@@ -1,0 +1,369 @@
+---
+import { siteConfig } from '../config/site';
+import CurvedArc from './CurvedArc.astro';
+import Icon from './Icon.astro';
+
+const { hero } = siteConfig;
+---
+
+<div class="hero-scroll-track" id="hero-scroll-wrapper">
+  <section id="hero" class="hero-pinned-viewport" aria-labelledby="hero-heading">
+    <!-- Large Orange Curved Arc sweeping behind visual stage off the right edge -->
+    <CurvedArc variant="hero-sweep" class="hero-curved-arc" />
+
+    <div class="container hero-container">
+      <!-- Left Column: Short Headline & CTAs (Instant paint, text side) -->
+      <div class="hero-content">
+        <span class="eyebrow">{hero.label}</span>
+
+        <h1 id="hero-heading" class="hero-headline">
+          {hero.headline}
+        </h1>
+
+        <p class="hero-subline">
+          {hero.subline}
+        </p>
+
+        <div class="hero-cta-group">
+          <a href={hero.primaryCta.href} class="btn btn-primary hero-btn-main">
+            <span>{hero.primaryCta.label}</span>
+            <Icon name="arrow-right" size={18} class="cta-arrow" />
+          </a>
+          <a href={hero.secondaryCta.href} class="btn btn-secondary hero-btn-sub">
+            <span>{hero.secondaryCta.label}</span>
+          </a>
+        </div>
+
+        <!-- Scroll cue at bottom -->
+        <a href="#peg-cube" class="hero-scroll-cue" id="hero-scroll-indicator" aria-label="Scroll down to approach">
+          <span class="cue-label">SCROLL</span>
+          <Icon name="chevron-down" size={16} class="cue-chevron" />
+        </a>
+      </div>
+
+      <!-- Right Column: Visual Stage (Apple-style scroll scrubber with WebGL fallback) -->
+      <div class="hero-visual-stage" id="hero-visual-container">
+        <div class="hero-sequence-wrapper" id="hero-sequence-wrapper">
+          <!-- Frame 1 rendered as native <img> (LCP element with fetchpriority high) -->
+          <picture id="hero-frame1-picture" class="hero-frame1-picture">
+            <source
+              media="(prefers-color-scheme: dark) and (min-width: 768px)"
+              srcset="/media/hero-seq/dark/desktop/0001.webp"
+              type="image/webp"
+            />
+            <source
+              media="(prefers-color-scheme: dark)"
+              srcset="/media/hero-seq/dark/mobile/0001.webp"
+              type="image/webp"
+            />
+            <source
+              media="(min-width: 768px)"
+              srcset="/media/hero-seq/light/desktop/0001.webp"
+              type="image/webp"
+            />
+            <img
+              src="/media/hero-seq/light/desktop/0001.webp"
+              id="hero-frame1-img"
+              alt="RHSP logo cube hovering over elliptical socket"
+              width="600"
+              height="600"
+              fetchpriority="high"
+              loading="eager"
+              decoding="async"
+              class="hero-media-element hero-lcp-img"
+            />
+          </picture>
+
+          <!-- Canvas swapped in post-load with zero visual jump -->
+          <canvas
+            id="hero-scrub-canvas"
+            class="hero-media-element hero-scrub-canvas"
+            width="1000"
+            height="1000"
+            aria-hidden="true"
+            style="display: none;"
+          ></canvas>
+
+          <!-- Fallback WebGL container if image sequence files are missing -->
+          <div id="hero-webgl-fallback" class="hero-webgl-fallback" style="display: none;" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<style>
+  .hero-scroll-track {
+    position: relative;
+    min-height: 150vh;
+  }
+
+  .hero-pinned-viewport {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--color-border);
+    overflow: hidden;
+    background-color: var(--color-bg);
+    transition: background-color 0.25s ease;
+  }
+
+  .hero-curved-arc {
+    top: 10%;
+    right: -10%;
+    width: 75%;
+    height: 80%;
+    opacity: 0.65;
+  }
+
+  .hero-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    align-items: center;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+  }
+
+  @media (min-width: 960px) {
+    .hero-container {
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 4rem;
+    }
+  }
+
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    z-index: 2;
+  }
+
+  .hero-headline {
+    font-size: var(--fs-hero);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    margin-bottom: 1.5rem;
+    max-width: 13ch;
+  }
+
+  .hero-subline {
+    font-size: var(--fs-body-lg);
+    line-height: 1.55;
+    color: var(--color-text-secondary);
+    margin-bottom: 2.25rem;
+    max-width: 48ch;
+  }
+
+  .hero-cta-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .hero-btn-main {
+    min-height: 52px;
+    padding: 0 2rem;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .cta-arrow {
+    transition: transform 0.25s var(--ease-out-expo);
+  }
+
+  .hero-btn-main:hover .cta-arrow {
+    transform: translateX(4px);
+  }
+
+  .hero-btn-sub {
+    min-height: 52px;
+    padding: 0 2rem;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  /* Scroll Cue */
+  .hero-scroll-cue {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--color-text-secondary);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    margin-top: 1rem;
+    opacity: 0.75;
+    transition: opacity 0.3s ease, color 0.2s ease;
+  }
+
+  .hero-scroll-cue:hover {
+    opacity: 1;
+    color: var(--color-text-primary);
+  }
+
+  .cue-chevron {
+    animation: cueBounce 2s infinite ease-in-out;
+  }
+
+  @keyframes cueBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(3px); }
+  }
+
+  /* Visual Stage */
+  .hero-visual-stage {
+    position: relative;
+    width: 100%;
+    min-height: 340px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media (min-width: 960px) {
+    .hero-visual-stage {
+      min-height: 480px;
+    }
+  }
+
+  .hero-sequence-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+  }
+
+  .hero-frame1-picture {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero-media-element {
+    width: 100%;
+    height: 100%;
+    max-width: 480px;
+    max-height: 480px;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    /* Invisible blending into hero background: subtle radial edge feathering */
+    mask-image: radial-gradient(closest-side at center, #000000 82%, transparent 100%);
+    -webkit-mask-image: radial-gradient(closest-side at center, #000000 82%, transparent 100%);
+    user-select: none;
+    pointer-events: none;
+  }
+
+  .hero-webgl-fallback {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-scroll-track {
+      min-height: auto;
+    }
+    .hero-pinned-viewport {
+      position: relative;
+      height: auto;
+      padding: 5rem 0;
+    }
+    .hero-scroll-cue {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  let activeDestroy: (() => void) | null = null;
+
+  function scheduleHeroSetup() {
+    if (activeDestroy) {
+      activeDestroy();
+      activeDestroy = null;
+    }
+
+    let initialized = false;
+    const runInit = () => {
+      if (initialized) return;
+      initialized = true;
+
+      // Clean up interaction triggers
+      window.removeEventListener('scroll', runInit);
+      window.removeEventListener('touchstart', runInit);
+      window.removeEventListener('pointerdown', runInit);
+
+      import('../scripts/HeroScrollSequence').then(({ initHeroScrollSequence }) => {
+        const track = document.getElementById('hero-scroll-wrapper');
+        const heroSection = document.getElementById('hero');
+        const container = document.getElementById('hero-visual-container');
+        const picture = document.getElementById('hero-frame1-picture');
+        const img = document.getElementById('hero-frame1-img') as HTMLImageElement | null;
+        const canvas = document.getElementById('hero-scrub-canvas') as HTMLCanvasElement | null;
+        const webglFallback = document.getElementById('hero-webgl-fallback');
+        const scrollCue = document.getElementById('hero-scroll-indicator');
+
+        if (!track || !heroSection || !container || !picture || !img || !canvas || !webglFallback) return;
+
+        const destroy = initHeroScrollSequence({
+          track,
+          heroSection,
+          container,
+          picture,
+          img,
+          canvas,
+          webglFallback,
+          scrollCue
+        });
+
+        if (destroy) {
+          activeDestroy = destroy;
+        }
+      }).catch((err) => {
+        console.warn('Hero scroll sequence init deferred', err);
+      });
+    };
+
+    // User interaction starts initialization immediately with 0 delay
+    window.addEventListener('scroll', runInit, { once: true, passive: true });
+    window.addEventListener('touchstart', runInit, { once: true, passive: true });
+    window.addEventListener('pointerdown', runInit, { once: true, passive: true });
+
+    // In background, start after page load when browser is idle
+    const onPageLoad = () => {
+      if ('requestIdleCallback' in window) {
+        (window as any).requestIdleCallback(() => {
+          setTimeout(runInit, 350);
+        });
+      } else {
+        setTimeout(runInit, 800);
+      }
+    };
+
+    if (document.readyState === 'complete') {
+      onPageLoad();
+    } else {
+      window.addEventListener('load', onPageLoad, { once: true });
+    }
+  }
+
+  scheduleHeroSetup();
+  document.addEventListener('astro:after-swap', scheduleHeroSetup);
+</script>

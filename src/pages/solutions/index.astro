@@ -1,0 +1,396 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import ContactSection from '../../components/ContactSection.astro';
+import MediaAsset from '../../components/MediaAsset.astro';
+import LearnMore from '../../components/LearnMore.astro';
+import Icon from '../../components/Icon.astro';
+import { getCollection } from 'astro:content';
+
+const rawProducts = await getCollection('products');
+const products = rawProducts.sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout
+  title="Solutions Directory - RHSP"
+  description="Explore RHSP's enterprise software solutions across Engineer and Gen-AI, plus our Plan advisory service. Low-code velocity on OutSystems, bespoke high-code in MERN, and sovereign AI."
+>
+  <Nav />
+
+  <main id="main-content" tabindex="-1">
+    <!-- Solutions Hero -->
+    <section class="solutions-hero-section" aria-labelledby="solutions-index-title">
+      <div class="container">
+        <div class="solutions-hero-content reveal-on-scroll">
+          <span class="eyebrow">SOLUTIONS DIRECTORY</span>
+          <h1 id="solutions-index-title" class="solutions-index-headline">
+            Shaped for the way you already work.
+          </h1>
+          <p class="solutions-index-subline">
+            We don't force your business into someone else's templates. We engineer adapters that fit the way you work.
+          </p>
+
+          <!-- Pill Filters (All · Engineer · Gen-AI) -->
+          <div class="filter-pills-bar" role="tablist" aria-label="Filter solutions by PEG pillar">
+            <button
+              type="button"
+              class="filter-pill-btn is-active"
+              data-filter="all"
+              role="tab"
+              aria-selected="true"
+            >
+              All Solutions (6)
+            </button>
+            <button
+              type="button"
+              class="filter-pill-btn"
+              data-filter="Engineer"
+              role="tab"
+              aria-selected="false"
+            >
+              Engineer (3)
+            </button>
+            <button
+              type="button"
+              class="filter-pill-btn"
+              data-filter="Gen-AI"
+              role="tab"
+              aria-selected="false"
+            >
+              Gen-AI (3)
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Solutions Directory Grid -->
+    <section class="solutions-catalog-section" aria-label="Solutions list">
+      <div class="container">
+        <div class="solutions-catalog-grid" id="solutions-cards-list">
+          {products.map((item) => {
+            const p = item.data;
+            return (
+              <article
+                class="catalog-card card-mastercard reveal-on-scroll"
+                data-pillar={p.pillar}
+              >
+                <!-- Media Frame with Quarter Circle Crop -->
+                <div class="catalog-media-frame">
+                  <MediaAsset
+                    assetKey={`product-${item.slug}`}
+                    alt={p.title}
+                    aspectRatio="16/10"
+                    crop="quarter"
+                    hoverVideoKey={`video-${item.slug}`}
+                    theme={p.pillar === 'Gen-AI' ? 'navy' : 'warm'}
+                  />
+                  <!-- Pillar Tag -->
+                  <div class="catalog-pillar-tag">
+                    <span>{p.pillar}</span>
+                  </div>
+                </div>
+
+                <!-- Card Body -->
+                <div class="catalog-card-body">
+                  <span class="catalog-stack-tag">{p.badge}</span>
+                  <h2 class="catalog-card-title">
+                    <a href={`/solutions/${item.slug}`} class="catalog-title-link">
+                      {p.title}
+                    </a>
+                  </h2>
+
+                  <p class="catalog-outcome">
+                    {p.outcomeHeadline}
+                  </p>
+
+                  <p class="catalog-oneliner">
+                    {p.oneLiner.replace(/^\[PLACEHOLDER\]\s*/i, '')}
+                  </p>
+
+                  <div class="catalog-action">
+                    <LearnMore href={`/solutions/${item.slug}`} text={`Explore ${p.title}`} />
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+
+        <!-- Plan / Advisory Banner -->
+        <div class="advisory-banner card-mastercard reveal-on-scroll">
+          <div class="advisory-banner-left">
+            <span class="eyebrow">PLAN · ADVISORY SERVICE</span>
+            <h2 class="advisory-title">Not sure what you need? Start with architecture clarity.</h2>
+            <p class="advisory-desc">
+              We evaluate platform feasibility, low-code vs. high-code fit, and architecture boundaries before the first line of code is committed.
+            </p>
+          </div>
+          <div class="advisory-banner-right">
+            <a href="/about#peg" class="btn btn-primary advisory-cta-btn">
+              <span>Explore advisory</span>
+              <Icon name="arrow-right" size={16} />
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Universal Contact Section -->
+    <ContactSection />
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .solutions-hero-section {
+    padding: calc(72px + var(--section-spacing-desktop)) 0 var(--section-spacing-desktop);
+    background-color: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .solutions-hero-content {
+    max-width: 720px;
+  }
+
+  .solutions-index-headline {
+    font-size: var(--fs-h1);
+    font-weight: 500;
+    line-height: 1.1;
+    margin-bottom: 1.25rem;
+  }
+
+  .solutions-index-subline {
+    font-size: var(--fs-body-lg);
+    color: var(--color-text-secondary);
+    line-height: 1.55;
+    margin-bottom: 2.5rem;
+  }
+
+  /* Filter Pills */
+  .filter-pills-bar {
+    display: inline-flex;
+    padding: 0.35rem;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-surface-alt);
+    border: 1px solid var(--color-border);
+    gap: 0.5rem;
+  }
+
+  .filter-pill-btn {
+    padding: 0.6rem 1.5rem;
+    border-radius: var(--radius-pill);
+    border: none;
+    background: transparent;
+    font-family: var(--font-sans);
+    font-size: var(--fs-body);
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  .filter-pill-btn:hover {
+    color: var(--color-text-primary);
+  }
+
+  .filter-pill-btn.is-active {
+    background-color: var(--color-btn-primary-bg);
+    color: var(--color-btn-primary-text);
+  }
+
+  /* Catalog Grid */
+  .solutions-catalog-section {
+    padding: var(--section-spacing-desktop) 0;
+    background-color: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .solutions-catalog-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    margin-bottom: 4rem;
+  }
+
+  @media (min-width: 768px) {
+    .solutions-catalog-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .solutions-catalog-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .catalog-card {
+    background-color: var(--color-surface-alt);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--color-border-subtle);
+    transition: transform 0.4s var(--ease-out-expo), box-shadow 0.4s var(--ease-out-expo);
+  }
+
+  .catalog-media-frame {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background-color: var(--color-surface);
+  }
+
+  .catalog-pillar-tag {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-pill);
+    background-color: rgba(255, 255, 255, 0.95);
+    color: #141413;
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .catalog-card-body {
+    padding: 2.25rem 2rem 2.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    flex: 1;
+  }
+
+  .catalog-stack-tag {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    letter-spacing: 0.05em;
+  }
+
+  .catalog-card-title {
+    font-size: 1.35rem;
+    font-weight: 500;
+    line-height: 1.25;
+  }
+
+  .catalog-title-link {
+    color: var(--color-text-primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .catalog-title-link:hover {
+    color: var(--rhsp-peg-start);
+  }
+
+  .catalog-outcome {
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    color: var(--color-text-primary);
+    line-height: 1.45;
+  }
+
+  .catalog-oneliner {
+    font-size: var(--fs-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.55;
+    margin-bottom: 1rem;
+    flex: 1;
+  }
+
+  .catalog-action {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  /* Advisory Banner */
+  .advisory-banner {
+    background-color: var(--color-surface-alt);
+    border-radius: var(--radius-card);
+    padding: 3.5rem 3rem;
+    border: 1px solid var(--color-border);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    align-items: center;
+  }
+
+  @media (min-width: 840px) {
+    .advisory-banner {
+      grid-template-columns: 1.4fr 0.6fr;
+      padding: 4rem 3.5rem;
+    }
+  }
+
+  .advisory-title {
+    font-size: var(--fs-h3);
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+    line-height: 1.25;
+  }
+
+  .advisory-desc {
+    font-size: var(--fs-body);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    max-width: 54ch;
+  }
+
+  .advisory-banner-right {
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  @media (min-width: 840px) {
+    .advisory-banner-right {
+      justify-content: flex-end;
+    }
+  }
+
+  .advisory-cta-btn {
+    min-height: 52px;
+    padding: 0 2rem;
+  }
+</style>
+
+<script>
+  function setupSolutionsFilter() {
+    const filterButtons = document.querySelectorAll('.filter-pill-btn');
+    const cards = document.querySelectorAll('.catalog-card');
+
+    if (!filterButtons.length || !cards.length) return;
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filterVal = btn.getAttribute('data-filter');
+
+        filterButtons.forEach(b => {
+          b.classList.remove('is-active');
+          b.setAttribute('aria-selected', 'false');
+        });
+        btn.classList.add('is-active');
+        btn.setAttribute('aria-selected', 'true');
+
+        cards.forEach(card => {
+          const pillar = card.getAttribute('data-pillar');
+          if (filterVal === 'all' || pillar === filterVal) {
+            (card as HTMLElement).style.display = 'flex';
+          } else {
+            (card as HTMLElement).style.display = 'none';
+          }
+        });
+      });
+    });
+  }
+
+  setupSolutionsFilter();
+  document.addEventListener('astro:after-swap', setupSolutionsFilter);
+</script>

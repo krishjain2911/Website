@@ -1,0 +1,235 @@
+---
+import { getCollection } from 'astro:content';
+import { siteConfig } from '../config/site';
+import MediaAsset from './MediaAsset.astro';
+import LearnMore from './LearnMore.astro';
+import Icon from './Icon.astro';
+
+const products = await getCollection('products');
+products.sort((a, b) => a.data.order - b.data.order);
+
+// Feature card is Voice Agents
+const featureProduct = products.find(p => p.slug === 'voice-agents') || products[0];
+const standardProducts = products.filter(p => p.slug !== featureProduct.slug);
+---
+
+<section id="solutions" class="solutions-section" aria-labelledby="solutions-heading">
+  <div class="container">
+    <!-- Header -->
+    <div class="solutions-header">
+      <span class="eyebrow">SOLUTIONS</span>
+      <h2 id="solutions-heading" class="solutions-title">
+        Shaped for the way you already work.
+      </h2>
+      <p class="solutions-subline">
+        Enterprise solutions engineered for OutSystems speed or high-code freedom, shaped for your business.
+      </p>
+    </div>
+
+    <!-- Mastercard-Style Grid: 1 Feature (2 cols) + 5 Standard Cards -->
+    <div class="solutions-cards-grid">
+      <!-- Large Feature Card: Voice Agents (2 Columns Wide on Desktop) -->
+      <article class="solution-card feature-card card-mastercard reveal-on-scroll">
+        <div class="card-inner-content">
+          <div class="card-media-wrapper feature-media">
+            <MediaAsset
+              assetKey={`product-${featureProduct.slug}`}
+              alt={featureProduct.data.title}
+              aspectRatio="16/9"
+              crop="quarter"
+              hoverVideoKey={`video-${featureProduct.slug}`}
+              theme="navy"
+            />
+          </div>
+          <div class="card-body feature-body">
+            <span class="card-pillar-eyebrow">{featureProduct.data.pillar}</span>
+            <h3 class="card-title feature-title">{featureProduct.data.title}</h3>
+            <p class="card-desc">
+              {featureProduct.data.oneLiner.replace(/^\[PLACEHOLDER\]\s*/i, '')}
+            </p>
+            <div class="card-action">
+              <LearnMore
+                href={`/solutions/${featureProduct.slug}`}
+                text={`Explore ${featureProduct.data.title}`}
+                ariaLabel={`Explore ${featureProduct.data.title}`}
+              />
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Standard 5 Cards -->
+      {standardProducts.map((product) => (
+        <article class="solution-card standard-card card-mastercard reveal-on-scroll">
+          <div class="card-inner-content">
+            <div class="card-media-wrapper">
+              <MediaAsset
+                assetKey={`product-${product.slug}`}
+                alt={product.data.title}
+                aspectRatio="16/10"
+                crop="quarter"
+                hoverVideoKey={`video-${product.slug}`}
+                theme={product.data.pillar === 'Gen-AI' ? 'navy' : 'warm'}
+              />
+            </div>
+            <div class="card-body">
+              <span class="card-pillar-eyebrow">{product.data.pillar}</span>
+              <h3 class="card-title">{product.data.title}</h3>
+              <p class="card-desc">
+                {product.data.oneLiner.replace(/^\[PLACEHOLDER\]\s*/i, '')}
+              </p>
+              <div class="card-action">
+                <LearnMore
+                  href={`/solutions/${product.slug}`}
+                  text={`Explore ${product.data.title}`}
+                  ariaLabel={`Explore ${product.data.title}`}
+                />
+              </div>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <!-- Bottom Directory CTA -->
+    <div class="solutions-footer-cta">
+      <a href="/solutions" class="btn btn-secondary solutions-all-btn">
+        <span>Explore all 6 solutions</span>
+        <Icon name="arrow-right" size={16} />
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .solutions-section {
+    background-color: var(--color-bg);
+  }
+
+  .solutions-header {
+    text-align: center;
+    max-width: 680px;
+    margin: 0 auto 4.5rem auto;
+  }
+
+  .solutions-title {
+    font-size: var(--fs-h2);
+    font-weight: 500;
+    margin-bottom: 1rem;
+  }
+
+  .solutions-subline {
+    margin: 0 auto;
+    font-size: var(--fs-body-lg);
+  }
+
+  /* Grid Layout: 3 Columns on Desktop */
+  .solutions-cards-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .solutions-cards-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .solutions-cards-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    /* Feature card spans 2 columns */
+    .feature-card {
+      grid-column: span 2;
+    }
+  }
+
+  .solution-card {
+    position: relative;
+    background-color: var(--color-surface-alt);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.4s var(--ease-out-expo), box-shadow 0.4s var(--ease-out-expo);
+  }
+
+  .card-inner-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .card-action :global(.learn-more-link)::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+  }
+
+  .card-media-wrapper {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    background-color: var(--color-surface);
+  }
+
+  .feature-media {
+    max-height: 380px;
+  }
+
+  .card-body {
+    padding: 2rem 2.25rem 2.25rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 0.5rem;
+  }
+
+  .card-pillar-eyebrow {
+    font-family: var(--font-sans);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-secondary);
+  }
+
+  .card-title {
+    font-size: clamp(1.25rem, 2vw, 1.5rem); /* 20-24px */
+    font-weight: 500;
+    color: var(--color-text-primary);
+    line-height: 1.25;
+  }
+
+  .feature-title {
+    font-size: clamp(1.5rem, 2.5vw, 1.85rem);
+  }
+
+  .card-desc {
+    font-size: var(--fs-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.55;
+    margin-bottom: 1rem;
+    flex: 1;
+  }
+
+  .card-action {
+    margin-top: auto;
+    padding-top: 0.5rem;
+  }
+
+  .solutions-footer-cta {
+    display: flex;
+    justify-content: center;
+    margin-top: 4rem;
+  }
+
+  .solutions-all-btn {
+    min-height: 52px;
+    padding: 0 2rem;
+  }
+</style>

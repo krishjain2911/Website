@@ -1,0 +1,288 @@
+---
+// MediaAsset.astro: Handles responsive AVIF/WebP images and lazy videos with Mastercard-grade subtle placeholder
+import fs from 'node:fs';
+import path from 'node:path';
+
+interface Props {
+  assetKey: string;
+  alt: string;
+  type?: 'image' | 'video';
+  aspectRatio?: string;
+  class?: string;
+  crop?: 'quarter' | 'rounded' | 'circle' | 'none';
+  sizes?: string;
+  hoverVideoKey?: string;
+  theme?: 'warm' | 'navy';
+}
+
+const {
+  assetKey,
+  alt,
+  type = 'image',
+  aspectRatio,
+  class: className = '',
+  crop = 'none',
+  sizes = '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw',
+  hoverVideoKey,
+  theme = 'warm'
+} = Astro.props;
+
+// Read manifest
+let manifest: any = { images: {}, videos: {} };
+try {
+  const manifestPath = path.resolve('public/media/manifest.json');
+  if (fs.existsSync(manifestPath)) {
+    manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  }
+} catch (e) {
+  // Silent fallback
+}
+
+const imageEntry = manifest.images?.[assetKey];
+const videoEntry = manifest.videos?.[assetKey];
+const hoverVideoEntry = hoverVideoKey ? manifest.videos?.[hoverVideoKey] : null;
+
+const hasImage = Boolean(imageEntry);
+const hasVideo = Boolean(videoEntry);
+const isMissing = type === 'video' ? !hasVideo : !hasImage;
+
+if (isMissing && import.meta.env.DEV) {
+  console.warn(`[RHSP Media] Asset missing: ${assetKey} (${type})`);
+}
+
+const cropClass = 
+  crop === 'quarter' ? 'crop-quarter' :
+  crop === 'rounded' ? 'crop-rounded' :
+  crop === 'circle' ? 'crop-circle' : '';
+---
+
+<div
+  class={`media-asset-container ${cropClass} ${isMissing ? 'is-placeholder' : ''} ${className}`}
+  style={aspectRatio ? `aspect-ratio: ${aspectRatio};` : undefined}
+>
+  {isMissing ? (
+    <!-- Intentional Soft Gradient Panel (White -> #FFF4EA or #F0F4FA, subtle cube line art & orange arc) -->
+    <div
+      class={`placeholder-gradient-panel theme-${theme}`}
+      role="img"
+      aria-label={alt}
+    >
+      <svg
+        viewBox="0 0 200 200"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        class="placeholder-art-svg"
+        aria-hidden="true"
+      >
+        <defs>
+          <linearGradient id={`ph-grad-${assetKey}`} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#F7941D" stop-opacity="0.8" />
+            <stop offset="100%" stop-color="#EE4B2B" stop-opacity="0.8" />
+          </linearGradient>
+        </defs>
+
+        <!-- Gentle curved arc motif -->
+        <path
+          d="M 20 180 C 60 180, 160 140, 180 20"
+          stroke={`url(#ph-grad-${assetKey})`}
+          stroke-width="1.5"
+          stroke-linecap="round"
+          opacity="0.5"
+        />
+
+        <!-- Subtle line art cube -->
+        <g transform="translate(65, 60)" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round" opacity="0.35">
+          <!-- Top face -->
+          <polygon points="35,5 65,22 35,39 5,22" />
+          <!-- Left face -->
+          <polygon points="5,22 35,39 35,72 5,55" />
+          <!-- Right face -->
+          <polygon points="35,39 65,22 65,55 35,72" />
+          <!-- Navy socket hint -->
+          <ellipse cx="35" cy="77" rx="26" ry="6" stroke="#1E4B8F" stroke-width="1" stroke-dasharray="2 3" opacity="0.5" />
+        </g>
+      </svg>
+    </div>
+  ) : type === 'video' ? (
+    <!-- Lazy Loop Video -->
+    <video
+      class="media-video lazy-video"
+      preload="none"
+      muted
+      playsinline
+      loop
+      poster={videoEntry.poster || undefined}
+      aria-label={alt}
+    >
+      <source src={videoEntry.mp4} type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+  ) : (
+    <!-- Responsive Picture with AVIF + WebP srcset -->
+    <picture class="media-picture">
+      {imageEntry.formats.avif && Object.keys(imageEntry.formats.avif).length > 0 && (
+        <source
+          type="image/avif"
+          srcset={Object.entries(imageEntry.formats.avif)
+            .map(([w, url]) => `${url} ${w}w`)
+            .join(', ')}
+          sizes={sizes}
+        />
+      )}
+      {imageEntry.formats.webp && Object.keys(imageEntry.formats.webp).length > 0 && (
+        <source
+          type="image/webp"
+          srcset={Object.entries(imageEntry.formats.webp)
+            .map(([w, url]) => `${url} ${w}w`)
+            .join(', ')}
+          sizes={sizes}
+        />
+      )}
+      <img
+        src={imageEntry.raw || Object.values(imageEntry.formats.webp || {})[0]}
+        alt={alt}
+        loading="lazy"
+        decoding="async"
+        class="media-img card-image-scaler"
+      />
+    </picture>
+  )}
+
+  {hoverVideoEntry && (
+    <!-- Hover Video Overlay for desktop -->
+    <video
+      class="media-hover-video lazy-video"
+      preload="none"
+      muted
+      playsinline
+      loop
+      aria-hidden="true"
+    >
+      <source src={hoverVideoEntry.mp4} type="video/mp4" />
+    </video>
+  )}
+</div>
+
+<style>
+  .media-asset-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: var(--color-surface-alt);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Mastercard-style Card Shapes */
+  .crop-quarter {
+    border-radius: var(--radius-card);
+    border-bottom-left-radius: 96px;
+  }
+
+  .crop-rounded {
+    border-radius: var(--radius-card);
+  }
+
+  .crop-circle {
+    border-radius: 50%;
+  }
+
+  .media-picture,
+  .media-img,
+  .media-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s var(--ease-out-expo);
+  }
+
+  /* Placeholder Styling: Soft gradient, subtle line art, zero visible text */
+  .placeholder-gradient-panel {
+    width: 100%;
+    height: 100%;
+    min-height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    user-select: none;
+    color: var(--color-text-secondary);
+  }
+
+  .placeholder-gradient-panel.theme-warm {
+    background: linear-gradient(135deg, #FFFFFF 0%, #FFF4EA 100%);
+  }
+
+  .placeholder-gradient-panel.theme-navy {
+    background: linear-gradient(135deg, #FFFFFF 0%, #F0F4FA 100%);
+  }
+
+  :global([data-theme="dark"]) .placeholder-gradient-panel.theme-warm {
+    background: linear-gradient(135deg, #1A1A1A 0%, #251E17 100%);
+  }
+
+  :global([data-theme="dark"]) .placeholder-gradient-panel.theme-navy {
+    background: linear-gradient(135deg, #1A1A1A 0%, #151D2A 100%);
+  }
+
+  .placeholder-art-svg {
+    width: 60%;
+    max-width: 180px;
+    height: auto;
+    overflow: visible;
+  }
+
+  /* Hover video replacement */
+  .media-hover-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  @media (hover: hover) and (min-width: 960px) {
+    .media-asset-container:hover .media-hover-video {
+      opacity: 1;
+    }
+  }
+</style>
+
+<script>
+  // Lazy video observer: plays only when >= 50% visible, pauses off-screen
+  function setupVideoObservers() {
+    const videos = document.querySelectorAll<HTMLVideoElement>('.lazy-video');
+    if (!videos.length) return;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isMobile = window.innerWidth < 768;
+    const isSaveData = (navigator as any).connection?.saveData === true;
+
+    if (prefersReducedMotion || isMobile || isSaveData) {
+      return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const video = entry.target as HTMLVideoElement;
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      });
+    }, { threshold: [0, 0.5] });
+
+    videos.forEach((v) => observer.observe(v));
+  }
+
+  setupVideoObservers();
+  document.addEventListener('astro:after-swap', setupVideoObservers);
+</script>

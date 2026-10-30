@@ -1,0 +1,248 @@
+---
+import { siteConfig } from '../config/site';
+import MediaAsset from './MediaAsset.astro';
+import LearnMore from './LearnMore.astro';
+import Icon from './Icon.astro';
+
+const { featuredStories } = siteConfig;
+---
+
+<section id="featured" class="featured-carousel-section" aria-labelledby="featured-heading">
+  <div class="container">
+    <div class="featured-header-row">
+      <div class="featured-title-wrap">
+        <span class="eyebrow">EXPLORE</span>
+        <h2 id="featured-heading" class="featured-title">Ideas and insights.</h2>
+      </div>
+
+      <!-- Circular Arrow Navigation Controls Top-Right -->
+      <div class="carousel-nav-controls" aria-label="Carousel navigation">
+        <button
+          type="button"
+          class="carousel-circle-btn"
+          id="carousel-prev"
+          aria-label="Previous story"
+        >
+          <Icon name="arrow-left" size={18} />
+        </button>
+        <button
+          type="button"
+          class="carousel-circle-btn"
+          id="carousel-next"
+          aria-label="Next story"
+        >
+          <Icon name="arrow-right" size={18} />
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Horizontal Scroll Track -->
+  <div
+    class="carousel-track-wrapper"
+    id="carousel-viewport"
+    role="region"
+    aria-label="Featured ideas horizontal scroll"
+    tabindex="0"
+  >
+    <div class="carousel-cards-strip">
+      {featuredStories.map((story, index) => (
+        <article class="featured-story-card card-mastercard" data-card-index={index}>
+          <div class="story-card-content">
+            <div class="story-image-frame">
+              <MediaAsset
+                assetKey={story.imageKey}
+                alt={story.title}
+                aspectRatio="16/10"
+                crop="rounded"
+                hoverVideoKey={story.videoKey}
+                theme="warm"
+              />
+            </div>
+
+            <div class="story-card-body">
+              <span class="story-tag-eyebrow">{story.tag}</span>
+              <h3 class="story-card-title">{story.title}</h3>
+              <div class="story-card-action">
+                <LearnMore
+                  href={story.href}
+                  text="Read insight"
+                  ariaLabel={`Read insight: ${story.title}`}
+                />
+              </div>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .featured-carousel-section {
+    background-color: var(--color-bg);
+    overflow: hidden;
+    scroll-margin-top: 96px;
+  }
+
+  .featured-header-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 3.5rem;
+  }
+
+  .featured-title {
+    font-size: var(--fs-h2);
+    font-weight: 500;
+    line-height: 1.15;
+    margin-top: -0.25rem;
+  }
+
+  /* Circular Navigation Buttons */
+  .carousel-nav-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .carousel-circle-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-primary);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, transform 0.2s ease;
+  }
+
+  .carousel-circle-btn:hover {
+    background-color: var(--color-btn-primary-bg);
+    border-color: var(--color-btn-primary-bg);
+    color: var(--color-btn-primary-text);
+    transform: scale(1.05);
+  }
+
+  /* Track Wrapper */
+  .carousel-track-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-left: calc((100vw - var(--max-width)) / 2);
+    padding-right: 2rem;
+  }
+
+  @media (max-width: 1280px) {
+    .carousel-track-wrapper {
+      padding-left: var(--gutter);
+      padding-right: var(--gutter);
+    }
+  }
+
+  .carousel-track-wrapper::-webkit-scrollbar {
+    display: none;
+  }
+
+  .carousel-cards-strip {
+    display: flex;
+    gap: 2rem;
+    padding-bottom: 2rem;
+    width: max-content;
+  }
+
+  .featured-story-card {
+    position: relative;
+    width: 380px;
+    background-color: var(--color-surface-alt);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    flex-shrink: 0;
+    transition: transform 0.4s var(--ease-out-expo), box-shadow 0.4s var(--ease-out-expo);
+  }
+
+  @media (max-width: 480px) {
+    .featured-story-card {
+      width: 300px;
+    }
+  }
+
+  .story-card-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .story-card-action :global(.learn-more-link)::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+  }
+
+  .story-image-frame {
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    background-color: var(--color-surface);
+  }
+
+  .story-card-body {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    flex: 1;
+  }
+
+  .story-tag-eyebrow {
+    font-family: var(--font-sans);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-secondary);
+  }
+
+  .story-card-title {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    line-height: 1.35;
+    flex: 1;
+  }
+
+  .story-card-action {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border);
+  }
+</style>
+
+<script>
+  function setupCarouselControls() {
+    const viewport = document.getElementById('carousel-viewport');
+    const prevBtn = document.getElementById('carousel-prev');
+    const nextBtn = document.getElementById('carousel-next');
+
+    if (!viewport || !prevBtn || !nextBtn) return;
+
+    const scrollAmount = 400;
+
+    prevBtn.addEventListener('click', () => {
+      viewport.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    });
+
+    nextBtn.addEventListener('click', () => {
+      viewport.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    });
+  }
+
+  setupCarouselControls();
+  document.addEventListener('astro:after-swap', setupCarouselControls);
+</script>

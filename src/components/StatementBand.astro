@@ -1,0 +1,110 @@
+---
+// StatementBand.astro: Full-bleed navy section with huge typography & CTA
+import { siteConfig } from '../config/site';
+import MediaAsset from './MediaAsset.astro';
+import Icon from './Icon.astro';
+
+const { statementBand } = siteConfig;
+---
+
+<section class="statement-band-section" aria-labelledby="statement-heading">
+  <!-- Looping Background Video / Media layer -->
+  <div class="statement-bg-media">
+    <MediaAsset
+      assetKey="statement-band"
+      alt="Ambient technology statement background"
+      type="video"
+    />
+    <div class="statement-overlay-scrim"></div>
+  </div>
+
+  <div class="container statement-container">
+    <div class="statement-content">
+      <span class="statement-mono-label mono-label">ENTERPRISE ADAPTER</span>
+      <h2 id="statement-heading" class="statement-headline">
+        {statementBand.headline}
+      </h2>
+      <p class="statement-subline">
+        {statementBand.subline}
+      </p>
+      <div class="statement-cta-wrap">
+        <a href={statementBand.cta.href} class="btn btn-primary statement-btn">
+          <span>{statementBand.cta.label}</span>
+          <Icon name="arrow-right" size={18} />
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .statement-band-section {
+    position: relative;
+    width: 100%;
+    padding: var(--space-16) 0;
+    background-color: #0B1628; /* Full-bleed deep navy in both light and dark modes */
+    color: #F8FAFC;
+    overflow: hidden;
+  }
+
+  .statement-bg-media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.35;
+  }
+
+  .statement-overlay-scrim {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(11, 22, 40, 0.4) 0%, rgba(11, 22, 40, 0.95) 100%);
+    pointer-events: none;
+  }
+
+  .statement-container {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .statement-content {
+    max-width: 760px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .statement-mono-label {
+    color: var(--rhsp-orange);
+    letter-spacing: 0.15em;
+    margin-bottom: var(--space-4);
+  }
+
+  .statement-headline {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.08;
+    color: #FFFFFF;
+    margin-bottom: var(--space-4);
+  }
+
+  .statement-subline {
+    font-size: var(--fs-body-lg);
+    line-height: 1.5;
+    color: #94A3B8;
+    max-width: 520px;
+    margin-bottom: var(--space-8);
+  }
+
+  .statement-btn {
+    padding: 1rem 2.25rem;
+    font-size: 1.05rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 10px 25px -5px rgba(247, 148, 29, 0.4);
+  }
+</style>

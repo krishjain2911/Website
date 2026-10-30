@@ -1,0 +1,89 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  href: string;
+  text?: string;
+  class?: string;
+  ariaLabel?: string;
+}
+
+const {
+  href,
+  text = 'Learn more',
+  class: className = '',
+  ariaLabel
+} = Astro.props;
+
+// Derive descriptive aria-label if not provided to prevent generic "Learn more" SEO penalty
+const cleanSlug = href.split('/').filter(Boolean).pop()?.replace(/-/g, ' ') || '';
+const computedAriaLabel = ariaLabel || (text.toLowerCase() === 'learn more' && cleanSlug ? `Learn more about ${cleanSlug}` : text);
+---
+
+<a
+  href={href}
+  class={`learn-more-link ${className}`}
+  aria-label={computedAriaLabel}
+>
+  <span class="learn-more-text">{text}</span>
+  <span class="learn-more-circle" aria-hidden="true">
+    <Icon name="arrow-right" size={16} strokeWidth={2} class="learn-more-arrow" />
+  </span>
+</a>
+
+<style>
+  .learn-more-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--font-sans);
+    font-size: var(--fs-body);
+    font-weight: 500;
+    color: var(--color-text-primary);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.25s var(--ease-out-expo);
+  }
+
+  .learn-more-text {
+    position: relative;
+    letter-spacing: -0.01em;
+  }
+
+  .learn-more-circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    background-color: transparent;
+    color: var(--color-text-primary);
+    transition: background-color 0.3s var(--ease-out-expo),
+                border-color 0.3s var(--ease-out-expo),
+                color 0.3s var(--ease-out-expo),
+                transform 0.3s var(--ease-out-expo);
+    flex-shrink: 0;
+  }
+
+  :global(.learn-more-arrow) {
+    transition: transform 0.3s var(--ease-out-expo);
+  }
+
+  .learn-more-link:hover .learn-more-circle {
+    background-color: var(--color-text-primary);
+    border-color: var(--color-text-primary);
+    color: var(--color-bg);
+  }
+
+  .learn-more-link:hover :global(.learn-more-arrow) {
+    transform: translateX(3px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .learn-more-link:hover :global(.learn-more-arrow) {
+      transform: none;
+    }
+  }
+</style>

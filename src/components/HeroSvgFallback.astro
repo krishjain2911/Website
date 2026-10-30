@@ -1,0 +1,76 @@
+---
+// HeroSvgFallback.astro: Exact representation of the authentic RHSP logo mark
+// One gradient cube dipping into a deep navy ellipse socket.
+// Shown by default; hidden cleanly via visibility:hidden once WebGL initializes.
+---
+
+<div class="hero-svg-wrapper" id="hero-svg-fallback" role="img" aria-label="RHSP logo: square cube balanced above round elliptical socket">
+  <div class="cube-motion-group" id="svg-cube-group">
+    <img
+      src="/brand/rhsp-logo.png"
+      alt="RHSP logo mark"
+      width="280"
+      height="266"
+      class="hero-fallback-img"
+      loading="eager"
+      decoding="async"
+    />
+  </div>
+</div>
+
+<style>
+  .hero-svg-wrapper {
+    width: 100%;
+    max-width: 420px;
+    aspect-ratio: 1 / 1.1;
+    margin: 0 auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    transition: opacity 0.4s ease;
+  }
+
+  .cube-motion-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: svgIdleFloat 4s ease-in-out infinite;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+  }
+
+  .hero-fallback-img {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 16px 32px rgba(238, 75, 43, 0.12));
+  }
+
+  @keyframes svgIdleFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  /* Scroll pass-through states */
+  .hero-svg-wrapper.is-passing .cube-motion-group {
+    animation: none;
+    transform: translateY(50px) scale(0.95);
+    opacity: 0.85;
+  }
+
+  .hero-svg-wrapper.is-passed .cube-motion-group {
+    animation: none;
+    transform: translateY(120px) scale(0.65);
+    opacity: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cube-motion-group {
+      animation: none !important;
+      transform: none !important;
+      opacity: 1 !important;
+    }
+  }
+</style>

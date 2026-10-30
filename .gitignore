@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.astro/
+.env*
+lighthouse-report.json
+lh-*.json
+*.log
+.DS_Store
+Thumbs.db

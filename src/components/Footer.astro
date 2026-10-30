@@ -1,0 +1,284 @@
+---
+import LogoMark from './brand/LogoMark.astro';
+import { siteConfig } from '../config/site';
+import Icon from './Icon.astro';
+
+const { socials, contact, copyrightYear, tagline } = siteConfig;
+---
+
+<footer class="site-footer" role="contentinfo">
+  <div class="container footer-container">
+    <div class="footer-top-row">
+      <!-- Brand & Tagline -->
+      <div class="footer-brand-col">
+        <a href="/" class="footer-logo-link" aria-label="RHSP - Return to top of page">
+          <LogoMark size="lg" showText={true} />
+        </a>
+        <p class="footer-tagline-statement">
+          <strong>{tagline}</strong> We don't fit pegs. We shape them.
+        </p>
+        <p class="footer-location">
+          <a href={contact.mapUrl} target="_blank" rel="noopener noreferrer" class="footer-address-link" title="View office on Google Maps">
+            ThePlayce, Mulund West, Mumbai · Enterprise Technology Partner
+          </a>
+        </p>
+      </div>
+
+      <!-- Solutions Column -->
+      <div class="footer-nav-col">
+        <span class="footer-col-title">Solutions</span>
+        <ul class="footer-nav-list">
+          <li><a href="/solutions/voice-agents" class="footer-link">Voice Agents</a></li>
+          <li><a href="/solutions/sovereign-ai" class="footer-link">Sovereign AI</a></li>
+          <li><a href="/solutions/ask-me-anything" class="footer-link">AskMeAnything</a></li>
+          <li><a href="/solutions/clm" class="footer-link">CLM (Contracts)</a></li>
+          <li><a href="/solutions/dms" class="footer-link">DMS (Documents)</a></li>
+          <li><a href="/solutions/whatsapp-journeys" class="footer-link">WhatsApp Journeys</a></li>
+          <li><a href="/solutions" class="footer-link is-all">Solutions Directory &rarr;</a></li>
+        </ul>
+      </div>
+
+      <!-- Approach Column (Plan, Engineer, Gen-AI) -->
+      <div class="footer-nav-col">
+        <span class="footer-col-title">Approach</span>
+        <ul class="footer-nav-list">
+          <li><a href="/about#peg" class="footer-link">Plan</a></li>
+          <li><a href="/about#peg" class="footer-link">Engineer</a></li>
+          <li><a href="/about#peg" class="footer-link">Gen-AI</a></li>
+          <li><a href="/about#how" class="footer-link">How We Work</a></li>
+          <li><a href="/about#fit" class="footer-link">Find Your Fit</a></li>
+        </ul>
+      </div>
+
+      <!-- Company Column (About, Mission & Vision, Team) -->
+      <div class="footer-nav-col">
+        <span class="footer-col-title">Company</span>
+        <ul class="footer-nav-list">
+          <li><a href="/about" class="footer-link">About RHSP</a></li>
+          <li><a href="/about#mission" class="footer-link">Mission &amp; Vision</a></li>
+          <li><a href="/about#team" class="footer-link">Leadership Team</a></li>
+          <li><a href="#contact" class="footer-link">Let's Talk</a></li>
+        </ul>
+      </div>
+
+      <!-- Connect Column -->
+      <div class="footer-nav-col">
+        <span class="footer-col-title">Connect</span>
+        <ul class="footer-nav-list">
+          <li>
+            <a href={`mailto:${contact.email}`} class="footer-link social-link">
+              <Icon name="mail" size={16} />
+              <span>Email</span>
+            </a>
+          </li>
+          <li>
+            <a
+              href={socials.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="footer-link social-link"
+              aria-label="RHSP on LinkedIn"
+            >
+              <Icon name="external-link" size={16} />
+              <span>LinkedIn</span>
+            </a>
+          </li>
+          <li>
+            <a
+              href={socials.twitter}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="footer-link social-link"
+              aria-label="RHSP on X"
+            >
+              <Icon name="external-link" size={16} />
+              <span>X (Twitter)</span>
+            </a>
+          </li>
+          <li>
+            <a
+              href={socials.youtube}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="footer-link social-link"
+              aria-label="RHSP on YouTube"
+            >
+              <Icon name="external-link" size={16} />
+              <span>YouTube</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Small Copyright Row -->
+    <div class="footer-bottom-row">
+      <p class="copyright-text">
+        &copy; {copyrightYear} Round Hole Square Peg Technologies Pvt. Ltd. All rights reserved.
+      </p>
+      <div class="footer-bottom-links">
+        <a href="/" class="footer-bottom-link">Privacy</a>
+        <a href="/" class="footer-bottom-link">Security</a>
+        <a href="/solutions" class="footer-bottom-link">Sitemap</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background-color: var(--color-bg);
+    border-top: 1px solid var(--color-border);
+    padding: 5rem 0 3rem 0;
+  }
+
+  .footer-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+  }
+
+  .footer-top-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  @media (min-width: 640px) {
+    .footer-top-row {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .footer-top-row {
+      grid-template-columns: 1.5fr repeat(4, 1fr);
+      gap: 3rem;
+    }
+  }
+
+  /* Brand Column */
+  .footer-brand-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .footer-logo-link {
+    display: inline-block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .footer-tagline-statement {
+    font-size: var(--fs-body);
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    max-width: 32ch;
+  }
+
+  .footer-tagline-statement strong {
+    color: var(--color-text-primary);
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+
+  .footer-location {
+    font-size: var(--fs-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .footer-address-link {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .footer-address-link:hover {
+    color: var(--color-text-primary);
+    text-decoration: underline;
+  }
+
+  /* Navigation Columns */
+  .footer-nav-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .footer-col-title {
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    letter-spacing: -0.01em;
+  }
+
+  .footer-nav-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .footer-link {
+    font-size: var(--fs-sm);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .footer-link:hover {
+    color: var(--color-text-primary);
+  }
+
+  .footer-link.is-all {
+    color: var(--color-text-primary);
+    font-weight: 500;
+  }
+
+  .social-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  /* Bottom Row */
+  .footer-bottom-row {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border);
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+  }
+
+  @media (min-width: 640px) {
+    .footer-bottom-row {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+
+  .copyright-text {
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+  }
+
+  .footer-bottom-links {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .footer-bottom-link {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .footer-bottom-link:hover {
+    color: var(--color-text-primary);
+  }
+</style>

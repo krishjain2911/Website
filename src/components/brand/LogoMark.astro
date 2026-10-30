@@ -1,0 +1,108 @@
+---
+interface Props {
+  size?: 'sm' | 'md' | 'lg';
+  showText?: boolean;
+  class?: string;
+}
+
+const { size = 'md', showText = true, class: className = '' } = Astro.props;
+---
+
+<div class={`rhsp-logo-wrapper ${className}`} data-size={size}>
+  {showText ? (
+    <img
+      src="/brand/Picture1.png"
+      alt="RHSP - Round Hole Square Peg"
+      class="rhsp-full-logo-img"
+      loading="eager"
+      decoding="async"
+    />
+  ) : (
+    <div class="rhsp-glyph-container">
+      <img
+        src="/brand/rhsp-logo.png"
+        alt="RHSP Logo Mark"
+        class="rhsp-glyph-img"
+        loading="eager"
+        decoding="async"
+      />
+    </div>
+  )}
+</div>
+
+<style>
+  .rhsp-logo-wrapper {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    user-select: none;
+  }
+
+  .rhsp-full-logo-img {
+    height: 56px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    display: block;
+    transition: height 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  [data-size="sm"] .rhsp-full-logo-img {
+    height: 48px;
+  }
+
+  [data-size="md"] .rhsp-full-logo-img {
+    height: 56px;
+  }
+
+  [data-size="lg"] .rhsp-full-logo-img {
+    height: 72px;
+  }
+
+  @media (max-width: 640px) {
+    .rhsp-full-logo-img,
+    [data-size="md"] .rhsp-full-logo-img {
+      height: 46px;
+    }
+  }
+
+  .rhsp-logo-wrapper:hover .rhsp-full-logo-img,
+  .rhsp-logo-wrapper:hover .rhsp-glyph-container {
+    transform: scale(1.03);
+  }
+
+  .rhsp-glyph-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  [data-size="sm"] .rhsp-glyph-container {
+    width: 36px;
+    height: 34px;
+  }
+
+  [data-size="md"] .rhsp-glyph-container {
+    width: 48px;
+    height: 46px;
+  }
+
+  [data-size="lg"] .rhsp-glyph-container {
+    width: 64px;
+    height: 61px;
+  }
+
+  .rhsp-glyph-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  :global([data-theme="dark"]) .rhsp-full-logo-img {
+    filter: brightness(1.3) contrast(1.15) drop-shadow(0 0 1px rgba(255, 255, 255, 0.75)) drop-shadow(0 1px 6px rgba(255, 255, 255, 0.15));
+  }
+</style>

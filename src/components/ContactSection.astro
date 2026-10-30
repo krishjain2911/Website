@@ -1,0 +1,432 @@
+---
+import { siteConfig } from '../config/site';
+import CurvedArc from './CurvedArc.astro';
+import Icon from './Icon.astro';
+
+const { contact, team } = siteConfig;
+---
+
+<section id="contact" class="contact-section" aria-labelledby="contact-heading">
+  <div class="container">
+    <!-- Large Rounded Light-Grey Panel with Curved Arc -->
+    <div class="contact-card-box card-mastercard reveal-on-scroll">
+      <CurvedArc variant="corner-sweep" class="contact-corner-arc" />
+
+      <!-- Left Column: Primary Contact, Large Email Link & Black Pill "Email us" -->
+      <div class="contact-col-left">
+        <span class="eyebrow">{contact.label}</span>
+        <h2 id="contact-heading" class="contact-headline">
+          Got a square peg? Let's talk.
+        </h2>
+        <p class="contact-subline">
+          Whether you're deciding between low-code and high-code or deploying sovereign enterprise AI, let's shape the right fit together.
+        </p>
+
+        <!-- Large Email Link Row -->
+        <div class="email-action-row">
+          <a href={`mailto:${contact.email}`} class="large-email-link">
+            <span>{contact.email}</span>
+          </a>
+
+          <div class="email-buttons-group">
+            <button
+              type="button"
+              class="btn-copy-email"
+              id="copy-email-btn"
+              data-email={contact.email}
+              aria-label="Copy email address"
+            >
+              <span class="copy-state-default">
+                <Icon name="copy" size={15} />
+                <span>Copy</span>
+              </span>
+              <span class="copy-state-copied" style="display: none;">
+                <Icon name="check" size={15} />
+                <span>Copied</span>
+              </span>
+            </button>
+
+            <!-- Black Pill "Email us" (opens default mail app) -->
+            <a href={`mailto:${contact.email}`} class="btn btn-primary email-pill-btn" id="email-us-btn">
+              <span>Email us</span>
+              <Icon name="arrow-right" size={16} />
+            </a>
+          </div>
+        </div>
+
+        <!-- Office Location / Address with Google Maps link -->
+        <div class="office-location-block">
+          <span class="office-location-label">OFFICE LOCATION</span>
+          <address class="office-address-text">
+            {contact.address}
+          </address>
+          <a
+            href={contact.mapUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="office-map-link"
+            aria-label="View RHSP office location on Google Maps"
+          >
+            <Icon name="map-pin" size={15} />
+            <span>Open in Google Maps</span>
+            <Icon name="external-link" size={13} />
+          </a>
+        </div>
+      </div>
+
+      <!-- Right Column: Founders Direct Channels -->
+      <div class="contact-col-right">
+        <span class="eyebrow">FOUNDER DIRECT CHANNELS</span>
+        <div class="founders-cards-list">
+          {team.members.map((member, index) => {
+            const phoneClean = member.phone.replace(/^\[PLACEHOLDER\]\s*/i, '');
+            const phoneB64 = Buffer.from(phoneClean).toString('base64');
+
+            return (
+              <div class="founder-mini-card">
+                <div class="founder-left-info">
+                  <!-- Circular Monogram -->
+                  <div class="founder-monogram-circle" aria-hidden="true">
+                    <span>{member.initials}</span>
+                  </div>
+                  <div class="founder-text-meta">
+                    <strong class="founder-name">{member.name}</strong>
+                    <span class="founder-role">{member.role}</span>
+                  </div>
+                </div>
+
+                <div class="founder-actions-row">
+                  <!-- Click to reveal phone -->
+                  <button
+                    type="button"
+                    class="reveal-phone-btn"
+                    data-phone-b64={phoneB64}
+                    id={`reveal-phone-${index}`}
+                    aria-label={`Show number for ${member.name}`}
+                  >
+                    <Icon name="phone" size={14} />
+                    <span class="reveal-text">Show number</span>
+                  </button>
+
+                  <!-- LinkedIn Link -->
+                  <a
+                    href={member.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="founder-linkedin-btn"
+                    aria-label={`${member.name} on LinkedIn`}
+                  >
+                    <Icon name="external-link" size={14} />
+                    <span>LinkedIn</span>
+                  </a>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact-section {
+    background-color: var(--color-bg);
+  }
+
+  .contact-card-box {
+    position: relative;
+    background-color: var(--color-surface-alt);
+    border-radius: var(--radius-card);
+    padding: 3.5rem 3rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3.5rem;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+  }
+
+  @media (min-width: 960px) {
+    .contact-card-box {
+      grid-template-columns: 1.15fr 0.85fr;
+      padding: 4.5rem 4rem;
+      gap: 5rem;
+    }
+  }
+
+  /* Orange Arc curving around corner */
+  .contact-corner-arc {
+    top: -50px;
+    right: -50px;
+    width: 250px;
+    height: 250px;
+    opacity: 0.55;
+  }
+
+  /* Left Column */
+  .contact-col-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    position: relative;
+    z-index: 2;
+  }
+
+  .contact-headline {
+    font-size: var(--fs-h2);
+    font-weight: 500;
+    margin-bottom: 1rem;
+    line-height: 1.18;
+  }
+
+  .contact-subline {
+    font-size: var(--fs-body);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin-bottom: 2.25rem;
+    max-width: 44ch;
+  }
+
+  .email-action-row {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    width: 100%;
+  }
+
+  .large-email-link {
+    font-size: clamp(1.25rem, 2.5vw, 1.85rem);
+    font-weight: 500;
+    color: var(--color-text-primary);
+    text-decoration: underline;
+    text-decoration-color: var(--color-border);
+    text-underline-offset: 6px;
+    transition: text-decoration-color 0.25s ease, color 0.25s ease;
+  }
+
+  .large-email-link:hover {
+    color: var(--rhsp-peg-start);
+    text-decoration-color: var(--rhsp-peg-start);
+  }
+
+  .email-buttons-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-copy-email {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 44px;
+    padding: 0 1.25rem;
+    font-family: var(--font-sans);
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+    color: var(--color-text-primary);
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .btn-copy-email:hover {
+    background-color: var(--color-surface-hover);
+    border-color: var(--color-text-secondary);
+  }
+
+  .email-pill-btn {
+    height: 44px;
+    padding: 0 1.5rem;
+    font-size: var(--fs-sm);
+  }
+
+  /* Office Location Block */
+  .office-location-block {
+    margin-top: 2rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    width: 100%;
+    max-width: 52ch;
+  }
+
+  .office-location-label {
+    font-family: var(--font-sans);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-secondary);
+  }
+
+  .office-address-text {
+    font-style: normal;
+    font-size: var(--fs-sm);
+    line-height: 1.6;
+    color: var(--color-text-primary);
+  }
+
+  .office-map-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    color: var(--rhsp-peg-start);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    width: fit-content;
+    margin-top: 0.25rem;
+    transition: color 0.2s ease, text-decoration-color 0.2s ease;
+  }
+
+  .office-map-link:hover {
+    color: var(--rhsp-peg-middle);
+  }
+
+  /* Right Column: Founders */
+  .contact-col-right {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .founders-cards-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .founder-mini-card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 20px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    box-shadow: var(--shadow-subtle);
+  }
+
+  .founder-left-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .founder-monogram-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--rhsp-peg-gradient);
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .founder-text-meta {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .founder-name {
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+  }
+
+  .founder-role {
+    font-size: var(--fs-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .founder-actions-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .reveal-phone-btn,
+  .founder-linkedin-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 1rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--color-border);
+    background-color: var(--color-surface-alt);
+    color: var(--color-text-secondary);
+    font-family: var(--font-sans);
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .reveal-phone-btn:hover,
+  .founder-linkedin-btn:hover {
+    background-color: var(--color-surface-hover);
+    color: var(--color-text-primary);
+    border-color: var(--color-text-secondary);
+  }
+</style>
+
+<script>
+  function setupContactSection() {
+    // Copy email to clipboard
+    const copyBtn = document.getElementById('copy-email-btn');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', async () => {
+        try {
+          const emailToCopy = copyBtn.getAttribute('data-email') || 'LetsTalk@roundholesquarepeg.com';
+          await navigator.clipboard.writeText(emailToCopy);
+          const defaultEl = copyBtn.querySelector('.copy-state-default') as HTMLElement;
+          const copiedEl = copyBtn.querySelector('.copy-state-copied') as HTMLElement;
+          if (defaultEl && copiedEl) {
+            defaultEl.style.display = 'none';
+            copiedEl.style.display = 'inline-flex';
+            setTimeout(() => {
+              defaultEl.style.display = 'inline-flex';
+              copiedEl.style.display = 'none';
+            }, 2000);
+          }
+        } catch (e) {
+          // Fallback
+        }
+      });
+    }
+
+    // Reveal phone
+    const phoneButtons = document.querySelectorAll('.reveal-phone-btn');
+    phoneButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const b64 = btn.getAttribute('data-phone-b64');
+        if (b64) {
+          try {
+            const decoded = atob(b64);
+            const textEl = btn.querySelector('.reveal-text');
+            if (textEl) textEl.textContent = decoded;
+            btn.setAttribute('aria-label', `Phone: ${decoded}`);
+          } catch (e) {}
+        }
+      });
+    });
+  }
+
+  setupContactSection();
+  document.addEventListener('astro:after-swap', setupContactSection);
+</script>

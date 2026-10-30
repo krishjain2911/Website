@@ -1,0 +1,470 @@
+---
+import { getCollection } from 'astro:content';
+import { siteConfig } from '../config/site';
+import MediaFrame from './MediaFrame.astro';
+
+const { solutionsIntro } = siteConfig;
+const rawProducts = await getCollection('products');
+const products = rawProducts.sort((a, b) => a.data.order - b.data.order);
+---
+
+<section id="solutions" class="solutions-section" aria-labelledby="solutions-title">
+  <div class="container">
+    <!-- Section Intro -->
+    <div class="solutions-header reveal-on-scroll">
+      <span class="mono-label">{solutionsIntro.label}</span>
+      <h2 id="solutions-title" class="solutions-heading">{solutionsIntro.title}</h2>
+      <p class="solutions-subline">{solutionsIntro.subline}</p>
+    </div>
+
+    <!-- Editorial Asymmetric Grid -->
+    <div class="solutions-grid" role="region" aria-label="Enterprise Solutions Catalog">
+      {products.map((item, index) => {
+        const p = item.data;
+        const isFeatured = index === 0 || index === 1; // Editorial hierarchy
+        return (
+          <article
+            class={`solution-tile-card morphed-frame ${isFeatured ? 'tile-featured' : ''} reveal-on-scroll`}
+            id={`tile-${item.slug}`}
+          >
+            <!-- Card Header & Meta -->
+            <div class="tile-top-row">
+              <span class="mono-label tile-code">{p.code}</span>
+              <span class={`badge ${p.badge === 'High-code' ? 'badge-highcode' : ''}`}>
+                {p.badge}
+              </span>
+            </div>
+
+            <!-- Tile Media Preview Frame (Square -> Round on Hover) -->
+            <div class="tile-preview-frame">
+              <div class="preview-backdrop-glyph" aria-hidden="true">
+                <span class="glyph-step">{p.code.split('/')[0].trim()}</span>
+              </div>
+              <div class="tile-preview-indicator">
+                <span class="indicator-corner top-left"></span>
+                <span class="indicator-corner top-right"></span>
+                <span class="indicator-corner bottom-left"></span>
+                <span class="indicator-corner bottom-right"></span>
+              </div>
+            </div>
+
+            <!-- Content Info -->
+            <div class="tile-body">
+              <h3 class="tile-title">{p.title}</h3>
+              <p class="tile-oneliner">{p.oneLiner}</p>
+            </div>
+
+            <!-- Expand Toggle Action Button -->
+            <div class="tile-action-row">
+              <button
+                type="button"
+                class="tile-expand-btn btn btn-secondary"
+                aria-expanded="false"
+                aria-controls={`detail-panel-${item.slug}`}
+                data-target={item.slug}
+              >
+                <span class="btn-text">View Architecture</span>
+                <svg class="chevron-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Expanded Detail Panel (In-Place Reveal with View Transitions Support) -->
+            <div
+              id={`detail-panel-${item.slug}`}
+              class="tile-detail-drawer"
+              hidden
+            >
+              <div class="drawer-inner">
+                <!-- Problem Statement -->
+                <div class="detail-block">
+                  <h4 class="detail-subhead">THE PROBLEM</h4>
+                  <p class="detail-text">{p.problem}</p>
+                </div>
+
+                <!-- How It Works (3 Steps) -->
+                <div class="detail-block">
+                  <h4 class="detail-subhead">HOW IT WORKS</h4>
+                  <ol class="workflow-step-list">
+                    {p.howItWorks.map((st) => (
+                      <li class="workflow-step-item">
+                        <span class="workflow-step-num">{st.step}</span>
+                        <div class="workflow-step-body">
+                          <strong class="workflow-step-title">{st.title}</strong>
+                          <p class="workflow-step-desc">{st.description}</p>
+                        </div>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+
+                <!-- Business Value -->
+                <div class="detail-block">
+                  <h4 class="detail-subhead">BUSINESS VALUE</h4>
+                  <p class="detail-text highlight-value">{p.value}</p>
+                </div>
+
+                <!-- Demo Video Frame -->
+                <div class="detail-block">
+                  <h4 class="detail-subhead">SYSTEM DEMO</h4>
+                  <MediaFrame
+                    badgeText={p.demoMedia.badgeText}
+                    posterText={p.demoMedia.posterText}
+                    caption={p.demoMedia.caption}
+                  />
+                </div>
+
+                <!-- Bottom CTA -->
+                <div class="drawer-footer">
+                  <a href="#contact" class="btn btn-primary drawer-cta">
+                    <span>{p.ctaText}</span>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                      <path d="M3 8H13M13 8L8.5 3.5M13 8L8.5 12.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </a>
+                  <button
+                    type="button"
+                    class="btn btn-ghost drawer-close-btn"
+                    data-close={item.slug}
+                  >
+                    Close Architecture View
+                  </button>
+                </div>
+              </div>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+<style>
+  .solutions-section {
+    padding: var(--space-16) 0;
+    background: var(--color-bg);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .solutions-header {
+    margin-bottom: var(--space-10);
+    max-width: 760px;
+  }
+
+  .solutions-heading {
+    font-size: var(--fs-h1);
+    line-height: 1.1;
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .solutions-subline {
+    font-size: var(--fs-body-lg);
+    color: var(--color-text-secondary);
+  }
+
+  /* Editorial Asymmetric Grid */
+  .solutions-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 768px) {
+    .solutions-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Asymmetric layout */
+    .tile-featured {
+      grid-column: span 1;
+    }
+  }
+
+  @media (min-width: 1080px) {
+    .solutions-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    /* First two tiles take generous editorial presence */
+    .tile-featured {
+      grid-column: span 1;
+    }
+  }
+
+  /* Solution Tile Card */
+  .solution-tile-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    padding: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .tile-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-4);
+  }
+
+  /* Square to Round Preview Frame */
+  .tile-preview-frame {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: var(--color-bg-alt);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-square);
+    margin-bottom: var(--space-5);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: var(--transition-morph);
+  }
+
+  /* Morph into rounded stadium on hover */
+  .solution-tile-card:hover .tile-preview-frame,
+  .solution-tile-card:focus-within .tile-preview-frame {
+    border-radius: 36px;
+    border-color: var(--rhsp-navy);
+    box-shadow: 0 8px 24px rgba(30, 75, 143, 0.1);
+  }
+
+  .preview-backdrop-glyph {
+    font-family: var(--font-mono);
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--color-border);
+    user-select: none;
+    transition: transform 0.4s ease, color 0.4s ease;
+  }
+
+  .solution-tile-card:hover .preview-backdrop-glyph {
+    transform: scale(1.15);
+    color: var(--rhsp-navy);
+    opacity: 0.4;
+  }
+
+  .tile-preview-indicator {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    pointer-events: none;
+  }
+
+  .indicator-corner {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-color: var(--color-text-muted);
+    opacity: 0.4;
+  }
+
+  .indicator-corner.top-left { top: 0; left: 0; border-top: 1.5px solid; border-left: 1.5px solid; }
+  .indicator-corner.top-right { top: 0; right: 0; border-top: 1.5px solid; border-right: 1.5px solid; }
+  .indicator-corner.bottom-left { bottom: 0; left: 0; border-bottom: 1.5px solid; border-left: 1.5px solid; }
+  .indicator-corner.bottom-right { bottom: 0; right: 0; border-bottom: 1.5px solid; border-right: 1.5px solid; }
+
+  .tile-body {
+    flex-grow: 1;
+    margin-bottom: var(--space-6);
+  }
+
+  .tile-title {
+    font-size: var(--fs-h3);
+    line-height: 1.2;
+    margin-bottom: var(--space-2);
+  }
+
+  .tile-oneliner {
+    font-size: var(--fs-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+  }
+
+  .tile-action-row {
+    margin-top: auto;
+  }
+
+  .tile-expand-btn {
+    width: 100%;
+    justify-content: space-between;
+    padding: 0.65rem 1.15rem;
+  }
+
+  .chevron-icon {
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .tile-expand-btn[aria-expanded="true"] .chevron-icon {
+    transform: rotate(180deg);
+  }
+
+  /* Expanded Detail Drawer (Smooth in-place slide) */
+  .tile-detail-drawer {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+  }
+
+  .tile-detail-drawer.is-expanded {
+    grid-template-rows: 1fr;
+    margin-top: var(--space-6);
+    padding-top: var(--space-6);
+    border-top: 1px dashed var(--color-border);
+  }
+
+  .drawer-inner {
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  .detail-block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .detail-subhead {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--color-brand-structural);
+    text-transform: uppercase;
+  }
+
+  .detail-text {
+    font-size: var(--fs-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+  }
+
+  .highlight-value {
+    color: var(--color-text-primary);
+    font-weight: 600;
+  }
+
+  /* Workflow Steps List */
+  .workflow-step-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .workflow-step-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .workflow-step-num {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    background: var(--color-badge-bg);
+    color: var(--color-brand-structural);
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-square);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .workflow-step-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .workflow-step-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+  }
+
+  .workflow-step-desc {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    line-height: 1.45;
+  }
+
+  .drawer-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding-top: var(--space-4);
+  }
+
+  .drawer-cta {
+    width: 100%;
+    text-align: center;
+  }
+
+  .drawer-close-btn {
+    width: 100%;
+    font-size: 0.8rem;
+  }
+</style>
+
+<script>
+  function setupProductAccordion() {
+    const expandButtons = document.querySelectorAll<HTMLButtonElement>('.tile-expand-btn');
+    const closeButtons = document.querySelectorAll<HTMLButtonElement>('.drawer-close-btn');
+
+    function toggleTile(slug: string, forceClose = false) {
+      const panel = document.getElementById(`detail-panel-${slug}`);
+      const btn = document.querySelector<HTMLButtonElement>(`button[data-target="${slug}"]`);
+      if (!panel || !btn) return;
+
+      const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+      const shouldOpen = forceClose ? false : !isExpanded;
+
+      // Use View Transitions API if supported for buttery animations
+      const updateDom = () => {
+        panel.hidden = !shouldOpen;
+        panel.classList.toggle('is-expanded', shouldOpen);
+        btn.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
+        
+        const btnText = btn.querySelector('.btn-text');
+        if (btnText) {
+          btnText.textContent = shouldOpen ? 'Collapse Architecture' : 'View Architecture';
+        }
+      };
+
+      if ((document as any).startViewTransition) {
+        (document as any).startViewTransition(updateDom);
+      } else {
+        updateDom();
+      }
+    }
+
+    expandButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const slug = btn.getAttribute('data-target');
+        if (slug) toggleTile(slug);
+      });
+    });
+
+    closeButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const slug = btn.getAttribute('data-close');
+        if (slug) toggleTile(slug, true);
+      });
+    });
+  }
+
+  setupProductAccordion();
+  document.addEventListener('astro:after-swap', setupProductAccordion);
+</script>

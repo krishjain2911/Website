@@ -1,0 +1,72 @@
+---
+interface Props {
+  variant?: 'hero-sweep' | 'section-divider' | 'corner-sweep' | 'accent-loop';
+  class?: string;
+  width?: number | string;
+  height?: number | string;
+}
+
+const {
+  variant = 'hero-sweep',
+  class: className = '',
+  width = '100%',
+  height = '100%'
+} = Astro.props;
+
+// SVG paths for each variant
+let viewBox = "0 0 800 400";
+let pathD = "M 0 350 C 300 350, 500 50, 800 50";
+
+if (variant === 'hero-sweep') {
+  viewBox = "0 0 1000 500";
+  pathD = "M 0 450 C 400 450, 600 50, 1000 120";
+} else if (variant === 'section-divider') {
+  viewBox = "0 0 1200 200";
+  pathD = "M 0 100 C 400 180, 800 20, 1200 100";
+} else if (variant === 'corner-sweep') {
+  viewBox = "0 0 400 400";
+  pathD = "M 400 0 C 400 220, 220 400, 0 400";
+} else if (variant === 'accent-loop') {
+  viewBox = "0 0 500 300";
+  pathD = "M 20 280 C 150 280, 280 40, 480 80";
+}
+---
+
+<div class={`curved-arc-container ${className}`} aria-hidden="true">
+  <svg
+    viewBox={viewBox}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    class="curved-arc-svg"
+    preserveAspectRatio="none"
+  >
+    <defs>
+      <linearGradient id={`arc-grad-${variant}`} x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#F7941D" />
+        <stop offset="100%" stop-color="#EE4B2B" />
+      </linearGradient>
+    </defs>
+    <path
+      d={pathD}
+      stroke={`url(#arc-grad-${variant})`}
+      stroke-width="1.5"
+      stroke-linecap="round"
+      class="curved-arc-path"
+    />
+  </svg>
+</div>
+
+<style>
+  .curved-arc-container {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+    overflow: visible;
+  }
+
+  .curved-arc-svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+</style>

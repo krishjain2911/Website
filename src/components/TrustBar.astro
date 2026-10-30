@@ -1,0 +1,141 @@
+---
+import { siteConfig } from '../config/site';
+
+const { trustBar, showTrustBar } = siteConfig;
+if (!showTrustBar) return null;
+---
+
+<section class="trust-bar-section" aria-label="Enterprise validation and industry focus">
+  <div class="container">
+    <div class="trust-bar-header">
+      <span class="mono-label trust-label">{trustBar.heading}</span>
+    </div>
+
+    <!-- Industry Focus Badges -->
+    <div class="industries-row">
+      {trustBar.industries.map((ind) => (
+        <div class="industry-chip morphed-frame">
+          <span class="industry-code mono-label">[{ind.glyph}]</span>
+          <span class="industry-name">{ind.name}</span>
+        </div>
+      ))}
+    </div>
+
+    <!-- Key Delivery Stats -->
+    <div class="stats-grid">
+      {trustBar.stats.map((st) => (
+        <div class="stat-card morphed-frame reveal-on-scroll">
+          <span class="stat-value">{st.value}</span>
+          <span class="stat-title">{st.label}</span>
+          <span class="stat-detail">{st.detail}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .trust-bar-section {
+    padding: var(--space-10) 0;
+    background: var(--color-bg-alt);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .trust-bar-header {
+    text-align: center;
+    margin-bottom: var(--space-6);
+  }
+
+  .trust-label {
+    color: var(--color-text-secondary);
+    font-size: 0.72rem;
+  }
+
+  .industries-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: var(--space-8);
+  }
+
+  .industry-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-square);
+    transition: var(--transition-morph);
+  }
+
+  .industry-chip:hover {
+    border-radius: var(--radius-full);
+    border-color: var(--rhsp-navy);
+  }
+
+  .industry-code {
+    color: var(--color-text-accent);
+    font-size: 0.65rem;
+  }
+
+  .industry-code::before {
+    display: none;
+  }
+
+  .industry-name {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 640px) {
+    .stats-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-6);
+    }
+  }
+
+  .stat-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-square);
+    padding: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.25rem;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .stat-card:hover {
+    border-radius: 20px;
+    border-color: var(--rhsp-navy);
+  }
+
+  .stat-value {
+    font-family: var(--font-mono);
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--color-text-primary);
+  }
+
+  .stat-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+  }
+
+  .stat-detail {
+    font-size: 0.78rem;
+    color: var(--color-text-secondary);
+  }
+</style>

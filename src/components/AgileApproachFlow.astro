@@ -1,0 +1,736 @@
+---
+// AgileApproachFlow.astro: Interactive Agile Delivery Flow
+// Replaces the overly-detailed paperwork slider with an intuitive, dynamic sprint flow
+import Icon from './Icon.astro';
+import LearnMore from './LearnMore.astro';
+
+const sprints = [
+  {
+    id: 'discover',
+    number: '01',
+    duration: 'Week 1 – 2',
+    name: 'Discover & Map',
+    subtitle: 'Architecture alignment before code',
+    headline: 'Zero-bias architecture discovery shaped around your actual workflow.',
+    description:
+      'We do not start with a 200-page static specification. In rapid collaborative sessions, our architects evaluate your legacy stack, map operational bottlenecks, and objectively assess Low-Code vs. High-Code fit.',
+    deliverables: [
+      'Operational friction map & boundary definition',
+      'OutSystems vs. High-Code architecture matrix',
+      'Sprint zero backlog with prioritized epics'
+    ],
+    metric: '10 business days',
+    metricLabel: 'From kickoff to aligned architecture roadmap',
+    badge: 'AGILE DISCOVERY',
+    state: {
+      sprintName: 'Sprint 01: Architecture Spike',
+      velocity: 'Ready for prototype',
+      status: 'Aligned & Scoped'
+    }
+  },
+  {
+    id: 'prototype',
+    number: '02',
+    duration: 'Week 3 – 4',
+    name: 'Prototype & Validate',
+    subtitle: 'Working software in your hands',
+    headline: 'Interactive functional prototypes tested on your real operational data.',
+    description:
+      'We validate assumptions early. Within two weeks of discovery, we deploy a working prototype into a staging sandbox so business stakeholders can click, test, and provide direct feedback before heavy integration.',
+    deliverables: [
+      'Interactive functional prototype deployed to sandbox',
+      'Real user testing & stakeholder feedback loops',
+      'Refined technical architecture & API contract specs'
+    ],
+    metric: '14 days',
+    metricLabel: 'To first interactive working model',
+    badge: 'RAPID PROTOTYPING',
+    state: {
+      sprintName: 'Sprint 02: Functional MVP',
+      velocity: 'Live stakeholder feedback',
+      status: 'Validated'
+    }
+  },
+  {
+    id: 'build',
+    number: '03',
+    duration: 'Week 5 – 8',
+    name: 'Build & Integrate',
+    subtitle: 'Two-week sprint cadences',
+    headline: 'Bi-weekly production sprints with continuous enterprise integration.',
+    description:
+      'Engineered in disciplined 14-day sprints. We integrate with your existing core systems - SAP, Salesforce, core banking, or legacy SQL databases - deploying testable increments with automated regression tests.',
+    deliverables: [
+      'Bi-weekly sprint reviews with live demo software',
+      'Core ERP/CRM and API connector integration',
+      'Automated testing pipeline and security review'
+    ],
+    metric: 'Every 2 weeks',
+    metricLabel: 'Demo-ready software shipped to test environment',
+    badge: 'ITERATIVE SPRINT CADENCE',
+    state: {
+      sprintName: 'Sprint 03-04: Integration Cadence',
+      velocity: 'CI/CD Automated pipeline',
+      status: 'Shipped to Staging'
+    }
+  },
+  {
+    id: 'evolve',
+    number: '04',
+    duration: 'Continuous',
+    name: 'Launch & Evolve',
+    subtitle: 'Sovereign deployment & adaptation',
+    headline: 'Production deployment with agile feature expansion as business evolves.',
+    description:
+      'Software should never be static. We launch into your private cloud or on-prem perimeter, monitor real-world telemetry, and continuously adapt the solution as regulatory requirements and business models shift.',
+    deliverables: [
+      'Zero-downtime production cutover and telemetry monitoring',
+      'Private enterprise AI model fine-tuning & sovereign governance',
+      'Continuous agile backlog for ongoing feature sprints'
+    ],
+    metric: '99.9% uptime',
+    metricLabel: 'Enterprise reliability with continuous adaptation',
+    badge: 'CONTINUOUS AGILITY',
+    state: {
+      sprintName: 'Sprint Ongoing: Continuous Evolution',
+      velocity: 'Telemetry-driven backlog',
+      status: 'Active in Production'
+    }
+  }
+];
+---
+
+<section id="approach" class="agile-flow-section" aria-labelledby="approach-heading">
+  <div class="container">
+    <!-- Header -->
+    <div class="section-header">
+      <span class="mono-label">AGILE APPROACH</span>
+      <h2 id="approach-heading" class="section-title">
+        Built for agile adaptation.
+      </h2>
+      <p class="section-subline">
+        We do not force rigid, multi-year specifications. We operate in rapid, transparent sprints shaped around your operational reality.
+      </p>
+
+      <!-- Step Navigation Tabs -->
+      <div class="flow-tabs-track" role="tablist" aria-label="Agile sprint phases">
+        <div class="flow-tabs-line" aria-hidden="true">
+          <div class="flow-tabs-indicator" id="flow-indicator"></div>
+        </div>
+        {sprints.map((sprint, idx) => (
+          <button
+            type="button"
+            role="tab"
+            class={`flow-tab-btn ${idx === 0 ? 'is-active' : ''}`}
+            id={`tab-flow-${sprint.id}`}
+            data-target={sprint.id}
+            data-index={idx}
+            aria-selected={idx === 0 ? 'true' : 'false'}
+            aria-controls={`panel-flow-${sprint.id}`}
+          >
+            <span class="tab-num">{sprint.number}</span>
+            <div class="tab-label-group">
+              <strong class="tab-name">{sprint.name}</strong>
+              <span class="tab-duration">{sprint.duration}</span>
+            </div>
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <!-- Sprint Stage Panels -->
+    <div class="flow-stage-container">
+      {sprints.map((sprint, idx) => (
+        <div
+          class={`flow-panel ${idx === 0 ? 'is-active' : ''}`}
+          id={`panel-flow-${sprint.id}`}
+          role="tabpanel"
+          aria-labelledby={`tab-flow-${sprint.id}`}
+          hidden={idx !== 0}
+        >
+          <div class="panel-grid">
+            <!-- Left Info Column -->
+            <div class="panel-info-col">
+              <div class="phase-meta-pill">
+                <span class="phase-badge">{sprint.badge}</span>
+                <span class="phase-dot" aria-hidden="true">·</span>
+                <span class="phase-time">{sprint.duration}</span>
+              </div>
+
+              <h3 class="phase-headline">{sprint.headline}</h3>
+              <p class="phase-desc">{sprint.description}</p>
+
+              <div class="deliverables-box">
+                <span class="deliverables-title">Agile Deliverables:</span>
+                <ul class="deliverables-list">
+                  {sprint.deliverables.map((item) => (
+                    <li>
+                      <span class="check-icon-wrap" aria-hidden="true">
+                        <Icon name="check" size={14} class="check-icon" />
+                      </span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div class="panel-action-row">
+                <LearnMore href="/about#how" text="Learn more about our methodology" />
+              </div>
+            </div>
+
+            <!-- Right Sprint Simulation Card -->
+            <div class="panel-visual-col">
+              <div class="sprint-card">
+                <div class="sprint-card-header">
+                  <div class="sprint-tag">
+                    <span class="sprint-pulse" aria-hidden="true"></span>
+                    <span>{sprint.state.status}</span>
+                  </div>
+                  <span class="sprint-code mono-label">PHASE {sprint.number}</span>
+                </div>
+
+                <div class="sprint-card-body">
+                  <span class="card-sprint-title">{sprint.state.sprintName}</span>
+                  <p class="card-sprint-sub">{sprint.subtitle}</p>
+
+                  <div class="sprint-metric-card">
+                    <span class="metric-number">{sprint.metric}</span>
+                    <span class="metric-desc">{sprint.metricLabel}</span>
+                  </div>
+
+                  <!-- Agile Sprint Loop Visualization -->
+                  <div class="agile-loop-diagram">
+                    <div class="loop-step">
+                      <span class="loop-dot"></span>
+                      <span class="loop-text">Plan</span>
+                    </div>
+                    <div class="loop-arrow" aria-hidden="true">&rarr;</div>
+                    <div class="loop-step is-highlight">
+                      <span class="loop-dot"></span>
+                      <span class="loop-text">Sprint</span>
+                    </div>
+                    <div class="loop-arrow" aria-hidden="true">&rarr;</div>
+                    <div class="loop-step">
+                      <span class="loop-dot"></span>
+                      <span class="loop-text">Review</span>
+                    </div>
+                    <div class="loop-arrow" aria-hidden="true">&rarr;</div>
+                    <div class="loop-step">
+                      <span class="loop-dot"></span>
+                      <span class="loop-text">Adapt</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="sprint-card-footer">
+                  <span class="footer-label">Velocity &amp; Health:</span>
+                  <span class="footer-value">{sprint.state.velocity}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .agile-flow-section {
+    padding: clamp(4rem, 8vw, 7rem) 0;
+    background-color: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .section-header {
+    max-width: 860px;
+    margin: 0 auto 3.5rem;
+    text-align: center;
+  }
+
+  .mono-label {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-brand-primary);
+    margin-bottom: 0.75rem;
+  }
+
+  .section-title {
+    font-size: clamp(2rem, 3.8vw, 2.85rem);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    color: var(--color-text-primary);
+    margin-bottom: 1rem;
+  }
+
+  .section-subline {
+    font-size: clamp(1rem, 1.35vw, 1.15rem);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  /* Step Navigation Track */
+  .flow-tabs-track {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    position: relative;
+    margin-top: 3rem;
+    padding-bottom: 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .flow-tabs-track {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+  }
+
+  .flow-tabs-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: var(--color-border);
+    border-radius: 1px;
+  }
+
+  @media (max-width: 768px) {
+    .flow-tabs-line {
+      display: none;
+    }
+  }
+
+  .flow-tabs-indicator {
+    position: absolute;
+    height: 100%;
+    width: 25%;
+    top: 0;
+    left: 0;
+    background: var(--rhsp-peg-gradient);
+    border-radius: 2px;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .flow-tab-btn {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    padding: 1.1rem 1.25rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    text-align: left;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.25s ease;
+  }
+
+  .flow-tab-btn:hover {
+    border-color: var(--color-border-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+  }
+
+  .flow-tab-btn.is-active {
+    background-color: var(--color-bg-alt);
+    border-color: var(--color-brand-primary);
+    box-shadow: 0 6px 20px rgba(238, 75, 43, 0.08);
+  }
+
+  .tab-num {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    color: var(--color-brand-primary);
+    background: rgba(238, 75, 43, 0.08);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+
+  .tab-label-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .tab-name {
+    font-size: var(--text-sm);
+    font-weight: 700;
+    color: var(--color-text-primary);
+    line-height: 1.25;
+  }
+
+  .tab-duration {
+    font-size: var(--text-xs);
+    color: var(--color-text-tertiary);
+    font-weight: 500;
+  }
+
+  /* Stage Panels */
+  .flow-stage-container {
+    max-width: 1080px;
+    margin: 2.5rem auto 0;
+    position: relative;
+    min-height: 440px;
+  }
+
+  .flow-panel {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .flow-panel.is-active {
+    display: block;
+    opacity: 1;
+    animation: fadeInPanel 0.35s ease forwards;
+  }
+
+  @keyframes fadeInPanel {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .panel-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 3rem;
+    align-items: center;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    padding: clamp(2rem, 4vw, 3.25rem);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.04);
+  }
+
+  @media (max-width: 900px) {
+    .panel-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      padding: 1.75rem;
+    }
+  }
+
+  /* Left Panel Info */
+  .phase-meta-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    padding: 0.3rem 0.85rem;
+    border-radius: 9999px;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    margin-bottom: 1.25rem;
+  }
+
+  .phase-badge {
+    color: var(--color-brand-primary);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+
+  .phase-dot {
+    color: var(--color-text-tertiary);
+  }
+
+  .phase-time {
+    color: var(--color-text-secondary);
+    font-weight: 500;
+  }
+
+  .phase-headline {
+    font-size: clamp(1.4rem, 2.2vw, 1.85rem);
+    font-weight: 800;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    color: var(--color-text-primary);
+    margin-bottom: 1rem;
+  }
+
+  .phase-desc {
+    font-size: var(--text-base);
+    color: var(--color-text-secondary);
+    line-height: 1.65;
+    margin-bottom: 1.75rem;
+  }
+
+  .deliverables-box {
+    background-color: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .deliverables-title {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.75rem;
+  }
+
+  .deliverables-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
+  .deliverables-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    font-size: var(--text-sm);
+    color: var(--color-text-primary);
+    line-height: 1.4;
+  }
+
+  .check-icon-wrap {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: rgba(30, 75, 143, 0.1);
+    color: var(--color-brand-structural);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  :global([data-theme="dark"]) .check-icon-wrap {
+    background-color: rgba(64, 134, 244, 0.2);
+    color: #60A5FA;
+  }
+
+  /* Right Visual Sprint Card */
+  .sprint-card {
+    background: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    padding: 1.75rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03);
+  }
+
+  .sprint-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .sprint-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--text-xs);
+    font-weight: 700;
+    color: var(--color-text-primary);
+  }
+
+  .sprint-pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #10B981;
+    box-shadow: 0 0 6px rgba(16, 185, 129, 0.5);
+    animation: pulseDot 2s infinite ease-in-out;
+  }
+
+  @keyframes pulseDot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.85); }
+  }
+
+  .card-sprint-title {
+    display: block;
+    font-size: var(--text-lg);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    color: var(--color-text-primary);
+    margin-bottom: 0.25rem;
+  }
+
+  .card-sprint-sub {
+    font-size: var(--text-xs);
+    color: var(--color-text-secondary);
+    margin-bottom: 1.5rem;
+  }
+
+  .sprint-metric-card {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .metric-number {
+    display: block;
+    font-size: var(--text-2xl);
+    font-weight: 800;
+    color: var(--color-brand-primary);
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-bottom: 0.35rem;
+  }
+
+  .metric-desc {
+    font-size: var(--text-xs);
+    color: var(--color-text-secondary);
+    line-height: 1.4;
+  }
+
+  /* Agile Loop Visualization */
+  .agile-loop-diagram {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .loop-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .loop-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--color-text-tertiary);
+  }
+
+  .loop-text {
+    font-size: 0.65rem;
+    font-family: var(--font-mono);
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+  }
+
+  .loop-step.is-highlight .loop-dot {
+    background-color: var(--color-brand-primary);
+    box-shadow: 0 0 6px var(--rhsp-peg-glow);
+  }
+
+  .loop-step.is-highlight .loop-text {
+    color: var(--color-brand-primary);
+    font-weight: 700;
+  }
+
+  .loop-arrow {
+    color: var(--color-text-tertiary);
+    font-size: 0.75rem;
+  }
+
+  .sprint-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--color-border);
+    font-size: var(--text-xs);
+  }
+
+  .footer-label {
+    color: var(--color-text-tertiary);
+  }
+
+  .footer-value {
+    color: var(--color-text-primary);
+    font-weight: 600;
+  }
+</style>
+
+<script>
+  function initAgileFlow() {
+    const tabs = document.querySelectorAll<HTMLButtonElement>('.flow-tab-btn');
+    const panels = document.querySelectorAll<HTMLElement>('.flow-panel');
+    const indicator = document.getElementById('flow-indicator');
+
+    if (!tabs.length || !panels.length) return;
+
+    function switchTab(index: number) {
+      tabs.forEach((tab, i) => {
+        const isActive = i === index;
+        tab.classList.toggle('is-active', isActive);
+        tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      });
+
+      panels.forEach((panel, i) => {
+        const isActive = i === index;
+        panel.classList.toggle('is-active', isActive);
+        if (isActive) {
+          panel.removeAttribute('hidden');
+        } else {
+          panel.setAttribute('hidden', '');
+        }
+      });
+
+      if (indicator) {
+        indicator.style.transform = `translateX(${index * 100}%)`;
+      }
+    }
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => switchTab(index));
+
+      // Keyboard navigation
+      tab.addEventListener('keydown', (e) => {
+        let nextIndex = index;
+        if (e.key === 'ArrowRight') {
+          nextIndex = (index + 1) % tabs.length;
+        } else if (e.key === 'ArrowLeft') {
+          nextIndex = (index - 1 + tabs.length) % tabs.length;
+        } else if (e.key === 'Home') {
+          nextIndex = 0;
+        } else if (e.key === 'End') {
+          nextIndex = tabs.length - 1;
+        } else {
+          return;
+        }
+        e.preventDefault();
+        tabs[nextIndex].focus();
+        switchTab(nextIndex);
+      });
+    });
+  }
+
+  initAgileFlow();
+  document.addEventListener('astro:after-swap', initAgileFlow);
+</script>

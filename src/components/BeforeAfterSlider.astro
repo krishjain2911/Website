@@ -1,0 +1,956 @@
+---
+// BeforeAfterSlider.astro: The Shift (Before / After Comparison Slider)
+// Native accessible input[type=range], morphing cube handle, coded HTML/CSS UI mockups
+import { siteConfig } from '../config/site';
+import MediaAsset from './MediaAsset.astro';
+import Icon from './Icon.astro';
+
+interface Props {
+  initialTab?: 'clm' | 'dms' | 'whatsapp';
+  hideTabs?: boolean;
+}
+
+const { initialTab = 'clm', hideTabs = false } = Astro.props;
+const { beforeAfter } = siteConfig;
+---
+
+<section id="shift" class="shift-section" aria-labelledby="shift-heading">
+  <div class="container">
+    <!-- Header -->
+    <div class="shift-header">
+      <span class="mono-label">{beforeAfter.eyebrow}</span>
+      <h2 id="shift-heading" class="shift-title">
+        {beforeAfter.headline}
+      </h2>
+      <p class="shift-subline">
+        {beforeAfter.subline}
+      </p>
+
+      {!hideTabs && (
+        <!-- Tab Selectors -->
+        <div class="shift-tabs-bar" role="tablist" aria-label="Before and after transformation domains">
+          {beforeAfter.tabs.map((tab) => (
+            <button
+              type="button"
+              role="tab"
+              class={`shift-tab-btn ${tab.id === initialTab ? 'is-active' : ''}`}
+              id={`tab-btn-${tab.id}`}
+              data-tab-target={tab.id}
+              aria-selected={tab.id === initialTab ? 'true' : 'false'}
+              aria-controls={`panel-${tab.id}`}
+            >
+              <span class="tab-label">{tab.label}</span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+
+    <!-- Tab Panels Container -->
+    <div class="shift-panels-wrap">
+      {beforeAfter.tabs.map((tab) => (
+        <div
+          class={`shift-tab-panel ${tab.id === initialTab ? 'is-active' : ''}`}
+          id={`panel-${tab.id}`}
+          role="tabpanel"
+          aria-labelledby={`tab-btn-${tab.id}`}
+        >
+          <!-- Tagline -->
+          <div class="panel-meta-bar">
+            <span class="panel-product-tag mono-label">{tab.productName}</span>
+            <p class="panel-tagline">{tab.tagline}</p>
+          </div>
+
+          <!-- Interactive Comparison Slider Stage -->
+          <div class="comparison-stage-wrap" data-comparison-stage={tab.id}>
+            <div class="comparison-stage">
+              <!-- LAYER 1: BEFORE (Photo of manual reality: paper, email, spreadsheet) -->
+              <div class="comparison-layer layer-before" aria-hidden="true">
+                <div class="manual-reality-frame">
+                  <MediaAsset
+                    assetKey={tab.beforeImageKey}
+                    alt={`Manual before reality for ${tab.label}`}
+                    aspectRatio="16/9"
+                  />
+                  <!-- Small White Pill: Before -->
+                  <div class="shift-indicator-pill before-pill">
+                    <span>Before</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- LAYER 2: AFTER (Clean coded HTML/CSS UI mockup built in design tokens) -->
+              <div class="comparison-layer layer-after" id={`after-layer-${tab.id}`}>
+                <!-- Small White Pill: After -->
+                <div class="shift-indicator-pill after-pill">
+                  <span>After</span>
+                </div>
+
+                <div class="coded-mockup-frame">
+                  <!-- Mockup Window Header -->
+                  <div class="mockup-header-bar">
+                    <div class="mockup-window-dots" aria-hidden="true">
+                      <span class="dot dot-red"></span>
+                      <span class="dot dot-yellow"></span>
+                      <span class="dot dot-green"></span>
+                    </div>
+                    <div class="mockup-window-title">
+                      {tab.id === 'clm' && 'RHSP Contract Studio · v2.4'}
+                      {tab.id === 'dms' && 'RHSP Enterprise Vault · v3.1'}
+                      {tab.id === 'whatsapp' && 'RHSP Conversational Gateway · v1.8'}
+                    </div>
+                    <div class="mockup-status-badge">
+                      <span class="pulse-dot"></span>
+                      <span>ACTIVE PIPELINE</span>
+                    </div>
+                  </div>
+
+                  <!-- Mockup Body Content per Domain -->
+                  <div class="mockup-body">
+                    {tab.id === 'clm' && (
+                      <div class="clm-mockup">
+                        <div class="clm-top-track">
+                          <div class="clm-track-step is-complete">
+                            <span class="step-num">01</span>
+                            <span>Drafting</span>
+                          </div>
+                          <div class="track-divider"></div>
+                          <div class="clm-track-step is-current">
+                            <span class="step-num">02</span>
+                            <span>Legal Review</span>
+                          </div>
+                          <div class="track-divider"></div>
+                          <div class="clm-track-step">
+                            <span class="step-num">03</span>
+                            <span>Finance Sign-off</span>
+                          </div>
+                          <div class="track-divider"></div>
+                          <div class="clm-track-step">
+                            <span class="step-num">04</span>
+                            <span>Digital Signature</span>
+                          </div>
+                        </div>
+
+                        <div class="clm-doc-viewer">
+                          <div class="doc-meta-row">
+                            <span class="doc-code">MSA-2026-ENTERPRISE-SERVICE.pdf</span>
+                            <span class="badge-approved">✓ Clause 4.2 Approved</span>
+                          </div>
+                          <div class="doc-clauses">
+                            <div class="clause-box">
+                              <span class="clause-title">Section 4.2 · Standard Liability & Egress SLA</span>
+                              <p class="clause-text">Provider guarantees private cloud tenant data isolation with 100% on-premises custody.</p>
+                            </div>
+                            <div class="clause-box is-highlight">
+                              <span class="clause-title">Section 5.1 · Auto-Renewal & Audit Period</span>
+                              <p class="clause-text">Automated milestone alert triggered 60 days prior to contract cycle review.</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {tab.id === 'dms' && (
+                      <div class="dms-mockup">
+                        <div class="dms-search-bar">
+                          <Icon name="database" size={16} />
+                          <span class="dms-search-placeholder">Semantic search across 14,200 archived documents & OCR tags...</span>
+                          <span class="dms-filter-chip">Private VPC Vault</span>
+                        </div>
+
+                        <div class="dms-table">
+                          <div class="dms-table-head mono-label">
+                            <span>Document Name</span>
+                            <span>Taxonomy Tag</span>
+                            <span>Access Role</span>
+                            <span>Integrity Status</span>
+                          </div>
+                          <div class="dms-table-row">
+                            <span class="dms-fname"><Icon name="file-text" size={14} /> Q3-Financial-Audit-Summary.pdf</span>
+                            <span class="dms-tag">Statutory Audit</span>
+                            <span class="dms-role">Finance Directors</span>
+                            <span class="dms-status is-verified">✓ Verified OCR</span>
+                          </div>
+                          <div class="dms-table-row">
+                            <span class="dms-fname"><Icon name="file-text" size={14} /> Vendor-Master-Ledger-2026.xlsx</span>
+                            <span class="dms-tag">Procurement</span>
+                            <span class="dms-role">Ops Heads</span>
+                            <span class="dms-status is-verified">✓ Encrypted</span>
+                          </div>
+                          <div class="dms-table-row">
+                            <span class="dms-fname"><Icon name="file-text" size={14} /> Board-Resolution-Minutes.pdf</span>
+                            <span class="dms-tag">Governance</span>
+                            <span class="dms-role">Secretariat</span>
+                            <span class="dms-status is-verified">✓ Air-Gapped</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {tab.id === 'whatsapp' && (
+                      <div class="whatsapp-mockup">
+                        <div class="chat-viewport">
+                          <div class="chat-bubble bubble-incoming">
+                            <div class="bubble-header mono-label">RHSP ENTERPRISE NOTIFIER · 10:14 AM</div>
+                            <p class="bubble-text">Hello, your Q3 Vendor Renewal is pending sign-off. Please review the attached summary statement below.</p>
+                            <div class="chat-attachment-card">
+                              <Icon name="file-text" size={16} />
+                              <div class="attach-meta">
+                                <span class="attach-title">Renewal-Statement-RHSP-9821.pdf</span>
+                                <span class="attach-size">142 KB · Verified Doc</span>
+                              </div>
+                            </div>
+                            <div class="bubble-actions">
+                              <span class="bubble-btn">View Statement</span>
+                              <span class="bubble-btn is-primary">1-Click Approve</span>
+                            </div>
+                          </div>
+
+                          <div class="chat-bubble bubble-outgoing">
+                            <p class="bubble-text">✓ Approved via Enterprise Multi-Factor Token.</p>
+                            <span class="bubble-time mono-label">10:15 AM · Delivered</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <!-- Mockup Representative Disclaimer Tag -->
+                  <div class="mockup-representative-tag">
+                    <span class="mono-label">{beforeAfter.disclaimer}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- SLIDER DIVIDER LINE & DRAGGABLE CUBE HANDLE -->
+              <div class="comparison-divider" id={`divider-${tab.id}`}>
+                <div class="divider-line"></div>
+                <div class="cube-slider-handle" aria-hidden="true">
+                  <div class="cube-handle-shape">
+                    <!-- Little balanced cube glyph in handle -->
+                    <svg viewBox="0 0 24 24" class="handle-cube-svg" fill="none">
+                      <polygon points="12,3 21,8 12,13 3,8" fill="#FFBD3A" stroke="#FFAA38" stroke-width="1" />
+                      <polygon points="3,8 12,13 12,21 3,16" fill="#E83D1B" stroke="#C72C0B" stroke-width="1" />
+                      <polygon points="12,13 21,8 21,16 12,21" fill="#FF7F1F" stroke="#E04618" stroke-width="1" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <!-- NATIVE ACCESSIBLE RANGE INPUT (Overlaid with 0 opacity for keyboard/touch accessibility) -->
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value="50"
+                class="comparison-range-input"
+                id={`range-${tab.id}`}
+                aria-label={`Comparison slider for ${tab.label}`}
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="50"
+                aria-valuetext="50% before, 50% after"
+              />
+            </div>
+          </div>
+
+          <!-- Bottom Stat Chips Under Comparison -->
+          <div class="shift-stats-grid">
+            {tab.stats.map((stat) => (
+              <div class="stat-chip-card">
+                <span class="stat-chip-label mono-label">{stat.label}</span>
+                <div class="stat-values-row">
+                  <span class="stat-val-before">{stat.before}</span>
+                  <span class="stat-arrow" aria-hidden="true">→</span>
+                  <span class="stat-val-after">{stat.after}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .shift-section {
+    padding: var(--space-14) 0 var(--space-16);
+    background-color: var(--color-bg);
+    overflow: hidden;
+  }
+
+  .shift-header {
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto var(--space-8);
+  }
+
+  .shift-title {
+    font-size: var(--fs-h2);
+    letter-spacing: -0.03em;
+    color: var(--color-text-primary);
+    margin: var(--space-3) 0 var(--space-3);
+  }
+
+  .shift-subline {
+    font-size: var(--fs-body-lg);
+    color: var(--color-text-secondary);
+    line-height: 1.55;
+    margin-bottom: var(--space-8);
+  }
+
+  /* Tabs Bar */
+  .shift-tabs-bar {
+    display: inline-flex;
+    padding: 0.35rem;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    gap: 0.5rem;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .shift-tab-btn {
+    padding: 0.65rem 1.5rem;
+    border-radius: var(--radius-pill);
+    border: none;
+    background: transparent;
+    color: var(--color-text-secondary);
+    font-size: var(--fs-body);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.25s ease, color 0.25s ease;
+    white-space: nowrap;
+  }
+
+  .shift-tab-btn:hover {
+    color: var(--color-text-primary);
+  }
+
+  .shift-tab-btn.is-active {
+    background-color: var(--color-btn-primary-bg); /* Black */
+    color: var(--color-btn-primary-text); /* White */
+  }
+
+  /* Panels */
+  .shift-tab-panel {
+    display: none;
+  }
+
+  .shift-tab-panel.is-active {
+    display: block;
+    animation: fadeIn 0.35s ease forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .panel-meta-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+  }
+
+  .panel-product-tag {
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-secondary);
+  }
+
+  .panel-tagline {
+    font-size: var(--fs-body);
+    color: var(--color-text-secondary);
+    font-weight: 400;
+  }
+
+  /* Comparison Stage */
+  .comparison-stage-wrap {
+    width: 100%;
+    margin-bottom: var(--space-6);
+  }
+
+  .comparison-stage {
+    position: relative;
+    width: 100%;
+    height: 480px;
+    border-radius: var(--radius-card); /* 32px */
+    overflow: hidden;
+    background-color: var(--color-surface);
+    user-select: none;
+  }
+
+  @media (min-width: 960px) {
+    .comparison-stage {
+      height: 540px;
+    }
+  }
+
+  .comparison-layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Layer 1: Before */
+  .layer-before {
+    z-index: 1;
+    background-color: #121A24;
+  }
+
+  .manual-reality-frame {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Small White Pills Inside Frame */
+  .shift-indicator-pill {
+    position: absolute;
+    top: 1.25rem;
+    z-index: 5;
+    padding: 0.4rem 1rem;
+    border-radius: var(--radius-pill);
+    background-color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+    color: #141413;
+    font-family: var(--font-sans);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    pointer-events: none;
+  }
+
+  .before-pill {
+    left: 1.25rem;
+  }
+
+  .after-pill {
+    right: 1.25rem;
+  }
+
+  /* Layer 2: After */
+  .layer-after {
+    z-index: 2;
+    clip-path: inset(0 0 0 50%);
+    background-color: var(--color-bg);
+  }
+
+  /* Coded Mockup Frame */
+  .coded-mockup-frame {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-surface);
+    position: relative;
+  }
+
+  .mockup-header-bar {
+    height: 48px;
+    background-color: var(--color-surface-alt);
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--space-4);
+  }
+
+  .mockup-window-dots {
+    display: flex;
+    gap: 6px;
+  }
+
+  .dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+  }
+  .dot-red { background-color: #EF4444; }
+  .dot-yellow { background-color: #F59E0B; }
+  .dot-green { background-color: #10B981; }
+
+  .mockup-window-title {
+    font-size: var(--fs-sm);
+    color: var(--color-text-secondary);
+    font-weight: 500;
+  }
+
+  .mockup-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: #10B981;
+    font-weight: 700;
+  }
+
+  .pulse-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: var(--radius-circle);
+    background-color: #10B981;
+    box-shadow: 0 0 8px #10B981;
+  }
+
+  .mockup-body {
+    flex: 1;
+    padding: var(--space-5);
+    overflow: hidden;
+  }
+
+  /* CLM Mockup Styles */
+  .clm-top-track {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-4);
+    overflow-x: auto;
+  }
+
+  .clm-track-step {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+  }
+
+  .clm-track-step.is-complete { color: #10B981; }
+  .clm-track-step.is-current { color: var(--rhsp-navy); font-weight: 700; }
+
+  .step-num {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    padding: 0.15rem 0.35rem;
+    border-radius: 3px;
+    background-color: var(--color-border);
+  }
+
+  .track-divider {
+    width: 20px;
+    height: 1px;
+    background-color: var(--color-border);
+  }
+
+  .clm-doc-viewer {
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: var(--space-4);
+  }
+
+  .doc-meta-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+  }
+
+  .doc-code { color: var(--color-text-secondary); }
+  .badge-approved { color: #10B981; font-weight: 700; }
+
+  .doc-clauses {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .clause-box {
+    padding: var(--space-3);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-surface);
+  }
+
+  .clause-box.is-highlight {
+    border-color: var(--rhsp-orange);
+    background: rgba(247, 148, 29, 0.05);
+  }
+
+  .clause-title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    display: block;
+    margin-bottom: 0.2rem;
+  }
+
+  .clause-text {
+    font-size: 0.82rem;
+    color: var(--color-text-secondary);
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  /* DMS Mockup Styles */
+  .dms-search-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: 0.65rem var(--space-4);
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-4);
+  }
+
+  .dms-search-placeholder {
+    font-size: 0.82rem;
+    color: var(--color-text-muted);
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .dms-filter-chip {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    background-color: var(--rhsp-navy);
+    color: #FFFFFF;
+    white-space: nowrap;
+  }
+
+  .dms-table {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg);
+  }
+
+  .dms-table-head {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    padding: 0.6rem var(--space-3);
+    font-size: 0.68rem;
+    color: var(--color-text-muted);
+    border-bottom: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+  }
+
+  .dms-table-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    padding: 0.7rem var(--space-3);
+    font-size: 0.8rem;
+    align-items: center;
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .dms-fname {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+
+  .dms-tag, .dms-role { color: var(--color-text-secondary); font-size: 0.78rem; }
+  .dms-status.is-verified { color: #10B981; font-family: var(--font-mono); font-size: 0.72rem; }
+
+  /* WhatsApp Mockup Styles */
+  .chat-viewport {
+    max-width: 440px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+  }
+
+  .chat-bubble {
+    padding: var(--space-3);
+    border-radius: var(--radius-card);
+    font-size: 0.85rem;
+    line-height: 1.45;
+  }
+
+  .bubble-incoming {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-bottom-left-radius: 4px;
+  }
+
+  .bubble-outgoing {
+    background-color: var(--rhsp-navy);
+    color: #FFFFFF;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+  }
+
+  .bubble-header { font-size: 0.62rem; color: var(--color-text-accent); margin-bottom: 0.3rem; }
+  .bubble-text { margin: 0 0 0.4rem; }
+
+  .chat-attachment-card {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem;
+    border-radius: 6px;
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border-subtle);
+    margin-bottom: 0.5rem;
+  }
+
+  .attach-title { font-size: 0.75rem; font-weight: 600; display: block; }
+  .attach-size { font-size: 0.65rem; color: var(--color-text-muted); font-family: var(--font-mono); }
+
+  .bubble-actions { display: flex; gap: 0.4rem; }
+
+  .bubble-btn {
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+    color: var(--color-text-primary);
+  }
+
+  .bubble-btn.is-primary {
+    background-color: #10B981;
+    color: #FFFFFF;
+    border-color: #10B981;
+  }
+
+  .mockup-representative-tag {
+    position: absolute;
+    bottom: 8px;
+    right: 12px;
+    opacity: 0.6;
+    font-size: 0.65rem;
+    pointer-events: none;
+  }
+
+  /* Divider & Handle */
+  .comparison-divider {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    transform: translateX(-50%);
+    z-index: 10;
+    pointer-events: none;
+    transition: left 0.05s ease;
+  }
+
+  .divider-line {
+    width: 2px;
+    height: 100%;
+    background-color: #FFFFFF;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .cube-slider-handle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%; /* White circle handle */
+    background-color: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    transition: transform 0.2s var(--ease-out-expo), box-shadow 0.2s ease;
+  }
+
+  .comparison-stage:active .cube-slider-handle {
+    cursor: grabbing;
+    transform: translate(-50%, -50%) scale(1.08);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  }
+
+  .handle-cube-svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Accessible Range Input layered invisibly over stage */
+  .comparison-range-input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: grab;
+    z-index: 20;
+    -webkit-appearance: none;
+  }
+
+  .comparison-range-input:active {
+    cursor: grabbing;
+  }
+
+  /* Stat Chips Underneath */
+  .shift-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: var(--space-4);
+  }
+
+  @media (min-width: 640px) {
+    .shift-stats-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .stat-chip-card {
+    padding: var(--space-4);
+    border-radius: var(--radius-card);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .stat-chip-label {
+    font-size: 0.68rem;
+    color: var(--color-text-secondary);
+  }
+
+  .stat-values-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+  }
+
+  .stat-val-before {
+    color: var(--color-text-secondary);
+    text-decoration: line-through;
+  }
+
+  .stat-arrow {
+    color: var(--rhsp-orange);
+    font-size: 1.1rem;
+  }
+
+  .stat-val-after {
+    color: var(--color-text-primary);
+  }
+</style>
+
+<script>
+  function setupComparisonSliders() {
+    // 1. Tab Switching
+    const tabButtons = document.querySelectorAll<HTMLButtonElement>('.shift-tab-btn');
+    const tabPanels = document.querySelectorAll<HTMLElement>('.shift-tab-panel');
+
+    tabButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.getAttribute('data-tab-target');
+        if (!targetId) return;
+
+        tabButtons.forEach((b) => {
+          const isActive = b === btn;
+          b.classList.toggle('is-active', isActive);
+          b.setAttribute('aria-selected', String(isActive));
+        });
+
+        tabPanels.forEach((panel) => {
+          const isTarget = panel.id === `panel-${targetId}`;
+          panel.classList.toggle('is-active', isTarget);
+        });
+      });
+    });
+
+    // 2. Comparison Slider Drag & Nudge
+    const stages = document.querySelectorAll<HTMLElement>('[data-comparison-stage]');
+
+    stages.forEach((stage) => {
+      const stageId = stage.getAttribute('data-comparison-stage');
+      const range = stage.querySelector<HTMLInputElement>(`#range-${stageId}`);
+      const afterLayer = stage.querySelector<HTMLElement>(`#after-layer-${stageId}`);
+      const divider = stage.querySelector<HTMLElement>(`#divider-${stageId}`);
+
+      if (!range || !afterLayer || !divider) return;
+
+      function updateSlider(val: number) {
+        // value is 0 (all before) to 100 (all after)
+        // afterLayer clip-path: inset(0 0 0 X%)
+        afterLayer.style.clipPath = `inset(0 0 0 ${val}%)`;
+        divider.style.left = `${val}%`;
+        range.setAttribute('aria-valuenow', String(val));
+        range.setAttribute('aria-valuetext', `${100 - val}% before, ${val}% after`);
+      }
+
+      range.addEventListener('input', () => {
+        updateSlider(Number(range.value));
+      });
+
+      // Interactive Nudge Hint on First Intersection (skip with reduced motion)
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let nudged = false;
+
+      if (!prefersReducedMotion) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting && !nudged) {
+              nudged = true;
+              observer.disconnect();
+
+              // Gentle nudge: 50 -> 35 -> 50
+              let start: number | null = null;
+              function nudgeAnim(timestamp: number) {
+                if (!start) start = timestamp;
+                const progress = (timestamp - start) / 1200; // 1.2s duration
+                if (progress < 1) {
+                  // Sinusoidal nudge
+                  const offset = Math.sin(progress * Math.PI) * 15;
+                  const currentVal = 50 - offset;
+                  range.value = String(currentVal);
+                  updateSlider(currentVal);
+                  requestAnimationFrame(nudgeAnim);
+                } else {
+                  range.value = '50';
+                  updateSlider(50);
+                }
+              }
+              setTimeout(() => {
+                requestAnimationFrame(nudgeAnim);
+              }, 400);
+            }
+          });
+        }, { threshold: 0.35 });
+
+        observer.observe(stage);
+      }
+    });
+  }
+
+  setupComparisonSliders();
+  document.addEventListener('astro:after-swap', setupComparisonSliders);
+</script>

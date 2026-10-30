@@ -1,0 +1,159 @@
+---
+import '../styles/global.css';
+import { siteConfig } from '../config/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+}
+
+const {
+  title = `${siteConfig.name} - ${siteConfig.tagline}`,
+  description = siteConfig.description,
+  ogImage = '/og-image.png'
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, siteConfig.url).toString();
+const ogImageURL = new URL(ogImage, siteConfig.url).toString();
+
+const orgSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": siteConfig.name,
+  "legalName": siteConfig.legalName,
+  "url": siteConfig.url,
+  "logo": `${siteConfig.url}/brand/rhsp-logo.png`,
+  "description": siteConfig.description,
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "ThePlayce, 17th Floor, Marathon Millennium, Lal Bahadur Shastri Marg, beside Nirmal Lifestyle Road, Moti Nagar, Mulund Colony, Mulund West",
+    "addressLocality": "Mumbai",
+    "addressRegion": "Maharashtra",
+    "postalCode": "400080",
+    "addressCountry": "IN"
+  },
+  "hasMap": siteConfig.contact.mapUrl,
+  "founders": siteConfig.team.members.map(m => ({
+    "@type": "Person",
+    "name": m.name,
+    "jobTitle": m.role,
+    "sameAs": m.linkedin
+  })),
+  "sameAs": [
+    siteConfig.socials.linkedin,
+    siteConfig.socials.twitter,
+    siteConfig.socials.youtube
+  ]
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" href="/brand/rhsp-logo.png" />
+    <link rel="apple-touch-icon" href="/brand/rhsp-logo.png" />
+
+    <!-- Preload critical variable display font for instant FCP/LCP -->
+    <link
+      rel="preload"
+      href="/fonts/figtree-latin-var.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <!-- Theme Inline Script (Strict Zero Flash of Wrong Theme) -->
+    <script is:inline>
+      (function() {
+        try {
+          const stored = localStorage.getItem('rhsp-theme');
+          if (stored) {
+            document.documentElement.setAttribute('data-theme', stored);
+          } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+          } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+          }
+        } catch (e) {}
+      })();
+    </script>
+
+    <!-- Open Graph / Social Meta -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageURL} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content={siteConfig.legalName} />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@RoundHoleSqrPeg" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageURL} />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json" set:html={JSON.stringify(orgSchema)} />
+  </head>
+  <body>
+    <!-- Accessibility Skip Link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <slot />
+
+    <!-- Global Scroll Reveal & Arc Observer -->
+    <script>
+      function setupScrollObserver() {
+        const revealElements = document.querySelectorAll('.reveal-on-scroll:not(.is-revealed)');
+        const arcElements = document.querySelectorAll('.curved-arc-path:not(.is-drawn)');
+
+        if (revealElements.length) {
+          const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-revealed');
+                observer.unobserve(entry.target);
+              }
+            });
+          }, {
+            threshold: 0.12,
+            rootMargin: '0px 0px -40px 0px'
+          });
+
+          revealElements.forEach(el => observer.observe(el));
+        }
+
+        if (arcElements.length) {
+          const arcObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-drawn');
+                arcObserver.unobserve(entry.target);
+              }
+            });
+          }, {
+            threshold: 0.05,
+            rootMargin: '0px 0px -20px 0px'
+          });
+
+          arcElements.forEach(el => arcObserver.observe(el));
+        }
+      }
+
+      setupScrollObserver();
+      document.addEventListener('astro:after-swap', setupScrollObserver);
+    </script>
+  </body>
+</html>

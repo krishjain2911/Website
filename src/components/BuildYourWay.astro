@@ -1,0 +1,450 @@
+---
+import { siteConfig } from '../config/site';
+import Icon from './Icon.astro';
+
+const { buildYourWay } = siteConfig;
+---
+
+<section id="stack" class="build-your-way-section" aria-labelledby="stack-heading">
+  <div class="container">
+    <!-- Split Card Container -->
+    <div class="stack-split-card card-mastercard reveal-on-scroll">
+      <!-- Left Column: Strategy, Title & Pill Toggle -->
+      <div class="stack-info-col">
+        <span class="eyebrow">BUILD YOUR WAY</span>
+        <h2 id="stack-heading" class="stack-title">
+          Same problem. The right stack.
+        </h2>
+        <p class="stack-desc">
+          We don't force OutSystems when you need custom high-code freedom, and we don't build from scratch when low-code delivers in weeks.
+        </p>
+
+        <!-- Pill Toggle: OutSystems | MERN -->
+        <div class="stack-pill-switcher" role="radiogroup" aria-label="Select stack perspective">
+          <button
+            type="button"
+            role="radio"
+            class="stack-pill-btn is-active"
+            id="toggle-outsystems"
+            aria-checked="true"
+            data-stack="outsystems"
+          >
+            OutSystems
+          </button>
+          <button
+            type="button"
+            role="radio"
+            class="stack-pill-btn"
+            id="toggle-mern"
+            aria-checked="false"
+            data-stack="mern"
+          >
+            MERN
+          </button>
+        </div>
+
+        <div class="stack-details-wrapper">
+          <!-- OutSystems Details -->
+          <div class="stack-detail is-active" id="detail-outsystems">
+            <span class="detail-label">OutSystems (Low-Code Speed)</span>
+            <ul class="detail-bullets">
+              <li>Visual modeling for accelerated delivery cycles</li>
+              <li>Standardized governance across enterprise environments</li>
+              <li>Enterprise solutions tailored per budget and requirements</li>
+            </ul>
+          </div>
+
+          <!-- MERN Details -->
+          <div class="stack-detail" id="detail-mern" hidden>
+            <span class="detail-label">MERN (High-Code Freedom)</span>
+            <ul class="detail-bullets">
+              <li>Full control over application architecture and codebase</li>
+              <li>Deployment on your private enterprise infrastructure</li>
+              <li>Full-stack engineering tailored to operational needs</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Interactive Animated Stage inside Light Grey Frame -->
+      <div class="stack-stage-col">
+        <div class="stack-stage-frame">
+          <!-- Panel 1: OutSystems Visual Logic Blocks -->
+          <div class="stack-panel is-active" id="panel-outsystems" role="region" aria-label="OutSystems Visual Logic Engine">
+            <div class="visual-blocks-board">
+              <div class="logic-block block-trigger">
+                <div class="block-header">
+                  <Icon name="zap" size={14} />
+                  <span class="block-eyebrow">EVENT TRIGGER</span>
+                </div>
+                <span class="block-name">Contract Review Submitted</span>
+              </div>
+
+              <!-- Connector SVG -->
+              <svg class="connector-svg" viewBox="0 0 60 20" fill="none" aria-hidden="true">
+                <path d="M0,10 L50,10 M42,4 L50,10 L42,16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              </svg>
+
+              <div class="logic-block block-logic">
+                <div class="block-header">
+                  <Icon name="sliders" size={14} />
+                  <span class="block-eyebrow">VALIDATION RULE</span>
+                </div>
+                <span class="block-name">Threshold Check &amp; Role Verification</span>
+              </div>
+
+              <!-- Connector SVG -->
+              <svg class="connector-svg" viewBox="0 0 60 20" fill="none" aria-hidden="true">
+                <path d="M0,10 L50,10 M42,4 L50,10 L42,16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              </svg>
+
+              <div class="logic-block block-action">
+                <div class="block-header">
+                  <Icon name="check" size={14} />
+                  <span class="block-eyebrow">AUTOMATION</span>
+                </div>
+                <span class="block-name">Dispatch Multi-Party Sign-off</span>
+              </div>
+            </div>
+
+            <div class="stage-footer-chips">
+              <span class="chip-item">Low-Code Speed</span>
+              <span class="chip-item">Enterprise Scale</span>
+              <span class="chip-item">Visual Logic</span>
+            </div>
+          </div>
+
+          <!-- Panel 2: MERN Code Snippet -->
+          <div class="stack-panel" id="panel-mern" role="region" aria-label="MERN Full-Stack Engineering" hidden>
+            <div class="code-terminal-box">
+              <div class="terminal-bar">
+                <div class="terminal-dots" aria-hidden="true">
+                  <span></span><span></span><span></span>
+                </div>
+                <span class="terminal-title">src/api/adapter.ts</span>
+              </div>
+              <pre class="terminal-code"><code><span class="token-kw">import</span> &#123; Router &#125; <span class="token-kw">from</span> <span class="token-str">'express'</span>;
+<span class="token-kw">import</span> &#123; DataAdapter &#125; <span class="token-kw">from</span> <span class="token-str">'../core/adapter'</span>;
+
+<span class="token-kw">const</span> router = <span class="token-fn">Router</span>();
+
+router.<span class="token-fn">post</span>(<span class="token-str">'/process'</span>, <span class="token-kw">async</span> (req, res) =&gt; &#123;
+  <span class="token-kw">const</span> &#123; payload &#125; = req.body;
+  <span class="token-kw">const</span> result = <span class="token-kw">await</span> DataAdapter.<span class="token-fn">execute</span>(payload);
+  res.<span class="token-fn">json</span>(&#123; status: <span class="token-str">'success'</span>, data: result &#125;);
+&#125;);</code></pre>
+            </div>
+
+            <div class="stage-footer-chips">
+              <span class="chip-item">High-Code Freedom</span>
+              <span class="chip-item">Custom IP</span>
+              <span class="chip-item">Open Standards</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .build-your-way-section {
+    background-color: var(--color-bg);
+  }
+
+  .stack-split-card {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    align-items: center;
+    background-color: var(--color-surface);
+    border-radius: var(--radius-card);
+    padding: 3rem 2.5rem;
+    box-shadow: var(--shadow-subtle);
+    border: 1px solid var(--color-border);
+  }
+
+  @media (min-width: 960px) {
+    .stack-split-card {
+      grid-template-columns: 1.05fr 1.15fr;
+      gap: 4rem;
+      padding: 4rem 3.5rem;
+    }
+  }
+
+  .stack-info-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .stack-title {
+    font-size: var(--fs-h2);
+    font-weight: 500;
+    margin-bottom: 1rem;
+    line-height: 1.18;
+  }
+
+  .stack-desc {
+    font-size: var(--fs-body);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+
+  /* Pill Switcher */
+  .stack-pill-switcher {
+    display: inline-flex;
+    padding: 0.35rem;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-surface-alt);
+    border: 1px solid var(--color-border);
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .stack-pill-btn {
+    padding: 0.65rem 1.65rem;
+    border-radius: var(--radius-pill);
+    border: none;
+    background: transparent;
+    font-family: var(--font-sans);
+    font-size: var(--fs-body);
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  .stack-pill-btn:hover {
+    color: var(--color-text-primary);
+  }
+
+  .stack-pill-btn.is-active {
+    background-color: var(--color-btn-primary-bg);
+    color: var(--color-btn-primary-text);
+  }
+
+  .stack-details-wrapper {
+    width: 100%;
+  }
+
+  .stack-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .stack-detail[hidden] {
+    display: none;
+  }
+
+  .detail-label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+
+  .detail-bullets {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .detail-bullets li {
+    position: relative;
+    padding-left: 1.25rem;
+    font-size: var(--fs-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+  }
+
+  .detail-bullets li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--rhsp-peg-start);
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+
+  /* Right Stage Frame */
+  .stack-stage-col {
+    width: 100%;
+  }
+
+  .stack-stage-frame {
+    background-color: var(--color-surface-alt);
+    border-radius: var(--radius-card);
+    padding: 2.5rem;
+    min-height: 380px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: 1px solid var(--color-border-subtle);
+  }
+
+  @media (max-width: 640px) {
+    .stack-stage-frame {
+      padding: 1.5rem;
+      min-height: auto;
+    }
+  }
+
+  .stack-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .stack-panel[hidden] {
+    display: none;
+  }
+
+  /* OutSystems Visual Blocks */
+  .visual-blocks-board {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    align-items: center;
+  }
+
+  .logic-block {
+    width: 100%;
+    max-width: 360px;
+    padding: 1rem 1.25rem;
+    border-radius: 16px;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-subtle);
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .block-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--rhsp-navy);
+  }
+
+  .block-eyebrow {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+
+  .block-name {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+  }
+
+  .connector-svg {
+    width: 24px;
+    height: 16px;
+    color: var(--color-border);
+    transform: rotate(90deg);
+  }
+
+  /* MERN Code Terminal */
+  .code-terminal-box {
+    background-color: #141413;
+    border-radius: 16px;
+    overflow: hidden;
+    color: #F8FAFC;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+  }
+
+  .terminal-bar {
+    height: 36px;
+    background-color: #1F1F1E;
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    gap: 0.75rem;
+  }
+
+  .terminal-dots {
+    display: flex;
+    gap: 5px;
+  }
+
+  .terminal-dots span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #3F3F3E;
+  }
+
+  .terminal-title {
+    font-family: monospace;
+    font-size: 0.72rem;
+    color: #8E8E8A;
+  }
+
+  .terminal-code {
+    padding: 1.25rem;
+    margin: 0;
+    font-family: monospace;
+    font-size: 0.85rem;
+    line-height: 1.55;
+    overflow-x: auto;
+  }
+
+  .token-kw { color: #EE4B2B; }
+  .token-fn { color: #60A5FA; }
+  .token-str { color: #34D399; }
+
+  .stage-footer-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+  }
+</style>
+
+<script>
+  function setupBuildYourWay() {
+    const btnOutsystems = document.getElementById('toggle-outsystems');
+    const btnMern = document.getElementById('toggle-mern');
+    const panelOutsystems = document.getElementById('panel-outsystems');
+    const panelMern = document.getElementById('panel-mern');
+    const detailOutsystems = document.getElementById('detail-outsystems');
+    const detailMern = document.getElementById('detail-mern');
+
+    if (!btnOutsystems || !btnMern) return;
+
+    function selectStack(stack: 'outsystems' | 'mern') {
+      if (stack === 'outsystems') {
+        btnOutsystems?.classList.add('is-active');
+        btnOutsystems?.setAttribute('aria-checked', 'true');
+        btnMern?.classList.remove('is-active');
+        btnMern?.setAttribute('aria-checked', 'false');
+
+        panelOutsystems?.removeAttribute('hidden');
+        panelMern?.setAttribute('hidden', '');
+        detailOutsystems?.removeAttribute('hidden');
+        detailMern?.setAttribute('hidden', '');
+      } else {
+        btnMern?.classList.add('is-active');
+        btnMern?.setAttribute('aria-checked', 'true');
+        btnOutsystems?.classList.remove('is-active');
+        btnOutsystems?.setAttribute('aria-checked', 'false');
+
+        panelMern?.removeAttribute('hidden');
+        panelOutsystems?.setAttribute('hidden', '');
+        detailMern?.removeAttribute('hidden');
+        detailOutsystems?.setAttribute('hidden', '');
+      }
+    }
+
+    btnOutsystems.addEventListener('click', () => selectStack('outsystems'));
+    btnMern.addEventListener('click', () => selectStack('mern'));
+  }
+
+  setupBuildYourWay();
+  document.addEventListener('astro:after-swap', setupBuildYourWay);
+</script>

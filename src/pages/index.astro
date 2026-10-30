@@ -1,0 +1,48 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import Hero from '../components/Hero.astro';
+import PegCube from '../components/PegCube.astro';
+import SolutionsGrid from '../components/SolutionsGrid.astro';
+import AgileApproachFlow from '../components/AgileApproachFlow.astro';
+import WhoWeAre from '../components/WhoWeAre.astro';
+import BuildYourWay from '../components/BuildYourWay.astro';
+import FeaturedCarousel from '../components/FeaturedCarousel.astro';
+import ContactSection from '../components/ContactSection.astro';
+---
+
+<BaseLayout
+  title="RHSP - Square peg, meet round hole."
+  description="Enterprise software shaped around your business. Low-code velocity on OutSystems, high-code depth in MERN, and sovereign enterprise AI."
+>
+  <Nav />
+
+  <main id="main-content" tabindex="-1">
+    <!-- 1. Hero: Pinned 3D Logo Cube & Scroll Pass-Through -->
+    <Hero />
+
+    <!-- 2. The PEG Cube (Centrepiece Interaction) -->
+    <PegCube />
+
+    <!-- 3. Solutions: 1 Large Feature Card + 5 Standard Cards with Quarter-Circle Crop -->
+    <SolutionsGrid />
+
+    <!-- 4. Agile Approach: Interactive Sprint Flow -->
+    <AgileApproachFlow />
+
+    <!-- 5. Who We Are: Mission · Purpose · Vision -->
+    <WhoWeAre />
+
+    <!-- 6. Build Your Way: Split Card with OutSystems | MERN Toggle -->
+    <BuildYourWay />
+
+    <!-- 7. Featured Stories Carousel (Ideas and Insights) -->
+    <FeaturedCarousel />
+
+    <!-- 8. Contact Section (Above Footer) -->
+    <ContactSection />
+  </main>
+
+  <Footer />
+</BaseLayout>

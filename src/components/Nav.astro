@@ -1,0 +1,1119 @@
+---
+import LogoMark from './brand/LogoMark.astro';
+import ThemeToggle from './ThemeToggle.astro';
+import Icon from './Icon.astro';
+import LearnMore from './LearnMore.astro';
+import MediaAsset from './MediaAsset.astro';
+import { siteConfig } from '../config/site';
+
+const currentPath = Astro.url.pathname;
+const isAboutActive = currentPath.startsWith('/about');
+---
+
+<header id="main-nav-header" class="site-header">
+  <div class="container header-inner">
+    <!-- Left: Brand Logo -->
+    <a href="/" class="brand-logo-link" aria-label="RHSP - Return to homepage">
+      <LogoMark size="md" showText={true} />
+    </a>
+
+    <!-- Center: Main Nav Links -->
+    <nav class="desktop-nav" aria-label="Main Navigation">
+      <ul class="nav-links">
+        <li>
+          <button
+            type="button"
+            class="nav-link-btn mega-trigger"
+            id="mega-menu-trigger"
+            aria-expanded="false"
+            aria-haspopup="true"
+            aria-controls="mega-menu-panel"
+          >
+            <span>Solutions</span>
+            <Icon name="chevron-down" size={14} class="mega-chevron" />
+          </button>
+        </li>
+        <li>
+          <a href="#contact" class="nav-link">Contact</a>
+        </li>
+        <li>
+          <a href="/about" class={`nav-link ${isAboutActive ? 'is-active' : ''}`}>About Us</a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Right: Search Pill + Theme + Black CTA -->
+    <div class="header-actions">
+      <!-- Search Pill (opens mega menu) -->
+      <button
+        type="button"
+        class="search-pill-btn mega-trigger"
+        aria-label="What are you looking for? Open solutions search"
+        aria-expanded="false"
+        aria-controls="mega-menu-panel"
+      >
+        <Icon name="search" size={15} class="search-icon" />
+        <span class="search-pill-text">What are you looking for?</span>
+      </button>
+
+      <!-- Theme Toggle -->
+      <ThemeToggle />
+
+      <!-- Primary Black Pill CTA -->
+      <a href="#contact" class="btn btn-primary nav-cta-pill">
+        <span>Let's talk</span>
+      </a>
+
+      <!-- Mobile Menu Hamburger -->
+      <button
+        type="button"
+        id="mobile-menu-open-btn"
+        class="mobile-menu-hamburger"
+        aria-label="Open navigation menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu-drawer"
+      >
+        <Icon name="menu" size={24} />
+      </button>
+    </div>
+  </div>
+
+  <!-- Full-Width Mastercard-Style Mega Menu Panel -->
+  <div
+    id="mega-menu-panel"
+    class="mega-menu-panel"
+    role="region"
+    aria-label="Solutions and Navigation Explorer"
+    aria-hidden="true"
+  >
+    <div class="container mega-menu-inner">
+      <div class="mega-menu-grid">
+        <!-- Col 1: Categories -->
+        <div class="mega-categories-col" role="tablist" aria-label="Solution Categories">
+          <button
+            type="button"
+            class="mega-category-item is-active"
+            role="tab"
+            aria-selected="true"
+            aria-controls="cat-engineer"
+            id="tab-engineer"
+            data-target="cat-engineer"
+          >
+            <span class="cat-name">Engineer</span>
+            <Icon name="chevron-right" size={16} class="cat-arrow" />
+          </button>
+          <button
+            type="button"
+            class="mega-category-item"
+            role="tab"
+            aria-selected="false"
+            aria-controls="cat-gen-ai"
+            id="tab-gen-ai"
+            data-target="cat-gen-ai"
+          >
+            <span class="cat-name">Gen-AI</span>
+            <Icon name="chevron-right" size={16} class="cat-arrow" />
+          </button>
+          <button
+            type="button"
+            class="mega-category-item"
+            role="tab"
+            aria-selected="false"
+            aria-controls="cat-plan"
+            id="tab-plan"
+            data-target="cat-plan"
+          >
+            <span class="cat-name">Plan</span>
+            <Icon name="chevron-right" size={16} class="cat-arrow" />
+          </button>
+          <button
+            type="button"
+            class="mega-category-item"
+            role="tab"
+            aria-selected="false"
+            aria-controls="cat-company"
+            id="tab-company"
+            data-target="cat-company"
+          >
+            <span class="cat-name">Company</span>
+            <Icon name="chevron-right" size={16} class="cat-arrow" />
+          </button>
+        </div>
+
+        <!-- Col 2: Category Links Content Panels -->
+        <div class="mega-links-col">
+          <!-- Engineer Panel -->
+          <div
+            id="cat-engineer"
+            class="mega-links-panel is-active"
+            role="tabpanel"
+            aria-labelledby="tab-engineer"
+          >
+            <div class="panel-header">
+              <span class="eyebrow">ENGINEER PILLAR</span>
+              <h3 class="panel-title">Low-code speed or high-code freedom</h3>
+            </div>
+            <ul class="mega-links-list">
+              <li>
+                <a href="/solutions/clm" class="mega-link-card">
+                  <div class="mega-link-info">
+                    <span class="mega-link-title">CLM (Contracts Lifecycle)</span>
+                    <span class="mega-link-desc">Extract, track milestones, eliminate manual review</span>
+                  </div>
+                  <Icon name="arrow-right" size={18} class="mega-link-arrow" />
+                </a>
+              </li>
+              <li>
+                <a href="/solutions/dms" class="mega-link-card">
+                  <div class="mega-link-info">
+                    <span class="mega-link-title">DMS (Document Management)</span>
+                    <span class="mega-link-desc">SLA tracking, intelligent routing, compliance audits</span>
+                  </div>
+                  <Icon name="arrow-right" size={18} class="mega-link-arrow" />
+                </a>
+              </li>
+              <li>
+                <a href="/solutions/whatsapp-journeys" class="mega-link-card">
+                  <div class="mega-link-info">
+                    <span class="mega-link-title">WhatsApp Journeys</span>
+                    <span class="mega-link-desc">Verified business flows without portal logins</span>
+                  </div>
+                  <Icon name="arrow-right" size={18} class="mega-link-arrow" />
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Gen-AI Panel -->
+          <div
+            id="cat-gen-ai"
+            class="mega-links-panel"
+            role="tabpanel"
+            aria-labelledby="tab-gen-ai"
+            hidden
+          >
+            <div class="panel-header">
+              <span class="eyebrow">GEN-AI PILLAR</span>
+              <h3 class="panel-title">AI that works on your data, inside your walls.</h3>
+            </div>
+            <ul class="mega-links-list">
+              <li>
+                <a href="/solutions/voice-agents" class="mega-link-card">
+                  <div class="mega-link-info">
+                    <span class="mega-link-title">Voice Agents</span>
+                    <span class="mega-link-desc">Voice interfaces for enterprise customer communication</span>
+                  </div>
+                  <Icon name="arrow-right" size={18} class="mega-link-arrow" />
+                </a>
+              </li>
+              <li>
+                <a href="/solutions/sovereign-ai" class="mega-link-card">
+                  <div class="mega-link-info">
+                    <span class="mega-link-title">Sovereign AI</span>
+                    <span class="mega-link-desc">Private enterprise AI deployed within your perimeter</span>
+                  </div>
+                  <Icon name="arrow-right" size={18} class="mega-link-arrow" />
+                </a>
+              </li>
+              <li>
+                <a href="/solutions/ask-me-anything" class="mega-link-card">
+                  <div class="mega-link-info">
+                    <span class="mega-link-title">AskMeAnything</span>
+                    <span class="mega-link-desc">Enterprise knowledge search across internal documentation</span>
+                  </div>
+                  <Icon name="arrow-right" size={18} class="mega-link-arrow" />
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Plan Panel -->
+          <div
+            id="cat-plan"
+            class="mega-links-panel"
+            role="tabpanel"
+            aria-labelledby="tab-plan"
+            hidden
+          >
+            <div class="panel-header">
+              <span class="eyebrow">PLAN PILLAR</span>
+              <h3 class="panel-title">Architecture clarity before code</h3>
+            </div>
+            <ul class="mega-links-list">
+              <li>
+                <a href="/about#peg" class="mega-link-card">
+                  <div class="mega-link-info">
+                    <span class="mega-link-title">Technology Consultancy</span>
+                    <span class="mega-link-desc">Evaluate OutSystems vs High-Code with zero vendor bias</span>
+                  </div>
+                  <Icon name="arrow-right" size={18} class="mega-link-arrow" />
+                </a>
+              </li>
+              <li>
+                <a href="/about#how" class="mega-link-card">
+                  <div class="mega-link-info">
+                    <span class="mega-link-title">Architecture &amp; Roadmaps</span>
+                    <span class="mega-link-desc">From discovery to scaling enterprise systems</span>
+                  </div>
+                  <Icon name="arrow-right" size={18} class="mega-link-arrow" />
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Company Panel -->
+          <div
+            id="cat-company"
+            class="mega-links-panel"
+            role="tabpanel"
+            aria-labelledby="tab-company"
+            hidden
+          >
+            <div class="panel-header">
+              <span class="eyebrow">COMPANY</span>
+              <h3 class="panel-title">Mumbai-based enterprise technology partner</h3>
+            </div>
+            <ul class="mega-links-list">
+              <li>
+                <a href="/about" class="mega-link-card">
+                  <div class="mega-link-info">
+                    <span class="mega-link-title">About RHSP</span>
+                    <span class="mega-link-desc">Our origin story, mission, purpose and philosophy</span>
+                  </div>
+                  <Icon name="arrow-right" size={18} class="mega-link-arrow" />
+                </a>
+              </li>
+              <li>
+                <a href="/about#team" class="mega-link-card">
+                  <div class="mega-link-info">
+                    <span class="mega-link-title">Leadership Team</span>
+                    <span class="mega-link-desc">Meet founders Subramaniam Iyer &amp; Abhishek Bagwe</span>
+                  </div>
+                  <Icon name="arrow-right" size={18} class="mega-link-arrow" />
+                </a>
+              </li>
+              <li>
+                <a href="#contact" class="mega-link-card">
+                  <div class="mega-link-info">
+                    <span class="mega-link-title">Get in Touch</span>
+                    <span class="mega-link-desc">Start a conversation with our technology architects</span>
+                  </div>
+                  <Icon name="arrow-right" size={18} class="mega-link-arrow" />
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Col 3: Featured Card (Voice Agents) -->
+        <div class="mega-featured-col">
+          <div class="featured-card">
+            <div class="featured-image-wrapper">
+              <MediaAsset
+                assetKey="solutions/voice-agents-hero"
+                alt="Voice Agents Feature Preview"
+                aspectRatio="16/10"
+                crop="quarter"
+                theme="navy"
+              />
+            </div>
+            <div class="featured-card-body">
+              <span class="eyebrow">FEATURED SOLUTION</span>
+              <h4 class="featured-title">Voice Agents for Enterprise</h4>
+              <p class="featured-desc">
+                Multilingual AI speech agents operating in Hindi, Marathi &amp; English with real CRM integration.
+              </p>
+              <LearnMore href="/solutions/voice-agents" text="Explore Voice Agents" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Quick-Link Chips Bar -->
+      <div class="mega-chips-bar">
+        <span class="chips-label">Popular:</span>
+        <div class="chips-scroll">
+          <a href="/solutions/voice-agents" class="chip-item">Voice Agents</a>
+          <a href="/solutions/sovereign-ai" class="chip-item">Sovereign AI</a>
+          <a href="/solutions/clm" class="chip-item">CLM</a>
+          <a href="/solutions/dms" class="chip-item">DMS</a>
+          <a href="/solutions/ask-me-anything" class="chip-item">AskMeAnything</a>
+          <a href="/solutions/whatsapp-journeys" class="chip-item">WhatsApp Journeys</a>
+          <a href="/solutions" class="chip-item chip-view-all">All Solutions Directory &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Full-Screen Drawer Menu -->
+  <div id="mobile-menu-drawer" class="mobile-drawer" aria-hidden="true">
+    <div class="mobile-drawer-header">
+      <LogoMark size="md" showText={true} />
+      <button
+        type="button"
+        id="mobile-menu-close-btn"
+        class="mobile-close-btn"
+        aria-label="Close menu"
+      >
+        <Icon name="x" size={24} />
+      </button>
+    </div>
+
+    <div class="mobile-drawer-body">
+      <!-- Search Input on Mobile -->
+      <a href="/solutions" class="mobile-search-pill">
+        <Icon name="search" size={16} />
+        <span>Search solutions &amp; architecture...</span>
+      </a>
+
+      <!-- Accordion Navigation -->
+      <div class="mobile-nav-sections">
+        <div class="mobile-section">
+          <span class="eyebrow">SOLUTIONS</span>
+          <div class="mobile-links-grid">
+            <a href="/solutions/voice-agents" class="mobile-nav-link">
+              <strong>Voice Agents</strong>
+              <span>Enterprise voice solutions</span>
+            </a>
+            <a href="/solutions/sovereign-ai" class="mobile-nav-link">
+              <strong>Sovereign AI</strong>
+              <span>Private enterprise AI</span>
+            </a>
+            <a href="/solutions/clm" class="mobile-nav-link">
+              <strong>CLM</strong>
+              <span>Contract lifecycle</span>
+            </a>
+            <a href="/solutions/dms" class="mobile-nav-link">
+              <strong>DMS</strong>
+              <span>Intelligent documents</span>
+            </a>
+            <a href="/solutions/whatsapp-journeys" class="mobile-nav-link">
+              <strong>WhatsApp Journeys</strong>
+              <span>Appless transactions</span>
+            </a>
+            <a href="/solutions/ask-me-anything" class="mobile-nav-link">
+              <strong>AskMeAnything</strong>
+              <span>Enterprise knowledge search</span>
+            </a>
+          </div>
+          <a href="/solutions" class="mobile-all-link">Explore all solutions &rarr;</a>
+        </div>
+
+        <div class="mobile-section">
+          <span class="eyebrow">COMPANY &amp; METHOD</span>
+          <div class="mobile-links-grid">
+            <a href="/about" class="mobile-nav-link">
+              <strong>About RHSP</strong>
+              <span>Our story &amp; mission</span>
+            </a>
+            <a href="/about#peg" class="mobile-nav-link">
+              <strong>The PEG Method</strong>
+              <span>Plan · Engineer · Gen-AI</span>
+            </a>
+            <a href="/about#team" class="mobile-nav-link">
+              <strong>Founders &amp; Team</strong>
+              <span>Subramaniam Iyer &amp; Abhishek Bagwe</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Chips on Mobile -->
+      <div class="mobile-chips-group">
+        <span class="eyebrow">QUICK ACCESS</span>
+        <div class="mobile-chips-wrap">
+          <a href="/solutions/voice-agents" class="chip-item">Voice Agents</a>
+          <a href="/solutions/clm" class="chip-item">CLM</a>
+          <a href="/solutions/sovereign-ai" class="chip-item">Sovereign AI</a>
+          <a href="/about#peg" class="chip-item">PEG Cube</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="mobile-drawer-footer">
+      <div class="mobile-theme-row">
+        <span>Dark Mode</span>
+        <ThemeToggle />
+      </div>
+      <a href="#contact" class="btn btn-primary mobile-cta-pill" id="mobile-cta-btn">
+        Let's talk
+      </a>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 72px;
+    z-index: 1000;
+    background-color: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+    transition: height 0.3s var(--ease-out-expo),
+                box-shadow 0.3s var(--ease-out-expo),
+                background-color 0.25s ease;
+  }
+
+  .site-header.is-scrolled {
+    height: 60px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  }
+
+  .site-header.is-scrolled :global(.rhsp-full-logo-img) {
+    height: 46px;
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+  }
+
+  .brand-logo-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  /* Desktop Nav Links */
+  .desktop-nav {
+    display: none;
+  }
+
+  @media (min-width: 960px) {
+    .desktop-nav {
+      display: block;
+    }
+  }
+
+  .nav-links {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .nav-link,
+  .nav-link-btn {
+    font-family: var(--font-sans);
+    font-size: var(--fs-body);
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.5rem 0;
+    transition: color 0.2s ease;
+  }
+
+  .nav-link:hover,
+  .nav-link-btn:hover,
+  .nav-link.is-active,
+  .nav-link-btn.is-active {
+    color: var(--color-text-primary);
+  }
+
+  :global(.mega-chevron) {
+    transition: transform 0.3s var(--ease-out-expo);
+  }
+
+  .nav-link-btn.is-active :global(.mega-chevron) {
+    transform: rotate(180deg);
+  }
+
+  /* Header Actions */
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  /* Search Pill */
+  .search-pill-btn {
+    display: none;
+    align-items: center;
+    gap: 0.6rem;
+    height: 42px;
+    padding: 0 1.25rem;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-surface-alt);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    font-family: var(--font-sans);
+    font-size: var(--fs-sm);
+    font-weight: 400;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+
+  @media (min-width: 1100px) {
+    .search-pill-btn {
+      display: inline-flex;
+    }
+  }
+
+  .search-pill-btn:hover {
+    background-color: var(--color-surface-hover);
+    color: var(--color-text-primary);
+    border-color: var(--color-text-secondary);
+  }
+
+  .nav-cta-pill {
+    display: none;
+    height: 44px;
+    padding: 0 1.5rem;
+    font-size: var(--fs-sm);
+  }
+
+  @media (min-width: 640px) {
+    .nav-cta-pill {
+      display: inline-flex;
+    }
+  }
+
+  .mobile-menu-hamburger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: var(--color-text-primary);
+    cursor: pointer;
+    padding: 0.5rem;
+  }
+
+  @media (min-width: 960px) {
+    .mobile-menu-hamburger {
+      display: none;
+    }
+  }
+
+  /* Mega Menu Panel */
+  .mega-menu-panel {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+    box-shadow: var(--shadow-dropdown);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity 0.3s var(--ease-out-expo),
+                transform 0.3s var(--ease-out-expo),
+                visibility 0.3s;
+    pointer-events: none;
+    z-index: 1001;
+  }
+
+  .mega-menu-panel.is-open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .mega-menu-inner {
+    padding-top: 2.5rem;
+    padding-bottom: 2rem;
+  }
+
+  .mega-menu-grid {
+    display: grid;
+    grid-template-columns: 200px 1fr 340px;
+    gap: 3rem;
+  }
+
+  /* Categories Col */
+  .mega-categories-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    border-right: 1px solid var(--color-border);
+    padding-right: 1.5rem;
+  }
+
+  .mega-category-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.85rem 1.25rem;
+    border-radius: var(--radius-pill);
+    background: transparent;
+    border: none;
+    font-family: var(--font-sans);
+    font-size: var(--fs-body);
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .mega-category-item:hover {
+    color: var(--color-text-primary);
+    background-color: var(--color-surface-alt);
+  }
+
+  .mega-category-item.is-active {
+    background-color: var(--color-btn-primary-bg);
+    color: var(--color-btn-primary-text);
+  }
+
+  :global(.cat-arrow) {
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .mega-category-item.is-active :global(.cat-arrow) {
+    opacity: 1;
+  }
+
+  /* Links Panel */
+  .mega-links-col {
+    min-height: 280px;
+  }
+
+  .mega-links-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .mega-links-panel[hidden] {
+    display: none;
+  }
+
+  .panel-title {
+    font-size: var(--fs-h3);
+    margin-top: -0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .mega-links-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .mega-link-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-radius: 16px;
+    background-color: var(--color-surface-alt);
+    text-decoration: none;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .mega-link-card:hover {
+    background-color: var(--color-surface-hover);
+    transform: translateX(4px);
+  }
+
+  .mega-link-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .mega-link-title {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+  }
+
+  .mega-link-desc {
+    font-size: var(--fs-sm);
+    color: var(--color-text-secondary);
+  }
+
+  :global(.mega-link-arrow) {
+    color: var(--color-text-secondary);
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+
+  .mega-link-card:hover :global(.mega-link-arrow) {
+    transform: translateX(4px);
+    color: var(--color-text-primary);
+  }
+
+  /* Featured Card Col */
+  .mega-featured-col {
+    border-left: 1px solid var(--color-border);
+    padding-left: 2rem;
+  }
+
+  .featured-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .featured-image-wrapper {
+    height: 150px;
+    border-radius: var(--radius-card);
+    overflow: hidden;
+  }
+
+  .featured-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .featured-title {
+    font-size: 1.15rem;
+    margin-top: -0.5rem;
+  }
+
+  .featured-desc {
+    font-size: var(--fs-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.45;
+  }
+
+  /* Quick-Link Chips Bar */
+  .mega-chips-bar {
+    margin-top: 2rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .chips-label {
+    font-size: var(--fs-sm);
+    color: var(--color-text-secondary);
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  .chips-scroll {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+
+  .chip-item {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.95rem;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-surface-alt);
+    border: 1px solid var(--color-border);
+    font-size: var(--fs-sm);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .chip-item:hover {
+    background-color: var(--color-surface-hover);
+    color: var(--color-text-primary);
+    border-color: var(--color-text-secondary);
+  }
+
+  .chip-view-all {
+    font-weight: 500;
+    color: var(--color-text-primary);
+    border-color: var(--color-text-primary);
+  }
+
+  /* Mobile Drawer Menu */
+  .mobile-drawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: var(--color-bg);
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-20px);
+    transition: opacity 0.35s var(--ease-out-expo),
+                transform 0.35s var(--ease-out-expo),
+                visibility 0.35s;
+  }
+
+  .mobile-drawer.is-open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .mobile-drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .mobile-close-btn {
+    background: transparent;
+    border: none;
+    color: var(--color-text-primary);
+    cursor: pointer;
+    padding: 0.5rem;
+  }
+
+  .mobile-drawer-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .mobile-search-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1.25rem;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-surface-alt);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-size: var(--fs-body);
+  }
+
+  .mobile-nav-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .mobile-links-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  .mobile-nav-link {
+    display: flex;
+    flex-direction: column;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    background-color: var(--color-surface-alt);
+    text-decoration: none;
+  }
+
+  .mobile-nav-link strong {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+  }
+
+  .mobile-nav-link span {
+    font-size: var(--fs-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .mobile-all-link {
+    display: inline-block;
+    margin-top: 0.75rem;
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    color: var(--color-text-primary);
+    text-decoration: none;
+  }
+
+  .mobile-chips-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .mobile-drawer-footer {
+    padding: 1.5rem;
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .mobile-theme-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: var(--fs-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .mobile-cta-pill {
+    width: 100%;
+    min-height: 50px;
+    font-size: 1rem;
+  }
+</style>
+
+<script>
+  function setupMegaMenu() {
+    const header = document.getElementById('main-nav-header');
+    const megaTriggers = document.querySelectorAll('.mega-trigger');
+    const megaPanel = document.getElementById('mega-menu-panel');
+    const categoryButtons = document.querySelectorAll('.mega-category-item');
+    const linkPanels = document.querySelectorAll('.mega-links-panel');
+    const mobileOpenBtn = document.getElementById('mobile-menu-open-btn');
+    const mobileCloseBtn = document.getElementById('mobile-menu-close-btn');
+    const mobileDrawer = document.getElementById('mobile-menu-drawer');
+    const mobileCtaBtn = document.getElementById('mobile-cta-btn');
+
+    if (!header || !megaPanel) return;
+
+    // Sticky header shrink on scroll
+    let lastScrollY = window.scrollY;
+    function handleScroll() {
+      if (window.scrollY > 30) {
+        header?.classList.add('is-scrolled');
+      } else {
+        header?.classList.remove('is-scrolled');
+      }
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+
+    // Toggle Mega Menu
+    let isOpen = false;
+    let hoverTimeout: any = null;
+
+    function openMegaMenu() {
+      isOpen = true;
+      megaPanel?.classList.add('is-open');
+      megaPanel?.setAttribute('aria-hidden', 'false');
+      megaTriggers.forEach(t => t.setAttribute('aria-expanded', 'true'));
+      document.getElementById('mega-menu-trigger')?.classList.add('is-active');
+    }
+
+    function closeMegaMenu() {
+      isOpen = false;
+      megaPanel?.classList.remove('is-open');
+      megaPanel?.setAttribute('aria-hidden', 'true');
+      megaTriggers.forEach(t => t.setAttribute('aria-expanded', 'false'));
+      document.getElementById('mega-menu-trigger')?.classList.remove('is-active');
+    }
+
+    megaTriggers.forEach(trigger => {
+      trigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (isOpen) {
+          closeMegaMenu();
+        } else {
+          openMegaMenu();
+        }
+      });
+
+      // Desktop Hover with intent
+      trigger.addEventListener('mouseenter', () => {
+        if (window.innerWidth >= 960) {
+          clearTimeout(hoverTimeout);
+          openMegaMenu();
+        }
+      });
+    });
+
+    header.addEventListener('mouseleave', () => {
+      if (window.innerWidth >= 960 && isOpen) {
+        hoverTimeout = setTimeout(closeMegaMenu, 250);
+      }
+    });
+
+    megaPanel.addEventListener('mouseenter', () => {
+      clearTimeout(hoverTimeout);
+    });
+
+    // Close on click outside or Esc
+    document.addEventListener('click', (e) => {
+      if (isOpen && !header.contains(e.target as Node)) {
+        closeMegaMenu();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (isOpen) closeMegaMenu();
+        if (mobileDrawer?.classList.contains('is-open')) closeMobileMenu();
+      }
+    });
+
+    // Category Tabs Switching
+    categoryButtons.forEach(btn => {
+      const targetId = btn.getAttribute('data-target');
+
+      function activateTab() {
+        categoryButtons.forEach(b => {
+          b.classList.remove('is-active');
+          b.setAttribute('aria-selected', 'false');
+        });
+        btn.classList.add('is-active');
+        btn.setAttribute('aria-selected', 'true');
+
+        linkPanels.forEach(panel => {
+          if (panel.id === targetId) {
+            panel.removeAttribute('hidden');
+            panel.classList.add('is-active');
+          } else {
+            panel.setAttribute('hidden', '');
+            panel.classList.remove('is-active');
+          }
+        });
+      }
+
+      btn.addEventListener('click', activateTab);
+      btn.addEventListener('mouseenter', activateTab);
+    });
+
+    // Mobile Drawer
+    function openMobileMenu() {
+      mobileDrawer?.classList.add('is-open');
+      mobileDrawer?.setAttribute('aria-hidden', 'false');
+      mobileOpenBtn?.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMobileMenu() {
+      mobileDrawer?.classList.remove('is-open');
+      mobileDrawer?.setAttribute('aria-hidden', 'true');
+      mobileOpenBtn?.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+
+    mobileOpenBtn?.addEventListener('click', openMobileMenu);
+    mobileCloseBtn?.addEventListener('click', closeMobileMenu);
+    mobileCtaBtn?.addEventListener('click', closeMobileMenu);
+
+    // Close mobile drawer on link navigation
+    const mobileLinks = mobileDrawer?.querySelectorAll('a');
+    mobileLinks?.forEach(link => {
+      link.addEventListener('click', closeMobileMenu);
+    });
+  }
+
+  setupMegaMenu();
+  document.addEventListener('astro:after-swap', setupMegaMenu);
+</script>

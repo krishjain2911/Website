@@ -1,0 +1,218 @@
+---
+import { siteConfig } from '../config/site';
+import Icon from './Icon.astro';
+
+const { team } = siteConfig;
+---
+
+<section id="team" class="team-section" aria-labelledby="team-heading">
+  <div class="container">
+    <div class="team-header reveal-on-scroll">
+      <span class="eyebrow">LEADERSHIP</span>
+      <h2 id="team-heading" class="team-headline">Engineers and enterprise operators.</h2>
+      <p class="team-subline">
+        Direct technical oversight and strategic involvement from founders on every enterprise engagement.
+      </p>
+    </div>
+
+    <!-- Founders Grid -->
+    <div class="team-grid">
+      {team.members.map((member, index) => {
+        const phoneClean = member.phone.replace(/^\[PLACEHOLDER\]\s*/i, '');
+        const phoneB64 = Buffer.from(phoneClean).toString('base64');
+
+        return (
+          <article class="founder-card card-mastercard reveal-on-scroll">
+            <div class="founder-top-row">
+              <!-- Circular Monogram Avatar -->
+              <div class="founder-avatar-circle" aria-hidden="true">
+                <span class="avatar-initials">{member.initials}</span>
+              </div>
+              <div class="founder-title-meta">
+                <h3 class="founder-name">{member.name}</h3>
+                <span class="founder-role-tag">{member.role}</span>
+              </div>
+            </div>
+
+            <p class="founder-bio">{member.bio}</p>
+
+            <div class="founder-actions-footer">
+              <button
+                type="button"
+                class="reveal-phone-btn"
+                data-phone-b64={phoneB64}
+                id={`team-reveal-phone-${index}`}
+                aria-label={`Show number for ${member.name}`}
+              >
+                <Icon name="phone" size={15} />
+                <span class="reveal-text">Show number</span>
+              </button>
+
+              <a
+                href={member.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="team-linkedin-link"
+                aria-label={`${member.name}'s LinkedIn Profile (opens in new tab)`}
+              >
+                <Icon name="external-link" size={15} />
+                <span>LinkedIn Profile</span>
+              </a>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+<style>
+  .team-section {
+    padding: var(--section-spacing-desktop) 0;
+    background-color: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+    scroll-margin-top: 96px;
+  }
+
+  .team-header {
+    margin-bottom: 4rem;
+    max-width: 680px;
+  }
+
+  .team-headline {
+    font-size: var(--fs-h2);
+    font-weight: 500;
+    margin-bottom: 1rem;
+  }
+
+  .team-subline {
+    font-size: var(--fs-body-lg);
+    color: var(--color-text-secondary);
+  }
+
+  .team-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  @media (min-width: 840px) {
+    .team-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 3rem;
+    }
+  }
+
+  .founder-card {
+    background-color: var(--color-surface-alt);
+    border-radius: var(--radius-card);
+    padding: 3rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    border: 1px solid var(--color-border-subtle);
+  }
+
+  .founder-top-row {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .founder-avatar-circle {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--rhsp-peg-gradient);
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    box-shadow: 0 6px 18px rgba(238, 75, 43, 0.2);
+  }
+
+  .founder-title-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .founder-name {
+    font-size: 1.35rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+  }
+
+  .founder-role-tag {
+    font-size: var(--fs-sm);
+    color: var(--color-text-secondary);
+    font-weight: 500;
+  }
+
+  .founder-bio {
+    font-size: var(--fs-body);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    flex: 1;
+  }
+
+  .founder-actions-footer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-border);
+    flex-wrap: wrap;
+  }
+
+  .reveal-phone-btn,
+  .team-linkedin-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.25rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+    color: var(--color-text-secondary);
+    font-family: var(--font-sans);
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .reveal-phone-btn:hover,
+  .team-linkedin-link:hover {
+    background-color: var(--color-surface-hover);
+    color: var(--color-text-primary);
+    border-color: var(--color-text-secondary);
+  }
+</style>
+
+<script>
+  function setupTeamReveal() {
+    const phoneButtons = document.querySelectorAll('.team-section .reveal-phone-btn');
+    phoneButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const b64 = btn.getAttribute('data-phone-b64');
+        if (b64) {
+          try {
+            const decoded = atob(b64);
+            const textEl = btn.querySelector('.reveal-text');
+            if (textEl) textEl.textContent = decoded;
+            btn.setAttribute('aria-label', `Phone: ${decoded}`);
+          } catch (e) {}
+        }
+      });
+    });
+  }
+
+  setupTeamReveal();
+  document.addEventListener('astro:after-swap', setupTeamReveal);
+</script>

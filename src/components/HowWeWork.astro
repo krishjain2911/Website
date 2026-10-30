@@ -1,0 +1,646 @@
+---
+import { siteConfig } from '../config/site';
+import Icon from './Icon.astro';
+
+const { howWeWork, contact } = siteConfig;
+const { steps, findYourFit } = howWeWork;
+const initialRule = findYourFit.rules[0];
+---
+
+<section id="how" class="how-we-work-section" aria-labelledby="how-heading">
+  <div class="container">
+    <div class="how-header reveal-on-scroll">
+      <span class="eyebrow">HOW WE WORK</span>
+      <h2 id="how-heading" class="how-headline">{howWeWork.headline}</h2>
+      <p class="how-subline">{howWeWork.subline}</p>
+    </div>
+
+    <!-- Part 1: Horizontal Stepper with Circle Step Markers Joined by a Curved Line -->
+    <div class="stepper-container reveal-on-scroll">
+      <!-- Curved Connecting Line SVG -->
+      <div class="stepper-line-wrap" aria-hidden="true">
+        <svg viewBox="0 0 1000 60" fill="none" class="stepper-curved-svg" preserveAspectRatio="none">
+          <path
+            d="M 50 30 C 250 10, 400 50, 600 20 C 750 0, 850 40, 950 30"
+            stroke="url(#stepper-grad)"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+          <defs>
+            <linearGradient id="stepper-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#F7941D" />
+              <stop offset="100%" stop-color="#EE4B2B" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+
+      <!-- Stepper Columns Grid -->
+      <div class="stepper-cards-grid">
+        {steps.map((st, idx) => (
+          <div class="step-card card-mastercard" id={`step-card-${idx}`}>
+            <!-- Circle Step Marker -->
+            <div class="step-circle-marker">
+              <span>{st.step}</span>
+            </div>
+
+            <div class="step-card-content">
+              <h3 class="step-title">{st.title}</h3>
+              
+              <div class="step-details-group">
+                <div class="step-field">
+                  <span class="step-label">WHAT WE DO</span>
+                  <p class="step-val">{st.whatWeDo}</p>
+                </div>
+
+                <div class="step-field">
+                  <span class="step-label">WHAT YOU GET</span>
+                  <p class="step-deliverable">{st.deliverable}</p>
+                </div>
+
+                <div class="step-field duration-field">
+                  <span class="step-label">DURATION</span>
+                  <span class="step-duration">{st.duration.replace(/^\[PLACEHOLDER\]\s*/i, '')}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Part 2: "Find your fit" Interactive Mini Tool with Black Result Card -->
+    <div class="find-fit-box card-mastercard reveal-on-scroll" id="fit">
+      <div class="find-fit-header">
+        <span class="eyebrow">ASSESSMENT</span>
+        <h3 class="find-fit-title">{findYourFit.headline}</h3>
+        <p class="find-fit-subline">{findYourFit.subline}</p>
+      </div>
+
+      <div class="find-fit-grid">
+        <!-- Interactive Pill Toggles Column -->
+        <div class="toggles-column">
+          <!-- Question 1: Speed -->
+          <div class="toggle-group" data-param="speed">
+            <span class="toggle-question-label">{findYourFit.questions[0].label}</span>
+            <div class="toggle-pill-row" role="radiogroup" aria-label="Project Speed">
+              <button
+                type="button"
+                class="toggle-choice-btn is-selected"
+                data-val="weeks"
+                role="radio"
+                aria-checked="true"
+              >
+                Weeks
+              </button>
+              <button
+                type="button"
+                class="toggle-choice-btn"
+                data-val="months"
+                role="radio"
+                aria-checked="false"
+              >
+                Months
+              </button>
+            </div>
+          </div>
+
+          <!-- Question 2: Custom Process -->
+          <div class="toggle-group" data-param="custom">
+            <span class="toggle-question-label">{findYourFit.questions[1].label}</span>
+            <div class="toggle-pill-row" role="radiogroup" aria-label="Process Customization">
+              <button
+                type="button"
+                class="toggle-choice-btn is-selected"
+                data-val="standard"
+                role="radio"
+                aria-checked="true"
+              >
+                Standard-ish
+              </button>
+              <button
+                type="button"
+                class="toggle-choice-btn"
+                data-val="unique"
+                role="radio"
+                aria-checked="false"
+              >
+                Very unique
+              </button>
+            </div>
+          </div>
+
+          <!-- Question 3: Data Location -->
+          <div class="toggle-group" data-param="dataLoc">
+            <span class="toggle-question-label">{findYourFit.questions[2].label}</span>
+            <div class="toggle-pill-row" role="radiogroup" aria-label="Data Hosting Perimeter">
+              <button
+                type="button"
+                class="toggle-choice-btn is-selected"
+                data-val="cloud"
+                role="radio"
+                aria-checked="true"
+              >
+                Cloud is fine
+              </button>
+              <button
+                type="button"
+                class="toggle-choice-btn"
+                data-val="private"
+                role="radio"
+                aria-checked="false"
+              >
+                Inside our walls
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Black Result Card -->
+        <div class="result-card-black" id="fit-result-card">
+          <div class="result-top-row">
+            <span class="result-eyebrow">SUGGESTED ARCHITECTURAL APPROACH</span>
+            <span class="result-pill-badge" id="fit-stack-badge">{initialRule.stackBadge}</span>
+          </div>
+
+          <h4 class="result-approach-title" id="fit-approach-title">
+            {initialRule.approach}
+          </h4>
+
+          <p class="result-approach-desc" id="fit-approach-desc">
+            {initialRule.description}
+          </p>
+
+          <p class="result-disclaimer">
+            {findYourFit.disclaimer}
+          </p>
+
+          <div class="result-action-row">
+            <a
+              href={`mailto:${contact.email}?subject=Project%20Fit%20Inquiry%3A%20${encodeURIComponent(initialRule.approach)}`}
+              class="btn btn-secondary result-cta-btn"
+              id="fit-discuss-btn"
+            >
+              <span>Discuss this with us</span>
+              <Icon name="arrow-right" size={16} />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .how-we-work-section {
+    padding: var(--section-spacing-desktop) 0;
+    background-color: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .how-header {
+    margin-bottom: 4rem;
+    max-width: 720px;
+  }
+
+  .how-headline {
+    font-size: var(--fs-h2);
+    font-weight: 500;
+    margin-bottom: 1rem;
+  }
+
+  .how-subline {
+    font-size: var(--fs-body-lg);
+    color: var(--color-text-secondary);
+  }
+
+  /* Stepper */
+  .stepper-container {
+    position: relative;
+    margin-bottom: 5rem;
+  }
+
+  .stepper-line-wrap {
+    position: absolute;
+    top: 24px;
+    left: 40px;
+    right: 40px;
+    height: 40px;
+    z-index: 1;
+    pointer-events: none;
+    display: none;
+  }
+
+  @media (min-width: 960px) {
+    .stepper-line-wrap {
+      display: block;
+    }
+  }
+
+  .stepper-curved-svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .stepper-cards-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  @media (min-width: 640px) {
+    .stepper-cards-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .stepper-cards-grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+  }
+
+  .step-card {
+    background-color: var(--color-surface-alt);
+    border-radius: var(--radius-card);
+    padding: 2.25rem 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    border: 1px solid var(--color-border-subtle);
+  }
+
+  .step-circle-marker {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+
+  .step-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .step-title {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+  }
+
+  .step-details-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .step-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .step-label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .step-val {
+    font-size: var(--fs-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+  }
+
+  .step-deliverable {
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    color: var(--color-text-primary);
+    line-height: 1.45;
+  }
+
+  .step-duration {
+    font-size: var(--fs-sm);
+    color: var(--rhsp-peg-start);
+    font-weight: 500;
+  }
+
+  /* Find Your Fit Box */
+  .find-fit-box {
+    background-color: var(--color-surface);
+    border-radius: var(--radius-card);
+    padding: 3.5rem 3rem;
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-subtle);
+  }
+
+  @media (max-width: 640px) {
+    .find-fit-box {
+      padding: 2rem 1.5rem;
+    }
+  }
+
+  .find-fit-header {
+    margin-bottom: 3rem;
+    max-width: 640px;
+  }
+
+  .find-fit-title {
+    font-size: var(--fs-h3);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+
+  .find-fit-subline {
+    font-size: var(--fs-body);
+    color: var(--color-text-secondary);
+  }
+
+  .find-fit-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  @media (min-width: 960px) {
+    .find-fit-grid {
+      grid-template-columns: 1fr 1.15fr;
+      gap: 4rem;
+      align-items: center;
+    }
+  }
+
+  /* Toggles */
+  .toggles-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+
+  .toggle-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .toggle-question-label {
+    font-size: var(--fs-body);
+    font-weight: 500;
+    color: var(--color-text-primary);
+  }
+
+  .toggle-pill-row {
+    display: inline-flex;
+    padding: 0.35rem;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-surface-alt);
+    border: 1px solid var(--color-border);
+    gap: 0.5rem;
+    width: max-content;
+  }
+
+  .toggle-choice-btn {
+    padding: 0.5rem 1.25rem;
+    border-radius: var(--radius-pill);
+    border: none;
+    background: transparent;
+    font-family: var(--font-sans);
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .toggle-choice-btn:hover {
+    color: var(--color-text-primary);
+  }
+
+  .toggle-choice-btn.is-selected {
+    background-color: var(--color-btn-primary-bg);
+    color: var(--color-btn-primary-text);
+  }
+
+  /* Black Result Card */
+  .result-card-black {
+    background-color: #141413;
+    color: #FFFFFF;
+    border-radius: var(--radius-card);
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+  }
+
+  .result-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .result-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #A3A3A3;
+  }
+
+  .result-pill-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-pill);
+    background-color: #262626;
+    color: #F7941D;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .result-approach-title {
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 1.25;
+    color: #FFFFFF;
+  }
+
+  .result-approach-desc {
+    font-size: var(--fs-sm);
+    color: #D4D4D4;
+    line-height: 1.6;
+  }
+
+  .result-disclaimer {
+    font-size: 0.8rem;
+    color: #737373;
+    font-style: italic;
+  }
+
+  .result-action-row {
+    margin-top: 1rem;
+  }
+
+  .result-cta-btn {
+    min-height: 48px;
+    padding: 0 1.5rem;
+    background-color: #FFFFFF;
+    color: #141413;
+    border: none;
+    font-weight: 500;
+  }
+
+  .result-cta-btn:hover {
+    background-color: #F0F0EE;
+  }
+</style>
+
+<script>
+  function setupHowWeWorkInteractions() {
+    const rules = [
+      {
+        speed: "weeks",
+        custom: "standard",
+        dataLoc: "cloud",
+        approach: "OutSystems Rapid Build",
+        stackBadge: "Low-Code",
+        pegCombo: "Engineer (OutSystems)",
+        description: "Accelerated visual delivery on OutSystems for fast time-to-value with enterprise compliance and cloud hosting."
+      },
+      {
+        speed: "weeks",
+        custom: "standard",
+        dataLoc: "private",
+        approach: "OutSystems On-Premises Build",
+        stackBadge: "Low-Code + Private",
+        pegCombo: "Plan + Engineer (OutSystems)",
+        description: "Rapid low-code application development configured for private virtual cloud (VPC) or local server isolation."
+      },
+      {
+        speed: "weeks",
+        custom: "unique",
+        dataLoc: "cloud",
+        approach: "Hybrid OutSystems & MERN Microservices",
+        stackBadge: "Hybrid",
+        pegCombo: "Engineer (Low + High Code)",
+        description: "Core standardized workflows on OutSystems paired with custom MERN microservices for differentiated competitive modules."
+      },
+      {
+        speed: "weeks",
+        custom: "unique",
+        dataLoc: "private",
+        approach: "Private Hybrid Architecture",
+        stackBadge: "Hybrid + Private",
+        pegCombo: "Plan + Engineer",
+        description: "Dedicated low-code runtime combined with custom isolated containers running on internal enterprise servers."
+      },
+      {
+        speed: "months",
+        custom: "standard",
+        dataLoc: "cloud",
+        approach: "Managed OutSystems Enterprise Program",
+        stackBadge: "Enterprise Low-Code",
+        pegCombo: "Plan + Engineer",
+        description: "Comprehensive multi-phase system replacement with iterative milestone releases on enterprise cloud OutSystems."
+      },
+      {
+        speed: "months",
+        custom: "standard",
+        dataLoc: "private",
+        approach: "Sovereign Low-Code Platform",
+        stackBadge: "Sovereign + Low-Code",
+        pegCombo: "Plan + Engineer",
+        description: "End-to-end operational software modernization contained entirely within corporate datacenter boundaries."
+      },
+      {
+        speed: "months",
+        custom: "unique",
+        dataLoc: "cloud",
+        approach: "Custom MERN Cloud-Native Engineering",
+        stackBadge: "High-Code MERN",
+        pegCombo: "Engineer (MERN) + Gen-AI",
+        description: "Ground-up bespoke full-stack engineering with customized IP, high-throughput microservices, and AI assistance."
+      },
+      {
+        speed: "months",
+        custom: "unique",
+        dataLoc: "private",
+        approach: "Bespoke High-Code & Sovereign AI Stack",
+        stackBadge: "Full High-Code + Sovereign",
+        pegCombo: "Plan + Engineer (MERN) + Gen-AI",
+        description: "Full architectural customization built from first principles with zero vendor lock-in and 100% on-premises data custody."
+      }
+    ];
+
+    const contactEmail = 'hello@rhsp.in';
+
+    const state: Record<string, string> = {
+      speed: 'weeks',
+      custom: 'standard',
+      dataLoc: 'cloud'
+    };
+
+    const toggleGroups = document.querySelectorAll('.toggle-group');
+    const titleEl = document.getElementById('fit-approach-title');
+    const descEl = document.getElementById('fit-approach-desc');
+    const badgeEl = document.getElementById('fit-stack-badge');
+    const discussBtn = document.getElementById('fit-discuss-btn');
+
+    function evaluateRule() {
+      const match = rules.find(r => 
+        r.speed === state.speed &&
+        r.custom === state.custom &&
+        r.dataLoc === state.dataLoc
+      ) || rules[0];
+
+      if (titleEl) titleEl.textContent = match.approach;
+      if (descEl) descEl.textContent = match.description;
+      if (badgeEl) badgeEl.textContent = match.pegCombo || match.stackBadge;
+      if (discussBtn) {
+        const subject = encodeURIComponent(`Project Fit Inquiry: ${match.approach} (${match.pegCombo || match.stackBadge})`);
+        discussBtn.setAttribute('href', `mailto:${contactEmail}?subject=${subject}`);
+      }
+    }
+
+    toggleGroups.forEach(group => {
+      const param = group.getAttribute('data-param');
+      const buttons = group.querySelectorAll('.toggle-choice-btn');
+
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const val = btn.getAttribute('data-val');
+          if (param && val) {
+            state[param] = val;
+            buttons.forEach(b => {
+              b.classList.remove('is-selected');
+              b.setAttribute('aria-checked', 'false');
+            });
+            btn.classList.add('is-selected');
+            btn.setAttribute('aria-checked', 'true');
+            evaluateRule();
+          }
+        });
+      });
+    });
+  }
+
+  setupHowWeWorkInteractions();
+  document.addEventListener('astro:after-swap', setupHowWeWorkInteractions);
+</script>

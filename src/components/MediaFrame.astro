@@ -1,0 +1,214 @@
+---
+// MediaFrame.astro: Video / Poster media slot with progressive lazy-loading and autoplay safeguards
+interface Props {
+  badgeText?: string;
+  posterText: string;
+  caption: string;
+  videoUrl?: string;
+  posterUrl?: string;
+}
+
+const {
+  badgeText = "DEMO VIDEO COMING SOON",
+  posterText,
+  caption,
+  videoUrl,
+  posterUrl
+} = Astro.props;
+---
+
+<div class="media-frame-container morphed-frame" data-video-url={videoUrl || ''}>
+  <div class="media-poster-area">
+    {videoUrl ? (
+      <video
+        class="media-video-player"
+        src={videoUrl}
+        poster={posterUrl}
+        preload="none"
+        playsinline
+        muted
+        loop
+      ></video>
+    ) : null}
+
+    <!-- Technical Poster Backdrop -->
+    <div class="media-poster-fallback">
+      <div class="media-grid-pattern" aria-hidden="true"></div>
+      
+      <div class="media-center-badge">
+        <span class="media-play-icon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8 5V19L19 12L8 5Z" />
+          </svg>
+        </span>
+        <span class="media-coming-soon-label">{badgeText}</span>
+      </div>
+
+      <div class="media-telemetry-corner">
+        <span class="mono-label">[VIDEO STREAM: QUEUED]</span>
+      </div>
+
+      <p class="media-placeholder-caption">{posterText}</p>
+    </div>
+  </div>
+
+  <figcaption class="media-caption-text">
+    <span class="caption-bullet">■</span> {caption}
+  </figcaption>
+</div>
+
+<style>
+  .media-frame-container {
+    width: 100%;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-square);
+    overflow: hidden;
+    transition: var(--transition-morph);
+  }
+
+  .media-poster-area {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #070F1D;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .media-video-player {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .media-poster-fallback {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-4);
+    text-align: center;
+  }
+
+  .media-grid-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      linear-gradient(rgba(30, 75, 143, 0.15) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(30, 75, 143, 0.15) 1px, transparent 1px);
+    background-size: 20px 20px;
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  .media-center-badge {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .media-play-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-square);
+    background: var(--rhsp-peg-gradient);
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(238, 75, 43, 0.35);
+    transition: var(--transition-morph);
+  }
+
+  .media-frame-container:hover .media-play-icon {
+    border-radius: var(--radius-full);
+    transform: scale(1.08);
+  }
+
+  .media-coming-soon-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #F8FAFC;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .media-telemetry-corner {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 2;
+  }
+
+  .media-placeholder-caption {
+    position: absolute;
+    bottom: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: #94A3B8;
+    max-width: 90%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    z-index: 2;
+  }
+
+  .media-caption-text {
+    padding: 0.75rem 1rem;
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    border-top: 1px solid var(--color-border-subtle);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .caption-bullet {
+    color: var(--color-text-accent);
+    font-size: 0.65rem;
+  }
+</style>
+
+<script>
+  // Progressive video playback on desktop only when visible & not on Save-Data
+  function setupMediaPlayback() {
+    const isSaveData = (navigator as any).connection?.saveData === true;
+    const isMobile = window.innerWidth < 768;
+    if (isSaveData || isMobile) return;
+
+    const videos = document.querySelectorAll<HTMLVideoElement>('.media-video-player');
+    if (!videos.length) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const video = entry.target as HTMLVideoElement;
+        if (entry.isIntersecting) {
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      });
+    }, { threshold: 0.5 });
+
+    videos.forEach((vid) => observer.observe(vid));
+  }
+
+  setupMediaPlayback();
+  document.addEventListener('astro:after-swap', setupMediaPlayback);
+</script>

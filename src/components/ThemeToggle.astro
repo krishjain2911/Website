@@ -1,0 +1,158 @@
+---
+// ThemeToggle.astro: Dark mode switch with Sun and Moon icons
+import Icon from './Icon.astro';
+---
+
+<button
+  type="button"
+  id="theme-toggle"
+  class="theme-toggle"
+  aria-label="Toggle dark / light color theme"
+  title="Toggle dark / light theme"
+>
+  <span class="theme-toggle-track">
+    <span class="toggle-thumb" aria-hidden="true"></span>
+    <span class="toggle-icon-slot slot-sun" aria-hidden="true">
+      <Icon name="sun" size={13} class="icon-sun" />
+    </span>
+    <span class="toggle-icon-slot slot-moon" aria-hidden="true">
+      <Icon name="moon" size={13} class="icon-moon" />
+    </span>
+  </span>
+  <span class="sr-only">Toggle theme</span>
+</button>
+
+<style>
+  .theme-toggle {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.375rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-full);
+    color: var(--color-text-secondary);
+    transition: transform 0.2s ease;
+  }
+
+  .theme-toggle:hover {
+    transform: scale(1.04);
+  }
+
+  .theme-toggle:focus-visible {
+    outline: 2px solid var(--color-brand-primary);
+    outline-offset: 2px;
+  }
+
+  .theme-toggle-track {
+    width: 52px;
+    height: 28px;
+    background: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    padding: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    transition: background-color 0.25s ease, border-color 0.25s ease;
+    box-sizing: border-box;
+  }
+
+  .toggle-icon-slot {
+    position: relative;
+    z-index: 2;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    transition: color 0.25s ease, transform 0.25s ease;
+  }
+
+  /* Light mode icon states */
+  .slot-sun {
+    color: var(--color-brand-primary);
+  }
+
+  .slot-moon {
+    color: var(--color-text-tertiary);
+  }
+
+  /* Sliding Thumb */
+  .toggle-thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    z-index: 1;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18), 0 0 1px rgba(0, 0, 0, 0.1);
+    transform: translateX(0);
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  /* Dark theme active states */
+  :global([data-theme="dark"]) .toggle-thumb {
+    transform: translateX(24px);
+    background: #1E293B;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4), 0 0 6px var(--rhsp-peg-glow);
+  }
+
+  :global([data-theme="dark"]) .slot-sun {
+    color: var(--color-text-tertiary);
+  }
+
+  :global([data-theme="dark"]) .slot-moon {
+    color: #FFA336;
+  }
+
+  /* Screen reader only */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+</style>
+
+<script>
+  function initThemeToggle() {
+    const toggleBtns = document.querySelectorAll('.theme-toggle');
+    toggleBtns.forEach(btn => {
+      // Avoid duplicate event listeners
+      btn.replaceWith(btn.cloneNode(true));
+    });
+
+    const refreshedBtns = document.querySelectorAll('.theme-toggle');
+    refreshedBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        try {
+          const currentTheme = document.documentElement.getAttribute('data-theme') || 
+            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+          const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+          
+          document.documentElement.setAttribute('data-theme', nextTheme);
+          localStorage.setItem('rhsp-theme', nextTheme);
+          
+          window.dispatchEvent(new CustomEvent('rhsp-theme-change', { detail: { theme: nextTheme } }));
+        } catch (err) {
+          console.warn('LocalStorage unavailable for theme persistence', err);
+        }
+      });
+    });
+  }
+
+  // Initialize on load and support view transitions
+  initThemeToggle();
+  document.addEventListener('astro:after-swap', initThemeToggle);
+</script>
