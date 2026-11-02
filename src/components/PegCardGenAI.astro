@@ -1,0 +1,352 @@
+---
+// PegCardGenAI.astro: Interactive Gen-AI Card ("Private by design. Powerful by default.")
+import Icon from './Icon.astro';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+
+const capabilities = [
+  {
+    id: 'voice',
+    title: 'Voice Agents',
+    desc: 'Talks with customers 24/7 in native languages',
+    icon: 'phone'
+  },
+  {
+    id: 'sovereign',
+    title: 'Sovereign AI',
+    desc: 'Dedicated models running on your infrastructure',
+    icon: 'shield'
+  },
+  {
+    id: 'knowledge',
+    title: 'Knowledge Engine',
+    desc: 'Answers grounded strictly in verified data',
+    icon: 'sparkles'
+  }
+];
+---
+
+<div class={`peg-interactive-card peg-card-genai ${className}`} id="peg-card-genai" role="region" aria-label="Interactive Sovereign AI Diagram">
+  <!-- Card Header -->
+  <div class="peg-card-header">
+    <div class="header-left">
+      <span class="genai-accent-dot" aria-hidden="true"></span>
+      <h4 class="peg-card-title">Private by design. Powerful by default.</h4>
+    </div>
+  </div>
+
+  <!-- Secure Enterprise Perimeter Stage -->
+  <div class="genai-perimeter-box" id="genai-perimeter-box">
+    <!-- Perimeter Watermark / Security Tag -->
+    <div class="perimeter-tag-bar">
+      <div class="secure-badge">
+        <Icon name="shield" size={13} class="genai-shield-icon" />
+        <span>SECURE ENTERPRISE PERIMETER</span>
+      </div>
+      <span class="zero-leak-label">100% Data Custody</span>
+    </div>
+
+    <!-- 3 Internal Capability Cards -->
+    <div class="capabilities-grid">
+      {capabilities.map((cap, idx) => (
+        <div class="capability-node-card" id={`genai-node-${idx}`}>
+          <div class="cap-icon-circle">
+            <Icon name={cap.icon as any} size={15} class="cap-lucide-icon" />
+          </div>
+          <div class="cap-text-col">
+            <span class="cap-title">{cap.title}</span>
+            <p class="cap-desc">{cap.desc}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- Bottom Chips: Zero Cloud Leak · Dedicated Model · Full Audit -->
+  <div class="genai-chips-bar" aria-label="Security Guarantees">
+    <div class="quality-chip">
+      <span class="chip-dot" aria-hidden="true"></span>
+      <span>Zero External Leak</span>
+    </div>
+    <div class="quality-chip">
+      <span class="chip-dot" aria-hidden="true"></span>
+      <span>Dedicated Models</span>
+    </div>
+    <div class="quality-chip">
+      <span class="chip-dot" aria-hidden="true"></span>
+      <span>Full Audit Trail</span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .peg-card-genai {
+    background-color: var(--color-surface, #FFFFFF);
+    border: 1px solid var(--color-border, #E6E6E3);
+    border-radius: 24px;
+    padding: 24px;
+    width: 100%;
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    user-select: none;
+    box-sizing: border-box;
+  }
+
+  :global([data-theme="dark"]) .peg-card-genai {
+    background-color: #1A1A1A;
+    border-color: #2D2D2D;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  }
+
+  .peg-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .genai-accent-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #EE4B2B;
+    flex-shrink: 0;
+  }
+
+  .peg-card-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--color-text-primary, #1A1A1A);
+    margin: 0;
+    line-height: 1.25;
+  }
+
+  /* Perimeter Stage */
+  .genai-perimeter-box {
+    position: relative;
+    border: 1.5px dashed rgba(238, 75, 43, 0.35);
+    background: rgba(238, 75, 43, 0.025);
+    border-radius: 16px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  :global([data-theme="dark"]) .genai-perimeter-box {
+    border-color: rgba(238, 75, 43, 0.45);
+    background: rgba(238, 75, 43, 0.04);
+  }
+
+  .genai-perimeter-box.is-pulsing {
+    border-color: #EE4B2B;
+    box-shadow: 0 0 16px rgba(238, 75, 43, 0.15);
+  }
+
+  .perimeter-tag-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .secure-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: #EE4B2B;
+  }
+
+  .genai-shield-icon {
+    color: #EE4B2B;
+  }
+
+  .zero-leak-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-muted, #777777);
+  }
+
+  /* 3 Cards Grid */
+  .capabilities-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+  }
+
+  @media (max-width: 640px) {
+    .capabilities-grid {
+      grid-template-columns: 1fr;
+      gap: 0.6rem;
+    }
+  }
+
+  .capability-node-card {
+    background-color: var(--color-surface, #FFFFFF);
+    border: 1px solid var(--color-border, #E6E6E3);
+    border-radius: 12px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  :global([data-theme="dark"]) .capability-node-card {
+    background-color: #222222;
+    border-color: #2E2E2E;
+  }
+
+  .capability-node-card:hover {
+    border-color: #EE4B2B;
+    transform: translateY(-2px);
+  }
+
+  .cap-icon-circle {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: rgba(238, 75, 43, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  :global([data-theme="dark"]) .cap-icon-circle {
+    background-color: rgba(238, 75, 43, 0.2);
+  }
+
+  .cap-lucide-icon {
+    color: #EE4B2B;
+  }
+
+  .cap-text-col {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .cap-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text-primary, #1A1A1A);
+    line-height: 1.25;
+  }
+
+  .cap-desc {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--color-text-secondary, #5B5B5B);
+    line-height: 1.35;
+    margin: 0;
+  }
+
+  :global([data-theme="dark"]) .cap-desc {
+    color: #A0A0A0;
+  }
+
+  /* Bottom Quality Chips */
+  .genai-chips-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--color-border-subtle, #EEEEEC);
+  }
+
+  :global([data-theme="dark"]) .genai-chips-bar {
+    border-top-color: #262626;
+  }
+
+  .quality-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-secondary, #5B5B5B);
+  }
+
+  :global([data-theme="dark"]) .quality-chip {
+    color: #A0A0A0;
+  }
+
+  .chip-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #EE4B2B;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .genai-perimeter-box,
+    .capability-node-card {
+      transition: none !important;
+      animation: none !important;
+      transform: none !important;
+    }
+  }
+</style>
+
+<script>
+  function setupGenAICard() {
+    const card = document.getElementById('peg-card-genai');
+    if (!card) return;
+
+    const perimeter = card.querySelector<HTMLElement>('#genai-perimeter-box');
+
+    function pulsePerimeter() {
+      if (!perimeter) return;
+      perimeter.classList.remove('is-pulsing');
+      void perimeter.offsetWidth; // reflow
+      perimeter.classList.add('is-pulsing');
+      setTimeout(() => {
+        perimeter.classList.remove('is-pulsing');
+      }, 1200);
+    }
+
+    // Play when >= 50% visible
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            pulsePerimeter();
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    observer.observe(card);
+
+    // Tab select listener
+    document.addEventListener('peg-tab-change', (e: any) => {
+      if (e.detail?.pillar === 'genai') {
+        pulsePerimeter();
+      }
+    });
+  }
+
+  setupGenAICard();
+  document.addEventListener('astro:after-swap', setupGenAICard);
+</script>
+

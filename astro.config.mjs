@@ -7,6 +7,9 @@ export default defineConfig({
   output: 'static',
   integrations: [sitemap()],
   compressHTML: true,
+  devToolbar: {
+    enabled: false
+  },
   build: {
     inlineStylesheets: 'auto'
   },

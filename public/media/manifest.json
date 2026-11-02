@@ -1,9 +1,421 @@
 {
-  "updatedAt": "2026-10-28T07:30:54.204Z",
-  "images": {},
+  "updatedAt": "2026-11-02T09:34:09.987Z",
+  "images": {
+    "about-approach": {
+      "raw": "/media/raw/about/about-approach.png",
+      "subfolder": "about",
+      "width": 2752,
+      "height": 1536,
+      "aspectRatio": 1.792,
+      "formats": {
+        "avif": {
+          "480": "/media/about/about-approach-480.avif",
+          "960": "/media/about/about-approach-960.avif",
+          "1600": "/media/about/about-approach-1600.avif"
+        },
+        "webp": {
+          "480": "/media/about/about-approach-480.webp",
+          "960": "/media/about/about-approach-960.webp",
+          "1600": "/media/about/about-approach-1600.webp"
+        }
+      }
+    },
+    "about-hero": {
+      "raw": "/media/raw/about/about-hero.png",
+      "subfolder": "about",
+      "width": 2603,
+      "height": 1464,
+      "aspectRatio": 1.778,
+      "formats": {
+        "avif": {
+          "480": "/media/about/about-hero-480.avif",
+          "960": "/media/about/about-hero-960.avif",
+          "1600": "/media/about/about-hero-1600.avif"
+        },
+        "webp": {
+          "480": "/media/about/about-hero-480.webp",
+          "960": "/media/about/about-hero-960.webp",
+          "1600": "/media/about/about-hero-1600.webp"
+        }
+      }
+    },
+    "about-mission-icon": {
+      "raw": "/media/raw/about/about-mission-icon.png",
+      "subfolder": "about",
+      "width": 2048,
+      "height": 2048,
+      "aspectRatio": 1,
+      "formats": {
+        "avif": {
+          "128": "/media/about/about-mission-icon-128.avif",
+          "200": "/media/about/about-mission-icon-200.avif",
+          "480": "/media/about/about-mission-icon-480.avif",
+          "960": "/media/about/about-mission-icon-960.avif",
+          "1600": "/media/about/about-mission-icon-1600.avif"
+        },
+        "webp": {
+          "128": "/media/about/about-mission-icon-128.webp",
+          "200": "/media/about/about-mission-icon-200.webp",
+          "480": "/media/about/about-mission-icon-480.webp",
+          "960": "/media/about/about-mission-icon-960.webp",
+          "1600": "/media/about/about-mission-icon-1600.webp"
+        }
+      }
+    },
+    "about-purpose-icon": {
+      "raw": "/media/raw/about/about-purpose-icon.png",
+      "subfolder": "about",
+      "width": 2048,
+      "height": 2048,
+      "aspectRatio": 1,
+      "formats": {
+        "avif": {
+          "128": "/media/about/about-purpose-icon-128.avif",
+          "200": "/media/about/about-purpose-icon-200.avif",
+          "480": "/media/about/about-purpose-icon-480.avif",
+          "960": "/media/about/about-purpose-icon-960.avif",
+          "1600": "/media/about/about-purpose-icon-1600.avif"
+        },
+        "webp": {
+          "128": "/media/about/about-purpose-icon-128.webp",
+          "200": "/media/about/about-purpose-icon-200.webp",
+          "480": "/media/about/about-purpose-icon-480.webp",
+          "960": "/media/about/about-purpose-icon-960.webp",
+          "1600": "/media/about/about-purpose-icon-1600.webp"
+        }
+      }
+    },
+    "about-vision-icon": {
+      "raw": "/media/raw/about/about-vision-icon.png",
+      "subfolder": "about",
+      "width": 2048,
+      "height": 2048,
+      "aspectRatio": 1,
+      "formats": {
+        "avif": {
+          "128": "/media/about/about-vision-icon-128.avif",
+          "200": "/media/about/about-vision-icon-200.avif",
+          "480": "/media/about/about-vision-icon-480.avif",
+          "960": "/media/about/about-vision-icon-960.avif",
+          "1600": "/media/about/about-vision-icon-1600.avif"
+        },
+        "webp": {
+          "128": "/media/about/about-vision-icon-128.webp",
+          "200": "/media/about/about-vision-icon-200.webp",
+          "480": "/media/about/about-vision-icon-480.webp",
+          "960": "/media/about/about-vision-icon-960.webp",
+          "1600": "/media/about/about-vision-icon-1600.webp"
+        }
+      }
+    },
+    "founder-abhishek": {
+      "raw": "/media/raw/about/founder-abhishek.jpg",
+      "subfolder": "about",
+      "width": 200,
+      "height": 200,
+      "aspectRatio": 1,
+      "formats": {
+        "avif": {
+          "128": "/media/about/founder-abhishek-128.avif",
+          "200": "/media/about/founder-abhishek-200.avif"
+        },
+        "webp": {
+          "128": "/media/about/founder-abhishek-128.webp",
+          "200": "/media/about/founder-abhishek-200.webp"
+        }
+      }
+    },
+    "founder-subu": {
+      "raw": "/media/raw/about/founder-subu.webp",
+      "subfolder": "about",
+      "width": 600,
+      "height": 601,
+      "aspectRatio": 0.998,
+      "formats": {
+        "avif": {
+          "128": "/media/about/founder-subu-128.avif",
+          "200": "/media/about/founder-subu-200.avif",
+          "480": "/media/about/founder-subu-480.avif"
+        },
+        "webp": {
+          "128": "/media/about/founder-subu-128.webp",
+          "200": "/media/about/founder-subu-200.webp",
+          "480": "/media/about/founder-subu-480.webp"
+        }
+      }
+    },
+    "before-whatsapp": {
+      "raw": "/media/raw/before/before-whatsapp.png",
+      "subfolder": "before",
+      "width": 2752,
+      "height": 1536,
+      "aspectRatio": 1.792,
+      "formats": {
+        "avif": {
+          "480": "/media/before/before-whatsapp-480.avif",
+          "960": "/media/before/before-whatsapp-960.avif",
+          "1600": "/media/before/before-whatsapp-1600.avif"
+        },
+        "webp": {
+          "480": "/media/before/before-whatsapp-480.webp",
+          "960": "/media/before/before-whatsapp-960.webp",
+          "1600": "/media/before/before-whatsapp-1600.webp"
+        }
+      }
+    },
+    "contact-angle": {
+      "raw": "/media/raw/contact/contact-angle.png",
+      "subfolder": "contact",
+      "width": 2048,
+      "height": 2048,
+      "aspectRatio": 1,
+      "formats": {
+        "avif": {
+          "480": "/media/contact/contact-angle-480.avif",
+          "960": "/media/contact/contact-angle-960.avif"
+        },
+        "webp": {
+          "480": "/media/contact/contact-angle-480.webp",
+          "960": "/media/contact/contact-angle-960.webp"
+        },
+        "png": {
+          "480": "/media/contact/contact-angle-480.png",
+          "960": "/media/contact/contact-angle-960.png"
+        }
+      }
+    },
+    "feature-build-stack": {
+      "raw": "/media/raw/featured/feature-build-stack.png",
+      "subfolder": "featured",
+      "width": 2752,
+      "height": 1536,
+      "aspectRatio": 1.792,
+      "formats": {
+        "avif": {
+          "480": "/media/featured/feature-build-stack-480.avif",
+          "960": "/media/featured/feature-build-stack-960.avif",
+          "1600": "/media/featured/feature-build-stack-1600.avif"
+        },
+        "webp": {
+          "480": "/media/featured/feature-build-stack-480.webp",
+          "960": "/media/featured/feature-build-stack-960.webp",
+          "1600": "/media/featured/feature-build-stack-1600.webp"
+        }
+      }
+    },
+    "feature-paper-to-platform": {
+      "raw": "/media/raw/featured/feature-paper-to-platform.png",
+      "subfolder": "featured",
+      "width": 2752,
+      "height": 1536,
+      "aspectRatio": 1.792,
+      "formats": {
+        "avif": {
+          "480": "/media/featured/feature-paper-to-platform-480.avif",
+          "960": "/media/featured/feature-paper-to-platform-960.avif",
+          "1600": "/media/featured/feature-paper-to-platform-1600.avif"
+        },
+        "webp": {
+          "480": "/media/featured/feature-paper-to-platform-480.webp",
+          "960": "/media/featured/feature-paper-to-platform-960.webp",
+          "1600": "/media/featured/feature-paper-to-platform-1600.webp"
+        }
+      }
+    },
+    "feature-sovereign": {
+      "raw": "/media/raw/featured/feature-sovereign.png",
+      "subfolder": "featured",
+      "width": 2752,
+      "height": 1536,
+      "aspectRatio": 1.792,
+      "formats": {
+        "avif": {
+          "480": "/media/featured/feature-sovereign-480.avif",
+          "960": "/media/featured/feature-sovereign-960.avif",
+          "1600": "/media/featured/feature-sovereign-1600.avif"
+        },
+        "webp": {
+          "480": "/media/featured/feature-sovereign-480.webp",
+          "960": "/media/featured/feature-sovereign-960.webp",
+          "1600": "/media/featured/feature-sovereign-1600.webp"
+        }
+      }
+    },
+    "feature-voice": {
+      "raw": "/media/raw/featured/feature-voice.png",
+      "subfolder": "featured",
+      "width": 2752,
+      "height": 1536,
+      "aspectRatio": 1.792,
+      "formats": {
+        "avif": {
+          "480": "/media/featured/feature-voice-480.avif",
+          "960": "/media/featured/feature-voice-960.avif",
+          "1600": "/media/featured/feature-voice-1600.avif"
+        },
+        "webp": {
+          "480": "/media/featured/feature-voice-480.webp",
+          "960": "/media/featured/feature-voice-960.webp",
+          "1600": "/media/featured/feature-voice-1600.webp"
+        }
+      }
+    },
+    "product-clm": {
+      "raw": "/media/raw/product-clm.png",
+      "subfolder": "",
+      "width": 2752,
+      "height": 1536,
+      "aspectRatio": 1.792,
+      "formats": {
+        "avif": {
+          "480": "/media/product-clm-480.avif",
+          "960": "/media/product-clm-960.avif",
+          "1600": "/media/product-clm-1600.avif"
+        },
+        "webp": {
+          "480": "/media/product-clm-480.webp",
+          "960": "/media/product-clm-960.webp",
+          "1600": "/media/product-clm-1600.webp"
+        }
+      }
+    },
+    "product-dms": {
+      "raw": "/media/raw/product-dms.png",
+      "subfolder": "",
+      "width": 2752,
+      "height": 1536,
+      "aspectRatio": 1.792,
+      "formats": {
+        "avif": {
+          "480": "/media/product-dms-480.avif",
+          "960": "/media/product-dms-960.avif",
+          "1600": "/media/product-dms-1600.avif"
+        },
+        "webp": {
+          "480": "/media/product-dms-480.webp",
+          "960": "/media/product-dms-960.webp",
+          "1600": "/media/product-dms-1600.webp"
+        }
+      }
+    },
+    "product-ask-me-anything": {
+      "raw": "/media/raw/solutions/product-ask-me-anything.png",
+      "subfolder": "solutions",
+      "width": 2752,
+      "height": 1536,
+      "aspectRatio": 1.792,
+      "formats": {
+        "avif": {
+          "480": "/media/solutions/product-ask-me-anything-480.avif",
+          "960": "/media/solutions/product-ask-me-anything-960.avif",
+          "1600": "/media/solutions/product-ask-me-anything-1600.avif"
+        },
+        "webp": {
+          "480": "/media/solutions/product-ask-me-anything-480.webp",
+          "960": "/media/solutions/product-ask-me-anything-960.webp",
+          "1600": "/media/solutions/product-ask-me-anything-1600.webp"
+        }
+      }
+    },
+    "product-sovereign-ai": {
+      "raw": "/media/raw/solutions/product-sovereign-ai.png",
+      "subfolder": "solutions",
+      "width": 2752,
+      "height": 1536,
+      "aspectRatio": 1.792,
+      "formats": {
+        "avif": {
+          "480": "/media/solutions/product-sovereign-ai-480.avif",
+          "960": "/media/solutions/product-sovereign-ai-960.avif",
+          "1600": "/media/solutions/product-sovereign-ai-1600.avif"
+        },
+        "webp": {
+          "480": "/media/solutions/product-sovereign-ai-480.webp",
+          "960": "/media/solutions/product-sovereign-ai-960.webp",
+          "1600": "/media/solutions/product-sovereign-ai-1600.webp"
+        }
+      }
+    },
+    "product-sovreign": {
+      "raw": "/media/raw/solutions/product-sovereign-ai.png",
+      "subfolder": "solutions",
+      "width": 2752,
+      "height": 1536,
+      "aspectRatio": 1.792,
+      "formats": {
+        "avif": {
+          "480": "/media/solutions/product-sovereign-ai-480.avif",
+          "960": "/media/solutions/product-sovereign-ai-960.avif",
+          "1600": "/media/solutions/product-sovereign-ai-1600.avif"
+        },
+        "webp": {
+          "480": "/media/solutions/product-sovereign-ai-480.webp",
+          "960": "/media/solutions/product-sovereign-ai-960.webp",
+          "1600": "/media/solutions/product-sovereign-ai-1600.webp"
+        }
+      }
+    },
+    "product-voice-agents": {
+      "raw": "/media/raw/solutions/product-voice-agents.png",
+      "subfolder": "solutions",
+      "width": 1312,
+      "height": 816,
+      "aspectRatio": 1.608,
+      "formats": {
+        "avif": {
+          "480": "/media/solutions/product-voice-agents-480.avif",
+          "960": "/media/solutions/product-voice-agents-960.avif",
+          "1600": "/media/solutions/product-voice-agents-1600.avif"
+        },
+        "webp": {
+          "480": "/media/solutions/product-voice-agents-480.webp",
+          "960": "/media/solutions/product-voice-agents-960.webp",
+          "1600": "/media/solutions/product-voice-agents-1600.webp"
+        }
+      }
+    },
+    "product-sonakshi": {
+      "raw": "/media/raw/solutions/product-voice-agents.png",
+      "subfolder": "solutions",
+      "width": 1312,
+      "height": 816,
+      "aspectRatio": 1.608,
+      "formats": {
+        "avif": {
+          "480": "/media/solutions/product-voice-agents-480.avif",
+          "960": "/media/solutions/product-voice-agents-960.avif",
+          "1600": "/media/solutions/product-voice-agents-1600.avif"
+        },
+        "webp": {
+          "480": "/media/solutions/product-voice-agents-480.webp",
+          "960": "/media/solutions/product-voice-agents-960.webp",
+          "1600": "/media/solutions/product-voice-agents-1600.webp"
+        }
+      }
+    },
+    "product-whatsapp-journeys": {
+      "raw": "/media/raw/solutions/product-whatsapp-journeys.png",
+      "subfolder": "solutions",
+      "width": 2752,
+      "height": 1536,
+      "aspectRatio": 1.792,
+      "formats": {
+        "avif": {
+          "480": "/media/solutions/product-whatsapp-journeys-480.avif",
+          "960": "/media/solutions/product-whatsapp-journeys-960.avif",
+          "1600": "/media/solutions/product-whatsapp-journeys-1600.avif"
+        },
+        "webp": {
+          "480": "/media/solutions/product-whatsapp-journeys-480.webp",
+          "960": "/media/solutions/product-whatsapp-journeys-960.webp",
+          "1600": "/media/solutions/product-whatsapp-journeys-1600.webp"
+        }
+      }
+    }
+  },
   "videos": {},
   "heroSequence": {
-    "generatedAt": "2026-10-28T07:30:54.958Z",
+    "generatedAt": "2026-10-30T07:06:05.865Z",
     "sets": {
       "light": {
         "desktop": {
@@ -49,16 +461,10 @@
   },
   "missingExpected": {
     "images": [
-      "product-voice-agents.png",
-      "product-sovereign-ai.png",
-      "product-ask-me-anything.png",
-      "product-clm.png",
-      "product-dms.png",
-      "product-whatsapp-journeys.png",
+      "feature-peg.png",
       "before-clm.png",
       "before-dms.png",
-      "before-whatsapp.png",
-      "about-hero.png"
+      "og-default.png"
     ],
     "videos": [
       "peg-plan.mp4",

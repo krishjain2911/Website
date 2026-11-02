@@ -7,3 +7,5 @@ lh-*.json
 *.log
 .DS_Store
 Thumbs.db
+scratch/
+scratch-screenshots/

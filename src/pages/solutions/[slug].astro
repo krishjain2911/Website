@@ -5,7 +5,6 @@ import Footer from '../../components/Footer.astro';
 import ContactSection from '../../components/ContactSection.astro';
 import MediaAsset from '../../components/MediaAsset.astro';
 import MediaFrame from '../../components/MediaFrame.astro';
-import BeforeAfterSlider from '../../components/BeforeAfterSlider.astro';
 import LearnMore from '../../components/LearnMore.astro';
 import Icon from '../../components/Icon.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
@@ -37,7 +36,7 @@ const relatedProducts = allProducts
 
 <BaseLayout
   title={`${p.title} - RHSP Enterprise Solution`}
-  description={p.oneLiner}
+  description={p.seoDescription || p.oneLiner}
 >
   <Nav />
 
@@ -55,8 +54,16 @@ const relatedProducts = allProducts
             </nav>
 
             <div class="product-badge-row">
-              <span class="pillar-pill">{p.pillar}</span>
-              <span class="stack-pill">{p.badge}</span>
+              {p.badges && p.badges.length > 0 ? (
+                p.badges.map((b, idx) => (
+                  <span class={idx === 0 ? "pillar-pill" : "stack-pill"}>{b}</span>
+                ))
+              ) : (
+                <>
+                  <span class="pillar-pill">{p.pillar}</span>
+                  <span class="stack-pill">{p.badge}</span>
+                </>
+              )}
             </div>
 
             <h1 id="product-title" class="product-hero-title">
@@ -123,12 +130,26 @@ const relatedProducts = allProducts
       </div>
     </section>
 
-    <!-- 3. Centrepiece Comparison Slider (For products that have before/after state) -->
-    {p.beforeAfterId && (
-      <BeforeAfterSlider initialTab={p.beforeAfterId} hideTabs={true} />
+    <!-- 2.5 What We Built Section -->
+    {p.whatWeBuilt && (
+      <section class="what-we-built-section" aria-labelledby="what-we-built-heading">
+        <div class="container">
+          <div class="built-card card-mastercard reveal-on-scroll">
+            <div class="built-card-header">
+              <span class="eyebrow">WHAT WE BUILT</span>
+              <h2 id="what-we-built-heading" class="built-card-title">
+                Catalogue-grounded AI on the showroom floor.
+              </h2>
+            </div>
+            <p class="built-card-desc">
+              {p.whatWeBuilt}
+            </p>
+          </div>
+        </div>
+      </section>
     )}
 
-    <!-- 4. How It Works (3-step flow) -->
+    <!-- 4. How It Works (3-step flow with Optional Interactive Showroom Tablet) -->
     <section class="how-it-works-section" aria-labelledby="how-it-works-heading">
       <div class="container">
         <div class="section-lead-block reveal-on-scroll">
@@ -137,17 +158,115 @@ const relatedProducts = allProducts
           <p class="section-lead-subline">{p.value.replace(/^\[PLACEHOLDER\]\s*/i, '')}</p>
         </div>
 
-        <div class="flow-steps-grid">
-          {p.howItWorks.map((st) => (
-            <div class="flow-step-card card-mastercard reveal-on-scroll">
-              <div class="flow-step-marker">
-                <span>{st.step}</span>
-              </div>
-              <h3 class="flow-step-title">{st.title}</h3>
-              <p class="flow-step-desc">{st.description.replace(/^\[PLACEHOLDER\]\s*/i, '')}</p>
+        {p.interfaceScreens && p.interfaceScreens.length > 0 ? (
+          <div class="interface-showcase-wrapper reveal-on-scroll" id="interface-showcase">
+            <!-- 3 Step Cards Row (Clickable Interactive Tabs) -->
+            <div class="interactive-steps-nav" role="tablist" aria-label="Showroom flow steps">
+              {p.interfaceScreens.map((screen, idx) => (
+                <button
+                  type="button"
+                  class={`interactive-step-card card-mastercard ${idx === 0 ? 'is-active' : ''}`}
+                  role="tab"
+                  aria-selected={idx === 0 ? "true" : "false"}
+                  aria-controls={`tablet-slide-${idx}`}
+                  id={`step-tab-${idx}`}
+                  data-screen-idx={idx}
+                  data-status-text={screen.statusText || screen.description}
+                >
+                  <div class="step-card-top">
+                    <div class="step-badge-pill">
+                      <span class="step-dot" aria-hidden="true"></span>
+                      <span class="step-pill-label">STEP {screen.step}</span>
+                    </div>
+                    {screen.badge && (
+                      <span class="step-tag-pill">{screen.badge}</span>
+                    )}
+                  </div>
+                  <h3 class="step-card-heading">{screen.title}</h3>
+                  <p class="step-card-copy">{screen.description}</p>
+                  <div class="step-progress-indicator" aria-hidden="true"></div>
+                </button>
+              ))}
             </div>
-          ))}
-        </div>
+
+            <!-- Showroom Tablet Mockup Chassis -->
+            <div class="showroom-tablet-chassis">
+              <!-- Tablet Header Bar -->
+              <div class="tablet-chassis-topbar">
+                <div class="tablet-camera-notch" aria-hidden="true">
+                  <span class="camera-lens"></span>
+                  <span class="ambient-sensor"></span>
+                </div>
+                <div class="tablet-topbar-meta">
+                  <span class="tablet-app-title">IN-STORE TABLET INTERFACE</span>
+                  <span class="tablet-live-pill">
+                    <span class="live-pulse-dot" aria-hidden="true"></span>
+                    <span>Live Catalogue Active</span>
+                  </span>
+                </div>
+              </div>
+
+              <!-- Tablet Screen Viewport -->
+              <div class="tablet-viewport" id="tablet-viewport">
+                {p.interfaceScreens.map((screen, idx) => (
+                  <div
+                    class={`tablet-screen-slide ${idx === 0 ? 'is-active' : ''}`}
+                    id={`tablet-slide-${idx}`}
+                    role="tabpanel"
+                    aria-labelledby={`step-tab-${idx}`}
+                    data-slide-idx={idx}
+                  >
+                    <img
+                      src={screen.image}
+                      alt={screen.alt}
+                      class="tablet-screenshot-img"
+                      loading={idx === 0 ? "eager" : "lazy"}
+                      draggable="false"
+                    />
+                  </div>
+                ))}
+              </div>
+
+              <!-- Tablet Footer Status Bar -->
+              <div class="tablet-chassis-bottombar">
+                <div class="tablet-caption-box">
+                  <Icon name="check" size={14} class="caption-icon" />
+                  <span class="tablet-caption-text" id="tablet-caption-text">
+                    {p.interfaceScreens[0].statusText || p.interfaceScreens[0].description}
+                  </span>
+                </div>
+
+                <div class="tablet-quick-switch" role="tablist" aria-label="Screen Quick Switcher">
+                  {p.interfaceScreens.map((screen, idx) => (
+                    <button
+                      type="button"
+                      class={`quick-switch-btn ${idx === 0 ? 'is-active' : ''}`}
+                      data-target-idx={idx}
+                      aria-label={`Jump to Step ${screen.step}: ${screen.title}`}
+                    >
+                      <span>Step {screen.step}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div class="flow-steps-grid">
+            {p.howItWorks.map((st) => (
+              <div class="flow-step-card card-mastercard reveal-on-scroll">
+                <div class="step-card-top">
+                  <div class="step-badge-pill">
+                    <span class="step-dot" aria-hidden="true"></span>
+                    <span class="step-pill-label">STEP {st.step}</span>
+                  </div>
+                </div>
+                <h3 class="step-card-heading">{st.title}</h3>
+                <p class="step-card-copy">{st.description.replace(/^\[PLACEHOLDER\]\s*/i, '')}</p>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
 
@@ -194,30 +313,38 @@ const relatedProducts = allProducts
       </section>
     )}
 
-    <!-- 7. Who It's For & Built With -->
-    <section class="audience-stack-section" aria-label="Target audience and technology stack">
-      <div class="container">
-        <div class="audience-stack-grid">
-          <!-- Who it's for -->
-          <div class="audience-card card-mastercard reveal-on-scroll">
-            <span class="eyebrow">WHO IT'S FOR</span>
-            <h3 class="audience-card-title">Operational stakeholders.</h3>
-            <div class="audience-chips-wrap">
-              {p.audiences.map((aud) => (
-                <span class="audience-pill">{aud}</span>
-              ))}
-            </div>
+    <!-- 6.5 Make It Yours Section -->
+    {p.makeItYours && (
+      <section class="make-it-yours-section" aria-labelledby="make-it-yours-heading">
+        <div class="container">
+          <div class="section-lead-block reveal-on-scroll">
+            <span class="eyebrow">{p.makeItYours.subline || "MAKE IT YOURS"}</span>
+            <h2 id="make-it-yours-heading" class="section-headline">{p.makeItYours.headline}</h2>
+            {p.makeItYours.description && (
+              <p class="make-it-yours-lead">{p.makeItYours.description}</p>
+            )}
           </div>
 
-          <!-- Built With & Why -->
-          <div class="audience-card card-mastercard reveal-on-scroll">
-            <span class="eyebrow">TECHNOLOGY FIT</span>
-            <h3 class="audience-card-title">Built with {p.builtWith}</h3>
-            <p class="stack-rationale">{p.builtWithReason}</p>
+          <div class="usecases-grid">
+            {p.makeItYours.useCases.map((uc, idx) => (
+              <div class="usecase-card card-mastercard reveal-on-scroll">
+                <span class="usecase-number">0{idx + 1}</span>
+                <h3 class="usecase-title">{uc.title}</h3>
+                <p class="usecase-desc">{uc.description}</p>
+              </div>
+            ))}
           </div>
+
+          {p.makeItYours.closing && (
+            <div class="make-it-yours-callout card-mastercard reveal-on-scroll">
+              <span class="callout-badge">TAILORED DEPLOYMENT</span>
+              <p class="callout-text">{p.makeItYours.closing}</p>
+            </div>
+          )}
         </div>
-      </div>
-    </section>
+      </section>
+    )}
+
 
     <!-- 8. Accessible FAQ Accordion -->
     {p.faq && p.faq.length > 0 && (
@@ -453,13 +580,7 @@ const relatedProducts = allProducts
     line-height: 1.6;
   }
 
-  /* How It Works */
-  .how-it-works-section {
-    padding: var(--section-spacing-desktop) 0;
-    background-color: var(--color-bg);
-    border-bottom: 1px solid var(--color-border);
-  }
-
+  /* How It Works Grid Fallback */
   .flow-steps-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -505,6 +626,345 @@ const relatedProducts = allProducts
     font-size: var(--fs-sm);
     color: var(--color-text-secondary);
     line-height: 1.6;
+  }
+
+  /* Interactive Showroom Tablet & Flow Showcase */
+  .interface-showcase-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    margin-top: 1rem;
+  }
+
+  .interactive-steps-nav {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 840px) {
+    .interactive-steps-nav {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+  }
+
+  .interactive-step-card {
+    background-color: var(--color-surface-alt);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-card);
+    padding: 1.75rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    text-align: left;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: var(--shadow-subtle);
+    font-family: inherit;
+  }
+
+  .interactive-step-card:hover {
+    background-color: var(--color-surface);
+    border-color: var(--color-border);
+    transform: translateY(-2px);
+  }
+
+  .interactive-step-card.is-active {
+    background-color: var(--color-surface);
+    border-color: var(--rhsp-peg-start);
+    box-shadow: 0 12px 28px -8px rgba(238, 75, 43, 0.18);
+  }
+
+  .step-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.25rem;
+  }
+
+  .step-badge-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: var(--radius-pill);
+    background-color: rgba(238, 75, 43, 0.08);
+    border: 1px solid rgba(238, 75, 43, 0.22);
+    color: var(--rhsp-peg-start, #EE4B2B);
+    font-family: var(--font-mono, monospace);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: all 0.25s ease;
+  }
+
+  :global([data-theme="dark"]) .step-badge-pill {
+    background-color: rgba(238, 75, 43, 0.16);
+    border-color: rgba(238, 75, 43, 0.35);
+  }
+
+  .step-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--rhsp-peg-start, #EE4B2B);
+    box-shadow: 0 0 6px rgba(238, 75, 43, 0.6);
+    transition: all 0.25s ease;
+  }
+
+  .step-tag-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3rem 0.75rem;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: all 0.25s ease;
+  }
+
+  .interactive-step-card.is-active .step-badge-pill {
+    background-color: var(--rhsp-peg-start, #EE4B2B);
+    color: #FFFFFF;
+    border-color: var(--rhsp-peg-start, #EE4B2B);
+    box-shadow: 0 2px 8px rgba(238, 75, 43, 0.3);
+  }
+
+  .interactive-step-card.is-active .step-dot {
+    background-color: #FFFFFF;
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.9);
+  }
+
+  .interactive-step-card.is-active .step-tag-pill {
+    border-color: rgba(238, 75, 43, 0.3);
+    color: var(--color-text-primary);
+  }
+
+  .step-card-heading {
+    font-size: 1.18rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    line-height: 1.35;
+    margin: 0;
+  }
+
+  .step-card-copy {
+    font-size: 0.92rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    flex: 1;
+    margin: 0;
+  }
+
+  .step-progress-indicator {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    width: 100%;
+    background: var(--rhsp-peg-gradient);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+
+  .interactive-step-card.is-active .step-progress-indicator {
+    transform: scaleX(1);
+  }
+
+  /* Showroom Tablet Mockup Chassis */
+  .showroom-tablet-chassis {
+    background-color: #0B0F19;
+    border-radius: 28px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.06);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .tablet-chassis-topbar {
+    background: linear-gradient(180deg, #161F33 0%, #0F172A 100%);
+    padding: 0.85rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .tablet-camera-notch {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .camera-lens {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #38BDF8 0%, #0284C7 45%, #032A44 100%);
+    box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.8), 0 0 4px rgba(56, 189, 248, 0.4);
+  }
+
+  .ambient-sensor {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #1E293B;
+  }
+
+  .tablet-topbar-meta {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .tablet-app-title {
+    font-size: 0.72rem;
+    font-weight: 600;
+    font-family: var(--font-sans);
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+  }
+
+  .tablet-live-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: #4ADE80;
+    background: rgba(34, 197, 94, 0.12);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    padding: 0.2rem 0.65rem;
+    border-radius: var(--radius-pill);
+  }
+
+  .live-pulse-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #4ADE80;
+    box-shadow: 0 0 8px #4ADE80;
+    animation: livePulse 2s infinite ease-in-out;
+  }
+
+  @keyframes livePulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.85); }
+  }
+
+  /* Viewport and Slides */
+  .tablet-viewport {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1535 / 735;
+    background-color: #030712;
+    overflow: hidden;
+  }
+
+  .tablet-screen-slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: scale(0.985);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .tablet-screen-slide.is-active {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+    z-index: 2;
+  }
+
+  .tablet-screenshot-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+    cursor: default;
+  }
+
+  /* Tablet Bottom Bar */
+  .tablet-chassis-bottombar {
+    background: #0B0F19;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    flex-wrap: wrap;
+  }
+
+  .tablet-caption-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: var(--fs-sm);
+    line-height: 1.5;
+  }
+
+  .caption-icon {
+    color: var(--rhsp-peg-start);
+    flex-shrink: 0;
+  }
+
+  .tablet-quick-switch {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .quick-switch-btn {
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background-color: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .quick-switch-btn:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #FFFFFF;
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+
+  .quick-switch-btn.is-active {
+    background: var(--rhsp-peg-gradient);
+    color: #FFFFFF;
+    border-color: transparent;
+    box-shadow: 0 2px 10px rgba(238, 75, 43, 0.35);
   }
 
   /* Demo */
@@ -735,4 +1195,236 @@ const relatedProducts = allProducts
     padding-top: 1rem;
     border-top: 1px solid var(--color-border);
   }
+
+  /* What We Built */
+  .what-we-built-section {
+    padding: var(--section-spacing-desktop) 0;
+    background-color: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .built-card {
+    background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-alt) 100%);
+    border-radius: var(--radius-card);
+    padding: 3.5rem 3rem;
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-subtle);
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .built-card-title {
+    font-size: var(--fs-h2);
+    font-weight: 500;
+    line-height: 1.2;
+    margin-top: 0.25rem;
+  }
+
+  .built-card-desc {
+    font-size: var(--fs-body-lg);
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    max-width: 72ch;
+  }
+
+  /* Make It Yours */
+  .make-it-yours-section {
+    padding: var(--section-spacing-desktop) 0;
+    background-color: var(--color-bg-alt);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .make-it-yours-lead {
+    font-size: var(--fs-body-lg);
+    color: var(--color-text-secondary);
+    line-height: 1.65;
+    margin-top: 1.25rem;
+  }
+
+  .usecases-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .usecases-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .usecases-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .usecase-card {
+    background-color: var(--color-surface);
+    border-radius: var(--radius-card);
+    padding: 2rem 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    border: 1px solid var(--color-border-subtle);
+    transition: transform 0.25s var(--ease-out-expo), box-shadow 0.25s var(--ease-out-expo);
+  }
+
+  .usecase-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-card-hover);
+    border-color: var(--color-border);
+  }
+
+  .usecase-number {
+    font-size: 0.95rem;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    color: var(--rhsp-peg-start);
+    letter-spacing: 0.05em;
+  }
+
+  .usecase-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+
+  .usecase-desc {
+    font-size: var(--fs-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.55;
+  }
+
+  .make-it-yours-callout {
+    margin-top: 2.5rem;
+    padding: 2rem 2.5rem;
+    background: linear-gradient(135deg, rgba(247, 148, 29, 0.08) 0%, rgba(238, 75, 43, 0.08) 100%);
+    border: 1px solid rgba(247, 148, 29, 0.35);
+    border-radius: var(--radius-card);
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .callout-badge {
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-pill);
+    background: var(--rhsp-peg-gradient);
+    color: #FFFFFF;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .callout-text {
+    font-size: var(--fs-body);
+    font-weight: 500;
+    color: var(--color-text-primary);
+    line-height: 1.5;
+  }
+
+  /* Tech Stack Pills */
+  .tech-stack-pills-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0.5rem 0 0.75rem;
+  }
+
+  .tech-pill {
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-surface-alt);
+    border: 1px solid var(--color-border);
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+  }
 </style>
+
+<script>
+  function setupInterfaceShowcase() {
+    const showcase = document.getElementById('interface-showcase');
+    if (!showcase) return;
+
+    const tabs = showcase.querySelectorAll<HTMLButtonElement>('.interactive-step-card');
+    const slides = showcase.querySelectorAll<HTMLElement>('.tablet-screen-slide');
+    const pills = showcase.querySelectorAll<HTMLButtonElement>('.quick-switch-btn');
+    const captionEl = document.getElementById('tablet-caption-text');
+
+    if (!tabs.length || !slides.length) return;
+
+    let currentIndex = 0;
+    let autoInterval: any = null;
+
+    function activateSlide(index: number) {
+      currentIndex = index;
+
+      tabs.forEach((tab, i) => {
+        const isActive = i === index;
+        tab.classList.toggle('is-active', isActive);
+        tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      });
+
+      slides.forEach((slide, i) => {
+        slide.classList.toggle('is-active', i === index);
+      });
+
+      pills.forEach((pill, i) => {
+        pill.classList.toggle('is-active', i === index);
+      });
+
+      const activeTab = tabs[index];
+      if (captionEl && activeTab) {
+        const text = activeTab.getAttribute('data-status-text') || activeTab.querySelector('.step-card-copy')?.textContent || '';
+        if (text) captionEl.textContent = text;
+      }
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const idx = parseInt(tab.getAttribute('data-screen-idx') || '0', 10);
+        activateSlide(idx);
+        stopAutoplay();
+      });
+    });
+
+    pills.forEach((pill) => {
+      pill.addEventListener('click', () => {
+        const idx = parseInt(pill.getAttribute('data-target-idx') || '0', 10);
+        activateSlide(idx);
+        stopAutoplay();
+      });
+    });
+
+    function startAutoplay() {
+      if (autoInterval) clearInterval(autoInterval);
+      autoInterval = setInterval(() => {
+        const next = (currentIndex + 1) % slides.length;
+        activateSlide(next);
+      }, 5500);
+    }
+
+    function stopAutoplay() {
+      if (autoInterval) {
+        clearInterval(autoInterval);
+        autoInterval = null;
+      }
+    }
+
+    showcase.addEventListener('mouseenter', stopAutoplay);
+    showcase.addEventListener('mouseleave', startAutoplay);
+    showcase.addEventListener('touchstart', stopAutoplay, { passive: true });
+
+    startAutoplay();
+  }
+
+  setupInterfaceShowcase();
+  document.addEventListener('astro:after-swap', setupInterfaceShowcase);
+</script>

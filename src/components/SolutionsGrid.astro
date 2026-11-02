@@ -33,10 +33,11 @@ const standardProducts = products.filter(p => p.slug !== featureProduct.slug);
         <div class="card-inner-content">
           <div class="card-media-wrapper feature-media">
             <MediaAsset
-              assetKey={`product-${featureProduct.slug}`}
+              assetKey={featureProduct.data.imageKey || `product-${featureProduct.slug}`}
               alt={featureProduct.data.title}
               aspectRatio="16/9"
               crop="quarter"
+              focus={featureProduct.data.focus}
               hoverVideoKey={`video-${featureProduct.slug}`}
               theme="navy"
             />
@@ -64,10 +65,11 @@ const standardProducts = products.filter(p => p.slug !== featureProduct.slug);
           <div class="card-inner-content">
             <div class="card-media-wrapper">
               <MediaAsset
-                assetKey={`product-${product.slug}`}
+                assetKey={product.data.imageKey || `product-${product.slug}`}
                 alt={product.data.title}
-                aspectRatio="16/10"
+                aspectRatio="4/5"
                 crop="quarter"
+                focus={product.data.focus}
                 hoverVideoKey={`video-${product.slug}`}
                 theme={product.data.pillar === 'Gen-AI' ? 'navy' : 'warm'}
               />

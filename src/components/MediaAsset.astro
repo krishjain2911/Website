@@ -13,6 +13,11 @@ interface Props {
   sizes?: string;
   hoverVideoKey?: string;
   theme?: 'warm' | 'navy';
+  focus?: string;
+  loading?: 'lazy' | 'eager';
+  fetchpriority?: 'high' | 'auto' | 'low';
+  width?: number;
+  height?: number;
 }
 
 const {
@@ -24,7 +29,12 @@ const {
   crop = 'none',
   sizes = '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw',
   hoverVideoKey,
-  theme = 'warm'
+  theme = 'warm',
+  focus,
+  loading = 'lazy',
+  fetchpriority = 'auto',
+  width,
+  height
 } = Astro.props;
 
 // Read manifest
@@ -38,11 +48,99 @@ try {
   // Silent fallback
 }
 
-const imageEntry = manifest.images?.[assetKey];
+// Clean slug from assetKey (e.g. 'product-voice-agents' -> 'voice-agents', 'solutions/voice-agents-hero' -> 'voice-agents')
+const cleanSlug = assetKey
+  .replace(/^product-/, '')
+  .replace(/^solutions\//, '')
+  .replace(/-hero$/, '');
+
+const slugAliases: Record<string, string[]> = {
+  'voice-agents': ['voice-agents', 'sonakshi'],
+  'sovereign-ai': ['sovereign-ai', 'sovreign', 'sovereign'],
+  'clm': ['clm'],
+  'dms': ['dms'],
+  'whatsapp-journeys': ['whatsapp-journeys', 'whatsapp'],
+  'ask-me-anything': ['ask-me-anything', 'ama']
+};
+
+const candidateFolders = [
+  cleanSlug,
+  ...(slugAliases[cleanSlug] || [])
+];
+
+let directImagePath: string | null = null;
+const imageExtensions = ['.png', '.jpg', '.jpeg', '.webp', '.svg', '.gif'];
+
+// 1. Check inside public/media/products/<folder>/
+for (const folder of candidateFolders) {
+  const dirPath = path.resolve(`public/media/products/${folder}`);
+  if (fs.existsSync(dirPath)) {
+    try {
+      const files = fs.readdirSync(dirPath);
+      const preferred = files.find(f => /^(hero|main|cover|product-)/i.test(f) && imageExtensions.some(ext => f.toLowerCase().endsWith(ext)));
+      const fallback = files.find(f => imageExtensions.some(ext => f.toLowerCase().endsWith(ext)));
+      const chosen = preferred || fallback;
+      if (chosen) {
+        directImagePath = `/media/products/${folder}/${chosen}`;
+        break;
+      }
+    } catch {}
+  }
+}
+
+// 2. Check public/media/products/<folder>.(png|jpg|webp)
+if (!directImagePath) {
+  for (const folder of candidateFolders) {
+    for (const ext of imageExtensions) {
+      if (fs.existsSync(path.resolve(`public/media/products/${folder}${ext}`))) {
+        directImagePath = `/media/products/${folder}${ext}`;
+        break;
+      }
+    }
+    if (directImagePath) break;
+  }
+}
+
+// 3. Check public/media/raw/
+if (!directImagePath) {
+  const rawCandidateKeys = [assetKey, `product-${cleanSlug}`, cleanSlug];
+  for (const k of rawCandidateKeys) {
+    for (const ext of imageExtensions) {
+      if (fs.existsSync(path.resolve(`public/media/raw/${k}${ext}`))) {
+        directImagePath = `/media/raw/${k}${ext}`;
+        break;
+      }
+    }
+    if (directImagePath) break;
+  }
+}
+
+// 4. Check public/media/ directly
+if (!directImagePath) {
+  for (const ext of imageExtensions) {
+    if (fs.existsSync(path.resolve(`public/media/${assetKey}${ext}`))) {
+      directImagePath = `/media/${assetKey}${ext}`;
+      break;
+    }
+  }
+}
+
+const lookupKey =
+  manifest.images?.[assetKey] ? assetKey :
+  manifest.images?.[assetKey.replace(/^solutions\//, 'product-')] ? assetKey.replace(/^solutions\//, 'product-') :
+  manifest.images?.[assetKey.replace(/^about\//, 'about-')] ? assetKey.replace(/^about\//, 'about-') :
+  manifest.images?.[assetKey.replace(/^featured\//, 'feature-')] ? assetKey.replace(/^featured\//, 'feature-') :
+  manifest.images?.[assetKey.replace(/^before\//, 'before-')] ? assetKey.replace(/^before\//, 'before-') :
+  manifest.images?.[assetKey.replace(/^contact\//, 'contact-')] ? assetKey.replace(/^contact\//, 'contact-') :
+  manifest.images?.[`product-${cleanSlug}`] ? `product-${cleanSlug}` :
+  manifest.images?.[cleanSlug] ? cleanSlug :
+  assetKey;
+
+const imageEntry = manifest.images?.[lookupKey] || (directImagePath ? { raw: directImagePath, formats: {} } : null);
 const videoEntry = manifest.videos?.[assetKey];
 const hoverVideoEntry = hoverVideoKey ? manifest.videos?.[hoverVideoKey] : null;
 
-const hasImage = Boolean(imageEntry);
+const hasImage = Boolean(imageEntry || directImagePath);
 const hasVideo = Boolean(videoEntry);
 const isMissing = type === 'video' ? !hasVideo : !hasImage;
 
@@ -118,9 +216,9 @@ const cropClass =
       Your browser does not support the video tag.
     </video>
   ) : (
-    <!-- Responsive Picture with AVIF + WebP srcset -->
+    <!-- Responsive Picture with AVIF + WebP srcset or Direct Image -->
     <picture class="media-picture">
-      {imageEntry.formats.avif && Object.keys(imageEntry.formats.avif).length > 0 && (
+      {imageEntry?.formats?.avif && Object.keys(imageEntry.formats.avif).length > 0 && (
         <source
           type="image/avif"
           srcset={Object.entries(imageEntry.formats.avif)
@@ -129,7 +227,7 @@ const cropClass =
           sizes={sizes}
         />
       )}
-      {imageEntry.formats.webp && Object.keys(imageEntry.formats.webp).length > 0 && (
+      {imageEntry?.formats?.webp && Object.keys(imageEntry.formats.webp).length > 0 && (
         <source
           type="image/webp"
           srcset={Object.entries(imageEntry.formats.webp)
@@ -139,11 +237,15 @@ const cropClass =
         />
       )}
       <img
-        src={imageEntry.raw || Object.values(imageEntry.formats.webp || {})[0]}
+        src={directImagePath || imageEntry?.raw || (imageEntry?.formats?.webp ? Object.values(imageEntry.formats.webp)[0] : '')}
         alt={alt}
-        loading="lazy"
+        loading={loading}
         decoding="async"
+        fetchpriority={fetchpriority !== 'auto' ? fetchpriority : undefined}
+        width={width || imageEntry?.width}
+        height={height || imageEntry?.height}
         class="media-img card-image-scaler"
+        style={focus ? `object-position: ${focus};` : undefined}
       />
     </picture>
   )}

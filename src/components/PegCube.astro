@@ -1,6 +1,8 @@
 ---
-import Icon from './Icon.astro';
 import LearnMore from './LearnMore.astro';
+import PegCardPlan from './PegCardPlan.astro';
+import PegCardEngineer from './PegCardEngineer.astro';
+import PegCardGenAI from './PegCardGenAI.astro';
 ---
 
 <section id="peg-cube" class="peg-section" aria-labelledby="peg-heading">
@@ -72,31 +74,13 @@ import LearnMore from './LearnMore.astro';
             </div>
           </div>
 
-          <!-- Navy Socket Ellipse (Interactive Easter Egg) -->
+          <!-- Navy Socket Ellipse Pedestal -->
           <div
             class="cube-socket-ellipse"
             id="cube-socket-ellipse"
-            role="button"
-            tabindex="0"
-            title="Easter egg: Click to test PEG socket locking mechanism"
-            aria-label="Interactive Socket: Click to test fit"
+            aria-hidden="true"
           >
             <div class="socket-inner-depth"></div>
-            <div class="socket-lock-indicator">
-              <span class="socket-dot" aria-hidden="true"></span>
-              <span class="socket-text">TEST FIT</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Easter Egg Celebration Toast -->
-        <div id="peg-lock-toast" class="peg-lock-toast" hidden aria-hidden="true">
-          <div class="toast-inner">
-            <span class="toast-icon" aria-hidden="true">✨</span>
-            <div class="toast-text-col">
-              <strong class="toast-title">ADAPTER ENGAGED: PERFECT FIT!</strong>
-              <span class="toast-sub">Square PEG seated into Round Socket with 0% compromise.</span>
-            </div>
           </div>
         </div>
 
@@ -135,16 +119,6 @@ import LearnMore from './LearnMore.astro';
           >
             Gen-AI
           </button>
-          <button
-            type="button"
-            class="peg-tab-btn peg-lock-tab-btn"
-            id="peg-lock-trigger"
-            title="Easter egg: Lock the square PEG into the round socket"
-            aria-label="Test Adapter Fit Easter Egg"
-          >
-            <span class="lock-sparkle" aria-hidden="true">⚡</span>
-            <span>Test Fit</span>
-          </button>
         </div>
       </div>
 
@@ -160,7 +134,7 @@ import LearnMore from './LearnMore.astro';
           >
             <div class="panel-eyebrow">
               <span class="eyebrow">P - PLAN</span>
-              <span class="pillar-role-badge">Technology consultancy</span>
+              <span class="pillar-role-badge">Decide right, once.</span>
             </div>
             <h3 class="panel-headline">
               "The right decision before the first line of code."
@@ -172,35 +146,20 @@ import LearnMore from './LearnMore.astro';
             <ul class="panel-bullets">
               <li>
                 <span class="bullet-dot" aria-hidden="true"></span>
-                <span>Strategy and technology advisory</span>
+                <span>Clarity on what to build, and what to skip</span>
               </li>
               <li>
                 <span class="bullet-dot" aria-hidden="true"></span>
-                <span>Architecture and platform choice</span>
+                <span>The right platform, chosen on facts, not habit</span>
               </li>
               <li>
                 <span class="bullet-dot" aria-hidden="true"></span>
-                <span>Roadmap planning and delivery guidance</span>
+                <span>A roadmap your team can actually execute</span>
               </li>
             </ul>
 
-            <!-- Plan Architecture Diagram -->
-            <div class="panel-diagram-card">
-              <div class="diagram-meta-row">
-                <span class="diagram-badge">ARCHITECTURE BLUEPRINT</span>
-                <span class="diagram-label">Strategy Decision Matrix</span>
-              </div>
-              <div class="diagram-view">
-                <img
-                  src="/media/peg/plan-architecture-diagram.webp"
-                  alt="Plan Architecture Blueprint: Decision Matrix for Low-Code OutSystems, High-Code MERN, and Hybrid Strategy"
-                  class="diagram-img"
-                  width="1376"
-                  height="768"
-                  loading="lazy"
-                />
-              </div>
-            </div>
+            <!-- Plan Interactive Roadmap Card -->
+            <PegCardPlan />
 
             <div class="panel-products">
               <span class="products-title">Focus areas:</span>
@@ -227,10 +186,10 @@ import LearnMore from './LearnMore.astro';
           >
             <div class="panel-eyebrow">
               <span class="eyebrow">E - ENGINEER</span>
-              <span class="pillar-role-badge">Low-code speed or high-code freedom</span>
+              <span class="pillar-role-badge">Built fast. Built to scale.</span>
             </div>
             <h3 class="panel-headline">
-              "Low-code speed or high-code freedom - whichever fits."
+              "Speed when you need it. Freedom when you don't want limits."
             </h3>
             <p class="panel-desc">
               OutSystems or MERN, chosen per budget and requirements.
@@ -239,35 +198,20 @@ import LearnMore from './LearnMore.astro';
             <ul class="panel-bullets">
               <li>
                 <span class="bullet-dot" aria-hidden="true"></span>
-                <span>OutSystems for rapid visual delivery</span>
+                <span>OutSystems: live in weeks, not quarters</span>
               </li>
               <li>
                 <span class="bullet-dot" aria-hidden="true"></span>
-                <span>MERN for high-code flexibility</span>
+                <span>MERN: complete freedom, no platform ceiling</span>
               </li>
               <li>
                 <span class="bullet-dot" aria-hidden="true"></span>
-                <span>Chosen per budget and requirements</span>
+                <span>We recommend what suits you, not what suits us</span>
               </li>
             </ul>
 
-            <!-- Engineer Architecture Diagram -->
-            <div class="panel-diagram-card">
-              <div class="diagram-meta-row">
-                <span class="diagram-badge">INTEGRATION BLUEPRINT</span>
-                <span class="diagram-label">Dual-Engine System Pipeline</span>
-              </div>
-              <div class="diagram-view">
-                <img
-                  src="/media/peg/engineer-architecture-diagram.webp"
-                  alt="Engineer Architecture Blueprint: OutSystems Low-Code Rapid Portal and MERN Stack Integration"
-                  class="diagram-img"
-                  width="1376"
-                  height="768"
-                  loading="lazy"
-                />
-              </div>
-            </div>
+            <!-- Engineer Interactive Integration Card -->
+            <PegCardEngineer />
 
             <div class="panel-products">
               <span class="products-title">Products:</span>
@@ -293,47 +237,32 @@ import LearnMore from './LearnMore.astro';
           >
             <div class="panel-eyebrow">
               <span class="eyebrow">G - GEN-AI</span>
-              <span class="pillar-role-badge">AI solutions</span>
+              <span class="pillar-role-badge">AI you can trust with your data.</span>
             </div>
             <h3 class="panel-headline">
               "AI that works on your data, inside your walls."
             </h3>
             <p class="panel-desc">
-              AI that works on your data, inside your walls.
+              Private by design. Powerful by default.
             </p>
 
             <ul class="panel-bullets">
               <li>
                 <span class="bullet-dot" aria-hidden="true"></span>
-                <span>Voice Agents</span>
+                <span>Voice agents that talk to customers 24/7</span>
               </li>
               <li>
                 <span class="bullet-dot" aria-hidden="true"></span>
-                <span>Sovereign AI</span>
+                <span>Your own AI, on your own infrastructure</span>
               </li>
               <li>
                 <span class="bullet-dot" aria-hidden="true"></span>
-                <span>AskMeAnything</span>
+                <span>Ask your business anything, get answers from your own data</span>
               </li>
             </ul>
 
-            <!-- Gen-AI Architecture Diagram -->
-            <div class="panel-diagram-card">
-              <div class="diagram-meta-row">
-                <span class="diagram-badge">SOVEREIGN AI BLUEPRINT</span>
-                <span class="diagram-label">Private Perimeter AI Pipeline</span>
-              </div>
-              <div class="diagram-view">
-                <img
-                  src="/media/peg/genai-architecture-diagram.webp"
-                  alt="Gen-AI Architecture Blueprint: Sovereign Private AI Pipeline inside Enterprise Walls"
-                  class="diagram-img"
-                  width="1376"
-                  height="768"
-                  loading="lazy"
-                />
-              </div>
-            </div>
+            <!-- Gen-AI Interactive Architecture Card -->
+            <PegCardGenAI />
 
             <div class="panel-products">
               <span class="products-title">Products:</span>
@@ -542,7 +471,7 @@ import LearnMore from './LearnMore.astro';
     opacity: 0.95;
   }
 
-  /* Navy Ellipse Socket with Easter Egg */
+  /* Navy Ellipse Socket Pedestal */
   .cube-socket-ellipse {
     position: absolute;
     bottom: 25px;
@@ -555,177 +484,10 @@ import LearnMore from './LearnMore.astro';
     align-items: center;
     justify-content: center;
     filter: drop-shadow(0 15px 25px rgba(15, 42, 74, 0.35));
-    cursor: pointer;
+    pointer-events: none;
     transition: all 0.3s ease;
   }
 
-  .cube-socket-ellipse:hover {
-    filter: drop-shadow(0 15px 30px rgba(247, 148, 29, 0.45));
-  }
-
-  .cube-socket-ellipse.is-locked {
-    background: radial-gradient(ellipse at center, #FF9E2C 0%, #1E4B8F 60%, rgba(30, 75, 143, 0) 75%);
-    filter: drop-shadow(0 0 35px rgba(247, 148, 29, 0.8));
-    animation: socketPulse 1.2s infinite alternate;
-  }
-
-  @keyframes socketPulse {
-    0% { transform: scale(1); filter: drop-shadow(0 0 25px rgba(247, 148, 29, 0.6)); }
-    100% { transform: scale(1.04); filter: drop-shadow(0 0 45px rgba(247, 148, 29, 0.95)); }
-  }
-
-  .socket-lock-indicator {
-    position: absolute;
-    bottom: -24px;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    padding: 0.15rem 0.55rem;
-    border-radius: 9999px;
-    background: rgba(30, 75, 143, 0.15);
-    border: 1px solid rgba(30, 75, 143, 0.3);
-    pointer-events: none;
-    transition: all 0.25s ease;
-  }
-
-  .cube-socket-ellipse:hover .socket-lock-indicator {
-    background: rgba(247, 148, 29, 0.2);
-    border-color: rgba(247, 148, 29, 0.5);
-  }
-
-  .socket-dot {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: #22c55e;
-    box-shadow: 0 0 5px #22c55e;
-  }
-
-  .socket-text {
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    font-weight: 600;
-    color: var(--color-brand-structural);
-    letter-spacing: 0.05em;
-  }
-
-  .cube-socket-ellipse:hover .socket-text {
-    color: #f7941d;
-  }
-
-  /* Cube viewport lock animation */
-  .cube-viewport.is-locked {
-    animation: none !important;
-    transform: translateY(68px) scale(0.92) !important;
-    transition: transform 0.6s cubic-bezier(0.34, 1.3, 0.64, 1) !important;
-  }
-
-  /* Easter Egg Toast */
-  .peg-lock-toast {
-    margin-top: 1.5rem;
-    background: #0f172a;
-    border: 1px solid rgba(247, 148, 29, 0.5);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3), 0 0 20px rgba(247, 148, 29, 0.2);
-    border-radius: 10px;
-    padding: 0.75rem 1.15rem;
-    animation: toastPop 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    max-width: 340px;
-    z-index: 10;
-  }
-
-  @keyframes toastPop {
-    0% { opacity: 0; transform: translateY(10px) scale(0.95); }
-    100% { opacity: 1; transform: translateY(0) scale(1); }
-  }
-
-  .toast-inner {
-    display: flex;
-    align-items: center;
-    gap: 0.65rem;
-  }
-
-  .toast-icon {
-    font-size: 1.25rem;
-  }
-
-  .toast-text-col {
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-  }
-
-  .toast-title {
-    font-size: 0.78rem;
-    color: #f7941d;
-    letter-spacing: 0.02em;
-  }
-
-  .toast-sub {
-    font-size: 0.72rem;
-    color: #cbd5e1;
-    line-height: 1.35;
-  }
-
-  /* Architecture Diagram Cards in Panels */
-  .panel-diagram-card {
-    margin: 1.25rem 0;
-    background: #0a0d14;
-    border: 1px solid #1f293d;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-    transition: border-color 0.25s ease, transform 0.25s ease;
-  }
-
-  .panel-diagram-card:hover {
-    border-color: rgba(247, 148, 29, 0.5);
-    transform: translateY(-2px);
-  }
-
-  .diagram-meta-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.65rem 1rem;
-    background: #0f1422;
-    border-bottom: 1px solid #1f293d;
-  }
-
-  .diagram-badge {
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    font-weight: 700;
-    color: #38bdf8;
-    letter-spacing: 0.06em;
-  }
-
-  .diagram-label {
-    font-size: 0.72rem;
-    color: #94a3b8;
-    font-weight: 500;
-  }
-
-  .diagram-view {
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    background: #05070c;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .diagram-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.4s ease;
-  }
-
-  .diagram-view:hover .diagram-img {
-    transform: scale(1.02);
-  }
 
   .socket-inner-depth {
     width: 70%;
@@ -767,29 +529,6 @@ import LearnMore from './LearnMore.astro';
   .peg-tab-btn.is-active {
     background-color: var(--color-btn-primary-bg);
     color: var(--color-btn-primary-text);
-  }
-
-  .peg-lock-tab-btn {
-    background: rgba(247, 148, 29, 0.1);
-    color: var(--rhsp-peg-start);
-    border: 1px dashed rgba(247, 148, 29, 0.45);
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    font-weight: 600;
-  }
-
-  .peg-lock-tab-btn:hover {
-    background: rgba(247, 148, 29, 0.2);
-    color: var(--color-text-primary);
-    border-color: var(--rhsp-peg-start);
-  }
-
-  .peg-lock-tab-btn.is-active {
-    background: var(--rhsp-peg-start);
-    color: #ffffff;
-    border-style: solid;
-    box-shadow: 0 0 16px rgba(247, 148, 29, 0.4);
   }
 
   /* Content Panel */
@@ -948,10 +687,7 @@ import LearnMore from './LearnMore.astro';
 <script>
   function setupPegCube() {
     const sceneWrapper = document.getElementById('cube-scene-wrapper');
-    const cubeViewport = document.getElementById('cube-viewport');
     const cubeAssembly = document.getElementById('cube-assembly');
-    const socketEllipse = document.getElementById('cube-socket-ellipse');
-    const lockToast = document.getElementById('peg-lock-toast');
     const tabButtons = document.querySelectorAll('.peg-tab-btn');
     const panels = document.querySelectorAll('.peg-panel');
     const faces = document.querySelectorAll('.cube-face[data-pillar]');
@@ -968,7 +704,7 @@ import LearnMore from './LearnMore.astro';
     let baseAngle = angles[currentPillar];
 
     function setPillar(pillarKey: string) {
-      if (!angles[pillarKey]) return;
+      if (!angles[pillarKey] || !cubeAssembly) return;
       currentPillar = pillarKey;
       baseAngle = angles[pillarKey];
 
@@ -989,6 +725,9 @@ import LearnMore from './LearnMore.astro';
           p.setAttribute('hidden', '');
         }
       });
+
+      // Dispatch event for interactive peg cards
+      document.dispatchEvent(new CustomEvent('peg-tab-change', { detail: { pillar: pillarKey } }));
 
       // Rotate Cube smoothly
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1017,7 +756,7 @@ import LearnMore from './LearnMore.astro';
       });
 
       // Keyboard arrow cycling
-      btn.addEventListener('keydown', (e: KeyboardEvent) => {
+      btn.addEventListener('keydown', (e: any) => {
         const order = ['plan', 'engineer', 'genai'];
         const idx = order.indexOf(currentPillar);
         if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
@@ -1034,19 +773,12 @@ import LearnMore from './LearnMore.astro';
       });
     });
 
-    // Face clicks & Easter Egg Sequence Tracker (P -> E -> G)
-    const clickedSequence: string[] = [];
-
+    // Face clicks
     faces.forEach(face => {
       face.addEventListener('click', () => {
         const pillar = face.getAttribute('data-pillar');
         if (pillar) {
           setPillar(pillar);
-          clickedSequence.push(pillar);
-          if (clickedSequence.length > 3) clickedSequence.shift();
-          if (clickedSequence.join('-') === 'plan-engineer-genai') {
-            triggerSocketLockEasterEgg();
-          }
         }
       });
       face.addEventListener('keydown', (e: any) => {
@@ -1090,115 +822,6 @@ import LearnMore from './LearnMore.astro';
         cubeAssembly.style.transform = `rotateX(${baseAngle.x}deg) rotateY(${baseAngle.y}deg)`;
       });
     }
-
-    const lockTrigger = document.getElementById('peg-lock-trigger');
-
-    // Easter Egg: Lock PEG into the socket
-    let isLocked = false;
-    let lockTimer: any = null;
-    let audioCtx: AudioContext | null = null;
-
-    function playLockHarmonicChime() {
-      try {
-        const AudioClass = window.AudioContext || (window as any).webkitAudioContext;
-        if (!AudioClass) return;
-        if (!audioCtx) audioCtx = new AudioClass();
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-
-        const notes = [523.25, 659.25, 783.99]; // C5, E5, G5 major triad
-        notes.forEach((freq, idx) => {
-          const osc = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
-
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(freq, audioCtx.currentTime + idx * 0.08);
-
-          gain.gain.setValueAtTime(0.0001, audioCtx.currentTime + idx * 0.08);
-          gain.gain.exponentialRampToValueAtTime(0.07, audioCtx.currentTime + idx * 0.08 + 0.02);
-          gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + idx * 0.08 + 0.35);
-
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
-
-          osc.start(audioCtx.currentTime + idx * 0.08);
-          osc.stop(audioCtx.currentTime + idx * 0.08 + 0.35);
-        });
-      } catch (err) {
-        console.warn('Audio chime suppressed', err);
-      }
-    }
-
-    function triggerSocketLockEasterEgg() {
-      isLocked = !isLocked;
-      clearTimeout(lockTimer);
-
-      if (isLocked) {
-        cubeViewport?.classList.add('is-locked');
-        socketEllipse?.classList.add('is-locked');
-        lockTrigger?.classList.add('is-active');
-        if (lockToast) {
-          lockToast.hidden = false;
-          lockToast.style.display = 'block';
-          lockToast.setAttribute('aria-hidden', 'false');
-        }
-        playLockHarmonicChime();
-
-        // Auto release after 4.5 seconds
-        lockTimer = setTimeout(() => {
-          isLocked = false;
-          cubeViewport?.classList.remove('is-locked');
-          socketEllipse?.classList.remove('is-locked');
-          lockTrigger?.classList.remove('is-active');
-          if (lockToast) {
-            lockToast.hidden = true;
-            lockToast.style.display = 'none';
-            lockToast.setAttribute('aria-hidden', 'true');
-          }
-        }, 4500);
-      } else {
-        cubeViewport?.classList.remove('is-locked');
-        socketEllipse?.classList.remove('is-locked');
-        lockTrigger?.classList.remove('is-active');
-        if (lockToast) {
-          lockToast.hidden = true;
-          lockToast.style.display = 'none';
-          lockToast.setAttribute('aria-hidden', 'true');
-        }
-      }
-    }
-
-    // Socket click & button triggers lock
-    socketEllipse?.addEventListener('click', triggerSocketLockEasterEgg);
-    lockTrigger?.addEventListener('click', triggerSocketLockEasterEgg);
-    socketEllipse?.addEventListener('keydown', (e: any) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        triggerSocketLockEasterEgg();
-      }
-    });
-
-    // Konami code easter egg (↑ ↑ ↓ ↓ ← → ← → B A)
-    const konamiSequence = [
-      'ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown',
-      'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight',
-      'b', 'a'
-    ];
-    let konamiIdx = 0;
-
-    window.addEventListener('keydown', (e) => {
-      const key = e.key.toLowerCase();
-      const expectedKey = konamiSequence[konamiIdx].toLowerCase();
-
-      if (key === expectedKey) {
-        konamiIdx++;
-        if (konamiIdx === konamiSequence.length) {
-          konamiIdx = 0;
-          triggerSocketLockEasterEgg();
-        }
-      } else {
-        konamiIdx = 0;
-      }
-    });
   }
 
   // Defer initialization to idle to safeguard LCP / TBT performance

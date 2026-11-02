@@ -52,9 +52,10 @@ const { featuredStories } = siteConfig;
             <div class="story-image-frame">
               <MediaAsset
                 assetKey={story.imageKey}
-                alt={story.title}
-                aspectRatio="16/10"
+                alt={story.alt || story.title}
+                aspectRatio="4/5"
                 crop="rounded"
+                focus={story.focus}
                 hoverVideoKey={story.videoKey}
                 theme="warm"
               />

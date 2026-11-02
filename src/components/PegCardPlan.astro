@@ -1,0 +1,471 @@
+---
+// PegCardPlan.astro: Interactive Plan Card ("Your roadmap, in 30 seconds.")
+import Icon from './Icon.astro';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+
+const roadmapData = {
+  'cut-manual': {
+    label: 'Cut manual work',
+    steps: [
+      { phase: 'NOW', text: 'Map the workflows worth automating' },
+      { phase: 'NEXT', text: 'Automate the top 3' },
+      { phase: 'LATER', text: 'Extend across teams' }
+    ]
+  },
+  'launch-faster': {
+    label: 'Launch faster',
+    steps: [
+      { phase: 'NOW', text: 'Pick the smallest valuable release' },
+      { phase: 'NEXT', text: 'Ship in weeks' },
+      { phase: 'LATER', text: 'Iterate on real usage' }
+    ]
+  },
+  'keep-private': {
+    label: 'Keep data private',
+    steps: [
+      { phase: 'NOW', text: 'Classify sensitive data' },
+      { phase: 'NEXT', text: 'Deploy inside your environment' },
+      { phase: 'LATER', text: 'Roll out with governance' }
+    ]
+  }
+};
+---
+
+<div class={`peg-interactive-card peg-card-plan ${className}`} id="peg-card-plan" role="region" aria-label="Interactive Plan Roadmap">
+  <!-- Card Header -->
+  <div class="peg-card-header">
+    <div class="header-left">
+      <span class="plan-accent-dot" aria-hidden="true"></span>
+      <h4 class="peg-card-title">Your roadmap, in 30 seconds.</h4>
+    </div>
+  </div>
+
+  <!-- Interactive Chip Selectors -->
+  <div class="plan-chips-row" role="tablist" aria-label="Roadmap Focus Options">
+    <button
+      type="button"
+      class="plan-chip-btn is-active"
+      role="tab"
+      aria-selected="true"
+      data-plan-target="cut-manual"
+      id="chip-cut-manual"
+    >
+      Cut manual work
+    </button>
+    <button
+      type="button"
+      class="plan-chip-btn"
+      role="tab"
+      aria-selected="false"
+      data-plan-target="launch-faster"
+      id="chip-launch-faster"
+    >
+      Launch faster
+    </button>
+    <button
+      type="button"
+      class="plan-chip-btn"
+      role="tab"
+      aria-selected="false"
+      data-plan-target="keep-private"
+      id="chip-keep-private"
+    >
+      Keep data private
+    </button>
+  </div>
+
+  <!-- 3-Step Horizontal Roadmap Stage -->
+  <div class="roadmap-stage">
+    <!-- Connecting animated line -->
+    <div class="roadmap-track-bg" aria-hidden="true">
+      <div class="roadmap-track-fill" id="plan-track-fill"></div>
+    </div>
+
+    <!-- The 3 Step Boxes -->
+    <div class="roadmap-steps-grid" id="plan-steps-grid">
+      <!-- Step 1: NOW -->
+      <div class="roadmap-step-box step-now">
+        <div class="step-badge-row">
+          <span class="step-phase-badge">NOW</span>
+          <span class="step-num-mono">01</span>
+        </div>
+        <p class="step-outcome-text" id="plan-step-text-0">Map the workflows worth automating</p>
+      </div>
+
+      <!-- Step 2: NEXT -->
+      <div class="roadmap-step-box step-next">
+        <div class="step-badge-row">
+          <span class="step-phase-badge">NEXT</span>
+          <span class="step-num-mono">02</span>
+        </div>
+        <p class="step-outcome-text" id="plan-step-text-1">Automate the top 3</p>
+      </div>
+
+      <!-- Step 3: LATER with Navy Check -->
+      <div class="roadmap-step-box step-later">
+        <div class="step-badge-row">
+          <span class="step-phase-badge">LATER</span>
+          <div class="later-check-badge" title="Verified outcome">
+            <Icon name="check" size={14} class="navy-check-icon" />
+          </div>
+        </div>
+        <p class="step-outcome-text" id="plan-step-text-2">Extend across teams</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .peg-card-plan {
+    background-color: var(--color-surface, #FFFFFF);
+    border: 1px solid var(--color-border, #E6E6E3);
+    border-radius: 24px;
+    padding: 24px;
+    width: 100%;
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    user-select: none;
+    box-sizing: border-box;
+  }
+
+  :global([data-theme="dark"]) .peg-card-plan {
+    background-color: #1A1A1A;
+    border-color: #2D2D2D;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  }
+
+  .peg-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .plan-accent-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #1E4B8F;
+    flex-shrink: 0;
+  }
+
+  .peg-card-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--color-text-primary, #1A1A1A);
+    margin: 0;
+    line-height: 1.25;
+  }
+
+  /* Pill Chips */
+  .plan-chips-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+
+  .plan-chip-btn {
+    border-radius: 100px;
+    padding: 7px 15px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.2;
+    cursor: pointer;
+    background-color: var(--color-surface-alt, #F6F6F4);
+    border: 1px solid var(--color-border, #E6E6E3);
+    color: var(--color-text-secondary, #5B5B5B);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .plan-chip-btn:hover {
+    color: var(--color-text-primary, #1A1A1A);
+    border-color: #1E4B8F;
+  }
+
+  .plan-chip-btn.is-active {
+    background-color: #1E4B8F;
+    border-color: #1E4B8F;
+    color: #FFFFFF;
+  }
+
+  :global([data-theme="dark"]) .plan-chip-btn {
+    background-color: #242424;
+    border-color: #333333;
+    color: #A0A0A0;
+  }
+
+  :global([data-theme="dark"]) .plan-chip-btn:hover {
+    color: #FFFFFF;
+    border-color: #4A7BBF;
+  }
+
+  :global([data-theme="dark"]) .plan-chip-btn.is-active {
+    background-color: #1E4B8F;
+    border-color: #1E4B8F;
+    color: #FFFFFF;
+  }
+
+  .plan-chip-btn:focus-visible {
+    outline: 2px solid #1E4B8F;
+    outline-offset: 2px;
+  }
+
+  /* Roadmap Stage */
+  .roadmap-stage {
+    position: relative;
+    width: 100%;
+    margin-top: auto;
+  }
+
+  .roadmap-track-bg {
+    position: absolute;
+    top: 24px;
+    left: 20px;
+    right: 20px;
+    height: 2px;
+    background-color: var(--color-border, #E6E6E3);
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  :global([data-theme="dark"]) .roadmap-track-bg {
+    background-color: #333333;
+  }
+
+  .roadmap-track-fill {
+    width: 100%;
+    height: 100%;
+    background-color: #1E4B8F;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .roadmap-track-fill.is-drawn {
+    transform: scaleX(1);
+  }
+
+  .roadmap-steps-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.85rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  @media (max-width: 640px) {
+    .roadmap-track-bg {
+      display: none;
+    }
+    .roadmap-steps-grid {
+      grid-template-columns: 1fr;
+      gap: 0.65rem;
+    }
+  }
+
+  .roadmap-step-box {
+    background-color: var(--color-surface-alt, #F9F9F8);
+    border: 1px solid var(--color-border, #E6E6E3);
+    border-radius: 14px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    transition: transform 0.3s ease, border-color 0.25s ease, opacity 0.3s ease;
+  }
+
+  :global([data-theme="dark"]) .roadmap-step-box {
+    background-color: #222222;
+    border-color: #2E2E2E;
+  }
+
+  .roadmap-step-box:hover {
+    border-color: #1E4B8F;
+    transform: translateY(-2px);
+  }
+
+  .step-badge-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .step-phase-badge {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1E4B8F;
+    letter-spacing: 0.05em;
+  }
+
+  :global([data-theme="dark"]) .step-phase-badge {
+    color: #6C9CE4;
+  }
+
+  .step-num-mono {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-muted, #8A8A88);
+  }
+
+  .later-check-badge {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: rgba(30, 75, 143, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  :global([data-theme="dark"]) .later-check-badge {
+    background-color: rgba(108, 156, 228, 0.2);
+  }
+
+  .navy-check-icon {
+    color: #1E4B8F;
+  }
+
+  :global([data-theme="dark"]) .navy-check-icon {
+    color: #6C9CE4;
+  }
+
+  .step-outcome-text {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--color-text-secondary, #444444);
+    line-height: 1.4;
+    margin: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  :global([data-theme="dark"]) .step-outcome-text {
+    color: #C0C0C0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .roadmap-track-fill {
+      transform: scaleX(1) !important;
+      transition: none !important;
+    }
+    .roadmap-step-box {
+      transform: none !important;
+      transition: none !important;
+    }
+  }
+</style>
+
+<script>
+  const roadmapData: Record<string, { steps: { phase: string; text: string }[] }> = {
+    'cut-manual': {
+      steps: [
+        { phase: 'NOW', text: 'Map the workflows worth automating' },
+        { phase: 'NEXT', text: 'Automate the top 3' },
+        { phase: 'LATER', text: 'Extend across teams' }
+      ]
+    },
+    'launch-faster': {
+      steps: [
+        { phase: 'NOW', text: 'Pick the smallest valuable release' },
+        { phase: 'NEXT', text: 'Ship in weeks' },
+        { phase: 'LATER', text: 'Iterate on real usage' }
+      ]
+    },
+    'keep-private': {
+      steps: [
+        { phase: 'NOW', text: 'Classify sensitive data' },
+        { phase: 'NEXT', text: 'Deploy inside your environment' },
+        { phase: 'LATER', text: 'Roll out with governance' }
+      ]
+    }
+  };
+
+  function setupPlanCard() {
+    const card = document.getElementById('peg-card-plan');
+    if (!card) return;
+
+    const chips = card.querySelectorAll<HTMLButtonElement>('.plan-chip-btn');
+    const trackFill = card.querySelector<HTMLElement>('#plan-track-fill');
+    const text0 = card.querySelector<HTMLElement>('#plan-step-text-0');
+    const text1 = card.querySelector<HTMLElement>('#plan-step-text-1');
+    const text2 = card.querySelector<HTMLElement>('#plan-step-text-2');
+
+    function animateDraw() {
+      if (!trackFill) return;
+      trackFill.classList.remove('is-drawn');
+      // trigger reflow
+      void trackFill.offsetWidth;
+      trackFill.classList.add('is-drawn');
+    }
+
+    function selectChip(targetKey: string) {
+      chips.forEach((btn) => {
+        const isSelected = btn.getAttribute('data-plan-target') === targetKey;
+        btn.classList.toggle('is-active', isSelected);
+        btn.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+      });
+
+      const data = roadmapData[targetKey];
+      if (!data) return;
+
+      [text0, text1, text2].forEach((el, i) => {
+        if (!el) return;
+        el.style.opacity = '0';
+        setTimeout(() => {
+          el.textContent = data.steps[i].text;
+          el.style.opacity = '1';
+        }, 150);
+      });
+
+      animateDraw();
+    }
+
+    chips.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const target = btn.getAttribute('data-plan-target');
+        if (target) selectChip(target);
+      });
+    });
+
+    // Observer to play when >= 50% visible or on tab select
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            animateDraw();
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    observer.observe(card);
+
+    // Tab select listener
+    document.addEventListener('peg-tab-change', (e: any) => {
+      if (e.detail?.pillar === 'plan') {
+        animateDraw();
+      }
+    });
+  }
+
+  setupPlanCard();
+  document.addEventListener('astro:after-swap', setupPlanCard);
+</script>
+

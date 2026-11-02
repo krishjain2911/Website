@@ -1,29 +1,31 @@
 ---
+import { siteConfig } from '../config/site';
 import MediaAsset from './MediaAsset.astro';
 import LearnMore from './LearnMore.astro';
 
+const { about } = siteConfig;
 const items = [
   {
     id: 'mission',
-    title: 'Mission',
-    imageKey: 'about/mission-circle',
-    text: 'We deploy Technology that adapts to your unique business process unlocking latent revenue.',
-    href: '/about'
+    title: about.mandate.cards[0].title,
+    imageKey: about.mandate.cards[0].imageKey,
+    text: about.mandate.cards[0].text,
+    href: '/about#mission'
   },
   {
     id: 'purpose',
-    title: 'Purpose',
-    imageKey: 'about/purpose-circle',
-    text: 'To empower clients through intelligent automation that simplifies operations, reduces manual effort, and delivers clear, measurable business value.',
-    href: '/about'
+    title: about.mandate.cards[1].title,
+    imageKey: about.mandate.cards[1].imageKey,
+    text: about.mandate.cards[1].text,
+    href: '/about#mission'
   },
   {
     id: 'vision',
-    title: 'Vision',
-    imageKey: 'about/vision-circle',
-    text: "To be the trusted partner for India's medium-scale companies by delivering practical, intelligent automation solutions that enhance operational efficiency, reduce costs, and drive sustainable growth.",
+    title: about.mandate.cards[2].title,
+    imageKey: about.mandate.cards[2].imageKey,
+    text: about.mandate.cards[2].text,
     tag: '[TO CONFIRM]',
-    href: '/about'
+    href: '/about#mission'
   }
 ];
 ---
@@ -119,8 +121,40 @@ const items = [
     height: 88px;
     border-radius: 50%;
     overflow: hidden;
+    background-color: #F6F6F4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  }
+
+  @media (max-width: 767px) {
+    .who-circle-wrapper {
+      width: 72px;
+      height: 72px;
+    }
+  }
+
+  :global([data-theme="dark"]) .who-circle-wrapper {
+    background-color: #1A1A1A;
+  }
+
+  .who-circle-wrapper :global(.media-asset-container) {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+  }
+
+  .who-circle-wrapper :global(.media-img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s var(--ease-out-expo);
+  }
+
+  .who-card:hover .who-circle-wrapper :global(.media-img) {
+    transform: scale(1.06);
   }
 
   .who-card-body {

@@ -1,0 +1,748 @@
+---
+// OriginVisual.astro: Interactive 3-Step Apollo 13 Origin Visual
+// Replaces the old static diagram with an accessible, interactive geometric component
+import Icon from './Icon.astro';
+---
+
+<div
+  class="origin-visual-card card-mastercard"
+  id="origin-visual-card"
+  data-step="1"
+>
+  <!-- Card Header Bar -->
+  <div class="origin-visual-header">
+    <div class="step-badge-pill" aria-live="polite">
+      <span>STEP <strong id="visual-step-num">01</strong> / 03</span>
+    </div>
+
+    <button
+      type="button"
+      class="origin-replay-btn"
+      id="origin-replay-btn"
+      aria-label="Replay origin sequence"
+      title="Replay sequence from step 01"
+    >
+      <Icon name="rotate-ccw" size={14} />
+      <span>Replay</span>
+    </button>
+  </div>
+
+  <!-- Interactive SVG Stage -->
+  <div
+    class="origin-canvas-wrap"
+    role="img"
+    id="origin-canvas"
+    aria-label="Interactive geometric diagram demonstrating round hole constraint, square peg, and RHSP adapter"
+  >
+    <svg
+      viewBox="0 0 440 220"
+      class="origin-svg"
+      preserveAspectRatio="xMidYMid meet"
+    >
+      <defs>
+        <!-- Peg Orange Gradient -->
+        <linearGradient id="pegGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#F7941D" />
+          <stop offset="100%" stop-color="#EE4B2B" />
+        </linearGradient>
+
+        <!-- Adapter Ring Gradient -->
+        <linearGradient id="adapterGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#F7941D" />
+          <stop offset="100%" stop-color="#EE4B2B" />
+        </linearGradient>
+
+        <!-- Drop Shadow Filter -->
+        <filter id="pegShadow" x="-20%" y="-20%" width="150%" height="150%">
+          <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#000000" flood-opacity="0.22" />
+        </filter>
+
+        <!-- Soft Glow for Hole -->
+        <filter id="holeGlow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feComposite in="SourceGraphic" in2="blur" operator="over" />
+        </filter>
+      </defs>
+
+      <!-- Background Alignment Guideline -->
+      <line
+        x1="40"
+        y1="110"
+        x2="330"
+        y2="110"
+        class="origin-guideline"
+        stroke-dasharray="4 4"
+      />
+
+      <!-- 1. The Round Hole (Right) -->
+      <g id="visual-hole-group" class="visual-hole-group" transform="translate(330, 110)">
+        <!-- Outer Navy Ring -->
+        <circle
+          cx="0"
+          cy="0"
+          r="48"
+          class="hole-outer-ring"
+        />
+
+        <!-- Deep Dark Cavity Interior -->
+        <circle
+          cx="0"
+          cy="0"
+          r="44"
+          class="hole-interior"
+        />
+
+        <!-- Soft Constraint Pulse Halo -->
+        <circle
+          cx="0"
+          cy="0"
+          r="54"
+          class="hole-pulse-halo"
+        />
+
+        <!-- Collision Cross Icon (Red-Orange) -->
+        <g id="hole-collision-cross" class="hole-status-icon cross-icon">
+          <circle cx="0" cy="0" r="16" fill="#EE4B2B" fill-opacity="0.18" />
+          <line x1="-7" y1="-7" x2="7" y2="7" stroke="#EE4B2B" stroke-width="2.5" stroke-linecap="round" />
+          <line x1="7" y1="-7" x2="-7" y2="7" stroke="#EE4B2B" stroke-width="2.5" stroke-linecap="round" />
+        </g>
+
+        <!-- Success Check Icon (Navy Blue) -->
+        <g id="hole-success-check" class="hole-status-icon check-icon">
+          <circle cx="0" cy="0" r="16" class="check-bg-circle" />
+          <polyline points="-7,-1 -2,4 7,-5" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+        </g>
+      </g>
+
+      <!-- 2. The Adapter (Slides over hole in step 3) -->
+      <g id="visual-adapter-group" class="visual-adapter-group" transform="translate(330, 110)">
+        <!-- Adapter Sleeve: Circular outer contour with square inner cutout -->
+        <path
+          d="M 0,-50 A 50,50 0 1,0 0,50 A 50,50 0 1,0 0,-50 Z M -34,-34 h 68 a 6,6 0 0 1 6,6 v 56 a 6,6 0 0 1 -6,6 h -56 a 6,6 0 0 1 -6,-6 v -56 a 6,6 0 0 1 6,-6 Z"
+          fill-rule="evenodd"
+          class="adapter-sleeve-body"
+        />
+        <!-- Outer Glowing Accent Ring -->
+        <circle
+          cx="0"
+          cy="0"
+          r="51"
+          class="adapter-rim"
+        />
+      </g>
+
+      <!-- 3. The Square Peg (Left) -->
+      <g
+        id="visual-peg-group"
+        class="visual-peg-group"
+        tabindex="0"
+        role="slider"
+        aria-label="Square peg"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow="0"
+        aria-valuetext="Initial position"
+      >
+        <!-- Peg Body (62x62 with rx=8) -->
+        <rect
+          x="-31"
+          y="-31"
+          width="62"
+          height="62"
+          rx="8"
+          fill="url(#pegGrad)"
+          class="peg-rect"
+          filter="url(#pegShadow)"
+        />
+
+        <!-- Subtle Inner Highlight Arc -->
+        <rect
+          x="-28"
+          y="-28"
+          width="56"
+          height="56"
+          rx="6"
+          fill="none"
+          stroke="#FFFFFF"
+          stroke-width="1.2"
+          stroke-opacity="0.35"
+        />
+
+        <!-- Geometric Grip Dots (visual affordance for dragging) -->
+        <circle cx="0" cy="-6" r="2.2" fill="#FFFFFF" fill-opacity="0.75" />
+        <circle cx="0" cy="0" r="2.2" fill="#FFFFFF" fill-opacity="0.75" />
+        <circle cx="0" cy="6" r="2.2" fill="#FFFFFF" fill-opacity="0.75" />
+      </g>
+    </svg>
+  </div>
+
+  <!-- Bottom Labels & Interaction Controls (Min 14px Text) -->
+  <div class="origin-visual-footer">
+    <!-- Dynamic Step Description Label -->
+    <div class="visual-label-row">
+      <span class="visual-step-label" id="visual-step-label">
+        The round hole: the constraint
+      </span>
+    </div>
+
+    <!-- Step 2 Add-Adapter Action Pill (appears after collision attempt) -->
+    <div class="visual-action-row" id="visual-action-row" style="display: none;">
+      <button
+        type="button"
+        class="btn btn-primary add-adapter-pill"
+        id="visual-add-adapter-btn"
+      >
+        <span>Add the adapter</span>
+        <Icon name="arrow-right" size={15} />
+      </button>
+    </div>
+
+    <!-- Step 3 Caption (fades in) -->
+    <p class="visual-caption" id="visual-caption" style="display: none;">
+      "They didn't force the socket. They engineered the adapter."
+    </p>
+  </div>
+</div>
+
+<style>
+  .origin-visual-card {
+    background-color: #F6F6F4;
+    border-radius: 32px;
+    padding: 1.75rem 2rem 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 400px;
+    position: relative;
+    border: 1px solid var(--color-border-subtle);
+    box-shadow: 0 10px 32px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+
+  :global([data-theme="dark"]) .origin-visual-card {
+    background-color: #1A1A1A;
+    border-color: var(--color-border);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Header */
+  .origin-visual-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    z-index: 2;
+  }
+
+  .step-badge-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: var(--color-text-secondary);
+  }
+
+  .step-badge-pill strong {
+    color: #1E4B8F;
+    margin-left: 0.2rem;
+  }
+
+  :global([data-theme="dark"]) .step-badge-pill strong {
+    color: #60A5FA;
+  }
+
+  .origin-replay-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .origin-replay-btn:hover {
+    color: var(--color-text-primary);
+    border-color: var(--color-border-focus);
+  }
+
+  .origin-replay-btn:focus-visible {
+    outline: 2px solid #1E4B8F;
+    outline-offset: 2px;
+  }
+
+  /* SVG Canvas */
+  .origin-canvas-wrap {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 220px;
+    position: relative;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .origin-svg {
+    width: 100%;
+    height: auto;
+    max-height: 250px;
+    overflow: visible;
+  }
+
+  .origin-guideline {
+    stroke: #D6D6D2;
+    stroke-width: 1.5;
+  }
+
+  :global([data-theme="dark"]) .origin-guideline {
+    stroke: #333333;
+  }
+
+  /* Round Hole */
+  .hole-outer-ring {
+    stroke: #1E4B8F;
+    stroke-width: 6;
+    fill: none;
+    filter: drop-shadow(0 4px 12px rgba(30, 75, 143, 0.25));
+  }
+
+  :global([data-theme="dark"]) .hole-outer-ring {
+    stroke: #2E65B8;
+  }
+
+  .hole-interior {
+    fill: #0B1626;
+  }
+
+  :global([data-theme="dark"]) .hole-interior {
+    fill: #060B12;
+  }
+
+  .hole-pulse-halo {
+    fill: none;
+    stroke: #1E4B8F;
+    stroke-width: 2;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .origin-visual-card[data-step="1"] .hole-pulse-halo {
+    opacity: 0.4;
+    animation: holeHaloPulse 2.4s ease-in-out infinite;
+  }
+
+  @keyframes holeHaloPulse {
+    0% { transform: scale(0.98); opacity: 0.5; }
+    50% { transform: scale(1.08); opacity: 0.15; }
+    100% { transform: scale(0.98); opacity: 0.5; }
+  }
+
+  /* Status Icons on Hole */
+  .hole-status-icon {
+    opacity: 0;
+    transform: scale(0.7);
+    transition: opacity 0.25s ease, transform 0.25s var(--ease-out-expo);
+    pointer-events: none;
+  }
+
+  .hole-status-icon.is-visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .check-bg-circle {
+    fill: #1E4B8F;
+  }
+
+  :global([data-theme="dark"]) .check-bg-circle {
+    fill: #2563EB;
+  }
+
+  /* Adapter Ring */
+  .visual-adapter-group {
+    opacity: 0;
+    transform: translate(330px, 110px) scale(0.85);
+    transition: opacity 0.5s var(--ease-out-expo), transform 0.5s var(--ease-out-expo);
+    pointer-events: none;
+  }
+
+  .origin-visual-card[data-step="3"] .visual-adapter-group {
+    opacity: 1;
+    transform: translate(330px, 110px) scale(1);
+  }
+
+  .adapter-sleeve-body {
+    fill: rgba(247, 148, 29, 0.12);
+    stroke: #F7941D;
+    stroke-width: 3.5;
+  }
+
+  :global([data-theme="dark"]) .adapter-sleeve-body {
+    fill: rgba(247, 148, 29, 0.2);
+    stroke: #F7941D;
+  }
+
+  .adapter-rim {
+    fill: none;
+    stroke: #EE4B2B;
+    stroke-width: 1.5;
+    stroke-dasharray: 4 3;
+    opacity: 0.6;
+  }
+
+  /* Square Peg */
+  .visual-peg-group {
+    cursor: default;
+    transition: transform 0.5s var(--ease-out-expo), opacity 0.4s ease;
+    outline: none;
+    touch-action: none;
+  }
+
+  .origin-visual-card[data-step="2"] .visual-peg-group {
+    cursor: grab;
+  }
+
+  .origin-visual-card[data-step="2"] .visual-peg-group:active {
+    cursor: grabbing;
+  }
+
+  .visual-peg-group:focus-visible .peg-rect {
+    stroke: #1E4B8F;
+    stroke-width: 3;
+  }
+
+  .peg-shake-anim {
+    animation: pegCollisionShake 0.45s ease;
+  }
+
+  @keyframes pegCollisionShake {
+    0%, 100% { transform: translate(var(--peg-x, 220px), 110px); }
+    20% { transform: translate(calc(var(--peg-x, 220px) - 8px), 108px) rotate(-3deg); }
+    40% { transform: translate(calc(var(--peg-x, 220px) + 6px), 112px) rotate(2deg); }
+    60% { transform: translate(calc(var(--peg-x, 220px) - 5px), 109px) rotate(-1deg); }
+    80% { transform: translate(calc(var(--peg-x, 220px) + 3px), 111px) rotate(0deg); }
+  }
+
+  /* Footer Controls & Labels */
+  .origin-visual-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: center;
+    text-align: center;
+    margin-top: 0.75rem;
+    z-index: 2;
+  }
+
+  .visual-label-row {
+    min-height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .visual-step-label {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    line-height: 1.4;
+    transition: color 0.3s ease;
+  }
+
+  .visual-action-row {
+    display: flex;
+    justify-content: center;
+  }
+
+  .add-adapter-pill {
+    min-height: 44px;
+    padding: 0 1.5rem;
+    font-size: 14px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: var(--radius-pill);
+    box-shadow: 0 6px 18px rgba(238, 75, 43, 0.25);
+    animation: pillFadeIn 0.4s var(--ease-out-expo);
+  }
+
+  @keyframes pillFadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .visual-caption {
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    font-style: italic;
+    margin: 0;
+    animation: pillFadeIn 0.5s ease;
+  }
+
+  /* Reduced Motion */
+  @media (prefers-reduced-motion: reduce) {
+    .hole-pulse-halo,
+    .visual-adapter-group,
+    .visual-peg-group,
+    .peg-shake-anim,
+    .add-adapter-pill,
+    .visual-caption {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+</style>
+
+<script>
+  function setupOriginVisual() {
+    const card = document.getElementById('origin-visual-card');
+    if (!card) return;
+
+    const stepNum = document.getElementById('visual-step-num');
+    const stepLabel = document.getElementById('visual-step-label');
+    const actionRow = document.getElementById('visual-action-row');
+    const addAdapterBtn = document.getElementById('visual-add-adapter-btn');
+    const captionEl = document.getElementById('visual-caption');
+    const replayBtn = document.getElementById('origin-replay-btn');
+
+    const pegGroup = document.getElementById('visual-peg-group');
+    const holeCross = document.getElementById('hole-collision-cross');
+    const holeCheck = document.getElementById('hole-success-check');
+    const timelineButtons = document.querySelectorAll('.story-step-item');
+
+    let currentStep = 1;
+    let hasAttemptedCollision = false;
+    let isDragging = false;
+    let dragStartX = 0;
+    let currentPegX = 80;
+    let autoPlayTimer: any = null;
+    let hasUserInteracted = false;
+
+    // Resting Coordinates (X axis)
+    const POS_START = 80;
+    const POS_COLLISION = 230;
+    const POS_DOCKED = 330;
+
+    const labels = {
+      1: "The round hole: the constraint",
+      2: "The square peg: what you need",
+      3: "RHSP: we build the adapter"
+    };
+
+    function setPegPosition(x: number, animate = true) {
+      if (!pegGroup) return;
+      currentPegX = x;
+      pegGroup.style.transition = animate ? 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1)' : 'none';
+      pegGroup.style.transform = `translate(${x}px, 110px)`;
+      pegGroup.setAttribute('aria-valuenow', String(Math.round(((x - POS_START) / (POS_COLLISION - POS_START)) * 100)));
+    }
+
+    function updateStepUI(step: number) {
+      currentStep = step;
+      card.setAttribute('data-step', String(step));
+      if (stepNum) stepNum.textContent = `0${step}`;
+      if (stepLabel) stepLabel.textContent = labels[step as 1 | 2 | 3];
+
+      // Update 01 / 02 / 03 list highlighting
+      timelineButtons.forEach((btn) => {
+        const btnStep = Number(btn.getAttribute('data-step'));
+        const isActive = btnStep === step;
+        btn.classList.toggle('is-active', isActive);
+        btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        btn.setAttribute('aria-current', isActive ? 'step' : 'false');
+      });
+
+      // Clear icon states
+      holeCross?.classList.remove('is-visible');
+      holeCheck?.classList.remove('is-visible');
+
+      if (step === 1) {
+        setPegPosition(POS_START, true);
+        if (pegGroup) pegGroup.style.opacity = '0.3';
+        if (actionRow) actionRow.style.display = 'none';
+        if (captionEl) captionEl.style.display = 'none';
+      } else if (step === 2) {
+        if (pegGroup) pegGroup.style.opacity = '1';
+        if (captionEl) captionEl.style.display = 'none';
+        playStep2Collision();
+      } else if (step === 3) {
+        if (pegGroup) pegGroup.style.opacity = '1';
+        setPegPosition(POS_DOCKED, true);
+        holeCheck?.classList.add('is-visible');
+        if (actionRow) actionRow.style.display = 'none';
+        if (captionEl) captionEl.style.display = 'block';
+      }
+    }
+
+    function playStep2Collision() {
+      // 1. Move peg to collision point
+      setPegPosition(POS_COLLISION, true);
+
+      setTimeout(() => {
+        if (currentStep !== 2) return;
+        // 2. Shake & Flash cross
+        holeCross?.classList.add('is-visible');
+        if (pegGroup) {
+          pegGroup.style.setProperty('--peg-x', `${POS_COLLISION}px`);
+          pegGroup.classList.add('peg-shake-anim');
+        }
+
+        setTimeout(() => {
+          if (currentStep !== 2) return;
+          if (pegGroup) pegGroup.classList.remove('peg-shake-anim');
+          holeCross?.classList.remove('is-visible');
+          // 3. Bounce back to resting point
+          setPegPosition(POS_START, true);
+          hasAttemptedCollision = true;
+          if (actionRow) actionRow.style.display = 'flex';
+        }, 450);
+      }, 500);
+    }
+
+    // Step switching handler
+    function goToStep(step: number, userInitiated = false) {
+      if (userInitiated) {
+        hasUserInteracted = true;
+        clearTimeout(autoPlayTimer);
+      }
+      updateStepUI(step);
+    }
+
+    // Add Adapter button handler
+    addAdapterBtn?.addEventListener('click', () => {
+      goToStep(3, true);
+    });
+
+    // Replay button handler
+    replayBtn?.addEventListener('click', () => {
+      goToStep(1, true);
+      setTimeout(() => {
+        if (currentStep === 1) goToStep(2, true);
+      }, 1500);
+    });
+
+    // Timeline button clicks
+    timelineButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const step = Number(btn.getAttribute('data-step'));
+        if (step) goToStep(step, true);
+      });
+    });
+
+    // Draggable Square Peg Pointer Events (Step 2)
+    if (pegGroup) {
+      pegGroup.addEventListener('pointerdown', (e) => {
+        if (currentStep !== 2) return;
+        isDragging = true;
+        hasUserInteracted = true;
+        clearTimeout(autoPlayTimer);
+        dragStartX = e.clientX - currentPegX;
+        pegGroup.setPointerCapture(e.pointerId);
+      });
+
+      pegGroup.addEventListener('pointermove', (e) => {
+        if (!isDragging || currentStep !== 2) return;
+        let newX = e.clientX - dragStartX;
+        newX = Math.max(POS_START, Math.min(newX, POS_COLLISION));
+        setPegPosition(newX, false);
+
+        if (newX >= POS_COLLISION - 5) {
+          triggerDragCollision();
+        }
+      });
+
+      const endDrag = (e: PointerEvent) => {
+        if (!isDragging) return;
+        isDragging = false;
+        try {
+          pegGroup.releasePointerCapture(e.pointerId);
+        } catch {}
+
+        if (currentPegX >= POS_COLLISION - 20) {
+          triggerDragCollision();
+        } else {
+          setPegPosition(POS_START, true);
+        }
+      };
+
+      pegGroup.addEventListener('pointerup', endDrag);
+      pegGroup.addEventListener('pointercancel', endDrag);
+
+      // Keyboard arrow key support
+      pegGroup.addEventListener('keydown', (e) => {
+        if (currentStep !== 2) return;
+        if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          const target = Math.min(currentPegX + 30, POS_COLLISION);
+          setPegPosition(target, true);
+          if (target >= POS_COLLISION) triggerDragCollision();
+        } else if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          const target = Math.max(currentPegX - 30, POS_START);
+          setPegPosition(target, true);
+        }
+      });
+    }
+
+    function triggerDragCollision() {
+      isDragging = false;
+      holeCross?.classList.add('is-visible');
+      if (pegGroup) {
+        pegGroup.style.setProperty('--peg-x', `${POS_COLLISION}px`);
+        pegGroup.classList.add('peg-shake-anim');
+      }
+
+      setTimeout(() => {
+        if (pegGroup) pegGroup.classList.remove('peg-shake-anim');
+        holeCross?.classList.remove('is-visible');
+        setPegPosition(POS_START, true);
+        hasAttemptedCollision = true;
+        if (actionRow) actionRow.style.display = 'flex';
+      }, 450);
+    }
+
+    // Auto-play 01 -> 02 -> 03 sequence once when >=50% visible
+    const section = document.getElementById('story');
+    if (section && 'IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && !hasUserInteracted) {
+              observer.unobserve(entry.target);
+              autoPlayTimer = setTimeout(() => {
+                if (hasUserInteracted) return;
+                goToStep(2);
+                autoPlayTimer = setTimeout(() => {
+                  if (hasUserInteracted) return;
+                  goToStep(3);
+                }, 3400);
+              }, 2200);
+            }
+          });
+        },
+        { threshold: 0.5 }
+      );
+      observer.observe(section);
+    }
+
+    // Initialize in Step 1
+    updateStepUI(1);
+  }
+
+  setupOriginVisual();
+  document.addEventListener('astro:after-swap', setupOriginVisual);
+</script>

@@ -193,13 +193,19 @@ const initialRule = findYourFit.rules[0];
 
 <style>
   .how-we-work-section {
-    padding: var(--section-spacing-desktop) 0;
+    padding: 56px 0 80px;
     background-color: var(--color-bg);
     border-bottom: 1px solid var(--color-border);
   }
 
+  @media (max-width: 767px) {
+    .how-we-work-section {
+      padding: 40px 0 60px;
+    }
+  }
+
   .how-header {
-    margin-bottom: 4rem;
+    margin-bottom: 2.5rem;
     max-width: 720px;
   }
 
@@ -437,16 +443,24 @@ const initialRule = findYourFit.rules[0];
     color: var(--color-btn-primary-text);
   }
 
-  /* Black Result Card */
+  /* Suggested Architectural Approach Result Card (Adapts to Bright & Dark Modes) */
   .result-card-black {
-    background-color: #141413;
-    color: #FFFFFF;
+    background-color: var(--color-surface-alt);
+    color: var(--color-text-primary);
     border-radius: var(--radius-card);
     padding: 3rem;
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  :global([data-theme="dark"]) .result-card-black {
+    background-color: #141413;
+    border-color: var(--color-border);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
   }
 
   .result-top-row {
@@ -462,6 +476,11 @@ const initialRule = findYourFit.rules[0];
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
+    color: var(--color-text-secondary);
+    transition: color 0.3s ease;
+  }
+
+  :global([data-theme="dark"]) .result-eyebrow {
     color: #A3A3A3;
   }
 
@@ -469,29 +488,44 @@ const initialRule = findYourFit.rules[0];
     display: inline-block;
     padding: 0.25rem 0.75rem;
     border-radius: var(--radius-pill);
-    background-color: #262626;
-    color: #F7941D;
+    background-color: rgba(238, 75, 43, 0.08);
+    color: var(--color-brand-primary, #EE4B2B);
+    border: 1px solid rgba(238, 75, 43, 0.2);
     font-size: 0.75rem;
     font-weight: 600;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
+
+  :global([data-theme="dark"]) .result-pill-badge {
+    background-color: rgba(247, 148, 29, 0.15);
+    color: #F7941D;
+    border-color: rgba(247, 148, 29, 0.3);
   }
 
   .result-approach-title {
     font-size: 1.5rem;
     font-weight: 500;
     line-height: 1.25;
-    color: #FFFFFF;
+    color: var(--color-text-primary);
+    transition: color 0.3s ease;
   }
 
   .result-approach-desc {
     font-size: var(--fs-sm);
-    color: #D4D4D4;
+    color: var(--color-text-secondary);
     line-height: 1.6;
+    transition: color 0.3s ease;
+  }
+
+  :global([data-theme="dark"]) .result-approach-desc {
+    color: #D4D4D4;
   }
 
   .result-disclaimer {
     font-size: 0.8rem;
-    color: #737373;
+    color: var(--color-text-muted);
     font-style: italic;
+    transition: color 0.3s ease;
   }
 
   .result-action-row {
@@ -501,14 +535,24 @@ const initialRule = findYourFit.rules[0];
   .result-cta-btn {
     min-height: 48px;
     padding: 0 1.5rem;
-    background-color: #FFFFFF;
-    color: #141413;
-    border: none;
+    background-color: var(--color-btn-primary-bg);
+    color: var(--color-btn-primary-text);
+    border: 1px solid transparent;
     font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: var(--radius-pill);
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
   }
 
   .result-cta-btn:hover {
-    background-color: #F0F0EE;
+    opacity: 0.92;
+    transform: translateX(2px);
+  }
+
+  :global([data-theme="dark"]) .result-cta-btn:hover {
+    background-color: #E6E6E3;
   }
 </style>
 

@@ -1,6 +1,7 @@
 ---
 import { siteConfig } from '../config/site';
 import Icon from './Icon.astro';
+import MediaAsset from './MediaAsset.astro';
 
 const { team } = siteConfig;
 ---
@@ -17,65 +18,68 @@ const { team } = siteConfig;
 
     <!-- Founders Grid -->
     <div class="team-grid">
-      {team.members.map((member, index) => {
-        const phoneClean = member.phone.replace(/^\[PLACEHOLDER\]\s*/i, '');
-        const phoneB64 = Buffer.from(phoneClean).toString('base64');
-
-        return (
-          <article class="founder-card card-mastercard reveal-on-scroll">
-            <div class="founder-top-row">
-              <!-- Circular Monogram Avatar -->
-              <div class="founder-avatar-circle" aria-hidden="true">
+      {team.members.map((member) => (
+        <article class="founder-card card-mastercard reveal-on-scroll">
+          <div class="founder-top-row">
+            <!-- Circular Photo Avatar (falls back to monogram) -->
+            <div class="founder-avatar-circle" aria-hidden="true">
+              {member.imageKey ? (
+                <MediaAsset
+                  assetKey={member.imageKey}
+                  alt={member.name}
+                  crop="circle"
+                  aspectRatio="1/1"
+                  width={80}
+                  height={80}
+                  loading="lazy"
+                  theme="warm"
+                />
+              ) : (
                 <span class="avatar-initials">{member.initials}</span>
-              </div>
-              <div class="founder-title-meta">
-                <h3 class="founder-name">{member.name}</h3>
-                <span class="founder-role-tag">{member.role}</span>
-              </div>
+              )}
             </div>
-
-            <p class="founder-bio">{member.bio}</p>
-
-            <div class="founder-actions-footer">
-              <button
-                type="button"
-                class="reveal-phone-btn"
-                data-phone-b64={phoneB64}
-                id={`team-reveal-phone-${index}`}
-                aria-label={`Show number for ${member.name}`}
-              >
-                <Icon name="phone" size={15} />
-                <span class="reveal-text">Show number</span>
-              </button>
-
-              <a
-                href={member.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="team-linkedin-link"
-                aria-label={`${member.name}'s LinkedIn Profile (opens in new tab)`}
-              >
-                <Icon name="external-link" size={15} />
-                <span>LinkedIn Profile</span>
-              </a>
+            <div class="founder-title-meta">
+              <h3 class="founder-name">{member.name}</h3>
+              <span class="founder-role-tag">{member.role}</span>
             </div>
-          </article>
-        );
-      })}
+          </div>
+
+          <p class="founder-bio">{member.bio}</p>
+
+          <div class="founder-actions-footer">
+            <a
+              href={member.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="team-linkedin-link"
+              aria-label={`${member.name}'s LinkedIn Profile (opens in new tab)`}
+            >
+              <Icon name="external-link" size={15} />
+              <span>LinkedIn Profile</span>
+            </a>
+          </div>
+        </article>
+      ))}
     </div>
   </div>
 </section>
 
 <style>
   .team-section {
-    padding: var(--section-spacing-desktop) 0;
+    padding: 56px 0 72px;
     background-color: var(--color-bg);
     border-bottom: 1px solid var(--color-border);
     scroll-margin-top: 96px;
   }
 
+  @media (max-width: 767px) {
+    .team-section {
+      padding: 40px 0 56px;
+    }
+  }
+
   .team-header {
-    margin-bottom: 4rem;
+    margin-bottom: 2.5rem;
     max-width: 680px;
   }
 
@@ -120,9 +124,10 @@ const { team } = siteConfig;
   }
 
   .founder-avatar-circle {
-    width: 64px;
-    height: 64px;
+    width: 76px;
+    height: 76px;
     border-radius: 50%;
+    overflow: hidden;
     background: var(--rhsp-peg-gradient);
     color: #FFFFFF;
     display: flex;
@@ -132,7 +137,26 @@ const { team } = siteConfig;
     font-weight: 600;
     font-size: 1.25rem;
     flex-shrink: 0;
-    box-shadow: 0 6px 18px rgba(238, 75, 43, 0.2);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    border: 2px solid var(--color-border);
+  }
+
+  .founder-avatar-circle :global(.media-asset-container) {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+  }
+
+  .founder-avatar-circle :global(.media-img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+
+  .founder-card:hover .founder-avatar-circle :global(.media-img) {
+    transform: scale(1.05);
   }
 
   .founder-title-meta {
@@ -169,7 +193,6 @@ const { team } = siteConfig;
     flex-wrap: wrap;
   }
 
-  .reveal-phone-btn,
   .team-linkedin-link {
     display: inline-flex;
     align-items: center;
@@ -187,32 +210,9 @@ const { team } = siteConfig;
     transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
   }
 
-  .reveal-phone-btn:hover,
   .team-linkedin-link:hover {
     background-color: var(--color-surface-hover);
     color: var(--color-text-primary);
     border-color: var(--color-text-secondary);
   }
 </style>
-
-<script>
-  function setupTeamReveal() {
-    const phoneButtons = document.querySelectorAll('.team-section .reveal-phone-btn');
-    phoneButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const b64 = btn.getAttribute('data-phone-b64');
-        if (b64) {
-          try {
-            const decoded = atob(b64);
-            const textEl = btn.querySelector('.reveal-text');
-            if (textEl) textEl.textContent = decoded;
-            btn.setAttribute('aria-label', `Phone: ${decoded}`);
-          } catch (e) {}
-        }
-      });
-    });
-  }
-
-  setupTeamReveal();
-  document.addEventListener('astro:after-swap', setupTeamReveal);
-</script>

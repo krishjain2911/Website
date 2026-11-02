@@ -9,18 +9,29 @@ const HERO_SEQ_DIR = path.resolve('public/media/hero-seq');
 const MANIFEST_PATH = path.resolve('public/media/manifest.json');
 const HERO_MANIFEST_PATH = path.resolve('public/media/hero-seq/manifest.json');
 
-// Expected assets per Prompt 3
+// Expected assets per Prompt 3 and Image Update
 const EXPECTED_IMAGES = [
   'product-voice-agents.png',
   'product-sovereign-ai.png',
   'product-ask-me-anything.png',
+  'product-whatsapp-journeys.png',
   'product-clm.png',
   'product-dms.png',
-  'product-whatsapp-journeys.png',
+  'feature-voice.png',
+  'feature-sovereign.png',
+  'feature-paper-to-platform.png',
+  'feature-build-stack.png',
+  'feature-peg.png',
+  'before-whatsapp.png',
   'before-clm.png',
   'before-dms.png',
-  'before-whatsapp.png',
-  'about-hero.png'
+  'about-hero.png',
+  'about-approach.png',
+  'about-mission-icon.png',
+  'about-purpose-icon.png',
+  'about-vision-icon.png',
+  'contact-angle.png',
+  'og-default.png'
 ];
 
 const EXPECTED_VIDEOS = [
@@ -51,6 +62,14 @@ function getFfmpeg() {
 // 1. Apple-style Scroll Scrubbed Hero Sequence Processing
 async function processHeroSequence(ffmpegCmd) {
   console.log('\n--- Processing Hero Scroll Image Sequence ---');
+
+  // Skip extraction if already built unless FORCE_HERO is specified
+  const lightDesktop = path.join(HERO_SEQ_DIR, 'light/desktop');
+  if (fs.existsSync(HERO_MANIFEST_PATH) && fs.existsSync(lightDesktop) && fs.readdirSync(lightDesktop).length >= 80 && !process.env.FORCE_HERO) {
+    console.log('[SKIP] Hero image sequence frames already generated (90 frames). Skipping extraction.');
+    return JSON.parse(fs.readFileSync(HERO_MANIFEST_PATH, 'utf8'));
+  }
+
   if (!ffmpegCmd) {
     console.warn('[SKIP] FFmpeg not found. Hero sequence extraction skipped.');
     return null;
@@ -218,6 +237,83 @@ async function processHeroSequence(ffmpegCmd) {
   return summary;
 }
 
+// Cutout helper for contact-* images (removes near-white background + defringes white halo)
+async function cutoutContactImage(rawPath) {
+  const { data, info } = await sharp(rawPath)
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+
+  const { width, height } = info;
+  const isCube = new Uint8Array(width * height);
+
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const idx = (y * width + x) * 4;
+      const r = data[idx], g = data[idx + 1], b = data[idx + 2];
+      const max = Math.max(r, g, b);
+      const min = Math.min(r, g, b);
+      const diff = max - min;
+
+      // Cut out floor shadow below cube vertex (y >= 1661)
+      if (y >= 1661) continue;
+
+      // Near-white background
+      if (min >= 235 && diff <= 20) continue;
+      if (min >= 220 && diff <= 14) continue;
+      if (min >= 200 && diff <= 8) continue;
+
+      // Must be orange / cube color: Red dominates
+      if (r > b + 25 && r > 90) {
+        isCube[y * width + x] = 1;
+      }
+    }
+  }
+
+  const output = Buffer.alloc(width * height * 4);
+  const bgVal = 245;
+
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const pIdx = y * width + x;
+      const oIdx = pIdx * 4;
+
+      if (!isCube[pIdx]) {
+        output[oIdx + 3] = 0;
+        continue;
+      }
+
+      let emptyNeighbors = 0;
+      for (let dy = -1; dy <= 1; dy++) {
+        for (let dx = -1; dx <= 1; dx++) {
+          const ny = y + dy, nx = x + dx;
+          if (ny >= 0 && ny < height && nx >= 0 && nx < width) {
+            if (!isCube[ny * width + nx]) emptyNeighbors++;
+          }
+        }
+      }
+
+      const r = data[oIdx], g = data[oIdx + 1], b = data[oIdx + 2];
+
+      if (emptyNeighbors === 0) {
+        output[oIdx] = r;
+        output[oIdx + 1] = g;
+        output[oIdx + 2] = b;
+        output[oIdx + 3] = 255;
+      } else {
+        // Edge feathering & decontaminate white background fringe
+        const a = Math.max(0.35, Math.min(0.9, 1.0 - (emptyNeighbors / 8) * 0.65));
+        output[oIdx + 3] = Math.round(a * 255);
+
+        output[oIdx] = Math.max(0, Math.min(255, Math.round((r - (1 - a) * bgVal) / a)));
+        output[oIdx + 1] = Math.max(0, Math.min(255, Math.round((g - (1 - a) * bgVal) / a)));
+        output[oIdx + 2] = Math.max(0, Math.min(255, Math.round((b - (1 - a) * bgVal) / a)));
+      }
+    }
+  }
+
+  return sharp(output, { raw: { width, height, channels: 4 } });
+}
+
 async function processMedia() {
   console.log('--- RHSP Media Processing Pipeline ---');
 
@@ -256,53 +352,130 @@ async function processMedia() {
     manifest.heroSequence = heroSeqSummary;
   }
 
-  // 2. Process Standard Images
-  const files = fs.readdirSync(RAW_DIR);
-  const imageFiles = files.filter(f => /\.(png|jpe?g|webp)$/i.test(f));
+  // 2. Process Standard Images (recursively from raw subfolders and mirror to output)
+  const imageItems = [];
 
-  for (const file of imageFiles) {
-    const rawPath = path.join(RAW_DIR, file);
-    const key = path.parse(file).name;
-    console.log(`Processing image: ${file} (key: ${key})`);
+  function scanRawDir(dir, relDir = '') {
+    if (!fs.existsSync(dir)) return;
+    const entries = fs.readdirSync(dir, { withFileTypes: true });
+    for (const entry of entries) {
+      const fullPath = path.join(dir, entry.name);
+      const curRel = relDir ? `${relDir}/${entry.name}` : entry.name;
+      if (entry.isDirectory()) {
+        scanRawDir(fullPath, curRel);
+      } else if (/\.(png|jpe?g|webp)$/i.test(entry.name)) {
+        // Skip duplicate raw source backup from generator
+        if (entry.name.startsWith('Gemini_Generated_Image_')) continue;
+        const subfolder = relDir; // e.g. 'solutions', 'featured', 'before', 'about', 'contact', 'social'
+        imageItems.push({
+          rawPath: fullPath,
+          key: path.parse(entry.name).name,
+          file: entry.name,
+          subfolder,
+          url: `/media/raw/${curRel}`
+        });
+      }
+    }
+  }
 
-    manifest.images[key] = {
-      raw: `/media/raw/${file}`,
+  scanRawDir(RAW_DIR);
+
+  for (const { rawPath, key, file, subfolder, url } of imageItems) {
+    console.log(`Processing image: ${file} (key: ${key}, subfolder: ${subfolder || 'root'})`);
+
+    const image = sharp(rawPath);
+    const metadata = await image.metadata();
+
+    const targetSubDir = subfolder ? path.join(OUT_DIR, subfolder) : OUT_DIR;
+    fs.mkdirSync(targetSubDir, { recursive: true });
+
+    const entryData = {
+      raw: url,
+      subfolder: subfolder || '',
+      width: metadata.width,
+      height: metadata.height,
+      aspectRatio: metadata.width && metadata.height ? +(metadata.width / metadata.height).toFixed(3) : 1.778,
       formats: {
         avif: {},
         webp: {}
       }
     };
 
-    const image = sharp(rawPath);
-    const metadata = await image.metadata();
+    manifest.images[key] = entryData;
 
-    for (const width of WIDTHS) {
+    const isContact = key.startsWith('contact-');
+    let sourceImage = sharp(rawPath);
+    if (isContact) {
+      console.log(`[CUTOUT] Removing white background and defringing for ${key}...`);
+      const cutoutPipeline = await cutoutContactImage(rawPath);
+      const cutoutBuffer = await cutoutPipeline.png().toBuffer();
+      sourceImage = sharp(cutoutBuffer);
+
+      // Save master png cutout fallback
+      const rootPngOut = path.join(targetSubDir, `${key}.png`);
+      fs.writeFileSync(rootPngOut, cutoutBuffer);
+    }
+
+    const isSmall = [
+      'about-mission-icon',
+      'about-purpose-icon',
+      'about-vision-icon',
+      'founder-subu',
+      'founder-abhishek'
+    ].includes(key);
+    const targetWidths = isContact ? [480, 960] : isSmall ? [128, 200, 480, ...WIDTHS] : WIDTHS;
+
+    for (const width of targetWidths) {
       if (metadata.width && width > metadata.width * 1.5) {
         continue;
       }
 
       const avifName = `${key}-${width}.avif`;
       const webpName = `${key}-${width}.webp`;
-      const avifOut = path.join(OUT_DIR, avifName);
-      const webpOut = path.join(OUT_DIR, webpName);
+      const avifOut = path.join(targetSubDir, avifName);
+      const webpOut = path.join(targetSubDir, webpName);
 
-      await sharp(rawPath)
+      await sourceImage
+        .clone()
         .resize(width, null, { withoutEnlargement: true })
         .avif({ quality: 80, effort: 4 })
         .toFile(avifOut);
 
-      await sharp(rawPath)
+      await sourceImage
+        .clone()
         .resize(width, null, { withoutEnlargement: true })
         .webp({ quality: 85, effort: 4 })
         .toFile(webpOut);
 
-      manifest.images[key].formats.avif[width] = `/media/${avifName}`;
-      manifest.images[key].formats.webp[width] = `/media/${webpName}`;
+      const relPathPrefix = subfolder ? `/media/${subfolder}/` : '/media/';
+      manifest.images[key].formats.avif[width] = `${relPathPrefix}${avifName}`;
+      manifest.images[key].formats.webp[width] = `${relPathPrefix}${webpName}`;
+
+      if (isContact) {
+        if (!manifest.images[key].formats.png) manifest.images[key].formats.png = {};
+        const pngName = `${key}-${width}.png`;
+        const pngOut = path.join(targetSubDir, pngName);
+        await sourceImage
+          .clone()
+          .resize(width, null, { withoutEnlargement: true })
+          .png({ compressionLevel: 8 })
+          .toFile(pngOut);
+        manifest.images[key].formats.png[width] = `${relPathPrefix}${pngName}`;
+      }
+    }
+
+    // Aliases for compatibility
+    if (key === 'product-voice-agents') {
+      manifest.images['product-sonakshi'] = manifest.images[key];
+    }
+    if (key === 'product-sovereign-ai') {
+      manifest.images['product-sovreign'] = manifest.images[key];
     }
   }
 
   // 3. Process Standard Videos (Excluding hero-fit videos processed above)
-  const videoFiles = files.filter(f => /\.(mp4|mov|webm)$/i.test(f) && !f.startsWith('hero-fit-'));
+  const rawFiles = fs.existsSync(RAW_DIR) ? fs.readdirSync(RAW_DIR) : [];
+  const videoFiles = rawFiles.filter(f => /\.(mp4|mov|webm)$/i.test(f) && !f.startsWith('hero-fit-'));
 
   for (const file of videoFiles) {
     const rawPath = path.join(RAW_DIR, file);

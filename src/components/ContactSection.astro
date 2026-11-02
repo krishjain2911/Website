@@ -1,7 +1,7 @@
 ---
 import { siteConfig } from '../config/site';
-import CurvedArc from './CurvedArc.astro';
 import Icon from './Icon.astro';
+import MediaAsset from './MediaAsset.astro';
 
 const { contact, team } = siteConfig;
 ---
@@ -10,17 +10,65 @@ const { contact, team } = siteConfig;
   <div class="container">
     <!-- Large Rounded Light-Grey Panel with Curved Arc -->
     <div class="contact-card-box card-mastercard reveal-on-scroll">
-      <CurvedArc variant="corner-sweep" class="contact-corner-arc" />
-
       <!-- Left Column: Primary Contact, Large Email Link & Black Pill "Email us" -->
       <div class="contact-col-left">
-        <span class="eyebrow">{contact.label}</span>
-        <h2 id="contact-heading" class="contact-headline">
-          Got a square peg? Let's talk.
-        </h2>
-        <p class="contact-subline">
-          Whether you're deciding between low-code and high-code or deploying sovereign enterprise AI, let's shape the right fit together.
-        </p>
+        <!-- Curved line sweeping from behind cube to left edge below headline -->
+        <div class="contact-curved-sweep" aria-hidden="true">
+          <svg viewBox="0 0 1000 240" fill="none" class="contact-sweep-svg" preserveAspectRatio="none">
+            <path
+              d="M 900 60 C 650 60, 380 200, 0 215"
+              stroke="url(#contact-sweep-grad)"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+            <defs>
+              <linearGradient id="contact-sweep-grad" x1="100%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#F7941D" stop-opacity="0.85" />
+                <stop offset="100%" stop-color="#EE4B2B" stop-opacity="0.35" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+
+        <div class="contact-header-layout">
+          <div class="contact-header-text">
+            <span class="eyebrow">{contact.label}</span>
+            <h2 id="contact-heading" class="contact-headline">
+              Every problem has an angle. Let's find yours.
+            </h2>
+            <p class="contact-subline">
+              {contact.subline}
+            </p>
+          </div>
+
+          <!-- Floating Transparent Cutout Cube with Soft Shadow -->
+          <div class="contact-cube-wrapper" aria-hidden="true">
+            <div class="contact-cube-floating">
+              <picture class="contact-cube-picture">
+                <source
+                  type="image/avif"
+                  srcset="/media/contact/contact-angle-480.avif 480w, /media/contact/contact-angle-960.avif 960w"
+                  sizes="(max-width: 768px) 140px, 220px"
+                />
+                <source
+                  type="image/webp"
+                  srcset="/media/contact/contact-angle-480.webp 480w, /media/contact/contact-angle-960.webp 960w"
+                  sizes="(max-width: 768px) 140px, 220px"
+                />
+                <img
+                  src="/media/contact/contact-angle-480.png"
+                  alt=""
+                  width="220"
+                  height="220"
+                  loading="lazy"
+                  decoding="async"
+                  class="contact-cube-img"
+                />
+              </picture>
+            </div>
+            <div class="contact-cube-shadow" aria-hidden="true"></div>
+          </div>
+        </div>
 
         <!-- Large Email Link Row -->
         <div class="email-action-row">
@@ -78,51 +126,47 @@ const { contact, team } = siteConfig;
       <div class="contact-col-right">
         <span class="eyebrow">FOUNDER DIRECT CHANNELS</span>
         <div class="founders-cards-list">
-          {team.members.map((member, index) => {
-            const phoneClean = member.phone.replace(/^\[PLACEHOLDER\]\s*/i, '');
-            const phoneB64 = Buffer.from(phoneClean).toString('base64');
-
-            return (
-              <div class="founder-mini-card">
-                <div class="founder-left-info">
-                  <!-- Circular Monogram -->
-                  <div class="founder-monogram-circle" aria-hidden="true">
+          {team.members.map((member) => (
+            <div class="founder-mini-card">
+              <div class="founder-left-info">
+                <!-- Circular Photo Avatar (falls back to monogram) -->
+                <div class="founder-monogram-circle" aria-hidden="true">
+                  {member.imageKey ? (
+                    <MediaAsset
+                      assetKey={member.imageKey}
+                      alt={member.name}
+                      crop="circle"
+                      aspectRatio="1/1"
+                      width={48}
+                      height={48}
+                      loading="lazy"
+                      theme="warm"
+                    />
+                  ) : (
                     <span>{member.initials}</span>
-                  </div>
-                  <div class="founder-text-meta">
-                    <strong class="founder-name">{member.name}</strong>
-                    <span class="founder-role">{member.role}</span>
-                  </div>
+                  )}
                 </div>
-
-                <div class="founder-actions-row">
-                  <!-- Click to reveal phone -->
-                  <button
-                    type="button"
-                    class="reveal-phone-btn"
-                    data-phone-b64={phoneB64}
-                    id={`reveal-phone-${index}`}
-                    aria-label={`Show number for ${member.name}`}
-                  >
-                    <Icon name="phone" size={14} />
-                    <span class="reveal-text">Show number</span>
-                  </button>
-
-                  <!-- LinkedIn Link -->
-                  <a
-                    href={member.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="founder-linkedin-btn"
-                    aria-label={`${member.name} on LinkedIn`}
-                  >
-                    <Icon name="external-link" size={14} />
-                    <span>LinkedIn</span>
-                  </a>
+                <div class="founder-text-meta">
+                  <strong class="founder-name">{member.name}</strong>
+                  <span class="founder-role">{member.role}</span>
                 </div>
               </div>
-            );
-          })}
+
+              <div class="founder-actions-row">
+                <!-- LinkedIn Link -->
+                <a
+                  href={member.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="founder-linkedin-btn"
+                  aria-label={`${member.name} on LinkedIn`}
+                >
+                  <Icon name="external-link" size={14} />
+                  <span>LinkedIn</span>
+                </a>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -154,13 +198,22 @@ const { contact, team } = siteConfig;
     }
   }
 
-  /* Orange Arc curving around corner */
-  .contact-corner-arc {
-    top: -50px;
-    right: -50px;
-    width: 250px;
-    height: 250px;
-    opacity: 0.55;
+  /* Re-routed Curved Line: sweeps from behind cube to left edge below headline */
+  .contact-curved-sweep {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: visible;
+  }
+
+  .contact-sweep-svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
   }
 
   /* Left Column */
@@ -172,19 +225,122 @@ const { contact, team } = siteConfig;
     z-index: 2;
   }
 
+  .contact-header-layout {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    width: 100%;
+    margin-bottom: 2.25rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .contact-header-text {
+    flex: 1;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Floating Transparent Cutout Cube (No card frame) */
+  .contact-cube-wrapper {
+    position: relative;
+    width: 220px;
+    height: 220px;
+    flex-shrink: 0;
+    pointer-events: none;
+    user-select: none;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media (max-width: 768px) {
+    .contact-cube-wrapper {
+      width: 140px;
+      height: 140px;
+    }
+  }
+
+  .contact-cube-floating {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+    animation: floatContactCube 6s ease-in-out infinite;
+  }
+
+  :global([data-theme="dark"]) .contact-cube-floating {
+    filter: drop-shadow(0 0 40px rgba(247, 148, 29, 0.25));
+  }
+
+  @keyframes floatContactCube {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .contact-cube-floating {
+      animation: none !important;
+      transform: none !important;
+    }
+  }
+
+  .contact-cube-picture {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .contact-cube-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .contact-cube-shadow {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 18px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(20, 20, 19, 0.18) 0%, rgba(20, 20, 19, 0.08) 40%, transparent 70%);
+    filter: blur(12px);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  :global([data-theme="dark"]) .contact-cube-shadow {
+    background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.25) 40%, transparent 70%);
+  }
+
   .contact-headline {
     font-size: var(--fs-h2);
     font-weight: 500;
     margin-bottom: 1rem;
     line-height: 1.18;
+    max-width: 24ch;
   }
 
   .contact-subline {
     font-size: var(--fs-body);
     color: var(--color-text-secondary);
     line-height: 1.6;
-    margin-bottom: 2.25rem;
-    max-width: 44ch;
+    margin-bottom: 0;
+    max-width: 52ch;
   }
 
   .email-action-row {
@@ -309,10 +465,12 @@ const { contact, team } = siteConfig;
     background-color: var(--color-surface);
     border: 1px solid var(--color-border-subtle);
     border-radius: 20px;
-    padding: 1.5rem;
+    padding: 1.25rem 1.5rem;
     display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
     box-shadow: var(--shadow-subtle);
   }
 
@@ -326,6 +484,7 @@ const { contact, team } = siteConfig;
     width: 48px;
     height: 48px;
     border-radius: 50%;
+    overflow: hidden;
     background: var(--rhsp-peg-gradient);
     color: #FFFFFF;
     display: flex;
@@ -334,6 +493,19 @@ const { contact, team } = siteConfig;
     font-weight: 600;
     font-size: 1rem;
     flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .founder-monogram-circle :global(.media-asset-container) {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+  }
+
+  .founder-monogram-circle :global(.media-img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .founder-text-meta {
@@ -356,10 +528,8 @@ const { contact, team } = siteConfig;
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    flex-wrap: wrap;
   }
 
-  .reveal-phone-btn,
   .founder-linkedin-btn {
     display: inline-flex;
     align-items: center;
@@ -377,7 +547,6 @@ const { contact, team } = siteConfig;
     transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
   }
 
-  .reveal-phone-btn:hover,
   .founder-linkedin-btn:hover {
     background-color: var(--color-surface-hover);
     color: var(--color-text-primary);
@@ -409,22 +578,6 @@ const { contact, team } = siteConfig;
         }
       });
     }
-
-    // Reveal phone
-    const phoneButtons = document.querySelectorAll('.reveal-phone-btn');
-    phoneButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const b64 = btn.getAttribute('data-phone-b64');
-        if (b64) {
-          try {
-            const decoded = atob(b64);
-            const textEl = btn.querySelector('.reveal-text');
-            if (textEl) textEl.textContent = decoded;
-            btn.setAttribute('aria-label', `Phone: ${decoded}`);
-          } catch (e) {}
-        }
-      });
-    });
   }
 
   setupContactSection();

@@ -1,0 +1,401 @@
+---
+// PegCardEngineer.astro: Interactive Engineer Card ("Built to plug into everything.")
+import Icon from './Icon.astro';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+
+const spokes = [
+  { id: 'erp', label: 'ERP', icon: 'layers', x: 75, y: 35 },
+  { id: 'crm', label: 'CRM', icon: 'users', x: 250, y: 22 },
+  { id: 'whatsapp', label: 'WhatsApp', icon: 'message-square', x: 425, y: 35 },
+  { id: 'database', label: 'Database', icon: 'database', x: 425, y: 145 },
+  { id: 'email', label: 'Email', icon: 'mail', x: 250, y: 158 },
+  { id: 'sso', label: 'SSO', icon: 'shield', x: 75, y: 145 }
+];
+---
+
+<div class={`peg-interactive-card peg-card-engineer ${className}`} id="peg-card-engineer" role="region" aria-label="Interactive Engineer Integration Diagram">
+  <!-- Card Header -->
+  <div class="peg-card-header">
+    <div class="header-left">
+      <span class="engineer-accent-dot" aria-hidden="true"></span>
+      <h4 class="peg-card-title">Built to plug into everything.</h4>
+    </div>
+  </div>
+
+  <!-- Interactive Spoke Network Stage -->
+  <div class="spoke-network-stage" id="engineer-stage">
+    <!-- SVG Spokes Canvas -->
+    <svg viewBox="0 0 500 180" class="spokes-svg" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <defs>
+        <linearGradient id="spoke-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#F7941D" />
+          <stop offset="100%" stop-color="#EE4B2B" />
+        </linearGradient>
+      </defs>
+
+      <!-- 6 Connector Spoke Lines (center: 250, 90) -->
+      <line class="spoke-connector" id="spoke-line-0" x1="250" y1="90" x2="85" y2="40" />
+      <line class="spoke-connector" id="spoke-line-1" x1="250" y1="90" x2="250" y2="28" />
+      <line class="spoke-connector" id="spoke-line-2" x1="250" y1="90" x2="415" y2="40" />
+      <line class="spoke-connector" id="spoke-line-3" x1="250" y1="90" x2="415" y2="140" />
+      <line class="spoke-connector" id="spoke-line-4" x1="250" y1="90" x2="250" y2="152" />
+      <line class="spoke-connector" id="spoke-line-5" x1="250" y1="90" x2="85" y2="140" />
+    </svg>
+
+    <!-- HTML Spoke Nodes Placed Absolutely Over Canvas -->
+    <div class="nodes-layer">
+      <!-- Central Node: Your app -->
+      <div class="central-app-node" id="central-app-node">
+        <Icon name="cpu" size={16} class="center-app-icon" />
+        <span class="center-node-label">Your app</span>
+      </div>
+
+      <!-- Spoke 1: ERP -->
+      <div class="spoke-node-badge pos-top-left" id="spoke-node-0">
+        <Icon name="layers" size={14} class="spoke-icon" />
+        <span>ERP</span>
+      </div>
+
+      <!-- Spoke 2: CRM -->
+      <div class="spoke-node-badge pos-top-mid" id="spoke-node-1">
+        <Icon name="users" size={14} class="spoke-icon" />
+        <span>CRM</span>
+      </div>
+
+      <!-- Spoke 3: WhatsApp -->
+      <div class="spoke-node-badge pos-top-right" id="spoke-node-2">
+        <Icon name="message-square" size={14} class="spoke-icon" />
+        <span>WhatsApp</span>
+      </div>
+
+      <!-- Spoke 4: Database -->
+      <div class="spoke-node-badge pos-bot-right" id="spoke-node-3">
+        <Icon name="database" size={14} class="spoke-icon" />
+        <span>Database</span>
+      </div>
+
+      <!-- Spoke 5: Email -->
+      <div class="spoke-node-badge pos-bot-mid" id="spoke-node-4">
+        <Icon name="mail" size={14} class="spoke-icon" />
+        <span>Email</span>
+      </div>
+
+      <!-- Spoke 6: SSO -->
+      <div class="spoke-node-badge pos-bot-left" id="spoke-node-5">
+        <Icon name="shield" size={14} class="spoke-icon" />
+        <span>SSO</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Chips: Secure · Scalable · Governed -->
+  <div class="engineer-chips-bar" aria-label="Architecture Guarantees">
+    <div class="quality-chip">
+      <span class="chip-dot" aria-hidden="true"></span>
+      <span>Secure</span>
+    </div>
+    <div class="quality-chip">
+      <span class="chip-dot" aria-hidden="true"></span>
+      <span>Scalable</span>
+    </div>
+    <div class="quality-chip">
+      <span class="chip-dot" aria-hidden="true"></span>
+      <span>Governed</span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .peg-card-engineer {
+    background-color: var(--color-surface, #FFFFFF);
+    border: 1px solid var(--color-border, #E6E6E3);
+    border-radius: 24px;
+    padding: 24px;
+    width: 100%;
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    user-select: none;
+    box-sizing: border-box;
+  }
+
+  :global([data-theme="dark"]) .peg-card-engineer {
+    background-color: #1A1A1A;
+    border-color: #2D2D2D;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  }
+
+  .peg-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .engineer-accent-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #F7941D;
+    flex-shrink: 0;
+  }
+
+  .peg-card-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--color-text-primary, #1A1A1A);
+    margin: 0;
+    line-height: 1.25;
+  }
+
+  /* Spoke Network Stage */
+  .spoke-network-stage {
+    position: relative;
+    width: 100%;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .spokes-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .spoke-connector {
+    stroke: #F7941D;
+    stroke-width: 1.75;
+    stroke-dasharray: 200;
+    stroke-dashoffset: 200;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .spoke-connector.is-connected {
+    stroke-dashoffset: 0;
+  }
+
+  /* Nodes Layer */
+  .nodes-layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: auto;
+  }
+
+  /* Central Node */
+  .central-app-node {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #FFF4EA;
+    border: 1.5px solid #F7941D;
+    border-radius: 12px;
+    padding: 8px 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #D96800;
+    box-shadow: 0 4px 16px rgba(247, 148, 29, 0.15);
+    z-index: 5;
+    white-space: nowrap;
+  }
+
+  :global([data-theme="dark"]) .central-app-node {
+    background: #281D13;
+    border-color: #F7941D;
+    color: #FFB366;
+    box-shadow: 0 4px 16px rgba(247, 148, 29, 0.25);
+  }
+
+  .center-app-icon {
+    color: #F7941D;
+  }
+
+  /* Spoke Badges */
+  .spoke-node-badge {
+    position: absolute;
+    background-color: var(--color-surface, #FFFFFF);
+    border: 1px solid var(--color-border, #E6E6E3);
+    border-radius: 999px;
+    padding: 5px 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-primary, #2A2A2A);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    white-space: nowrap;
+  }
+
+  :global([data-theme="dark"]) .spoke-node-badge {
+    background-color: #222222;
+    border-color: #333333;
+    color: #E0E0E0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .spoke-icon {
+    color: #F7941D;
+  }
+
+  .spoke-node-badge.is-pulsing {
+    animation: pulseOrange 0.45s ease;
+    border-color: #F7941D;
+    box-shadow: 0 0 12px rgba(247, 148, 29, 0.45);
+  }
+
+  @keyframes pulseOrange {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.12); border-color: #F7941D; }
+    100% { transform: scale(1); }
+  }
+
+  /* Positioning across 500x180 viewBox ratio */
+  .pos-top-left  { top: 12%; left: 6%; }
+  .pos-top-mid   { top: 4%;  left: 50%; transform: translateX(-50%); }
+  .pos-top-right { top: 12%; right: 6%; }
+  .pos-bot-right { bottom: 12%; right: 6%; }
+  .pos-bot-mid   { bottom: 4%; left: 50%; transform: translateX(-50%); }
+  .pos-bot-left  { bottom: 12%; left: 6%; }
+
+  @media (max-width: 480px) {
+    .pos-top-left  { left: 2%; }
+    .pos-top-right { right: 2%; }
+    .pos-bot-right { right: 2%; }
+    .pos-bot-left  { left: 2%; }
+    .spoke-node-badge { padding: 4px 9px; font-size: 13px; }
+  }
+
+  /* Bottom Quality Chips */
+  .engineer-chips-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--color-border-subtle, #EEEEEC);
+  }
+
+  :global([data-theme="dark"]) .engineer-chips-bar {
+    border-top-color: #262626;
+  }
+
+  .quality-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-secondary, #5B5B5B);
+  }
+
+  :global([data-theme="dark"]) .quality-chip {
+    color: #A0A0A0;
+  }
+
+  .chip-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #F7941D;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .spoke-connector {
+      stroke-dashoffset: 0 !important;
+      transition: none !important;
+    }
+    .spoke-node-badge.is-pulsing {
+      animation: none !important;
+    }
+  }
+</style>
+
+<script>
+  function setupEngineerCard() {
+    const card = document.getElementById('peg-card-engineer');
+    if (!card) return;
+
+    const lines = card.querySelectorAll<SVGLineElement>('.spoke-connector');
+    const nodes = card.querySelectorAll<HTMLElement>('.spoke-node-badge');
+
+    let timeoutIds: number[] = [];
+
+    function clearAnimation() {
+      timeoutIds.forEach(id => clearTimeout(id));
+      timeoutIds = [];
+      lines.forEach(l => l.classList.remove('is-connected'));
+      nodes.forEach(n => n.classList.remove('is-pulsing'));
+    }
+
+    function playSpokeAnimation() {
+      clearAnimation();
+
+      lines.forEach((line, idx) => {
+        const timerId = window.setTimeout(() => {
+          line.classList.add('is-connected');
+          const node = nodes[idx];
+          if (node) {
+            node.classList.remove('is-pulsing');
+            void node.offsetWidth; // reflow
+            node.classList.add('is-pulsing');
+          }
+        }, idx * 150); // ~150ms apart
+        timeoutIds.push(timerId);
+      });
+    }
+
+    // Play when >= 50% visible
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            playSpokeAnimation();
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    observer.observe(card);
+
+    // Tab select listener
+    document.addEventListener('peg-tab-change', (e: any) => {
+      if (e.detail?.pillar === 'engineer') {
+        playSpokeAnimation();
+      }
+    });
+  }
+
+  setupEngineerCard();
+  document.addEventListener('astro:after-swap', setupEngineerCard);
+</script>
+

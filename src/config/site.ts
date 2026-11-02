@@ -2,6 +2,7 @@ export interface PegPillar {
   id: 'plan' | 'engineer' | 'gen-ai';
   letter: 'P' | 'E' | 'G';
   name: string;
+  title?: string;
   color: string;
   tagline: string;
   description: string;
@@ -37,6 +38,8 @@ export interface StoryCard {
   imageKey: string;
   videoKey?: string;
   summary: string;
+  focus?: string;
+  alt?: string;
 }
 
 export interface BeforeAfterTab {
@@ -70,9 +73,9 @@ export const siteConfig = {
 
   nav: {
     links: [
-      { label: "Solutions", href: "/solutions" },
-      { label: "About", href: "/about" },
-      { label: "PEG Method", href: "/about#peg" }
+      { label: "About Us", href: "/about" },
+      { label: "Contacts", href: "#contact" },
+      { label: "Solutions", href: "/solutions" }
     ],
     cta: {
       label: "Let's talk",
@@ -104,13 +107,14 @@ export const siteConfig = {
         id: 'plan',
         letter: 'P',
         name: 'Plan',
+        title: 'Decide right, once.',
         color: '#1E4B8F', // Navy
         tagline: 'The right decision before the first line of code.',
-        description: 'Technology consultancy: architecture strategy, platform selection, feasibility assessments, and roadmap governance.',
+        description: 'Strategy, architecture, platform choice, roadmaps.',
         bullets: [
-          'Platform selection matrix: low-code vs. high-code vs. hybrid feasibility',
-          'Technical architecture blueprints, privacy assessments, and migration roadmaps',
-          'Founder-led advisory bridging business outcomes to engineering execution'
+          'Clarity on what to build, and what to skip',
+          'The right platform, chosen on facts, not habit',
+          'A roadmap your team can actually execute'
         ],
         productSlugs: [], // TO CONFIRM: Plan is an advisory service; no discrete products
         subTags: ['Strategy', 'Architecture', 'Roadmaps'],
@@ -120,13 +124,14 @@ export const siteConfig = {
         id: 'engineer',
         letter: 'E',
         name: 'Engineer',
+        title: 'Built fast. Built to scale.',
         color: '#F7941D', // Orange
-        tagline: 'Low-code speed or high-code freedom - whichever fits.',
-        description: 'Enterprise applications built on OutSystems (low-code) or high-code (MERN: MongoDB, Express, React, Node), chosen per client budget and requirements.',
+        tagline: 'Speed when you need it. Freedom when you don’t want limits.',
+        description: 'OutSystems or MERN, chosen per budget and requirements.',
         bullets: [
-          'Rapid enterprise portal and core digitization sprints on OutSystems',
-          'Bespoke high-code full-stack engineering in MERN for unique data pipelines',
-          'Hybrid integration connecting legacy operational cores to modern portals'
+          'OutSystems: live in weeks, not quarters',
+          'MERN: complete freedom, no platform ceiling',
+          'We recommend what suits you, not what suits us'
         ],
         productSlugs: ['clm', 'dms', 'whatsapp-journeys'], // TO CONFIRM
         subTags: ['OutSystems Low-Code', 'High-Code MERN'],
@@ -136,13 +141,14 @@ export const siteConfig = {
         id: 'gen-ai',
         letter: 'G',
         name: 'Gen-AI',
+        title: 'AI you can trust with your data.',
         color: '#EE4B2B', // Red-Orange
         tagline: 'AI that works on your data, inside your walls.',
-        description: 'AI that works on your data, inside your walls.',
+        description: 'Private by design. Powerful by default.',
         bullets: [
-          'Voice Agents',
-          'Sovereign AI',
-          'AskMeAnything'
+          'Voice agents that talk to customers 24/7',
+          'Your own AI, on your own infrastructure',
+          'Ask your business anything, get answers from your own data'
         ],
         productSlugs: ['voice-agents', 'sovereign-ai', 'ask-me-anything'],
         subTags: ['Voice Agents', 'Sovereign AI', 'AskMeAnything'],
@@ -158,15 +164,19 @@ export const siteConfig = {
       title: "Voice agents that pick up every call",
       tag: "Solution",
       href: "/solutions/voice-agents",
-      imageKey: "product-voice-agents",
-      summary: "[PLACEHOLDER] Voice interfaces connected to enterprise systems."
+      imageKey: "feature-voice",
+      focus: "center",
+      alt: "Retail and showroom customer interacting with voice AI assistant on a tablet",
+      summary: "Multilingual voice assistants connected to live enterprise product catalogues."
     },
     {
       id: "story-2",
       title: "Your AI, inside your walls",
       tag: "Solution",
       href: "/solutions/sovereign-ai",
-      imageKey: "product-sovereign-ai",
+      imageKey: "feature-sovereign",
+      focus: "center",
+      alt: "Dedicated private sovereign AI server cluster and protected data environment",
       summary: "AI that works on your data, inside your walls."
     },
     {
@@ -174,7 +184,9 @@ export const siteConfig = {
       title: "From paper to platform",
       tag: "Approach",
       href: "/#shift",
-      imageKey: "before-clm",
+      imageKey: "feature-paper-to-platform",
+      focus: "center",
+      alt: "Architectural transformation from manual paper ledgers to a modern web application",
       summary: "Replacing scattered physical approvals and spreadsheets with structured digital workflows."
     },
     {
@@ -182,7 +194,9 @@ export const siteConfig = {
       title: "OutSystems or MERN? We pick what fits",
       tag: "Insight",
       href: "/#stack",
-      imageKey: "peg-engineer",
+      imageKey: "feature-build-stack",
+      focus: "center",
+      alt: "Balanced engineering blueprint comparing OutSystems low-code with high-code MERN architecture",
       summary: "Choosing stacks based on timeline, compliance, and budget rather than platform dogma."
     },
     {
@@ -190,7 +204,9 @@ export const siteConfig = {
       title: "Every PEG, shaped",
       tag: "Approach",
       href: "/about#peg",
-      imageKey: "peg-plan",
+      imageKey: "feature-peg",
+      focus: "center",
+      alt: "The Plan, Engineer, and Gen-AI method shaping adapters around business reality",
       summary: "How Plan, Engineer, and Gen-AI unite to adapt technology around the business."
     }
   ] as StoryCard[],
@@ -435,7 +451,37 @@ export const siteConfig = {
     hero: {
       headline: "We don't fit pegs. We shape them.",
       subline: "Born from the engineering principle that enterprise systems should mold to organizational reality, not force compromise.",
-      imageKey: "about-hero"
+      imageKey: "about-hero",
+      focus: "center 70%"
+    },
+    mandate: {
+      badge: "OUR MANDATE",
+      headline: "Built on lasting enterprise value.",
+      subline: "Three foundational principles guiding every architecture decision.",
+      cards: [
+        {
+          num: "01",
+          label: "01 MISSION",
+          title: "Mission",
+          text: "We deploy technology that adapts to your unique business process, unlocking latent revenue.",
+          imageKey: "about-mission-icon"
+        },
+        {
+          num: "02",
+          label: "02 PURPOSE",
+          title: "Purpose",
+          text: "To empower clients through intelligent automation that simplifies operations, reduces manual effort, and delivers clear, measurable business value.",
+          imageKey: "about-purpose-icon"
+        },
+        {
+          num: "03",
+          label: "03 VISION",
+          title: "Vision",
+          // TO CONFIRM
+          text: "To be the trusted technology partner for Indian enterprises, delivering practical, intelligent automation that cuts costs, drives sustainable growth and makes advanced AI accessible and impactful.",
+          imageKey: "about-vision-icon"
+        }
+      ]
     },
     story: {
       badge: "OUR ORIGIN",
@@ -498,7 +544,8 @@ export const siteConfig = {
         bio: "18+ years bringing together operational technology and IT, from robotics and ASRS in steel, tyre and semiconductor industries to paperless loan origination systems in BFSI; specialises in OutSystems and Enterprise AI.",
         linkedin: "https://linkedin.com/in/thesubuiyer",
         phone: "[PLACEHOLDER] +91 98200 00001",
-        initials: "SI"
+        initials: "SI",
+        imageKey: "founder-subu"
       },
       {
         name: "Abhishek Bagwe",
@@ -506,15 +553,16 @@ export const siteConfig = {
         bio: "An 18-year corporate career leading strategic initiatives at Tata Power and Tata Motors; drives RHSP's growth, scalability and client acquisition.",
         linkedin: "https://linkedin.com/in/abhishek-bagwe-90ba8710",
         phone: "[PLACEHOLDER] +91 98200 00002",
-        initials: "AB"
+        initials: "AB",
+        imageKey: "founder-abhishek"
       }
     ]
   },
 
   contact: {
     label: "CONNECT",
-    headline: "Got a square peg? Let's talk.",
-    subline: "Whether your roadmap calls for low-code speed, high-code freedom, or sovereign AI, our engineers are ready to build the fit.",
+    headline: "Every problem has an angle. Let's find yours.",
+    subline: "Low-code, high-code or sovereign AI: the right answer starts with the right question. Tell us what you’re building, and let’s start there.",
     email: "LetsTalk@roundholesquarepeg.com",
     address: "ThePlayce, 17th Floor, Marathon Millennium, Lal Bahadur Shastri Marg, beside Nirmal Lifestyle Road, Moti Nagar, Mulund Colony, Mulund West, Mumbai, Maharashtra 400080",
     mapUrl: "https://maps.app.goo.gl/CZZiZs7fzmFmLVCf6"
@@ -524,5 +572,8 @@ export const siteConfig = {
     linkedin: "https://linkedin.com/company/roundholesquarepeg",
     twitter: "https://x.com/RoundHoleSqrPeg",
     youtube: "https://youtube.com/@roundholesquarepeg"
-  }
+  },
+
+  // TODO og-default: replace with 1200x630 asset when delivered
+  ogDefault: "/media/raw/social/og-default.png"
 };

@@ -79,10 +79,11 @@ const products = rawProducts.sort((a, b) => a.data.order - b.data.order);
                 <!-- Media Frame with Quarter Circle Crop -->
                 <div class="catalog-media-frame">
                   <MediaAsset
-                    assetKey={`product-${item.slug}`}
+                    assetKey={p.imageKey || `product-${item.slug}`}
                     alt={p.title}
-                    aspectRatio="16/10"
+                    aspectRatio="4/5"
                     crop="quarter"
+                    focus={p.focus}
                     hoverVideoKey={`video-${item.slug}`}
                     theme={p.pillar === 'Gen-AI' ? 'navy' : 'warm'}
                   />
@@ -94,7 +95,13 @@ const products = rawProducts.sort((a, b) => a.data.order - b.data.order);
 
                 <!-- Card Body -->
                 <div class="catalog-card-body">
-                  <span class="catalog-stack-tag">{p.badge}</span>
+                  <div class="catalog-tags-row">
+                    {p.badges && p.badges.length > 0 ? (
+                      p.badges.map((b) => <span class="catalog-stack-tag">{b}</span>)
+                    ) : (
+                      <span class="catalog-stack-tag">{p.badge}</span>
+                    )}
+                  </div>
                   <h2 class="catalog-card-title">
                     <a href={`/solutions/${item.slug}`} class="catalog-title-link">
                       {p.title}
@@ -267,11 +274,24 @@ const products = rawProducts.sort((a, b) => a.data.order - b.data.order);
     flex: 1;
   }
 
+  .catalog-tags-row {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.25rem;
+  }
+
   .catalog-stack-tag {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 600;
     color: var(--color-text-secondary);
     letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
   }
 
   .catalog-card-title {
