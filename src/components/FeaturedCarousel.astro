@@ -246,6 +246,16 @@ const { featuredStories } = siteConfig;
     nextBtn.addEventListener('click', () => {
       viewport.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     });
+
+    viewport.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        viewport.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        viewport.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      }
+    });
   }
 
   setupCarouselControls();

@@ -785,6 +785,12 @@ const { beforeAfter } = siteConfig;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
   }
 
+  .comparison-stage:has(.comparison-range-input:focus-visible) .cube-slider-handle {
+    outline: 3px solid var(--rhsp-peg-start);
+    outline-offset: 4px;
+    box-shadow: 0 0 0 6px rgba(247, 148, 29, 0.25);
+  }
+
   .handle-cube-svg {
     width: 22px;
     height: 22px;
