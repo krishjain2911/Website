@@ -1,0 +1,599 @@
+---
+import Icon from './Icon.astro';
+
+// Pre-indexed items for instant search
+const searchIndex = [
+  {
+    title: 'Voice Agents (Sonakshi)',
+    subtitle: 'Multilingual voice assistant for showrooms and retail appliances',
+    href: '/solutions/voice-agents',
+    category: 'Gen-AI',
+    badgeClass: 'badge-gen-ai',
+    tags: ['voice', 'sonakshi', 'hindi', 'gujarati', 'marathi', 'retail', 'tablet', 'appliances', 'audio']
+  },
+  {
+    title: 'Sovereign AI',
+    subtitle: '100% on-premises, air-gapped private intelligence infrastructure',
+    href: '/solutions/sovereign-ai',
+    category: 'Gen-AI',
+    badgeClass: 'badge-gen-ai',
+    tags: ['sovereign', 'private', 'airgap', 'security', 'enterprise', 'llm', 'on-prem', 'compliance']
+  },
+  {
+    title: 'CLM (Contract Lifecycle Management)',
+    subtitle: 'Automated extraction, clause comparison, redlining and audit workflows',
+    href: '/solutions/clm',
+    category: 'Engineer',
+    badgeClass: 'badge-engineer',
+    tags: ['clm', 'contracts', 'legal', 'extraction', 'redlining', 'workflow', 'agreements']
+  },
+  {
+    title: 'DMS (Document Management System)',
+    subtitle: 'High-throughput OCR, intelligent classification and secure repository',
+    href: '/solutions/dms',
+    category: 'Engineer',
+    badgeClass: 'badge-engineer',
+    tags: ['dms', 'documents', 'ocr', 'files', 'storage', 'search', 'invoices', 'records']
+  },
+  {
+    title: 'WhatsApp Journeys',
+    subtitle: 'Frictionless conversational experiences without mobile app downloads',
+    href: '/solutions/whatsapp-journeys',
+    category: 'Plan',
+    badgeClass: 'badge-plan',
+    tags: ['whatsapp', 'conversational', 'journeys', 'commerce', 'chat', 'messaging']
+  },
+  {
+    title: 'AskMeAnything (AMA)',
+    subtitle: 'Unified neural search across all enterprise siloed knowledge bases',
+    href: '/solutions/ask-me-anything',
+    category: 'Gen-AI',
+    badgeClass: 'badge-gen-ai',
+    tags: ['ama', 'ask-me-anything', 'neural', 'search', 'rag', 'knowledge', 'q&a', 'answers']
+  },
+  {
+    title: 'About RHSP',
+    subtitle: 'Our mandate, core mission, and Indian enterprise positioning',
+    href: '/about',
+    category: 'Company',
+    badgeClass: 'badge-company',
+    tags: ['about', 'mission', 'vision', 'mandate', 'enterprise', 'story']
+  },
+  {
+    title: 'The PEG Framework',
+    subtitle: 'Plan • Engineer • Gen-AI custom engineering methodology',
+    href: '/about#peg',
+    category: 'Approach',
+    badgeClass: 'badge-plan',
+    tags: ['peg', 'framework', 'method', 'cube', 'plan', 'engineer', 'genai']
+  },
+  {
+    title: 'Our Origin Story',
+    subtitle: 'Apollo 13 lithium hydroxide canister and the peg adapter metaphor',
+    href: '/about#origin',
+    category: 'Company',
+    badgeClass: 'badge-company',
+    tags: ['apollo', 'origin', 'adapter', 'round hole', 'square peg', 'socket']
+  },
+  {
+    title: 'How We Work',
+    subtitle: '4-phase delivery from discovery and architecture to continuous operation',
+    href: '/about#how',
+    category: 'Approach',
+    badgeClass: 'badge-engineer',
+    tags: ['process', 'timeline', 'delivery', 'sprints', 'phases', 'production']
+  },
+  {
+    title: 'Leadership & Founders',
+    subtitle: 'Subramaniam Iyer & Abhishek Bagwe — engineers and enterprise operators',
+    href: '/about#team',
+    category: 'Team',
+    badgeClass: 'badge-company',
+    tags: ['founders', 'subramaniam', 'abhishek', 'leadership', 'team', 'executives']
+  },
+  {
+    title: 'Get in Touch / Contacts',
+    subtitle: 'Direct architecture consultation and founder phone numbers',
+    href: '#contact',
+    category: 'Contact',
+    badgeClass: 'badge-accent',
+    tags: ['contact', 'email', 'phone', 'mumbai', 'mulund', 'office', 'architects', 'consult']
+  }
+];
+---
+
+<dialog id="site-search-dialog" class="search-dialog" aria-label="Search RHSP">
+  <div class="search-dialog-inner card-mastercard">
+    <div class="search-dialog-header">
+      <div class="search-input-wrapper">
+        <Icon name="search" size={20} class="search-dialog-icon" />
+        <input
+          type="search"
+          id="search-dialog-input"
+          class="search-dialog-input"
+          placeholder="Search solutions, method, founders..."
+          autocomplete="off"
+          spellcheck="false"
+        />
+      </div>
+      <button type="button" id="search-dialog-close" class="search-close-btn" aria-label="Close search dialog">
+        <Icon name="x" size={18} />
+        <kbd class="esc-kbd">ESC</kbd>
+      </button>
+    </div>
+
+    <div class="search-dialog-body">
+      <!-- Default list (when input is empty) -->
+      <div id="search-default-view" class="search-view-section">
+        <div class="search-group-header">POPULAR SOLUTIONS</div>
+        <div class="search-items-list" role="listbox">
+          {searchIndex.slice(0, 4).map((item, idx) => (
+            <a
+              href={item.href}
+              class="search-item"
+              role="option"
+              data-index={idx}
+            >
+              <span class={`search-badge ${item.badgeClass}`}>{item.category}</span>
+              <div class="search-item-info">
+                <strong class="search-item-title">{item.title}</strong>
+                <span class="search-item-sub">{item.subtitle}</span>
+              </div>
+              <Icon name="arrow-right" size={16} class="search-item-arrow" />
+            </a>
+          ))}
+        </div>
+
+        <div class="search-group-header" style="margin-top: 1.25rem;">METHODOLOGY & COMPANY</div>
+        <div class="search-items-list" role="listbox">
+          {searchIndex.slice(6, 10).map((item, idx) => (
+            <a
+              href={item.href}
+              class="search-item"
+              role="option"
+              data-index={idx + 4}
+            >
+              <span class={`search-badge ${item.badgeClass}`}>{item.category}</span>
+              <div class="search-item-info">
+                <strong class="search-item-title">{item.title}</strong>
+                <span class="search-item-sub">{item.subtitle}</span>
+              </div>
+              <Icon name="arrow-right" size={16} class="search-item-arrow" />
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <!-- Live filter view (rendered dynamically) -->
+      <div id="search-live-view" class="search-view-section" hidden>
+        <div class="search-group-header">MATCHING RESULTS</div>
+        <div id="search-results-list" class="search-items-list" role="listbox"></div>
+        <div id="search-empty-state" class="search-empty-state" hidden>
+          <p>No results found for "<span id="search-query-echo"></span>"</p>
+          <a href="/solutions" class="search-empty-link">Browse all solutions &rarr;</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="search-dialog-footer">
+      <span class="search-hint"><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
+      <span class="search-hint"><kbd>↵</kbd> select</span>
+      <span class="search-hint"><kbd>ESC</kbd> close</span>
+    </div>
+  </div>
+</dialog>
+
+<script define:vars={{ searchIndex }}>
+  function initSearchDialog() {
+    const dialog = document.getElementById('site-search-dialog');
+    const input = document.getElementById('search-dialog-input');
+    const closeBtn = document.getElementById('search-dialog-close');
+    const defaultView = document.getElementById('search-default-view');
+    const liveView = document.getElementById('search-live-view');
+    const resultsList = document.getElementById('search-results-list');
+    const emptyState = document.getElementById('search-empty-state');
+    const queryEcho = document.getElementById('search-query-echo');
+
+    if (!dialog || !input) return;
+
+    let selectedIndex = -1;
+
+    function openDialog() {
+      if (typeof dialog.showModal === 'function') {
+        dialog.showModal();
+      } else {
+        dialog.setAttribute('open', '');
+      }
+      document.body.style.overflow = 'hidden';
+      input.value = '';
+      updateSearch('');
+      setTimeout(() => input.focus(), 50);
+    }
+
+    function closeDialog() {
+      if (typeof dialog.close === 'function') {
+        dialog.close();
+      } else {
+        dialog.removeAttribute('open');
+      }
+      document.body.style.overflow = '';
+      selectedIndex = -1;
+    }
+
+    // Attach to triggers
+    document.querySelectorAll('[data-search-trigger]').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        openDialog();
+      });
+    });
+
+    closeBtn?.addEventListener('click', closeDialog);
+
+    // Backdrop click
+    dialog.addEventListener('click', (e) => {
+      const rect = dialog.getBoundingClientRect();
+      const isInDialog = (
+        rect.top <= e.clientY &&
+        e.clientY <= rect.top + rect.height &&
+        rect.left <= e.clientX &&
+        e.clientX <= rect.left + rect.width
+      );
+      if (!isInDialog) {
+        closeDialog();
+      }
+    });
+
+    // Keyboard shortcut (Cmd+K / Ctrl+K)
+    window.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) {
+        e.preventDefault();
+        if (dialog.open) {
+          closeDialog();
+        } else {
+          openDialog();
+        }
+      }
+    });
+
+    // Search filter logic
+    function updateSearch(query) {
+      const q = query.trim().toLowerCase();
+      selectedIndex = -1;
+
+      if (!q) {
+        defaultView?.removeAttribute('hidden');
+        liveView?.setAttribute('hidden', '');
+        return;
+      }
+
+      defaultView?.setAttribute('hidden', '');
+      liveView?.removeAttribute('hidden');
+
+      const matches = searchIndex.filter((item) => {
+        const titleMatch = item.title.toLowerCase().includes(q);
+        const subMatch = item.subtitle.toLowerCase().includes(q);
+        const catMatch = item.category.toLowerCase().includes(q);
+        const tagMatch = item.tags.some((t) => t.toLowerCase().includes(q));
+        return titleMatch || subMatch || catMatch || tagMatch;
+      });
+
+      if (!resultsList) return;
+
+      if (matches.length === 0) {
+        resultsList.innerHTML = '';
+        if (queryEcho) queryEcho.textContent = query;
+        emptyState?.removeAttribute('hidden');
+        return;
+      }
+
+      emptyState?.setAttribute('hidden', '');
+      resultsList.innerHTML = matches.map((item, idx) => `
+        <a
+          href="${item.href}"
+          class="search-item ${idx === 0 ? 'is-selected' : ''}"
+          role="option"
+          data-index="${idx}"
+        >
+          <span class="search-badge ${item.badgeClass}">${item.category}</span>
+          <div class="search-item-info">
+            <strong class="search-item-title">${item.title}</strong>
+            <span class="search-item-sub">${item.subtitle}</span>
+          </div>
+          <svg class="search-item-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </a>
+      `).join('');
+
+      selectedIndex = 0;
+    }
+
+    input.addEventListener('input', (e) => {
+      updateSearch((e.target).value);
+    });
+
+    // Arrow navigation
+    input.addEventListener('keydown', (e) => {
+      const activeList = defaultView?.hasAttribute('hidden') ? resultsList : defaultView;
+      const items = activeList?.querySelectorAll('.search-item');
+      if (!items || items.length === 0) return;
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        selectedIndex = (selectedIndex + 1) % items.length;
+        highlightItem(items, selectedIndex);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        selectedIndex = (selectedIndex - 1 + items.length) % items.length;
+        highlightItem(items, selectedIndex);
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (selectedIndex >= 0 && items[selectedIndex]) {
+          items[selectedIndex].click();
+          closeDialog();
+        }
+      }
+    });
+
+    function highlightItem(items, index) {
+      items.forEach((item, i) => {
+        if (i === index) {
+          item.classList.add('is-selected');
+          item.scrollIntoView({ block: 'nearest' });
+        } else {
+          item.classList.remove('is-selected');
+        }
+      });
+    }
+
+    // Close on navigation
+    dialog.querySelectorAll('.search-item, .search-empty-link').forEach((el) => {
+      el.addEventListener('click', () => {
+        closeDialog();
+      });
+    });
+  }
+
+  // Initialize
+  initSearchDialog();
+  document.addEventListener('astro:after-swap', initSearchDialog);
+</script>
+
+<style>
+  .search-dialog {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+    width: 90vw;
+    max-width: 640px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    z-index: 2000;
+  }
+
+  .search-dialog::backdrop {
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+
+  .search-dialog-inner {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 24px;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.16);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .search-dialog-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.125rem 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .search-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1;
+  }
+
+  :global(.search-dialog-icon) {
+    color: var(--color-text-secondary);
+    flex-shrink: 0;
+  }
+
+  .search-dialog-input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    color: var(--color-text-primary);
+    outline: none;
+  }
+
+  .search-dialog-input::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  .search-close-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.6rem;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-surface-alt);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    font-size: var(--fs-xs);
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .search-close-btn:hover {
+    background-color: var(--color-surface-hover);
+    color: var(--color-text-primary);
+  }
+
+  .esc-kbd {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+  }
+
+  .search-dialog-body {
+    padding: 1rem 1.25rem;
+    max-height: 52vh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .search-group-header {
+    font-family: var(--font-sans);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    padding: 0.25rem 0.5rem 0.5rem;
+  }
+
+  .search-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  .search-item {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding: 0.75rem 0.875rem;
+    border-radius: 14px;
+    text-decoration: none;
+    background-color: transparent;
+    transition: background-color 0.15s ease, transform 0.15s ease;
+  }
+
+  .search-item:hover,
+  .search-item.is-selected {
+    background-color: var(--color-surface-alt);
+  }
+
+  .search-badge {
+    padding: 0.2rem 0.55rem;
+    border-radius: 9999px;
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    flex-shrink: 0;
+  }
+
+  .badge-gen-ai {
+    background-color: rgba(247, 148, 29, 0.12);
+    color: #F7941D;
+  }
+
+  .badge-engineer {
+    background-color: rgba(30, 75, 143, 0.12);
+    color: #1E4B8F;
+  }
+
+  .badge-plan {
+    background-color: rgba(238, 75, 43, 0.12);
+    color: #EE4B2B;
+  }
+
+  .badge-company {
+    background-color: var(--color-surface-alt);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+  }
+
+  .badge-accent {
+    background-color: var(--color-btn-primary-bg);
+    color: var(--color-btn-primary-text);
+  }
+
+  .search-item-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .search-item-title {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .search-item-sub {
+    font-size: var(--fs-xs);
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  :global(.search-item-arrow) {
+    color: var(--color-text-muted);
+    opacity: 0.5;
+    flex-shrink: 0;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+
+  .search-item:hover :global(.search-item-arrow),
+  .search-item.is-selected :global(.search-item-arrow) {
+    opacity: 1;
+    transform: translateX(3px);
+  }
+
+  .search-empty-state {
+    padding: 2.5rem 1rem;
+    text-align: center;
+    color: var(--color-text-secondary);
+  }
+
+  .search-empty-link {
+    display: inline-block;
+    margin-top: 0.5rem;
+    color: var(--color-accent);
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .search-dialog-footer {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 0.75rem 1.5rem;
+    background-color: var(--color-surface-alt);
+    border-top: 1px solid var(--color-border);
+    font-size: var(--fs-xs);
+    color: var(--color-text-muted);
+  }
+
+  .search-hint kbd {
+    display: inline-block;
+    padding: 0.1rem 0.35rem;
+    margin-right: 0.25rem;
+    border-radius: 4px;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+  }
+</style>

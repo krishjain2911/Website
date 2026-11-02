@@ -46,11 +46,20 @@ const relatedProducts = allProducts
       <div class="container">
         <div class="product-hero-grid">
           <div class="product-hero-content reveal-on-scroll">
-            <!-- Breadcrumbs -->
+            <!-- Breadcrumbs with prominent Back to Solutions link -->
             <nav class="breadcrumb-row" aria-label="Breadcrumb">
-              <a href="/solutions" class="breadcrumb-link">Solutions</a>
-              <span class="breadcrumb-sep">/</span>
-              <span class="breadcrumb-current">{p.pillar}</span>
+              <a href="/solutions" class="breadcrumb-back-link">
+                <Icon name="arrow-left" size={14} />
+                <span>Back to solutions</span>
+              </a>
+              <span class="breadcrumb-divider" aria-hidden="true">•</span>
+              <ol class="breadcrumb-list">
+                <li class="breadcrumb-item"><a href="/" class="breadcrumb-link">Home</a></li>
+                <li class="breadcrumb-sep" aria-hidden="true">/</li>
+                <li class="breadcrumb-item"><a href="/solutions" class="breadcrumb-link">Solutions</a></li>
+                <li class="breadcrumb-sep" aria-hidden="true">/</li>
+                <li class="breadcrumb-item" aria-current="page"><span class="breadcrumb-current">{p.pillar}</span></li>
+              </ol>
             </nav>
 
             <div class="product-badge-row">
@@ -429,11 +438,53 @@ const relatedProducts = allProducts
 
   .breadcrumb-row {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.625rem;
     font-size: var(--fs-sm);
     color: var(--color-text-muted);
     margin-bottom: 1.5rem;
+  }
+
+  .breadcrumb-back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.625rem;
+    border-radius: 9999px;
+    background-color: var(--color-surface-alt);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    font-size: var(--fs-xs);
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .breadcrumb-back-link:hover {
+    color: var(--color-text-primary);
+    background-color: var(--color-surface-hover);
+    border-color: var(--color-text-secondary);
+  }
+
+  .breadcrumb-divider {
+    color: var(--color-text-muted);
+    opacity: 0.4;
+  }
+
+  .breadcrumb-list {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .breadcrumb-item {
+    display: inline-flex;
+    align-items: center;
   }
 
   .breadcrumb-link {
@@ -443,6 +494,12 @@ const relatedProducts = allProducts
 
   .breadcrumb-link:hover {
     color: var(--color-text-primary);
+  }
+
+  .breadcrumb-sep {
+    color: var(--color-text-muted);
+    user-select: none;
+    opacity: 0.6;
   }
 
   .breadcrumb-current {

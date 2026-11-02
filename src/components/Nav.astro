@@ -4,6 +4,7 @@ import ThemeToggle from './ThemeToggle.astro';
 import Icon from './Icon.astro';
 import LearnMore from './LearnMore.astro';
 import MediaAsset from './MediaAsset.astro';
+import SearchDialog from './SearchDialog.astro';
 import { siteConfig } from '../config/site';
 
 const { nav } = siteConfig;
@@ -23,7 +24,13 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     <nav class="desktop-nav" aria-label="Main Navigation">
       <ul class="nav-links">
         <li>
-          <a href={nav.links[0].href} class={`nav-link ${isAboutActive ? 'is-active' : ''}`}>{nav.links[0].label}</a>
+          <a
+            href={nav.links[0].href}
+            class={`nav-link ${isAboutActive ? 'is-active' : ''}`}
+            aria-current={isAboutActive ? 'page' : undefined}
+          >
+            {nav.links[0].label}
+          </a>
         </li>
         <li>
           <a href={nav.links[1].href} class="nav-link">{nav.links[1].label}</a>
@@ -36,6 +43,7 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
             aria-expanded="false"
             aria-haspopup="true"
             aria-controls="mega-menu-panel"
+            aria-current={isSolutionsActive ? 'page' : undefined}
           >
             <span>{nav.links[2].label}</span>
             <Icon name="chevron-down" size={14} class="mega-chevron" />
@@ -46,16 +54,17 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
 
     <!-- Right: Search Pill + Theme + Black CTA -->
     <div class="header-actions">
-      <!-- Search Pill (opens mega menu) -->
+      <!-- Search Pill (opens interactive search modal) -->
       <button
         type="button"
-        class="search-pill-btn mega-trigger"
-        aria-label="What are you looking for? Open solutions search"
-        aria-expanded="false"
-        aria-controls="mega-menu-panel"
+        class="search-pill-btn"
+        data-search-trigger
+        aria-label="What are you looking for? Search solutions and pages"
+        aria-haspopup="dialog"
       >
         <Icon name="search" size={15} class="search-icon" />
         <span class="search-pill-text">What are you looking for?</span>
+        <kbd class="search-kbd" aria-hidden="true">⌘K</kbd>
       </button>
 
       <!-- Theme Toggle -->
@@ -362,11 +371,16 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     </div>
 
     <div class="mobile-drawer-body">
-      <!-- Search Input on Mobile -->
-      <a href="/solutions" class="mobile-search-pill">
+      <!-- Search Input on Mobile (opens search dialog) -->
+      <button
+        type="button"
+        class="mobile-search-pill"
+        data-search-trigger
+        aria-label="Search solutions and architecture"
+      >
         <Icon name="search" size={16} />
         <span>Search solutions &amp; architecture...</span>
-      </a>
+      </button>
 
       <!-- Accordion Navigation -->
       <div class="mobile-nav-sections">
@@ -455,6 +469,12 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
       </a>
     </div>
   </div>
+
+  <!-- Thin Scroll Progress Line -->
+  <div id="scroll-progress-line" class="scroll-progress-bar" aria-hidden="true"></div>
+
+  <!-- Client-Side Search Dialog (Command Palette) -->
+  <SearchDialog />
 </header>
 
 <style>
@@ -533,15 +553,22 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    padding: 0.5rem 0;
-    transition: color 0.2s ease;
+    padding: 0.4rem 0.85rem;
+    border-radius: var(--radius-pill);
+    transition: color 0.2s ease, background-color 0.2s ease;
   }
 
   .nav-link:hover,
-  .nav-link-btn:hover,
+  .nav-link-btn:hover {
+    color: var(--color-text-primary);
+    background-color: var(--color-surface-alt);
+  }
+
   .nav-link.is-active,
   .nav-link-btn.is-active {
     color: var(--color-text-primary);
+    background-color: var(--color-surface-alt);
+    font-weight: 600;
   }
 
   :global(.mega-chevron) {
@@ -565,7 +592,7 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     align-items: center;
     gap: 0.6rem;
     height: 42px;
-    padding: 0 1.25rem;
+    padding: 0 1.125rem;
     border-radius: var(--radius-pill);
     background-color: var(--color-surface-alt);
     border: 1px solid var(--color-border);
@@ -575,6 +602,32 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     font-weight: 400;
     cursor: pointer;
     transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+
+  .search-kbd {
+    display: inline-block;
+    padding: 0.1rem 0.35rem;
+    margin-left: 0.25rem;
+    border-radius: 4px;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+  }
+
+  /* Thin Scroll Progress Bar */
+  .scroll-progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 0%;
+    background: linear-gradient(90deg, #F7941D 0%, #EE4B2B 100%);
+    pointer-events: none;
+    z-index: 1001;
+    transition: width 0.05s linear;
   }
 
   @media (min-width: 1100px) {
@@ -1045,6 +1098,14 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
         }
       } else {
         header?.classList.remove('is-hidden');
+      }
+
+      // Update thin scroll progress line
+      const progressBar = document.getElementById('scroll-progress-line');
+      if (progressBar) {
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (currentScrollY / docHeight) * 100 : 0;
+        progressBar.style.width = `${Math.min(100, Math.max(0, progress))}%`;
       }
 
       lastScrollY = Math.max(0, currentScrollY);
