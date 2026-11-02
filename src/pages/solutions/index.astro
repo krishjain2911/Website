@@ -15,6 +15,10 @@ const products = rawProducts.sort((a, b) => a.data.order - b.data.order);
 <BaseLayout
   title="Solutions Directory - RHSP"
   description="Explore RHSP's enterprise software solutions across Engineer and Gen-AI, plus our Plan advisory service. Low-code velocity on OutSystems, bespoke high-code in MERN, and sovereign AI."
+  breadcrumbs={[
+    { name: 'Home', item: '/' },
+    { name: 'Solutions', item: '/solutions' }
+  ]}
 >
   <Nav />
 

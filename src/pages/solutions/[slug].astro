@@ -37,6 +37,11 @@ const relatedProducts = allProducts
 <BaseLayout
   title={`${p.title} - RHSP Enterprise Solution`}
   description={p.seoDescription || p.oneLiner}
+  breadcrumbs={[
+    { name: 'Home', item: '/' },
+    { name: 'Solutions', item: '/solutions' },
+    { name: p.title, item: `/solutions/${product.slug}` }
+  ]}
 >
   <Nav />
 

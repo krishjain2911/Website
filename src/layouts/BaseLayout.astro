@@ -6,16 +6,29 @@ interface Props {
   title?: string;
   description?: string;
   ogImage?: string;
+  breadcrumbs?: Array<{ name: string; item: string }>;
 }
 
 const {
   title = `${siteConfig.name} - ${siteConfig.tagline}`,
   description = siteConfig.description,
-  ogImage = '/og-image.png'
+  ogImage = '/og-image.png',
+  breadcrumbs
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, siteConfig.url).toString();
 const ogImageURL = new URL(ogImage, siteConfig.url).toString();
+
+const breadcrumbSchema = breadcrumbs && breadcrumbs.length > 0 ? {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": breadcrumbs.map((b, idx) => ({
+    "@type": "ListItem",
+    "position": idx + 1,
+    "name": b.name,
+    "item": new URL(b.item, siteConfig.url).toString()
+  }))
+} : null;
 
 const orgSchema = {
   "@context": "https://schema.org",
@@ -111,6 +124,9 @@ const orgSchema = {
 
     <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json" set:html={JSON.stringify(orgSchema)} />
+    {breadcrumbSchema && (
+      <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+    )}
   </head>
   <body>
     <!-- Accessibility Skip Link -->

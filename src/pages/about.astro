@@ -18,6 +18,10 @@ const { about } = siteConfig;
 <BaseLayout
   title="About RHSP - Tech that adapts to business."
   description="We don't fit pegs. We shape them. Practical enterprise low-code on OutSystems, high-code MERN engineering, and sovereign AI."
+  breadcrumbs={[
+    { name: 'Home', item: '/' },
+    { name: 'About', item: '/about' }
+  ]}
 >
   <Nav />
 
