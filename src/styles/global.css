@@ -291,11 +291,24 @@ p {
   margin-bottom: 1rem;
 }
 
-/* Focus styling */
+/* Focus & Interactive States */
 :focus-visible {
   outline: 2px solid var(--color-border-focus);
-  outline-offset: 4px;
-  border-radius: 8px;
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.btn:active,
+button:active {
+  transform: scale(0.98);
+}
+
+.btn:disabled,
+button:disabled,
+[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 /* Buttons - Pill Shapes (48-56px tall) */
