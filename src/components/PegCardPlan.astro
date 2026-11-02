@@ -7,33 +7,6 @@ interface Props {
 }
 
 const { class: className = '' } = Astro.props;
-
-const roadmapData = {
-  'cut-manual': {
-    label: 'Cut manual work',
-    steps: [
-      { phase: 'NOW', text: 'Map the workflows worth automating' },
-      { phase: 'NEXT', text: 'Automate the top 3' },
-      { phase: 'LATER', text: 'Extend across teams' }
-    ]
-  },
-  'launch-faster': {
-    label: 'Launch faster',
-    steps: [
-      { phase: 'NOW', text: 'Pick the smallest valuable release' },
-      { phase: 'NEXT', text: 'Ship in weeks' },
-      { phase: 'LATER', text: 'Iterate on real usage' }
-    ]
-  },
-  'keep-private': {
-    label: 'Keep data private',
-    steps: [
-      { phase: 'NOW', text: 'Classify sensitive data' },
-      { phase: 'NEXT', text: 'Deploy inside your environment' },
-      { phase: 'LATER', text: 'Roll out with governance' }
-    ]
-  }
-};
 ---
 
 <div class={`peg-interactive-card peg-card-plan ${className}`} id="peg-card-plan" role="region" aria-label="Interactive Plan Roadmap">

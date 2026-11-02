@@ -75,6 +75,11 @@ const orgSchema = {
     <script is:inline>
       (function() {
         try {
+          const urlTheme = new URLSearchParams(window.location.search).get('theme');
+          if (urlTheme === 'dark' || urlTheme === 'light') {
+            document.documentElement.setAttribute('data-theme', urlTheme);
+            return;
+          }
           const stored = localStorage.getItem('rhsp-theme');
           if (stored) {
             document.documentElement.setAttribute('data-theme', stored);

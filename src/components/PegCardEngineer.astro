@@ -7,15 +7,6 @@ interface Props {
 }
 
 const { class: className = '' } = Astro.props;
-
-const spokes = [
-  { id: 'erp', label: 'ERP', icon: 'layers', x: 75, y: 35 },
-  { id: 'crm', label: 'CRM', icon: 'users', x: 250, y: 22 },
-  { id: 'whatsapp', label: 'WhatsApp', icon: 'message-square', x: 425, y: 35 },
-  { id: 'database', label: 'Database', icon: 'database', x: 425, y: 145 },
-  { id: 'email', label: 'Email', icon: 'mail', x: 250, y: 158 },
-  { id: 'sso', label: 'SSO', icon: 'shield', x: 75, y: 145 }
-];
 ---
 
 <div class={`peg-interactive-card peg-card-engineer ${className}`} id="peg-card-engineer" role="region" aria-label="Interactive Engineer Integration Diagram">

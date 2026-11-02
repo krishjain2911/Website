@@ -509,8 +509,9 @@ import Icon from './Icon.astro';
 
 <script>
   function setupOriginVisual() {
-    const card = document.getElementById('origin-visual-card');
-    if (!card) return;
+    const cardEl = document.getElementById('origin-visual-card');
+    if (!cardEl) return;
+    const card: HTMLElement = cardEl;
 
     const stepNum = document.getElementById('visual-step-num');
     const stepLabel = document.getElementById('visual-step-label');
@@ -525,7 +526,6 @@ import Icon from './Icon.astro';
     const timelineButtons = document.querySelectorAll('.story-step-item');
 
     let currentStep = 1;
-    let hasAttemptedCollision = false;
     let isDragging = false;
     let dragStartX = 0;
     let currentPegX = 80;
@@ -607,7 +607,6 @@ import Icon from './Icon.astro';
           holeCross?.classList.remove('is-visible');
           // 3. Bounce back to resting point
           setPegPosition(POS_START, true);
-          hasAttemptedCollision = true;
           if (actionRow) actionRow.style.display = 'flex';
         }, 450);
       }, 500);
@@ -710,7 +709,6 @@ import Icon from './Icon.astro';
         if (pegGroup) pegGroup.classList.remove('peg-shake-anim');
         holeCross?.classList.remove('is-visible');
         setPegPosition(POS_START, true);
-        hasAttemptedCollision = true;
         if (actionRow) actionRow.style.display = 'flex';
       }, 450);
     }

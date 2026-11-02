@@ -27,7 +27,6 @@ const { beforeAfter } = siteConfig;
       </p>
 
       {!hideTabs && (
-        <!-- Tab Selectors -->
         <div class="shift-tabs-bar" role="tablist" aria-label="Before and after transformation domains">
           {beforeAfter.tabs.map((tab) => (
             <button
@@ -893,17 +892,21 @@ const { beforeAfter } = siteConfig;
 
       if (!range || !afterLayer || !divider) return;
 
+      const inputEl = range;
+      const afterEl = afterLayer;
+      const dividerEl = divider;
+
       function updateSlider(val: number) {
         // value is 0 (all before) to 100 (all after)
         // afterLayer clip-path: inset(0 0 0 X%)
-        afterLayer.style.clipPath = `inset(0 0 0 ${val}%)`;
-        divider.style.left = `${val}%`;
-        range.setAttribute('aria-valuenow', String(val));
-        range.setAttribute('aria-valuetext', `${100 - val}% before, ${val}% after`);
+        afterEl.style.clipPath = `inset(0 0 0 ${val}%)`;
+        dividerEl.style.left = `${val}%`;
+        inputEl.setAttribute('aria-valuenow', String(val));
+        inputEl.setAttribute('aria-valuetext', `${100 - val}% before, ${val}% after`);
       }
 
-      range.addEventListener('input', () => {
-        updateSlider(Number(range.value));
+      inputEl.addEventListener('input', () => {
+        updateSlider(Number(inputEl.value));
       });
 
       // Interactive Nudge Hint on First Intersection (skip with reduced motion)
@@ -926,11 +929,11 @@ const { beforeAfter } = siteConfig;
                   // Sinusoidal nudge
                   const offset = Math.sin(progress * Math.PI) * 15;
                   const currentVal = 50 - offset;
-                  range.value = String(currentVal);
+                  inputEl.value = String(currentVal);
                   updateSlider(currentVal);
                   requestAnimationFrame(nudgeAnim);
                 } else {
-                  range.value = '50';
+                  inputEl.value = '50';
                   updateSlider(50);
                 }
               }

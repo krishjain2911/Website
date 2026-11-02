@@ -6,8 +6,10 @@ import LearnMore from './LearnMore.astro';
 import MediaAsset from './MediaAsset.astro';
 import { siteConfig } from '../config/site';
 
+const { nav } = siteConfig;
 const currentPath = Astro.url.pathname;
-const isAboutActive = currentPath.startsWith('/about');
+const isAboutActive = currentPath === '/about' || currentPath.startsWith('/about/');
+const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith('/solutions/');
 ---
 
 <header id="main-nav-header" class="site-header">
@@ -21,21 +23,21 @@ const isAboutActive = currentPath.startsWith('/about');
     <nav class="desktop-nav" aria-label="Main Navigation">
       <ul class="nav-links">
         <li>
-          <a href="/about" class={`nav-link ${isAboutActive ? 'is-active' : ''}`}>About Us</a>
+          <a href={nav.links[0].href} class={`nav-link ${isAboutActive ? 'is-active' : ''}`}>{nav.links[0].label}</a>
         </li>
         <li>
-          <a href="#contact" class="nav-link">Contacts</a>
+          <a href={nav.links[1].href} class="nav-link">{nav.links[1].label}</a>
         </li>
         <li>
           <button
             type="button"
-            class="nav-link-btn mega-trigger"
+            class={`nav-link-btn mega-trigger ${isSolutionsActive ? 'is-active' : ''}`}
             id="mega-menu-trigger"
             aria-expanded="false"
             aria-haspopup="true"
             aria-controls="mega-menu-panel"
           >
-            <span>Solutions</span>
+            <span>{nav.links[2].label}</span>
             <Icon name="chevron-down" size={14} class="mega-chevron" />
           </button>
         </li>
@@ -60,8 +62,8 @@ const isAboutActive = currentPath.startsWith('/about');
       <ThemeToggle />
 
       <!-- Primary Black Pill CTA -->
-      <a href="#contact" class="btn btn-primary nav-cta-pill">
-        <span>Let's talk</span>
+      <a href={nav.cta.href} class="btn btn-primary nav-cta-pill">
+        <span>{nav.cta.label}</span>
       </a>
 
       <!-- Mobile Menu Hamburger -->
@@ -448,8 +450,8 @@ const isAboutActive = currentPath.startsWith('/about');
         <span>Dark Mode</span>
         <ThemeToggle />
       </div>
-      <a href="#contact" class="btn btn-primary mobile-cta-pill" id="mobile-cta-btn">
-        Let's talk
+      <a href={nav.cta.href} class="btn btn-primary mobile-cta-pill" id="mobile-cta-btn">
+        {nav.cta.label}
       </a>
     </div>
   </div>
@@ -467,7 +469,14 @@ const isAboutActive = currentPath.startsWith('/about');
     border-bottom: 1px solid var(--color-border);
     transition: height 0.3s var(--ease-out-expo),
                 box-shadow 0.3s var(--ease-out-expo),
-                background-color 0.25s ease;
+                background-color 0.25s ease,
+                transform 0.3s var(--ease-out-expo);
+  }
+
+  @media (max-width: 959px) {
+    .site-header.is-hidden {
+      transform: translateY(-100%);
+    }
   }
 
   .site-header.is-scrolled {
@@ -999,16 +1008,38 @@ const isAboutActive = currentPath.startsWith('/about');
 
     if (!header || !megaPanel) return;
 
-    // Sticky header shrink on scroll
+    // Sticky header shrink & mobile hide on scroll down
     let lastScrollY = window.scrollY;
+    let ticking = false;
+
     function handleScroll() {
-      if (window.scrollY > 30) {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > 30) {
         header?.classList.add('is-scrolled');
       } else {
         header?.classList.remove('is-scrolled');
       }
+
+      if (window.innerWidth < 960 && currentScrollY > 120) {
+        if (currentScrollY > lastScrollY + 10) {
+          header?.classList.add('is-hidden');
+        } else if (currentScrollY < lastScrollY - 10) {
+          header?.classList.remove('is-hidden');
+        }
+      } else {
+        header?.classList.remove('is-hidden');
+      }
+
+      lastScrollY = Math.max(0, currentScrollY);
+      ticking = false;
     }
-    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(handleScroll);
+        ticking = true;
+      }
+    }, { passive: true });
     handleScroll();
 
     // Toggle Mega Menu

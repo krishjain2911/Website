@@ -159,7 +159,6 @@ const cropClass =
   style={aspectRatio ? `aspect-ratio: ${aspectRatio};` : undefined}
 >
   {isMissing ? (
-    <!-- Intentional Soft Gradient Panel (White -> #FFF4EA or #F0F4FA, subtle cube line art & orange arc) -->
     <div
       class={`placeholder-gradient-panel theme-${theme}`}
       role="img"
@@ -202,7 +201,6 @@ const cropClass =
       </svg>
     </div>
   ) : type === 'video' ? (
-    <!-- Lazy Loop Video -->
     <video
       class="media-video lazy-video"
       preload="none"
@@ -216,7 +214,6 @@ const cropClass =
       Your browser does not support the video tag.
     </video>
   ) : (
-    <!-- Responsive Picture with AVIF + WebP srcset or Direct Image -->
     <picture class="media-picture">
       {imageEntry?.formats?.avif && Object.keys(imageEntry.formats.avif).length > 0 && (
         <source
@@ -251,7 +248,6 @@ const cropClass =
   )}
 
   {hoverVideoEntry && (
-    <!-- Hover Video Overlay for desktop -->
     <video
       class="media-hover-video lazy-video"
       preload="none"
