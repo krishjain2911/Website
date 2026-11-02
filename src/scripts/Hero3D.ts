@@ -6,6 +6,17 @@ export interface Hero3DInstance {
 }
 
 export function initHero3D(container: HTMLElement, onReady?: () => void): Hero3DInstance | null {
+  // Guard: on mobile or low-power devices, use static fallback (no WebGL)
+  const isMobile = typeof window !== 'undefined' && (window.innerWidth < 768 || /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent));
+  const isLowPower = typeof navigator !== 'undefined' && (
+    (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) ||
+    ((navigator as any).connection && (navigator as any).connection.saveData === true)
+  );
+
+  if (isMobile || isLowPower) {
+    return null;
+  }
+
   const testCanvas = document.createElement('canvas');
   const glTest = testCanvas.getContext('webgl2') || testCanvas.getContext('webgl');
   if (!glTest) return null;

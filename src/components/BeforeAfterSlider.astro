@@ -765,9 +765,9 @@ const { beforeAfter } = siteConfig;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 44px;
-    height: 44px;
-    border-radius: 50%; /* White circle handle */
+    width: 48px;
+    height: 48px;
+    border-radius: 50%; /* White circle handle (at least 48px) */
     background-color: #FFFFFF;
     border: 1px solid rgba(0, 0, 0, 0.08);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
@@ -775,6 +775,7 @@ const { beforeAfter } = siteConfig;
     align-items: center;
     justify-content: center;
     cursor: grab;
+    touch-action: pan-y;
     transition: transform 0.2s var(--ease-out-expo), box-shadow 0.2s ease;
   }
 
@@ -785,8 +786,8 @@ const { beforeAfter } = siteConfig;
   }
 
   .handle-cube-svg {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
   }
 
   /* Accessible Range Input layered invisibly over stage */
@@ -798,6 +799,7 @@ const { beforeAfter } = siteConfig;
     margin: 0;
     opacity: 0;
     cursor: grab;
+    touch-action: pan-y;
     z-index: 20;
     -webkit-appearance: none;
   }

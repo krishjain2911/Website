@@ -4,6 +4,12 @@ import Icon from './Icon.astro';
 import MediaAsset from './MediaAsset.astro';
 
 const { contact, team } = siteConfig;
+
+const sanitizedMembers = team.members.map(m => ({
+  ...m,
+  cleanPhone: m.phone.replace(/^\[PLACEHOLDER\]\s*/i, '').trim(),
+  rawTel: m.phone.replace(/^\[PLACEHOLDER\]\s*/i, '').replace(/[\s-]/g, '')
+}));
 ---
 
 <section id="contact" class="contact-section" aria-labelledby="contact-heading">
@@ -126,7 +132,7 @@ const { contact, team } = siteConfig;
       <div class="contact-col-right">
         <span class="eyebrow">FOUNDER DIRECT CHANNELS</span>
         <div class="founders-cards-list">
-          {team.members.map((member) => (
+          {sanitizedMembers.map((member) => (
             <div class="founder-mini-card">
               <div class="founder-left-info">
                 <!-- Circular Photo Avatar (falls back to monogram) -->
@@ -153,12 +159,24 @@ const { contact, team } = siteConfig;
               </div>
 
               <div class="founder-actions-row">
+                <!-- Phone Reveal on Tap -->
+                <button
+                  type="button"
+                  class="founder-action-btn founder-phone-btn"
+                  data-phone={member.cleanPhone}
+                  data-tel={member.rawTel}
+                  aria-label={`Call or reveal direct phone number for ${member.name}`}
+                >
+                  <Icon name="phone" size={14} />
+                  <span class="phone-label">Call</span>
+                </button>
+
                 <!-- LinkedIn Link -->
                 <a
                   href={member.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="founder-linkedin-btn"
+                  class="founder-action-btn founder-linkedin-btn"
                   aria-label={`${member.name} on LinkedIn`}
                 >
                   <Icon name="external-link" size={14} />
@@ -527,14 +545,16 @@ const { contact, team } = siteConfig;
   .founder-actions-row {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.5rem;
+    flex-wrap: wrap;
   }
 
-  .founder-linkedin-btn {
+  .founder-action-btn {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    padding: 0.45rem 1rem;
+    min-height: 40px;
+    padding: 0.45rem 0.9rem;
     border-radius: var(--radius-pill);
     border: 1px solid var(--color-border);
     background-color: var(--color-surface-alt);
@@ -547,10 +567,16 @@ const { contact, team } = siteConfig;
     transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
   }
 
-  .founder-linkedin-btn:hover {
+  .founder-action-btn:hover {
     background-color: var(--color-surface-hover);
     color: var(--color-text-primary);
     border-color: var(--color-text-secondary);
+  }
+
+  .founder-phone-btn.is-revealed {
+    background-color: var(--color-btn-primary-bg);
+    color: var(--color-btn-primary-text);
+    border-color: var(--color-btn-primary-bg);
   }
 </style>
 
@@ -578,6 +604,25 @@ const { contact, team } = siteConfig;
         }
       });
     }
+
+    // Founder phone number reveal on tap
+    const phoneBtns = document.querySelectorAll<HTMLButtonElement>('.founder-phone-btn');
+    phoneBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const phone = btn.getAttribute('data-phone');
+        const tel = btn.getAttribute('data-tel');
+        const label = btn.querySelector('.phone-label');
+        if (!phone) return;
+
+        if (btn.classList.contains('is-revealed')) {
+          window.location.href = `tel:${tel}`;
+        } else {
+          btn.classList.add('is-revealed');
+          if (label) label.textContent = phone;
+          btn.setAttribute('title', `Click to dial ${phone}`);
+        }
+      });
+    });
   }
 
   setupContactSection();

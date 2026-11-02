@@ -135,8 +135,10 @@ const { featuredStories } = siteConfig;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    padding-left: calc((100vw - var(--max-width)) / 2);
-    padding-right: 2rem;
+    scroll-snap-type: x mandatory;
+    touch-action: pan-y;
+    padding-left: max(var(--gutter), calc((100% - var(--max-width)) / 2));
+    padding-right: var(--gutter);
   }
 
   @media (max-width: 1280px) {
@@ -164,6 +166,8 @@ const { featuredStories } = siteConfig;
     border-radius: var(--radius-card);
     overflow: hidden;
     flex-shrink: 0;
+    scroll-snap-align: start;
+    touch-action: pan-y;
     transition: transform 0.4s var(--ease-out-expo), box-shadow 0.4s var(--ease-out-expo);
   }
 
