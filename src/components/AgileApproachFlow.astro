@@ -353,11 +353,16 @@ const sprints = [
     font-family: var(--font-mono);
     font-size: var(--text-xs);
     font-weight: 700;
-    color: var(--color-brand-primary);
-    background: rgba(238, 75, 43, 0.08);
+    color: var(--color-brand-primary, #EE4B2B);
+    background: rgba(238, 75, 43, 0.1);
     padding: 0.2rem 0.5rem;
     border-radius: 4px;
     flex-shrink: 0;
+  }
+
+  :global([data-theme="dark"]) .tab-num {
+    color: #F7941D;
+    background: rgba(247, 148, 29, 0.15);
   }
 
   .tab-label-group {

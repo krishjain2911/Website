@@ -254,6 +254,8 @@ const relatedProducts = allProducts
                   {p.interfaceScreens.map((screen, idx) => (
                     <button
                       type="button"
+                      role="tab"
+                      aria-selected={idx === 0 ? "true" : "false"}
                       class={`quick-switch-btn ${idx === 0 ? 'is-active' : ''}`}
                       data-target-idx={idx}
                       aria-label={`Jump to Step ${screen.step}: ${screen.title}`}

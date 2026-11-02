@@ -293,8 +293,12 @@ const { class: className = '' } = Astro.props;
 
   .step-num-mono {
     font-size: 13px;
-    font-weight: 500;
-    color: var(--color-text-muted, #8A8A88);
+    font-weight: 600;
+    color: #575757;
+  }
+
+  :global([data-theme="dark"]) .step-num-mono {
+    color: #D0D0CE;
   }
 
   .later-check-badge {
