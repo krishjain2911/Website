@@ -62,11 +62,11 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
         type="button"
         class="search-pill-btn"
         data-search-trigger
-        aria-label="What are you looking for? Search solutions and pages"
+        aria-label="Search solutions"
         aria-haspopup="dialog"
       >
         <Icon name="search" size={15} class="search-icon" />
-        <span class="search-pill-text">What are you looking for?</span>
+        <span class="search-pill-text">Search</span>
         <kbd class="search-kbd" aria-hidden="true">⌘K</kbd>
       </button>
 
@@ -527,7 +527,7 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     }
   }
 
-  @media (max-width: 959px) {
+  @media (max-width: 1099px) {
     .site-header.is-hidden {
       transform: translateY(-100%);
     }
@@ -554,14 +554,16 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     align-items: center;
     text-decoration: none;
     color: inherit;
+    flex-shrink: 0;
   }
 
   /* Desktop Nav Links */
   .desktop-nav {
     display: none;
+    flex-shrink: 0;
   }
 
-  @media (min-width: 960px) {
+  @media (min-width: 1100px) {
     .desktop-nav {
       display: block;
     }
@@ -571,7 +573,15 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     list-style: none;
     display: flex;
     align-items: center;
-    gap: 2rem;
+    gap: 1.75rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-links > li {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
   }
 
   .nav-link,
@@ -589,6 +599,8 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     gap: 0.35rem;
     padding: 0.4rem 0.85rem;
     border-radius: var(--radius-pill);
+    white-space: nowrap;
+    flex-shrink: 0;
     transition: color 0.2s ease, background-color 0.2s ease;
   }
 
@@ -618,6 +630,7 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     display: flex;
     align-items: center;
     gap: 1rem;
+    flex-shrink: 0;
   }
 
   /* Search Pill */
@@ -626,8 +639,6 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     align-items: center;
     gap: 0.6rem;
     height: 42px;
-    padding: 0 1.125rem;
-    border-radius: var(--radius-pill);
     background-color: var(--color-surface-alt);
     border: 1px solid var(--color-border);
     color: var(--color-text-secondary);
@@ -635,7 +646,13 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     font-size: var(--fs-sm);
     font-weight: 400;
     cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
     transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+
+  .search-pill-text {
+    white-space: nowrap;
   }
 
   .search-kbd {
@@ -649,6 +666,48 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     font-size: 10px;
     font-weight: 600;
     color: var(--color-text-muted);
+    white-space: nowrap;
+  }
+
+  /* Below 1280px (1100px - 1279px): collapse to icon-only round button */
+  @media (min-width: 1100px) and (max-width: 1279px) {
+    .search-pill-btn {
+      display: inline-flex;
+      width: 42px;
+      padding: 0;
+      border-radius: 50%;
+      justify-content: center;
+    }
+
+    .search-pill-text,
+    .search-kbd {
+      display: none;
+    }
+  }
+
+  /* 1280px and above: single-line full pill with "Search" and ⌘K hint */
+  @media (min-width: 1280px) {
+    .search-pill-btn {
+      display: inline-flex;
+      width: auto;
+      padding: 0 1.125rem;
+      border-radius: var(--radius-pill);
+      justify-content: flex-start;
+    }
+
+    .search-pill-text {
+      display: inline;
+    }
+
+    .search-kbd {
+      display: inline-block;
+    }
+  }
+
+  .search-pill-btn:hover {
+    background-color: var(--color-surface-hover);
+    color: var(--color-text-primary);
+    border-color: var(--color-text-secondary);
   }
 
   /* Thin Scroll Progress Bar */
@@ -664,18 +723,6 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     transition: width 0.05s linear;
   }
 
-  @media (min-width: 1100px) {
-    .search-pill-btn {
-      display: inline-flex;
-    }
-  }
-
-  .search-pill-btn:hover {
-    background-color: var(--color-surface-hover);
-    color: var(--color-text-primary);
-    border-color: var(--color-text-secondary);
-  }
-
   .nav-cta-pill {
     display: inline-flex;
     align-items: center;
@@ -685,6 +732,8 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     padding: 0 0.95rem;
     font-size: 13px;
     font-weight: 600;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
 
   @media (min-width: 640px) {
@@ -715,9 +764,10 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     color: var(--color-text-primary);
     cursor: pointer;
     padding: 0.5rem;
+    flex-shrink: 0;
   }
 
-  @media (min-width: 960px) {
+  @media (min-width: 1100px) {
     .mobile-menu-hamburger {
       display: none;
     }
@@ -742,7 +792,7 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     z-index: 1001;
   }
 
-  @media (max-width: 959px) {
+  @media (max-width: 1099px) {
     .mega-menu-panel {
       display: none !important;
     }
@@ -1153,7 +1203,7 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
         header?.classList.remove('is-scrolled');
       }
 
-      if (window.innerWidth < 960 && currentScrollY > 140) {
+      if (window.innerWidth < 1100 && currentScrollY > 140) {
         if (currentScrollY > lastScrollY + 20) {
           header?.classList.add('is-hidden');
         } else if (currentScrollY < lastScrollY - 15) {
@@ -1215,7 +1265,7 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
 
       // Desktop Hover with intent
       trigger.addEventListener('mouseenter', () => {
-        if (window.innerWidth >= 960) {
+        if (window.innerWidth >= 1100) {
           clearTimeout(hoverTimeout);
           openMegaMenu();
         }
@@ -1223,7 +1273,7 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     });
 
     header.addEventListener('mouseleave', () => {
-      if (window.innerWidth >= 960 && isOpen) {
+      if (window.innerWidth >= 1100 && isOpen) {
         hoverTimeout = setTimeout(closeMegaMenu, 250);
       }
     });
