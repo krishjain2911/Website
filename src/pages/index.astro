@@ -3,7 +3,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import Hero from '../components/Hero.astro';
-import JourneyThread from '../components/JourneyThread.astro';
 import ApproachJourney from '../components/ApproachJourney.astro';
 import PegSolutions from '../components/PegSolutions.astro';
 import ContactSection from '../components/ContactSection.astro';
@@ -16,16 +15,11 @@ import ContactSection from '../components/ContactSection.astro';
   <Nav />
 
   <main id="main-content" tabindex="-1">
-    <!-- Continuous Story Layer: Hero Hole -> Journey Road -> PEG Hand-Off -->
-    <div class="hero-journey-wrapper" id="hero-journey-wrapper" style="position: relative;">
-      <JourneyThread />
+    <!-- 1. Hero: Pinned 3D Logo Cube & Scroll Pass-Through -->
+    <Hero />
 
-      <!-- 1. Hero: Pinned 3D Logo Cube & Scroll Pass-Through -->
-      <Hero />
-
-      <!-- 2. Our Approach: Six Stages Journey -->
-      <ApproachJourney />
-    </div>
+    <!-- 2. Our Approach: Six Stages Journey -->
+    <ApproachJourney />
 
     <!-- 3. The PEG Solutions: How We Think + Capabilities & Solutions -->
     <PegSolutions />
