@@ -4,15 +4,13 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import MediaAsset from '../components/MediaAsset.astro';
 import CurvedArc from '../components/CurvedArc.astro';
-import PegCube from '../components/PegCube.astro';
 import HowWeWork from '../components/HowWeWork.astro';
 import Team from '../components/Team.astro';
 import ContactSection from '../components/ContactSection.astro';
-import OriginVisual from '../components/OriginVisual.astro';
 import Icon from '../components/Icon.astro';
 import { siteConfig } from '../config/site';
 
-const { about } = siteConfig;
+const { about, pegMethod } = siteConfig;
 ---
 
 <BaseLayout
@@ -137,9 +135,40 @@ const { about } = siteConfig;
               </div>
             </div>
 
-            <!-- Right: Interactive 3-Step Origin Visual -->
+            <!-- Right: Blueprint Line-Art Illustration -->
             <div class="story-illustration-col">
-              <OriginVisual />
+              <div class="blueprint-canvas">
+                <svg
+                  viewBox="0 0 320 280"
+                  fill="none"
+                  class="blueprint-svg"
+                  role="img"
+                  aria-label="Technical diagram showing Round hole challenge, RHSP adapter, and Square peg solution"
+                >
+                  <!-- Left: Round Hole / Socket (The challenge) -->
+                  <ellipse cx="75" cy="130" rx="42" ry="42" stroke="#1E4B8F" stroke-width="1.75" />
+                  <ellipse cx="75" cy="130" rx="28" ry="28" stroke="#1E4B8F" stroke-dasharray="4 4" stroke-width="1" />
+                  <text x="75" y="126" font-family="var(--font-sans, sans-serif)" font-weight="600" font-size="8.5" fill="#1E4B8F" text-anchor="middle">ROUND HOLE</text>
+                  <text x="75" y="140" font-family="var(--font-sans, sans-serif)" font-size="8" fill="var(--color-text-secondary, #5B5B5B)" text-anchor="middle">The challenge</text>
+
+                  <!-- Center: The Engineered Adapter Bridge -->
+                  <path d="M120,105 C140,95 160,95 180,105" stroke="#F7941D" stroke-width="2" stroke-linecap="round" />
+                  <path d="M120,155 C140,165 160,165 180,155" stroke="#F7941D" stroke-width="2" stroke-linecap="round" />
+                  <rect x="135" y="112" width="46" height="36" rx="8" fill="var(--color-surface-alt, #FFFFFF)" stroke="#F7941D" stroke-width="1.5" />
+                  <text x="158" y="130" font-family="var(--font-sans, sans-serif)" font-weight="600" font-size="8" fill="#F7941D" text-anchor="middle">RHSP</text>
+                  <text x="158" y="141" font-family="var(--font-sans, sans-serif)" font-size="6.5" fill="var(--color-text-secondary, #5B5B5B)" text-anchor="middle">The adapter</text>
+
+                  <!-- Right: Square Peg (The solution) -->
+                  <rect x="205" y="75" width="70" height="110" rx="4" stroke="#EE4B2B" stroke-width="1.75" stroke-dasharray="3 3" />
+                  <text x="240" y="126" font-family="var(--font-sans, sans-serif)" font-weight="600" font-size="8.5" fill="#EE4B2B" text-anchor="middle">SQUARE PEG</text>
+                  <text x="240" y="140" font-family="var(--font-sans, sans-serif)" font-size="8" fill="var(--color-text-secondary, #5B5B5B)" text-anchor="middle">The solution</text>
+
+                  <!-- Bottom Measurement Baseline -->
+                  <line x1="35" y1="215" x2="285" y2="215" stroke="var(--color-border, #E6E6E3)" stroke-width="1" />
+                  <circle cx="35" cy="215" r="3" fill="#1E4B8F" />
+                  <circle cx="285" cy="215" r="3" fill="#EE4B2B" />
+                </svg>
+              </div>
             </div>
           </div>
         </div>
@@ -184,10 +213,127 @@ const { about } = siteConfig;
       </div>
     </section>
 
-    <!-- 4. The PEG Method (#peg): Reusing the Real 3D CSS PEG Cube Component -->
-    <div id="peg">
-      <PegCube />
-    </div>
+    <!-- 4. The PEG Method (#peg): Static Diagram & Three Pillars -->
+    <section id="peg" class="about-peg-section" aria-labelledby="peg-heading">
+      <div class="container">
+        <div class="peg-section-header text-center reveal-on-scroll">
+          <span class="eyebrow">{pegMethod.badge}</span>
+          <h2 id="peg-heading" class="peg-section-title">{pegMethod.headline}</h2>
+          <p class="peg-section-subline">{pegMethod.primaryTagline}</p>
+        </div>
+
+        <!-- Clean Static SVG Diagram (Round hole -> RHSP adapter -> Square peg) -->
+        <div class="peg-diagram-card card-mastercard reveal-on-scroll">
+          <div class="peg-diagram-wrapper" aria-label="Diagram: Round Hole (The challenge) to RHSP adapter (We engineer the bridge) to Square Peg (The solution)" role="img">
+            
+            <!-- Left: Round Hole / The challenge -->
+            <div class="diagram-node node-challenge">
+              <div class="node-graphic">
+                <svg viewBox="0 0 100 100" class="node-svg" aria-hidden="true">
+                  <circle cx="50" cy="50" r="42" stroke="#1E4B8F" stroke-width="2" fill="none" />
+                  <circle cx="50" cy="50" r="30" stroke="#1E4B8F" stroke-dasharray="4 4" stroke-width="1.25" fill="none" />
+                </svg>
+              </div>
+              <div class="node-meta">
+                <span class="node-tag" style="color: #1E4B8F;">ROUND HOLE</span>
+                <span class="node-label">The challenge</span>
+              </div>
+            </div>
+
+            <!-- Connector 1 -->
+            <div class="diagram-connector" aria-hidden="true">
+              <svg viewBox="0 0 80 24" class="connector-svg">
+                <path d="M4 12 H70 M62 5 L70 12 L62 19" stroke="#F7941D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+              </svg>
+            </div>
+
+            <!-- Center: RHSP Adapter / We engineer the bridge -->
+            <div class="diagram-node node-adapter">
+              <div class="node-graphic">
+                <svg viewBox="0 0 120 100" class="node-svg" aria-hidden="true">
+                  <path d="M12 28 C35 18 55 18 78 28" stroke="#F7941D" stroke-width="2" stroke-linecap="round" fill="none" />
+                  <path d="M12 72 C35 82 55 82 78 72" stroke="#F7941D" stroke-width="2" stroke-linecap="round" fill="none" />
+                  <rect x="24" y="32" width="72" height="36" rx="8" fill="var(--color-surface-alt)" stroke="#F7941D" stroke-width="2" />
+                  <text x="60" y="55" font-family="var(--font-sans)" font-weight="700" font-size="14" fill="#F7941D" text-anchor="middle">RHSP</text>
+                </svg>
+              </div>
+              <div class="node-meta">
+                <span class="node-tag" style="color: #F7941D;">RHSP ADAPTER</span>
+                <span class="node-label">We engineer the bridge</span>
+              </div>
+            </div>
+
+            <!-- Connector 2 -->
+            <div class="diagram-connector" aria-hidden="true">
+              <svg viewBox="0 0 80 24" class="connector-svg">
+                <path d="M4 12 H70 M62 5 L70 12 L62 19" stroke="#EE4B2B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+              </svg>
+            </div>
+
+            <!-- Right: Square Peg / The solution -->
+            <div class="diagram-node node-solution">
+              <div class="node-graphic">
+                <svg viewBox="0 0 100 100" class="node-svg" aria-hidden="true">
+                  <rect x="14" y="14" width="72" height="72" rx="6" stroke="#EE4B2B" stroke-width="2" stroke-dasharray="5 4" fill="none" />
+                </svg>
+              </div>
+              <div class="node-meta">
+                <span class="node-tag" style="color: #EE4B2B;">SQUARE PEG</span>
+                <span class="node-label">The solution</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Static Text Columns for the 3 PEG Pillars -->
+        <div class="peg-pillars-grid reveal-on-scroll">
+          {pegMethod.pillars.map((pillar) => (
+            <article class="peg-pillar-col card-mastercard" style={`--pillar-color: ${pillar.color};`}>
+              <div class="pillar-col-header">
+                <span class="pillar-letter">{pillar.letter}</span>
+                <div class="pillar-title-wrap">
+                  <h3 class="pillar-name">{pillar.name}</h3>
+                  <span class="pillar-tagline">{pillar.tagline}</span>
+                </div>
+              </div>
+
+              <p class="pillar-desc">{pillar.description}</p>
+
+              <ul class="pillar-bullets-list">
+                {pillar.bullets.map((bullet) => (
+                  <li>
+                    <span class="bullet-dot" aria-hidden="true"></span>
+                    <span>{bullet}</span>
+                  </li>
+                ))}
+              </ul>
+
+              {pillar.productSlugs && pillar.productSlugs.length > 0 ? (
+                <div class="pillar-products-group">
+                  <span class="products-label">Capabilities &amp; Products:</span>
+                  <div class="pillar-chips-list">
+                    {pillar.productSlugs.map((slug) => (
+                      <a href={`/solutions/${slug}`} class="pillar-prod-chip">
+                        {slug.split('-').map(w => w.toUpperCase() === 'CLM' || w.toUpperCase() === 'DMS' || w.toUpperCase() === 'AI' ? w.toUpperCase() : w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div class="pillar-products-group">
+                  <span class="products-label">Engagement:</span>
+                  <div class="pillar-chips-list">
+                    <a href="/about#how" class="pillar-prod-chip">Architecture Roadmaps</a>
+                    <a href="/#contact" class="pillar-prod-chip">Advisory Briefing</a>
+                  </div>
+                </div>
+              )}
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
 
     <!-- 5. How We Work (#how) + Find Your Fit (Horizontal Stepper & Black Result Card) -->
     <div class="about-approach-banner">
@@ -672,5 +818,260 @@ const { about } = siteConfig;
     line-height: 1.6;
     max-width: 55ch;
     margin: 0;
+  }
+
+  /* Static Blueprint & PEG Diagram Styles */
+  .blueprint-canvas {
+    background-color: var(--color-surface-alt);
+    border-radius: var(--radius-card);
+    padding: 1.5rem;
+    border: 1px solid var(--color-border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .blueprint-svg {
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+  }
+
+  .about-peg-section {
+    padding: var(--section-spacing-desktop) 0;
+    background-color: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+    scroll-margin-top: 96px;
+  }
+
+  .peg-section-header {
+    max-width: 680px;
+    margin: 0 auto 3.5rem;
+  }
+
+  .peg-section-title {
+    font-size: var(--fs-h2);
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+  }
+
+  .peg-section-subline {
+    font-size: var(--fs-body-lg);
+    color: var(--color-text-secondary);
+    margin: 0 auto;
+  }
+
+  .peg-diagram-card {
+    background-color: var(--color-surface);
+    border-radius: var(--radius-card);
+    padding: 3rem 2.5rem;
+    margin-bottom: 3.5rem;
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-subtle);
+  }
+
+  .peg-diagram-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 640px) {
+    .peg-diagram-wrapper {
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .diagram-connector {
+      transform: rotate(90deg);
+      margin: 0.25rem 0;
+    }
+  }
+
+  .diagram-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.75rem;
+  }
+
+  .node-graphic {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .node-svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .node-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .node-tag {
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  .node-label {
+    font-size: var(--fs-body);
+    color: var(--color-text-secondary);
+    font-weight: 500;
+  }
+
+  .diagram-connector {
+    width: 60px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .connector-svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .peg-pillars-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  @media (min-width: 960px) {
+    .peg-pillars-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2.5rem;
+    }
+  }
+
+  .peg-pillar-col {
+    background-color: var(--color-surface-alt);
+    border-radius: var(--radius-card);
+    padding: 2.75rem 2.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    border: 1px solid var(--color-border-subtle);
+    border-top: 3px solid var(--pillar-color);
+  }
+
+  .pillar-col-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+  }
+
+  .pillar-letter {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: var(--pillar-color);
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .pillar-title-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .pillar-name {
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+
+  .pillar-tagline {
+    font-size: var(--fs-sm);
+    color: var(--color-text-secondary);
+    font-weight: 500;
+  }
+
+  .pillar-desc {
+    font-size: var(--fs-body);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .pillar-bullets-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    flex: 1;
+  }
+
+  .pillar-bullets-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: var(--fs-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+  }
+
+  .bullet-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--pillar-color);
+    margin-top: 0.45rem;
+    flex-shrink: 0;
+  }
+
+  .pillar-products-group {
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .products-label {
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+
+  .pillar-chips-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .pillar-prod-chip {
+    padding: 0.3rem 0.75rem;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    font-size: var(--fs-sm);
+    color: var(--color-text-primary);
+    text-decoration: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .pillar-prod-chip:hover {
+    background-color: var(--color-surface-hover);
+    border-color: var(--pillar-color);
   }
 </style>
