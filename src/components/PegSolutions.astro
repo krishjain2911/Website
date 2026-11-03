@@ -32,7 +32,7 @@ import Icon from './Icon.astro';
               <div class="cube-assembly" id="cube-assembly">
                 <!-- Top Face: P - Plan -->
                 <div
-                  class="cube-face face-top is-active"
+                  class="cube-face face-top"
                   id="cube-face-plan"
                   data-pillar="plan"
                   role="button"
@@ -579,7 +579,7 @@ import Icon from './Icon.astro';
   /* Phase 0 Intro Header (Center-aligned, positioned near top of stage in Phase 0) */
   .stage-intro-header {
     position: absolute;
-    top: 6vh;
+    top: clamp(1rem, 2.8vh, 2rem);
     left: 50%;
     transform: translateX(-50%);
     text-align: center;
@@ -587,7 +587,7 @@ import Icon from './Icon.astro';
     pointer-events: none;
     transition: opacity 0.35s ease, transform 0.35s ease;
     width: 100%;
-    max-width: 720px;
+    max-width: 680px;
     padding: 0 1rem;
     box-sizing: border-box;
   }
@@ -598,10 +598,10 @@ import Icon from './Icon.astro';
   }
 
   .intro-headline {
-    font-size: clamp(2rem, 3.5vw, 2.85rem);
+    font-size: clamp(1.85rem, 3vw, 2.5rem);
     font-weight: 700;
     color: var(--color-text-primary);
-    margin: 0.4rem 0;
+    margin: 0.35rem 0;
     letter-spacing: -0.025em;
     line-height: 1.15;
   }
@@ -640,12 +640,12 @@ import Icon from './Icon.astro';
   .stage-container {
     display: grid;
     grid-template-columns: 38% 62%;
-    gap: 3rem;
+    gap: 2.5rem;
     align-items: center;
     width: 100%;
-    max-width: 1280px;
+    max-width: 1240px;
     height: 100%;
-    max-height: calc(100vh - 120px);
+    max-height: calc(100vh - var(--nav-height, 72px) - 20px);
     position: relative;
     z-index: 2;
   }
@@ -660,12 +660,13 @@ import Icon from './Icon.astro';
     transform-origin: center center;
     will-change: transform;
     z-index: 5;
+    margin-top: clamp(2.5rem, 5.5vh, 4rem);
   }
 
   .cube-scene-wrapper {
     position: relative;
-    width: 240px;
-    height: 240px;
+    width: clamp(190px, 24vh, 220px);
+    height: clamp(190px, 24vh, 220px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -721,8 +722,8 @@ import Icon from './Icon.astro';
 
   .cube-viewport {
     position: relative;
-    width: 140px;
-    height: 140px;
+    width: 130px;
+    height: 130px;
     transform-style: preserve-3d;
     z-index: 2;
   }
@@ -738,8 +739,8 @@ import Icon from './Icon.astro';
 
   .cube-face {
     position: absolute;
-    width: 140px;
-    height: 140px;
+    width: 130px;
+    height: 130px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -750,57 +751,45 @@ import Icon from './Icon.astro';
     backface-visibility: visible;
     border-radius: 4px;
     overflow: hidden;
-    transition: transform 0.4s cubic-bezier(0.34, 1.25, 0.64, 1), box-shadow 0.3s ease;
+    transition: box-shadow 0.3s ease;
   }
 
-  /* Top Face: P - Plan (Navy) */
+  /* Top Face: P - Plan (Navy) - Flush solid cube face */
   .face-top {
-    transform: rotateX(90deg) translateZ(70px);
+    transform: rotateX(90deg) translateZ(65px);
     background: linear-gradient(135deg, #1E4B8F 0%, #0F2A4A 100%);
     box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.2);
   }
 
-  .face-top.is-popped {
-    transform: rotateX(90deg) translateZ(85px);
-  }
-
-  /* Left Face: E - Engineer (Orange) */
+  /* Left Face: E - Engineer (Orange) - Flush solid cube face */
   .face-left {
-    transform: rotateY(-90deg) translateZ(70px);
+    transform: rotateY(-90deg) translateZ(65px);
     background: linear-gradient(135deg, #FF9E2C 0%, #F7941D 100%);
     box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.15);
   }
 
-  .face-left.is-popped {
-    transform: rotateY(-90deg) translateZ(85px);
-  }
-
-  /* Right Face: G - Gen-AI (Red) */
+  /* Right Face: G - Gen-AI (Red) - Flush solid cube face */
   .face-right {
-    transform: translateZ(70px);
+    transform: translateZ(65px);
     background: linear-gradient(135deg, #FF5B3B 0%, #EE4B2B 100%);
     box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.15);
   }
 
-  .face-right.is-popped {
-    transform: translateZ(85px);
-  }
-
-  /* Enclosure Faces */
+  /* Enclosure Faces - All translateZ(half-size) from center origin */
   .face-bottom {
-    transform: rotateX(-90deg) translateZ(70px);
+    transform: rotateX(-90deg) translateZ(65px);
     background: #0A1B30;
     pointer-events: none;
   }
 
   .face-back {
-    transform: rotateY(180deg) translateZ(70px);
+    transform: rotateY(180deg) translateZ(65px);
     background: #C43818;
     pointer-events: none;
   }
 
   .face-back-left {
-    transform: rotateY(90deg) translateZ(70px);
+    transform: rotateY(90deg) translateZ(65px);
     background: #0F2A4A;
     pointer-events: none;
   }
@@ -1505,10 +1494,10 @@ import Icon from './Icon.astro';
         panel.classList.toggle('is-active', key === pillar);
       });
 
-      // Face Pop Out
+      // Active Face indicator without translating face geometry (cube remains 100% solid)
       Object.entries(faces).forEach(([key, face]) => {
         if (!face) return;
-        face.classList.toggle('is-popped', key === pillar);
+        face.classList.toggle('is-active-face', key === pillar);
       });
     }
 
@@ -1572,7 +1561,7 @@ import Icon from './Icon.astro';
             cubeAlpha = smoothstep(0, 1, clamp((vp.scrollY - hStart) / Math.max(1, hEnd - hStart), 0, 1));
           }
           cubeCol.style.opacity = `${cubeAlpha}`;
-          cubeCol.style.transform = `translateX(${centerOffset}px) scale(1.15)`;
+          cubeCol.style.transform = `translateX(${centerOffset}px) scale(1.0)`;
 
           // Content column completely hidden
           contentCol.style.opacity = '0';
@@ -1601,11 +1590,10 @@ import Icon from './Icon.astro';
             scrollCue.style.pointerEvents = 'none';
           }
 
-          // Cube transitions from center to left column (scale 1.15 -> 1.0)
+          // Cube transitions from center to left column
           cubeCol.style.opacity = '1';
           const currentX = lerp(centerOffset, 0, ease1);
-          const currentScale = lerp(1.15, 1.0, ease1);
-          cubeCol.style.transform = `translateX(${currentX}px) scale(${currentScale})`;
+          cubeCol.style.transform = `translateX(${currentX}px) scale(1.0)`;
 
           // Cube interpolates angle: intro -> plan
           const ang = {
