@@ -4,14 +4,45 @@ import Icon from './Icon.astro';
 
 const { approach } = siteConfig;
 const steps = approach.steps;
+const headlineWords = approach.headline.split(' ');
 ---
 
 <section id="approach" class="approach-section" aria-labelledby="approach-heading">
+  <!-- Drifting Background Geometry (Faint depth <= 0.08 opacity) -->
+  <div class="journey-bg-parallax" aria-hidden="true">
+    <div class="parallax-layer layer-aperture" id="bg-parallax-aperture"></div>
+    <div class="parallax-layer layer-isometric-square" id="bg-parallax-square"></div>
+    <div class="parallax-layer layer-thin-grid"></div>
+  </div>
+
+  <!-- Journey Progress Rail (Fixed on desktop right viewport margin) -->
+  <nav class="journey-progress-rail" id="journey-progress-rail" aria-label="Journey stages progress">
+    <div class="rail-indicator" id="rail-indicator-text">Stage 1 / 6</div>
+    <div class="rail-dots-track">
+      {steps.map((step, idx) => (
+        <a
+          href={`#journey-stop-${idx}`}
+          class={`rail-dot ${idx === 0 ? 'is-active' : ''}`}
+          id={`rail-dot-${idx}`}
+          data-stage={idx}
+          title={`Stage 0${step.number}: ${step.title}`}
+          aria-label={`Jump to Stage 0${step.number}: ${step.title}`}
+        >
+          <span class="dot-inner" style={`--dot-color: ${step.color};`}></span>
+        </a>
+      ))}
+    </div>
+  </nav>
+
   <div class="container approach-container">
     <!-- Section Header (Left-aligned, leaving right side clear for thread path) -->
     <div class="approach-header">
       <span class="eyebrow">{approach.badge}</span>
-      <h2 id="approach-heading" class="approach-title">{approach.headline}</h2>
+      <h2 id="approach-heading" class="approach-title staged-word-heading">
+        {headlineWords.map((word, wIdx) => (
+          <span class="staged-word" style={`--word-idx: ${wIdx};`}>{word}{' '}</span>
+        ))}
+      </h2>
       <p class="approach-subline">{approach.subline}</p>
     </div>
 
@@ -38,7 +69,7 @@ const steps = approach.steps;
               </div>
 
               <!-- Stop Card -->
-              <article class="stop-content-card card-mastercard">
+              <article class="stop-content-card card-mastercard" id={`stop-card-${idx}`}>
                 <div class="card-accent-bar" style={`background-color: ${step.color};`}></div>
                 <div class="card-meta-row">
                   <span class="card-stage-eyebrow" style={`color: ${step.color};`}>
@@ -80,11 +111,140 @@ const steps = approach.steps;
     overflow: visible;
   }
 
-  .approach-container {
+  /* Drifting Background Parallax Layers */
+  .journey-bg-parallax {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .parallax-layer {
+    position: absolute;
+    will-change: transform;
+    pointer-events: none;
+  }
+
+  .layer-aperture {
+    top: 15%;
+    left: 8%;
+    width: 280px;
+    height: 280px;
+    border-radius: 50%;
+    border: 1.5px dashed rgba(30, 75, 143, 0.08);
+    opacity: 0.06;
+  }
+
+  :global(.dark) .layer-aperture {
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .layer-isometric-square {
+    top: 55%;
+    right: 6%;
+    width: 220px;
+    height: 220px;
+    border: 1.5px solid rgba(247, 148, 29, 0.08);
+    transform: rotate(45deg);
+    opacity: 0.05;
+  }
+
+  :global(.dark) .layer-isometric-square {
+    border-color: rgba(247, 148, 29, 0.12);
+  }
+
+  .layer-thin-grid {
+    inset: 0;
+    background-size: 80px 80px;
+    background-image: 
+      linear-gradient(to right, rgba(140, 150, 165, 0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(140, 150, 165, 0.03) 1px, transparent 1px);
+    opacity: 0.04;
+  }
+
+  /* Fixed Journey Progress Rail (Desktop right edge) */
+  .journey-progress-rail {
+    position: fixed;
+    right: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 50;
     display: flex;
     flex-direction: column;
-    position: relative;
-    z-index: 2;
+    align-items: flex-end;
+    gap: 0.65rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .journey-progress-rail.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .rail-indicator {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    background-color: var(--color-surface);
+    padding: 0.2rem 0.55rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    white-space: nowrap;
+  }
+
+  .rail-dots-track {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.4rem;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  }
+
+  .rail-dot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    text-decoration: none;
+    outline: none;
+  }
+
+  .rail-dot:focus-visible {
+    box-shadow: 0 0 0 2px #F7941D;
+  }
+
+  .dot-inner {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--color-text-muted);
+    opacity: 0.4;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .rail-dot:hover .dot-inner {
+    opacity: 0.8;
+    transform: scale(1.2);
+  }
+
+  .rail-dot.is-active .dot-inner {
+    width: 12px;
+    height: 12px;
+    background-color: var(--dot-color, #F7941D);
+    opacity: 1;
+    box-shadow: 0 0 8px var(--dot-color, #F7941D);
   }
 
   /* Left-aligned Header leaving right column clear for incoming thread */
@@ -92,6 +252,25 @@ const steps = approach.steps;
     text-align: left;
     max-width: 540px;
     margin-bottom: 3.5rem;
+  }
+
+  /* Staggered Word Reveal on Headings (Item 7) */
+  .staged-word-heading {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .staged-word {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: calc(var(--word-idx, 0) * 35ms);
+  }
+
+  .staged-word-heading.is-revealed .staged-word {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   .approach-title {
@@ -139,7 +318,7 @@ const steps = approach.steps;
     display: flex;
     align-items: center;
     width: 100%;
-    transition: opacity 0.4s ease, transform 0.4s ease;
+    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   /* Desktop Alternating Cards: Left vs Right of Road */
@@ -190,7 +369,7 @@ const steps = approach.steps;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    transition: transform 0.3s cubic-bezier(0.34, 1.25, 0.64, 1), background-color 0.3s ease, border-color 0.3s ease;
+    transition: transform 0.35s cubic-bezier(0.34, 1.25, 0.64, 1), background-color 0.3s ease, border-color 0.3s ease;
   }
 
   .pin-num {
@@ -223,6 +402,7 @@ const steps = approach.steps;
     max-width: 420px;
     padding: 1.75rem;
     border: 1px solid var(--color-border);
+    will-change: transform;
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.3s ease;
   }
 
@@ -292,7 +472,6 @@ const steps = approach.steps;
   }
 
   .journey-stop.is-active .stop-content-card {
-    transform: translateY(-4px) scale(1.02);
     box-shadow: var(--shadow-card-hover);
     border-color: var(--step-accent, #1E4B8F);
   }
@@ -367,6 +546,10 @@ const steps = approach.steps;
 
   /* Mobile Layout (< 900px) */
   @media (max-width: 899px) {
+    .journey-progress-rail {
+      display: none !important;
+    }
+
     .approach-header {
       text-align: left;
       margin-bottom: 2.5rem;
@@ -402,18 +585,37 @@ const steps = approach.steps;
     .pin-ring-pulse {
       display: none !important;
     }
+    .staged-word {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+    .journey-bg-parallax {
+      display: none !important;
+    }
   }
 </style>
 
 <script>
-  import { getScrollStory } from '../scripts/scrollStory';
+  import { getScrollStory, clamp } from '../scripts/scrollStory';
 
   function initApproachStops() {
     const stops = Array.from(document.querySelectorAll<HTMLElement>('.journey-stop'));
+    const cards = Array.from(document.querySelectorAll<HTMLElement>('.stop-content-card'));
     const section = document.getElementById('approach');
+    const heading = document.getElementById('approach-heading');
+    const rail = document.getElementById('journey-progress-rail');
+    const railText = document.getElementById('rail-indicator-text');
+    const railDots = Array.from(document.querySelectorAll<HTMLElement>('.rail-dot'));
+
+    const bgAperture = document.getElementById('bg-parallax-aperture');
+    const bgSquare = document.getElementById('bg-parallax-square');
+
     if (!section || stops.length === 0) return;
 
     let stopOffsets: number[] = [];
+    let sectionTop = 0;
+    let sectionHeight = 0;
+    let headingRevealed = false;
 
     const story = getScrollStory();
 
@@ -421,30 +623,81 @@ const steps = approach.steps;
       id: 'approach-stops',
       gateElement: section,
       measure: (vp) => {
+        const sRect = section.getBoundingClientRect();
+        sectionTop = sRect.top + vp.scrollY;
+        sectionHeight = sRect.height;
+
         stopOffsets = stops.map((s) => {
           const rect = s.getBoundingClientRect();
           return rect.top + vp.scrollY + rect.height * 0.5;
         });
       },
       update: (vp) => {
+        // Trigger word reveal on section heading
+        if (!headingRevealed && heading) {
+          const hRect = heading.getBoundingClientRect();
+          if (hRect.top < vp.viewportHeight * 0.85) {
+            heading.classList.add('is-revealed');
+            headingRevealed = true;
+          }
+        }
+
+        // Background Parallax Drift (Item 4)
+        if (vp.viewportWidth >= 900) {
+          const relScroll = vp.scrollY - sectionTop;
+          if (bgAperture) bgAperture.style.transform = `translateY(${relScroll * 0.18}px)`;
+          if (bgSquare) bgSquare.style.transform = `rotate(45deg) translateY(${relScroll * -0.14}px)`;
+        }
+
+        // Rail visibility: inside approach section only
+        if (rail) {
+          const inView = vp.scrollY >= sectionTop - 100 && vp.scrollY <= sectionTop + sectionHeight - 200;
+          rail.classList.toggle('is-visible', inView && vp.viewportWidth >= 900);
+        }
+
         const currentMid = vp.scrollY + vp.viewportHeight * 0.55;
+        let activeIdx = 0;
 
         stops.forEach((stop, idx) => {
           const pinCenter = stopOffsets[idx];
           if (!pinCenter) return;
 
           const diff = currentMid - pinCenter;
+          const card = cards[idx];
+          const isLeft = idx % 2 === 0;
 
           if (diff < -140) {
             stop.classList.remove('is-active', 'is-passed');
             stop.classList.add('is-upcoming');
+            if (card && vp.viewportWidth >= 900) {
+              card.style.transform = `translateX(${isLeft ? '-6px' : '6px'}) translateY(0)`;
+            }
           } else if (diff >= -140 && diff <= 180) {
             stop.classList.remove('is-upcoming', 'is-passed');
             stop.classList.add('is-active');
+            activeIdx = idx;
+
+            // Subtle Parallax Slide (+-12px) (Item 2)
+            if (card && vp.viewportWidth >= 900) {
+              const pRatio = clamp((diff + 140) / 320, 0, 1);
+              const slideX = (1 - pRatio) * (isLeft ? -12 : 12);
+              card.style.transform = `translateX(${slideX.toFixed(1)}px) translateY(-4px) scale(1.02)`;
+            }
           } else {
             stop.classList.remove('is-upcoming', 'is-active');
             stop.classList.add('is-passed');
+            if (card && vp.viewportWidth >= 900) {
+              card.style.transform = 'translateX(0) translateY(0)';
+            }
           }
+        });
+
+        // Update Rail Indicator & Dots (Item 5)
+        if (railText) {
+          railText.textContent = `Stage ${activeIdx + 1} / 6`;
+        }
+        railDots.forEach((dot, idx) => {
+          dot.classList.toggle('is-active', idx === activeIdx);
         });
       }
     });
