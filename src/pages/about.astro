@@ -79,45 +79,20 @@ const { about, pegMethod } = siteConfig;
           <div class="story-body-grid">
             <!-- Left: 3 Short Origin Lines -->
             <div class="story-lines-col">
-              <div class="story-timeline" role="tablist" aria-label="Apollo 13 origin sequence steps">
-                <button
-                  type="button"
-                  class="story-step-item is-active"
-                  id="story-step-01"
-                  role="tab"
-                  aria-selected="true"
-                  aria-current="step"
-                  aria-controls="origin-visual-card"
-                  data-step="1"
-                >
-                  <span class="step-bullet">01</span>
+              <ol class="story-timeline" aria-label="Apollo 13 origin sequence steps">
+                <li class="story-step-item">
+                  <span class="step-bullet" aria-hidden="true">01</span>
                   <p class="step-text">In April 1970, Apollo 13 suffered an oxygen tank explosion 200,000 miles from Earth.</p>
-                </button>
-                <button
-                  type="button"
-                  class="story-step-item"
-                  id="story-step-02"
-                  role="tab"
-                  aria-selected="false"
-                  aria-controls="origin-visual-card"
-                  data-step="2"
-                >
-                  <span class="step-bullet">02</span>
+                </li>
+                <li class="story-step-item">
+                  <span class="step-bullet" aria-hidden="true">02</span>
                   <p class="step-text">NASA engineers had to connect square lithium hydroxide canisters to round sockets using only what was on board.</p>
-                </button>
-                <button
-                  type="button"
-                  class="story-step-item"
-                  id="story-step-03"
-                  role="tab"
-                  aria-selected="false"
-                  aria-controls="origin-visual-card"
-                  data-step="3"
-                >
-                  <span class="step-bullet">03</span>
+                </li>
+                <li class="story-step-item">
+                  <span class="step-bullet" aria-hidden="true">03</span>
                   <p class="step-text">They engineered the adapter using only what was on board.</p>
-                </button>
-              </div>
+                </li>
+              </ol>
 
               <!-- Fact Chips -->
               <div class="story-fact-chips">
@@ -535,35 +510,21 @@ const { about, pegMethod } = siteConfig;
   }
 
   .story-timeline {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem 0;
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
-    margin-bottom: 2rem;
   }
 
   .story-step-item {
     display: flex;
     align-items: flex-start;
     gap: 1.25rem;
-    background: transparent;
-    border: none;
+    padding: 0;
+    margin: 0;
     text-align: left;
-    padding: 0.5rem 0.75rem;
-    margin-left: -0.75rem;
-    border-radius: 14px;
-    cursor: pointer;
-    font-family: inherit;
-    transition: background-color 0.2s ease, opacity 0.2s ease;
-    width: calc(100% + 1.5rem);
-  }
-
-  .story-step-item:hover {
-    background-color: var(--color-surface-hover, rgba(0, 0, 0, 0.03));
-  }
-
-  .story-step-item:focus-visible {
-    outline: 2px solid #1E4B8F;
-    outline-offset: 2px;
   }
 
   .step-bullet {
@@ -571,27 +532,20 @@ const { about, pegMethod } = siteConfig;
     height: 38px;
     border-radius: 50%;
     background-color: var(--color-surface-alt);
-    border: 1px solid var(--color-border);
+    border: 1.5px solid var(--color-border);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 0.85rem;
     font-weight: 600;
-    color: var(--color-text-muted);
+    color: var(--color-text-primary);
     flex-shrink: 0;
-    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
   }
 
-  .story-step-item.is-active .step-bullet {
-    background-color: #1E4B8F;
-    border-color: #1E4B8F;
-    color: #FFFFFF;
-  }
-
-  :global([data-theme="dark"]) .story-step-item.is-active .step-bullet {
-    background-color: #2563EB;
-    border-color: #2563EB;
-    color: #FFFFFF;
+  :global([data-theme="dark"]) .step-bullet {
+    background-color: #1A1A1A;
+    border-color: var(--color-border);
+    color: var(--color-text-primary);
   }
 
   .step-text {
@@ -599,14 +553,6 @@ const { about, pegMethod } = siteConfig;
     color: var(--color-text-secondary);
     line-height: 1.6;
     margin-top: 0.35rem;
-    opacity: 0.65;
-    transition: color 0.25s ease, opacity 0.25s ease;
-  }
-
-  .story-step-item.is-active .step-text {
-    color: var(--color-text-primary);
-    font-weight: 500;
-    opacity: 1;
   }
 
   /* Fact Chips */
