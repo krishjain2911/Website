@@ -158,6 +158,61 @@ export const siteConfig = {
     ] as PegPillar[]
   },
 
+  // Our Approach: Six Stages Journey
+  approach: {
+    badge: "OUR APPROACH",
+    headline: "A journey we take with you.",
+    subline: "Six stages from first conversation to a system your team relies on.",
+    closingCta: {
+      label: "See how we can start",
+      href: "#contact"
+    },
+    steps: [
+      {
+        number: 1,
+        title: "Understand the business",
+        description: "We study your processes, goals and challenges before proposing anything.",
+        icon: "compass" as const,
+        color: "#1E4B8F"
+      },
+      {
+        number: 2,
+        title: "Identify latent revenue",
+        description: "We find the untapped value hiding in your workflows, data and customer journeys.",
+        icon: "sparkles" as const,
+        color: "#27599D"
+      },
+      {
+        number: 3,
+        title: "Design adaptive systems",
+        description: "We architect intelligent systems that adapt to how your business runs and unlock that value.",
+        icon: "sliders" as const,
+        color: "#C28026"
+      },
+      {
+        number: 4,
+        title: "Pilot with on-ground teams",
+        description: "We test the solution with the people who will use it, on real workflows.",
+        icon: "users" as const,
+        color: "#F7941D"
+      },
+      {
+        number: 5,
+        title: "Refine and deploy",
+        description: "We improve from pilot feedback and launch with confidence.",
+        icon: "code" as const,
+        color: "#F16524"
+      },
+      {
+        number: 6,
+        title: "Enable and monitor",
+        description: "We train your teams and keep watching the system so the value keeps growing.",
+        icon: "shield" as const,
+        color: "#EE4B2B"
+      }
+    ]
+  },
+
   // Featured Story Carousel (Top carousel on homepage)
   featuredStories: [
     {

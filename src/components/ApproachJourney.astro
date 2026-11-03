@@ -1,0 +1,619 @@
+---
+import { siteConfig } from '../config/site';
+import Icon from './Icon.astro';
+
+const { approach } = siteConfig;
+const steps = approach.steps;
+---
+
+<section id="approach" class="approach-section" aria-labelledby="approach-heading">
+  <div class="container approach-container">
+    <!-- Header -->
+    <div class="approach-header">
+      <span class="eyebrow">{approach.badge}</span>
+      <h2 id="approach-heading" class="approach-title">{approach.headline}</h2>
+      <p class="approach-subline">{approach.subline}</p>
+    </div>
+
+    <!-- Journey Track Wrapper -->
+    <div class="approach-journey-wrap" id="approach-journey-wrap">
+      <!-- Desktop SVG Road (aria-hidden) -->
+      <div class="road-svg-canvas" aria-hidden="true">
+        <svg
+          class="road-svg"
+          viewBox="0 0 1200 460"
+          preserveAspectRatio="none"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <defs>
+            <linearGradient id="approachRoadGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#1E4B8F" />
+              <stop offset="50%" stop-color="#F7941D" />
+              <stop offset="100%" stop-color="#EE4B2B" />
+            </linearGradient>
+          </defs>
+
+          <!-- Inactive Background Road Track -->
+          <path
+            class="road-track-bg"
+            d="M 30,195 C 60,195 70,195 100,195 C 170,195 230,265 300,265 C 370,265 430,195 500,195 C 570,195 630,265 700,265 C 770,265 830,195 900,195 C 970,195 1030,265 1100,265 C 1130,265 1150,265 1170,265"
+          />
+
+          <!-- Active Brand-Gradient Road (Progress Drawn) -->
+          <path
+            id="approach-active-road"
+            class="road-track-fill"
+            d="M 30,195 C 60,195 70,195 100,195 C 170,195 230,265 300,265 C 370,265 430,195 500,195 C 570,195 630,265 700,265 C 770,265 830,195 900,195 C 970,195 1030,265 1100,265 C 1130,265 1150,265 1170,265"
+            stroke="url(#approachRoadGradient)"
+          />
+
+          <!-- Dashed Center Line -->
+          <path
+            class="road-track-centerline"
+            d="M 30,195 C 60,195 70,195 100,195 C 170,195 230,265 300,265 C 370,265 430,195 500,195 C 570,195 630,265 700,265 C 770,265 830,195 900,195 C 970,195 1030,265 1100,265 C 1130,265 1150,265 1170,265"
+          />
+
+          <!-- Traveling Orange Square-Peg Marker -->
+          <g id="approach-peg-traveler" class="peg-traveler" transform="translate(30, 195)" style="opacity: 0;">
+            <rect
+              x="-9"
+              y="-9"
+              width="18"
+              height="18"
+              rx="4"
+              fill="#F7941D"
+              stroke="#FFFFFF"
+              stroke-width="2.5"
+              class="peg-marker-rect"
+            />
+          </g>
+        </svg>
+      </div>
+
+      <!-- Mobile Vertical Track Line (aria-hidden) -->
+      <div class="mobile-track-container" aria-hidden="true">
+        <div class="mobile-track-bg"></div>
+        <div id="approach-mobile-fill" class="mobile-track-fill"></div>
+        <div id="approach-mobile-peg" class="mobile-peg-marker"></div>
+      </div>
+
+      <!-- Accessible Semantic List of 6 Stops -->
+      <ol class="approach-stops-list" id="approach-stops-list">
+        {steps.map((step, idx) => {
+          const isOdd = idx % 2 === 0; // 0, 2, 4 -> 1st, 3rd, 5th stops (above road)
+          return (
+            <li
+              class={`approach-stop approach-stop--${isOdd ? 'above' : 'below'}`}
+              data-index={idx}
+              style={`--step-color: ${step.color};`}
+            >
+              {/* Pin Marker */}
+              <div class="stop-pin" aria-hidden="true">
+                <span class="pin-number">0{step.number}</span>
+                <Icon name={step.icon} size={15} class="pin-icon" />
+              </div>
+
+              {/* Stop Card */}
+              <div class="stop-card">
+                <div class="stop-card-badge">Stage 0{step.number}</div>
+                <h3 class="stop-title">{step.title}</h3>
+                <p class="stop-description">{step.description}</p>
+              </div>
+            </li>
+          );
+        })}
+      </ol>
+    </div>
+
+    <!-- Closing Callout under the road -->
+    <div class="approach-closing">
+      <a href={approach.closingCta.href} class="approach-closing-link">
+        <span>{approach.closingCta.label}</span>
+        <Icon name="arrow-right" size={18} class="closing-arrow" />
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .approach-section {
+    padding: var(--section-spacing-desktop) 0;
+    background-color: var(--color-bg);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .approach-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .approach-header {
+    text-align: center;
+    max-width: 680px;
+    margin-bottom: 3.5rem;
+  }
+
+  .approach-title {
+    font-size: var(--fs-h2);
+    line-height: 1.15;
+    margin-bottom: 1rem;
+    color: var(--color-text-primary);
+  }
+
+  .approach-subline {
+    font-size: var(--fs-body-lg);
+    color: var(--color-text-secondary);
+    line-height: 1.55;
+    margin: 0 auto;
+  }
+
+  /* Journey Track Wrapper */
+  .approach-journey-wrap {
+    position: relative;
+    width: 100%;
+    margin: 0 auto 3.5rem auto;
+  }
+
+  /* Desktop View: SVG and 6 Columns */
+  @media (min-width: 900px) {
+    .approach-journey-wrap {
+      min-height: 480px;
+    }
+
+    .road-svg-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .road-svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .road-track-bg {
+      stroke: var(--color-border);
+      stroke-width: 18;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      opacity: 0.6;
+    }
+
+    .road-track-fill {
+      stroke-width: 18;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 2000;
+      stroke-dashoffset: 2000;
+      transition: stroke-dashoffset 0.1s linear;
+    }
+
+    .road-track-centerline {
+      stroke: #FFFFFF;
+      stroke-width: 2.25;
+      stroke-dasharray: 6 6;
+      stroke-linecap: round;
+      opacity: 0.9;
+    }
+
+    :global([data-theme="dark"]) .road-track-centerline {
+      stroke: #FFFFFF;
+      opacity: 0.85;
+    }
+
+    .peg-traveler-rect {
+      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.25));
+    }
+
+    .mobile-track-container {
+      display: none;
+    }
+
+    /* 6 Columns Grid for Stops */
+    .approach-stops-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0.75rem;
+      position: relative;
+      z-index: 2;
+      min-height: 480px;
+      margin: 0;
+      padding: 0;
+    }
+
+    .approach-stop {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0.35;
+      transform: translateY(8px);
+      transition: opacity 0.45s ease, transform 0.45s var(--ease-out-expo);
+    }
+
+    .approach-stop.is-revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Odd Stops (1, 3, 5): Card above road, Pin at road */
+    .approach-stop--above {
+      justify-content: flex-start;
+      padding-top: 10px;
+    }
+
+    .approach-stop--above .stop-pin {
+      position: absolute;
+      top: 195px;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .approach-stop--above .stop-card {
+      margin-bottom: auto;
+    }
+
+    /* Even Stops (2, 4, 6): Pin at road, Card below road */
+    .approach-stop--below {
+      justify-content: flex-end;
+      padding-bottom: 10px;
+    }
+
+    .approach-stop--below .stop-pin {
+      position: absolute;
+      top: 265px;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .approach-stop--below .stop-card {
+      margin-top: auto;
+    }
+
+    .stop-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-inner);
+      padding: 1.1rem 0.95rem;
+      width: 100%;
+      box-shadow: var(--shadow-subtle);
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+      min-height: 155px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .approach-stop.is-revealed .stop-card {
+      border-color: color-mix(in srgb, var(--step-color) 45%, var(--color-border));
+      box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.08);
+    }
+  }
+
+  /* Shared Pin Styles */
+  .stop-pin {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--color-surface);
+    border: 2.5px solid var(--step-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+    z-index: 3;
+    transition: transform 0.3s var(--ease-out-expo), box-shadow 0.3s ease;
+  }
+
+  .approach-stop.is-revealed .stop-pin {
+    transform: translate(-50%, -50%) scale(1.05);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+  }
+
+  .pin-number {
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--color-text-primary);
+  }
+
+  .pin-icon {
+    color: var(--step-color);
+    margin-top: 2px;
+  }
+
+  /* Stop Card Typography */
+  .stop-card-badge {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--step-color);
+    margin-bottom: 0.4rem;
+  }
+
+  .stop-title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.25;
+    color: var(--color-text-primary);
+    margin-bottom: 0.45rem;
+  }
+
+  .stop-description {
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+    line-height: 1.45;
+  }
+
+  /* Mobile Layout (<900px): Vertical road down left edge */
+  @media (max-width: 899px) {
+    .road-svg-canvas {
+      display: none;
+    }
+
+    .approach-journey-wrap {
+      padding-left: 3rem;
+      position: relative;
+    }
+
+    .mobile-track-container {
+      position: absolute;
+      left: 19px;
+      top: 12px;
+      bottom: 24px;
+      width: 4px;
+    }
+
+    .mobile-track-bg {
+      position: absolute;
+      inset: 0;
+      background-color: var(--color-border);
+      border-radius: 2px;
+      opacity: 0.6;
+    }
+
+    .mobile-track-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 0%;
+      background: linear-gradient(180deg, #1E4B8F 0%, #F7941D 50%, #EE4B2B 100%);
+      border-radius: 2px;
+      transition: height 0.1s linear;
+    }
+
+    .mobile-peg-marker {
+      position: absolute;
+      left: -6px;
+      top: 0%;
+      width: 16px;
+      height: 16px;
+      border-radius: 3px;
+      background-color: #F7941D;
+      border: 2px solid #FFFFFF;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+      transform: translateY(-50%);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      z-index: 4;
+    }
+
+    .approach-stops-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1.75rem;
+      margin: 0;
+      padding: 0;
+    }
+
+    .approach-stop {
+      position: relative;
+      opacity: 0.35;
+      transform: translateX(10px);
+      transition: opacity 0.4s ease, transform 0.4s var(--ease-out-expo);
+    }
+
+    .approach-stop.is-revealed {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .stop-pin {
+      position: absolute;
+      left: -48px;
+      top: 14px;
+      transform: translateY(-50%);
+    }
+
+    .approach-stop.is-revealed .stop-pin {
+      transform: translateY(-50%) scale(1.05);
+    }
+
+    .stop-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-inner);
+      padding: 1.25rem 1.15rem;
+      box-shadow: var(--shadow-subtle);
+    }
+  }
+
+  /* Closing CTA Link */
+  .approach-closing {
+    text-align: center;
+    margin-top: 1rem;
+  }
+
+  .approach-closing-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--fs-body);
+    font-weight: 600;
+    color: var(--color-text-primary);
+    text-decoration: none;
+    padding: 0.75rem 1.75rem;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-surface-alt);
+    border: 1px solid var(--color-border);
+    transition: all 0.25s var(--ease-out-expo);
+  }
+
+  .approach-closing-link:hover {
+    border-color: var(--rhsp-peg-start);
+    color: var(--rhsp-peg-start);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-subtle);
+  }
+
+  .closing-arrow {
+    transition: transform 0.25s var(--ease-out-expo);
+  }
+
+  .approach-closing-link:hover .closing-arrow {
+    transform: translateX(4px);
+  }
+
+  /* Accessibility & Reduced Motion */
+  @media (prefers-reduced-motion: reduce) {
+    .road-track-fill {
+      stroke-dashoffset: 0 !important;
+    }
+    .mobile-track-fill {
+      height: 100% !important;
+    }
+    .peg-traveler,
+    .mobile-peg-marker {
+      display: none !important;
+    }
+    .approach-stop {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+  }
+</style>
+
+<script>
+  function setupApproachJourney() {
+    const section = document.getElementById('approach');
+    if (!section) return;
+
+    // Check reduced motion
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const stops = Array.from(section.querySelectorAll<HTMLElement>('.approach-stop'));
+    const roadFill = document.getElementById('approach-active-road') as SVGPathElement | null;
+    const traveler = document.getElementById('approach-peg-traveler') as SVGGElement | null;
+    const mobileFill = document.getElementById('approach-mobile-fill') as HTMLElement | null;
+    const mobilePeg = document.getElementById('approach-mobile-peg') as HTMLElement | null;
+
+    if (prefersReducedMotion) {
+      stops.forEach(s => s.classList.add('is-revealed'));
+      if (roadFill) roadFill.style.strokeDashoffset = '0';
+      if (mobileFill) mobileFill.style.height = '100%';
+      return;
+    }
+
+    let totalLength = 0;
+    if (roadFill) {
+      totalLength = roadFill.getTotalLength();
+      roadFill.style.strokeDasharray = `${totalLength}`;
+      roadFill.style.strokeDashoffset = `${totalLength}`;
+    }
+
+    function onScroll() {
+      if (!section) return;
+      const rect = section.getBoundingClientRect();
+      const vh = window.innerHeight;
+
+      // Section starts animating when top enters 80% of viewport, finishes when bottom passes 30%
+      const start = vh * 0.75;
+      const end = vh * 0.25;
+      const scrollableRange = rect.height + (start - end);
+      const currentScroll = start - rect.top;
+
+      let progress = currentScroll / scrollableRange;
+      progress = Math.max(0, Math.min(1, progress));
+
+      // Desktop SVG Road update
+      if (roadFill && totalLength > 0) {
+        const offset = totalLength * (1 - progress);
+        roadFill.style.strokeDashoffset = `${offset}`;
+
+        if (traveler) {
+          if (progress > 0.01) {
+            const distance = totalLength * progress;
+            const pt = roadFill.getPointAtLength(distance);
+            traveler.setAttribute('transform', `translate(${pt.x}, ${pt.y})`);
+            traveler.style.opacity = '1';
+          } else {
+            traveler.style.opacity = '0';
+          }
+        }
+      }
+
+      // Mobile Track update
+      if (mobileFill) {
+        mobileFill.style.height = `${progress * 100}%`;
+      }
+      if (mobilePeg) {
+        mobilePeg.style.top = `${progress * 100}%`;
+        mobilePeg.style.opacity = progress > 0.01 ? '1' : '0';
+      }
+
+      // Reveal cards sequentially as progress passes thresholds
+      stops.forEach((stop, index) => {
+        const threshold = (index + 0.1) / (stops.length + 0.2);
+        if (progress >= threshold) {
+          stop.classList.add('is-revealed');
+        } else {
+          stop.classList.remove('is-revealed');
+        }
+      });
+    }
+
+    // IntersectionObserver to attach/detach scroll listener
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          onScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    if (typeof IntersectionObserver !== 'undefined') {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            window.addEventListener('scroll', handleScroll, { passive: true });
+            onScroll();
+          } else {
+            window.removeEventListener('scroll', handleScroll);
+          }
+        });
+      }, { rootMargin: '100px 0px 100px 0px' });
+
+      observer.observe(section);
+    } else {
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      onScroll();
+    }
+  }
+
+  setupApproachJourney();
+  document.addEventListener('astro:after-swap', setupApproachJourney);
+</script>
