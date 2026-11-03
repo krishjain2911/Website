@@ -4,8 +4,9 @@ export interface HeroScrollOptions {
   track: HTMLElement;
   heroSection: HTMLElement;
   container: HTMLElement;
-  picture: HTMLElement;
-  img: HTMLImageElement;
+  wrapper?: HTMLElement | null;
+  imgLight: HTMLImageElement;
+  imgDark: HTMLImageElement;
   canvas: HTMLCanvasElement;
   webglFallback: HTMLElement;
   scrollCue?: HTMLElement | null;
@@ -15,8 +16,9 @@ export function initHeroScrollSequence(opts: HeroScrollOptions) {
   const {
     track,
     heroSection,
-    picture,
-    img: initialImg,
+    wrapper,
+    imgLight,
+    imgDark,
     canvas,
     webglFallback,
     scrollCue
@@ -36,10 +38,20 @@ export function initHeroScrollSequence(opts: HeroScrollOptions) {
     return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
   };
 
+  const getThemeBgColor = (): string => {
+    const computed = getComputedStyle(document.documentElement).getPropertyValue('--color-bg').trim();
+    if (computed) return computed;
+    return currentTheme === 'dark' ? '#0E0E0E' : '#FFFFFF';
+  };
+
   const getIsMobile = (): boolean => window.innerWidth < 768;
 
   let currentTheme = getTheme();
   let isMobile = getIsMobile();
+
+  const getInitialImg = (): HTMLImageElement => {
+    return currentTheme === 'dark' ? imgDark : imgLight;
+  };
 
   // Helper to format frame path
   const getFrameUrl = (theme: 'light' | 'dark', mobile: boolean, index: number): string => {
@@ -67,26 +79,34 @@ export function initHeroScrollSequence(opts: HeroScrollOptions) {
       sampledColors.set(currentTheme, rgbColor);
       heroSection.style.backgroundColor = rgbColor;
     } catch {
-      const fallbackColor = currentTheme === 'dark' ? 'rgb(23, 23, 23)' : 'rgb(245, 245, 245)';
+      const fallbackColor = getThemeBgColor();
       sampledColors.set(currentTheme, fallbackColor);
       heroSection.style.backgroundColor = fallbackColor;
     }
   }
 
-  // Pre-set background color based on current theme immediately to prevent any flicker
-  heroSection.style.backgroundColor = currentTheme === 'dark' ? 'rgb(23, 23, 23)' : 'rgb(245, 245, 245)';
+  // Pre-set background color based on computed style immediately
+  heroSection.style.backgroundColor = getThemeBgColor();
 
   // Fallback A: Reduced motion - static first frame only
   if (prefersReducedMotion) {
-    initialImg.src = getFrameUrl(currentTheme, isMobile, 1);
-    initialImg.onload = () => sampleAndBlendBackground(initialImg);
+    const initialImg = getInitialImg();
+    if (initialImg.complete && initialImg.naturalWidth > 0) {
+      sampleAndBlendBackground(initialImg);
+    } else {
+      initialImg.onload = () => sampleAndBlendBackground(initialImg);
+    }
     return;
   }
 
   // Fallback B: Save-Data or very slow connection - static first frame only
   if (isSaveData || isSlowConnection) {
-    initialImg.src = getFrameUrl(currentTheme, isMobile, 1);
-    initialImg.onload = () => sampleAndBlendBackground(initialImg);
+    const initialImg = getInitialImg();
+    if (initialImg.complete && initialImg.naturalWidth > 0) {
+      sampleAndBlendBackground(initialImg);
+    } else {
+      initialImg.onload = () => sampleAndBlendBackground(initialImg);
+    }
     return;
   }
 
@@ -123,6 +143,7 @@ export function initHeroScrollSequence(opts: HeroScrollOptions) {
       }
     }
 
+    const initialImg = getInitialImg();
     return initialImg.complete && initialImg.naturalWidth > 0 ? initialImg : null;
   }
 
@@ -143,7 +164,10 @@ export function initHeroScrollSequence(opts: HeroScrollOptions) {
 
     if (!hasSwappedToCanvas) {
       canvas.style.display = 'block';
-      picture.style.display = 'none';
+      canvas.style.opacity = '1';
+      imgLight.style.display = 'none';
+      imgDark.style.display = 'none';
+      if (wrapper) wrapper.classList.add('has-canvas');
       hasSwappedToCanvas = true;
       sampleAndBlendBackground(canvas);
     }
@@ -153,7 +177,9 @@ export function initHeroScrollSequence(opts: HeroScrollOptions) {
   async function activateWebGLFallback() {
     console.warn('[Hero] Frame sequences missing or failed to load. Falling back to WebGL cube.');
     canvas.style.display = 'none';
-    picture.style.display = 'none';
+    imgLight.style.display = 'none';
+    imgDark.style.display = 'none';
+    if (wrapper) wrapper.classList.add('has-canvas');
     webglFallback.style.display = 'block';
     try {
       const { initHero3D } = await import('./Hero3D');
@@ -291,7 +317,15 @@ export function initHeroScrollSequence(opts: HeroScrollOptions) {
     if (newTheme === currentTheme) return;
     currentTheme = newTheme;
     lastDrawnIndex = -1;
-    heroSection.style.backgroundColor = currentTheme === 'dark' ? 'rgb(23, 23, 23)' : 'rgb(245, 245, 245)';
+    heroSection.style.backgroundColor = getThemeBgColor();
+
+    if (!hasSwappedToCanvas) {
+      const initialImg = getInitialImg();
+      if (initialImg.complete && initialImg.naturalWidth > 0) {
+        sampleAndBlendBackground(initialImg);
+      }
+      return;
+    }
 
     const currIdx = Math.round(smoothedIndex);
     const themeTest = new Image();

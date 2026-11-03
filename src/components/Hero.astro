@@ -70,34 +70,32 @@ const { hero } = siteConfig;
       <div class="hero-visual-stage" id="hero-visual-container">
         <div class="hero-sequence-wrapper" id="hero-sequence-wrapper">
           <!-- Frame 1 rendered as native <img> (LCP element with fetchpriority high) -->
-          <picture id="hero-frame1-picture" class="hero-frame1-picture">
-            <source
-              media="(prefers-color-scheme: dark) and (min-width: 768px)"
-              srcset="/media/hero-seq/dark/desktop/0001.webp"
-              type="image/webp"
-            />
-            <source
-              media="(prefers-color-scheme: dark)"
-              srcset="/media/hero-seq/dark/mobile/0001.webp"
-              type="image/webp"
-            />
-            <source
-              media="(min-width: 768px)"
-              srcset="/media/hero-seq/light/desktop/0001.webp"
-              type="image/webp"
-            />
-            <img
-              src="/media/hero-seq/light/desktop/0001.webp"
-              id="hero-frame1-img"
-              alt="RHSP logo cube hovering over elliptical socket"
-              width="600"
-              height="600"
-              fetchpriority="high"
-              loading="eager"
-              decoding="async"
-              class="hero-media-element hero-lcp-img"
-            />
-          </picture>
+          <img
+            src="/media/hero-seq/light/desktop/0001.webp"
+            srcset="/media/hero-seq/light/mobile/0001.webp 480w, /media/hero-seq/light/desktop/0001.webp 1000w"
+            sizes="(max-width: 767px) 480px, 600px"
+            id="hero-frame1-img-light"
+            alt="RHSP logo cube hovering over elliptical socket"
+            width="600"
+            height="600"
+            fetchpriority="high"
+            loading="eager"
+            decoding="async"
+            class="hero-media-element hero-lcp-img hero-frame1--light"
+          />
+          <img
+            src="/media/hero-seq/dark/desktop/0001.webp"
+            srcset="/media/hero-seq/dark/mobile/0001.webp 480w, /media/hero-seq/dark/desktop/0001.webp 1000w"
+            sizes="(max-width: 767px) 480px, 600px"
+            id="hero-frame1-img-dark"
+            alt=""
+            aria-hidden="true"
+            width="600"
+            height="600"
+            loading="eager"
+            decoding="async"
+            class="hero-media-element hero-frame1--dark"
+          />
 
           <!-- Canvas swapped in post-load with zero visual jump -->
           <canvas
@@ -106,7 +104,7 @@ const { hero } = siteConfig;
             width="1000"
             height="1000"
             aria-hidden="true"
-            style="display: none;"
+            style="display: none; opacity: 0;"
           ></canvas>
 
           <!-- Fallback WebGL container if image sequence files are missing -->
@@ -371,12 +369,26 @@ const { hero } = siteConfig;
     margin: 0 auto;
   }
 
-  .hero-frame1-picture {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
+  .hero-frame1--dark {
+    display: none;
+  }
+
+  :global(:root[data-theme="dark"]) .hero-frame1--dark {
+    display: block;
+  }
+
+  :global(:root[data-theme="dark"]) .hero-frame1--light {
+    display: none;
+  }
+
+  .hero-sequence-wrapper.has-canvas .hero-frame1--light,
+  .hero-sequence-wrapper.has-canvas .hero-frame1--dark {
+    display: none !important;
+  }
+
+  .hero-scrub-canvas {
+    opacity: 0;
+    transition: opacity 0.15s ease-out;
   }
 
   .hero-media-element {
@@ -438,20 +450,22 @@ const { hero } = siteConfig;
         const track = document.getElementById('hero-scroll-wrapper');
         const heroSection = document.getElementById('hero');
         const container = document.getElementById('hero-visual-container');
-        const picture = document.getElementById('hero-frame1-picture');
-        const img = document.getElementById('hero-frame1-img') as HTMLImageElement | null;
+        const wrapper = document.getElementById('hero-sequence-wrapper');
+        const imgLight = document.getElementById('hero-frame1-img-light') as HTMLImageElement | null;
+        const imgDark = document.getElementById('hero-frame1-img-dark') as HTMLImageElement | null;
         const canvas = document.getElementById('hero-scrub-canvas') as HTMLCanvasElement | null;
         const webglFallback = document.getElementById('hero-webgl-fallback');
         const scrollCue = document.getElementById('hero-scroll-indicator');
 
-        if (!track || !heroSection || !container || !picture || !img || !canvas || !webglFallback) return;
+        if (!track || !heroSection || !container || !wrapper || !imgLight || !imgDark || !canvas || !webglFallback) return;
 
         const destroy = initHeroScrollSequence({
           track,
           heroSection,
           container,
-          picture,
-          img,
+          wrapper,
+          imgLight,
+          imgDark,
           canvas,
           webglFallback,
           scrollCue
