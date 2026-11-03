@@ -327,7 +327,7 @@ export const siteConfig = {
       {
         step: "03",
         title: "Build",
-        whatWeDo: "Agile delivery sprints with weekly progress demos, rigorous security reviews, and continuous client testing.",
+        whatWeDo: "Agile delivery sprints with weekly progress reviews, rigorous security reviews, and continuous client testing.",
         deliverable: "Production-Ready Application & Full Test Coverage",
         duration: "[PLACEHOLDER] 6–10 Weeks"
       },
@@ -562,7 +562,7 @@ export const siteConfig = {
     label: "CONNECT",
     headline: "Every problem has an angle. Let's find yours.",
     subline: "Low-code, high-code or sovereign AI: our engineers are ready to build it with you.",
-    email: "LetsTalk@roundholesquarepeg.com",
+    email: "letstalk@rhsp.solutions",
     address: "ThePlayce, 17th Floor, Marathon Millennium, Lal Bahadur Shastri Marg, beside Nirmal Lifestyle Road, Moti Nagar, Mulund Colony, Mulund West, Mumbai, Maharashtra 400080",
     mapUrl: "https://maps.app.goo.gl/CZZiZs7fzmFmLVCf6"
   },

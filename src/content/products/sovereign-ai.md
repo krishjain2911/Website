@@ -69,6 +69,6 @@ faq:
 related:
   - "voice-agents"
   - "ask-me-anything"
-ctaText: "Book a demo"
+ctaText: "Let's talk"
 ---
 Sovereign AI architecture and deployment guidelines.

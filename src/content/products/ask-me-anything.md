@@ -69,6 +69,6 @@ faq:
 related:
   - "sovereign-ai"
   - "voice-agents"
-ctaText: "Book a demo"
+ctaText: "Let's talk"
 ---
 AskMeAnything knowledge discovery framework and implementation details.

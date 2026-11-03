@@ -237,10 +237,10 @@ const orgSchema = {
             '• Engineer: OutSystems speed + MERN high-code architecture\n' +
             '• Gen-AI: Private, on-prem sovereign models with verified grounding\n\n' +
             '📍 ThePlayce, 17th Floor, Marathon Millennium, Mulund West, Mumbai\n' +
-            '📧 LetsTalk@roundholesquarepeg.com',
+            '📧 letstalk@rhsp.solutions',
             'color: #1E4B8F; font-size: 12px; font-weight: 600; line-height: 1.6; font-family: sans-serif;'
           );
-          return '🚀 https://roundholesquarepeg.com';
+          return '🚀 https://rhsp.solutions';
         };
 
         window.developedBy = window.krish;
@@ -266,6 +266,30 @@ const orgSchema = {
           }
         });
       })();
+    
+        // Handle all "Let's talk" and #contact links to smoothly scroll to founders contact section
+        document.addEventListener('click', (e) => {
+          const target = e.target && e.target.closest ? e.target.closest('a') : null;
+          if (!target) return;
+          const href = target.getAttribute('href');
+          if (href === '#contact' || href === '/#contact' || href === '#founders-contact' || href === '/#founders-contact') {
+            const contactEl = document.getElementById('contact') || document.getElementById('founders-contact');
+            if (contactEl) {
+              e.preventDefault();
+              contactEl.scrollIntoView({ behavior: 'smooth' });
+              history.pushState(null, '', '#contact');
+            }
+          }
+        });
+
+        // If landing on page with #contact in hash, smooth scroll to it
+        if (window.location.hash === '#contact' || window.location.hash === '#founders-contact') {
+          setTimeout(() => {
+            const contactEl = document.getElementById('contact') || document.getElementById('founders-contact');
+            contactEl?.scrollIntoView({ behavior: 'smooth' });
+          }, 150);
+        }
+    
     </script>
   </body>
 </html>

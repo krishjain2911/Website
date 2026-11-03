@@ -71,7 +71,7 @@ const products = defineCollection({
       answer: z.string()
     })).default([]),
     related: z.array(z.string()).default([]),
-    ctaText: z.string().default('Book a demo')
+    ctaText: z.string().default("Let's talk")
   })
 });
 

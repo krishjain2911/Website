@@ -4,11 +4,9 @@ import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
 import ContactSection from '../../components/ContactSection.astro';
 import MediaAsset from '../../components/MediaAsset.astro';
-import MediaFrame from '../../components/MediaFrame.astro';
 import LearnMore from '../../components/LearnMore.astro';
 import Icon from '../../components/Icon.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
-import { siteConfig } from '../../config/site';
 
 export async function getStaticPaths() {
   const products = await getCollection('products');
@@ -26,7 +24,6 @@ interface Props {
 const { product, allProducts } = Astro.props;
 const p = product.data;
 
-const bookDemoSubject = encodeURIComponent(`Inquiry: ${p.title} (${p.code})`);
 
 // Related products in the same pillar
 const relatedProducts = allProducts
@@ -94,16 +91,11 @@ const relatedProducts = allProducts
 
             <div class="product-cta-row">
               <a
-                href={`mailto:${siteConfig.contact.email}?subject=${bookDemoSubject}`}
-                class="btn btn-primary product-demo-btn"
+                href="#contact"
+                class="btn btn-primary"
               >
-                <span>{p.ctaText}</span>
+                <span>{p.ctaText || "Let's talk"}</span>
                 <Icon name="arrow-right" size={16} />
-              </a>
-
-              <a href="#demo" class="btn btn-secondary">
-                <Icon name="play" size={15} />
-                <span>Watch it work</span>
               </a>
             </div>
           </div>
@@ -316,25 +308,6 @@ const relatedProducts = allProducts
         </div>
       </section>
     )}
-
-    <!-- 5. Interactive Demo Slot -->
-    <section id="demo" class="product-demo-section" aria-labelledby="demo-heading">
-      <div class="container">
-        <div class="section-lead-block reveal-on-scroll">
-          <span class="eyebrow">SYSTEM DEMONSTRATION</span>
-          <h2 id="demo-heading" class="section-headline">Watch it work.</h2>
-        </div>
-
-        <div class="product-demo-frame-wrap reveal-on-scroll">
-          <MediaFrame
-            badgeText={p.demoMedia.badgeText}
-            posterText={p.demoMedia.posterText}
-            caption={p.demoMedia.caption}
-            videoUrl={p.demoMedia.videoUrl}
-          />
-        </div>
-      </div>
-    </section>
 
     <!-- 6. Key Features Grid -->
     {p.features && p.features.length > 0 && (

@@ -112,5 +112,5 @@ faq:
 related:
   - "sovereign-ai"
   - "ask-me-anything"
-ctaText: "Book a showroom demo"
+ctaText: "Let's talk"
 ---

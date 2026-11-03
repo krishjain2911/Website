@@ -69,6 +69,6 @@ faq:
 related:
   - "clm"
   - "dms"
-ctaText: "Book a demo"
+ctaText: "Let's talk"
 ---
 WhatsApp Journeys framework and Meta Cloud API integration model.

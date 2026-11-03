@@ -123,7 +123,7 @@ const { contact, team } = siteConfig;
       </div>
 
       <!-- Right Column: Founders Direct Channels -->
-      <div class="contact-col-right">
+      <div class="contact-col-right" id="founders-contact">
         <span class="eyebrow">FOUNDER DIRECT CHANNELS</span>
         <div class="founders-cards-list">
           {team.members.map((member) => (
@@ -561,7 +561,7 @@ const { contact, team } = siteConfig;
     if (copyBtn) {
       copyBtn.addEventListener('click', async () => {
         try {
-          const emailToCopy = copyBtn.getAttribute('data-email') || 'LetsTalk@roundholesquarepeg.com';
+          const emailToCopy = copyBtn.getAttribute('data-email') || 'letstalk@rhsp.solutions';
           await navigator.clipboard.writeText(emailToCopy);
           const defaultEl = copyBtn.querySelector('.copy-state-default') as HTMLElement;
           const copiedEl = copyBtn.querySelector('.copy-state-copied') as HTMLElement;

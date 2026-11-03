@@ -69,6 +69,6 @@ faq:
 related:
   - "clm"
   - "whatsapp-journeys"
-ctaText: "Book a demo"
+ctaText: "Let's talk"
 ---
 DMS system architecture and compliance archival mechanisms.

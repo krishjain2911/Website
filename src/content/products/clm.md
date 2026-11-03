@@ -69,6 +69,6 @@ faq:
 related:
   - "dms"
   - "whatsapp-journeys"
-ctaText: "Book a demo"
+ctaText: "Let's talk"
 ---
 CLM product architecture and workflow capabilities.
