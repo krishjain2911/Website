@@ -94,65 +94,65 @@ export const siteConfig = {
     },
     secondaryCta: {
       label: "Explore solutions",
-      href: "/solutions"
+      href: "#solutions"
     }
   },
 
   // Brand Framework: The PEG Method
   pegMethod: {
     badge: "HOW WE THINK",
-    headline: "Plan. Engineer. Gen-AI.",
+    headline: "Plan with foresight. Engineer with precision. Gen-AI the leap.",
     primaryTagline: "Three disciplines. One accountable team.",
     pillars: [
       {
         id: 'plan',
         letter: 'P',
         name: 'Plan',
-        title: 'Decide right, once.',
+        title: 'Plan with foresight.',
         color: '#1E4B8F', // Navy
-        tagline: 'The right decision before the first line of code.',
-        description: 'Strategy, architecture, platform choice, roadmaps.',
+        tagline: 'Plan with foresight.',
+        description: 'Objective platform selection, architecture blueprints, and founder-led advisory.',
         bullets: [
-          'Clarity on what to build, and what to skip',
-          'The right platform, chosen on facts, not habit',
-          'A roadmap your team can actually execute'
+          'Platform selection: low-code OutSystems vs high-code MERN vs hybrid',
+          'Architecture blueprints and execution roadmaps',
+          'Founder-led advisory for high-stakes enterprise decisions'
         ],
-        productSlugs: [], // TO CONFIRM: Plan is an advisory service; no discrete products
-        subTags: ['Strategy', 'Architecture', 'Roadmaps'],
+        productSlugs: [], // Plan is an advisory service; no discrete products
+        subTags: ['Platform Selection', 'Architecture Blueprints', 'Advisory'],
         iconType: 'wireframe'
       },
       {
         id: 'engineer',
         letter: 'E',
         name: 'Engineer',
-        title: 'Built fast. Built to scale.',
+        title: 'Engineer with precision.',
         color: '#F7941D', // Orange
-        tagline: 'Low-code speed or high-code freedom, chosen per project.',
-        description: 'OutSystems or MERN, chosen per budget and requirements.',
+        tagline: 'Engineer with precision.',
+        description: 'OutSystems implementation and custom MERN development, built around enterprise workflows.',
         bullets: [
-          'OutSystems: live in weeks, not quarters',
-          'MERN: complete freedom, no platform ceiling',
-          'We recommend what suits you, not what suits us'
+          'Implementation & digital transformation on OutSystems',
+          'Custom development in MERN with full architectural control',
+          'Accelerators: CLM, DMS, and WhatsApp Journeys'
         ],
-        productSlugs: ['clm', 'dms', 'whatsapp-journeys'], // TO CONFIRM
-        subTags: ['OutSystems Low-Code', 'High-Code MERN'],
+        productSlugs: ['clm', 'dms', 'whatsapp-journeys'],
+        subTags: ['OutSystems Low-Code', 'High-Code MERN', 'Accelerators'],
         iconType: 'solid'
       },
       {
         id: 'gen-ai',
         letter: 'G',
         name: 'Gen-AI',
-        title: 'AI you can trust with your data.',
+        title: 'Gen-AI the leap.',
         color: '#EE4B2B', // Red-Orange
-        tagline: 'AI that works on your data, inside your walls.',
-        description: 'Private by design. Powerful by default.',
+        tagline: 'Gen-AI the leap.',
+        description: 'Private, catalogue-grounded, production-ready AI operating inside your walls.',
         bullets: [
-          'Voice agents that talk to customers 24/7',
-          'Your own AI, on your own infrastructure',
-          'Ask your business anything, get answers from your own data'
+          'Sonakshi: AI voice agent in MERN, deployed for a retail store',
+          'Sovereign AI: Private enterprise LLM deployments on your infrastructure',
+          'AskMeAnything: Enterprise search across documents and data'
         ],
-        productSlugs: ['voice-agents', 'sovereign-ai', 'ask-me-anything'],
-        subTags: ['Voice Agents', 'Sovereign AI', 'AskMeAnything'],
+        productSlugs: ['sonakshi', 'sovereign-ai', 'ask-me-anything'],
+        subTags: ['Sonakshi', 'Sovereign AI', 'AskMeAnything'],
         iconType: 'nodes'
       }
     ] as PegPillar[]

@@ -1,0 +1,1542 @@
+---
+import Icon from './Icon.astro';
+---
+
+<section id="solutions" class="peg-solutions-section" aria-label="How we think and capabilities">
+  <!-- Desktop / Interactive Scroll Track (~400vh) -->
+  <div class="peg-solutions-track" id="peg-solutions-track">
+    <div class="peg-solutions-stage" id="peg-solutions-stage">
+      <!-- 0. Intro Overlay: Centered Cube & "Scroll to explore" cue at p ≈ 0 -->
+      <div class="stage-intro-overlay" id="stage-intro-overlay" aria-hidden="true">
+        <span class="eyebrow">HOW WE THINK</span>
+        <h2 class="intro-headline">Plan. Engineer. Gen-AI.</h2>
+        <p class="intro-subline">Three disciplines. One accountable team.</p>
+        <div class="intro-scroll-cue">
+          <span class="cue-text">Scroll to explore</span>
+          <Icon name="chevron-down" size={16} class="cue-arrow" />
+        </div>
+      </div>
+
+      <div class="container stage-container">
+        <!-- Left Column: The 3D CSS Cube & P/E/G Tabs -->
+        <div class="stage-cube-col" id="stage-cube-col">
+          <div class="cube-scene-wrapper" id="cube-scene-wrapper" aria-label="Interactive 3D PEG Cube">
+            <div class="cube-viewport" id="cube-viewport">
+              <div class="cube-assembly" id="cube-assembly">
+                <!-- Top Face: P - Plan -->
+                <div
+                  class="cube-face face-top is-active"
+                  id="cube-face-plan"
+                  data-pillar="plan"
+                  role="button"
+                  tabindex="0"
+                  aria-label="P - Plan"
+                >
+                  <div class="face-content">
+                    <span class="face-letter">P</span>
+                    <span class="face-word">PLAN</span>
+                  </div>
+                </div>
+
+                <!-- Left Face: E - Engineer -->
+                <div
+                  class="cube-face face-left"
+                  id="cube-face-engineer"
+                  data-pillar="engineer"
+                  role="button"
+                  tabindex="0"
+                  aria-label="E - Engineer"
+                >
+                  <div class="face-content">
+                    <span class="face-letter">E</span>
+                    <span class="face-word">ENGINEER</span>
+                  </div>
+                </div>
+
+                <!-- Right Face: G - Gen-AI -->
+                <div
+                  class="cube-face face-right"
+                  id="cube-face-genai"
+                  data-pillar="genai"
+                  role="button"
+                  tabindex="0"
+                  aria-label="G - Gen-AI"
+                >
+                  <div class="face-content">
+                    <span class="face-letter">G</span>
+                    <span class="face-word">GEN-AI</span>
+                  </div>
+                </div>
+
+                <!-- Enclosure Faces -->
+                <div class="cube-face face-bottom" aria-hidden="true"></div>
+                <div class="cube-face face-back" aria-hidden="true"></div>
+                <div class="cube-face face-back-left" aria-hidden="true"></div>
+              </div>
+            </div>
+
+            <!-- Pedestal Socket -->
+            <div class="cube-socket-ellipse" aria-hidden="true">
+              <div class="socket-inner-depth"></div>
+            </div>
+          </div>
+
+          <!-- P/E/G Pill Tabs below Cube -->
+          <div class="stage-pill-tabs" id="stage-pill-tabs" role="tablist" aria-label="PEG Pillars">
+            <button
+              type="button"
+              class="peg-tab-btn is-active"
+              role="tab"
+              aria-selected="true"
+              aria-controls="stage-panel-plan"
+              id="tab-peg-plan"
+              data-pillar="plan"
+            >
+              <span class="tab-badge plan-badge">P</span>
+              <span>Plan</span>
+            </button>
+            <button
+              type="button"
+              class="peg-tab-btn"
+              role="tab"
+              aria-selected="false"
+              aria-controls="stage-panel-engineer"
+              id="tab-peg-engineer"
+              data-pillar="engineer"
+            >
+              <span class="tab-badge engineer-badge">E</span>
+              <span>Engineer</span>
+            </button>
+            <button
+              type="button"
+              class="peg-tab-btn"
+              role="tab"
+              aria-selected="false"
+              aria-controls="stage-panel-genai"
+              id="tab-peg-genai"
+              data-pillar="genai"
+            >
+              <span class="tab-badge genai-badge">G</span>
+              <span>Gen-AI</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Column: Pillar Content Panels -->
+        <div class="stage-content-col" id="stage-content-col">
+          <!-- PANEL 1: PLAN -->
+          <div
+            id="stage-panel-plan"
+            class="stage-panel is-active"
+            role="tabpanel"
+            aria-labelledby="tab-peg-plan"
+          >
+            <div class="panel-header">
+              <div class="panel-eyebrow">
+                <span class="pillar-indicator" style="background-color: #1E4B8F;">P</span>
+                <span class="eyebrow-text" style="color: #1E4B8F;">PLAN</span>
+              </div>
+              <h2 class="panel-title">
+                <strong>Plan</strong> with foresight.
+              </h2>
+              <p class="panel-desc">
+                Objective platform selection, architecture blueprints, and founder-led advisory before writing code.
+              </p>
+            </div>
+
+            <div class="cards-grid plan-grid">
+              <!-- Card 1 -->
+              <article class="stage-card card-mastercard">
+                <div class="card-top-icon" style="color: #1E4B8F;">
+                  <Icon name="compass" size={24} />
+                </div>
+                <h3 class="card-heading">Platform Selection</h3>
+                <p class="card-copy">
+                  Low-code OutSystems vs. high-code MERN vs. hybrid architecture. Objective evaluation based on organizational capability, velocity, and total cost of ownership.
+                </p>
+                <div class="card-tags-row">
+                  <span class="stage-tag">Low-Code vs High-Code</span>
+                  <span class="stage-tag">Vendor-Neutral</span>
+                </div>
+              </article>
+
+              <!-- Card 2 -->
+              <article class="stage-card card-mastercard">
+                <div class="card-top-icon" style="color: #1E4B8F;">
+                  <Icon name="layers" size={24} />
+                </div>
+                <h3 class="card-heading">Architecture Blueprints</h3>
+                <p class="card-copy">
+                  Resilient system design, data boundaries, and phased implementation roadmaps that your engineering team can actually execute.
+                </p>
+                <div class="card-tags-row">
+                  <span class="stage-tag">System Architecture</span>
+                  <span class="stage-tag">Roadmaps</span>
+                </div>
+              </article>
+
+              <!-- Card 3 -->
+              <article class="stage-card card-mastercard">
+                <div class="card-top-icon" style="color: #1E4B8F;">
+                  <Icon name="shield" size={24} />
+                </div>
+                <h3 class="card-heading">Founder-Led Advisory</h3>
+                <p class="card-copy">
+                  Direct senior technical guidance for high-stakes digital investments, architecture governance, and enterprise transformation.
+                </p>
+                <div class="card-tags-row">
+                  <span class="stage-tag">Executive Advisory</span>
+                  <span class="stage-tag">Governance</span>
+                </div>
+              </article>
+            </div>
+
+            <div class="panel-action">
+              <a href="#contact" class="btn btn-primary plan-cta-btn">
+                <span>Talk to our consultants</span>
+                <Icon name="arrow-right" size={16} />
+              </a>
+            </div>
+          </div>
+
+          <!-- PANEL 2: ENGINEER -->
+          <div
+            id="stage-panel-engineer"
+            class="stage-panel"
+            role="tabpanel"
+            aria-labelledby="tab-peg-engineer"
+          >
+            <div class="panel-header">
+              <div class="panel-eyebrow">
+                <span class="pillar-indicator" style="background-color: #F7941D;">E</span>
+                <span class="eyebrow-text" style="color: #B86200;">ENGINEER</span>
+              </div>
+              <h2 class="panel-title">
+                <strong>Engineer</strong> with precision.
+              </h2>
+              <p class="panel-desc">
+                OutSystems speed or custom MERN engineering, built around enterprise workflows.
+              </p>
+            </div>
+
+            <!-- Two Services Row -->
+            <div class="services-duo-grid">
+              <article class="stage-card service-card card-mastercard">
+                <div class="service-meta">
+                  <span class="stage-tag primary-tint">OutSystems Low-Code</span>
+                  <h3 class="card-heading">Implementation &amp; Transformation</h3>
+                  <p class="card-copy">
+                    Enterprise web and mobile applications deployed in weeks with built-in governance, security, and enterprise connectivity.
+                  </p>
+                </div>
+                <a href="#contact" class="btn btn-secondary btn-sm service-action">
+                  <span>Start an OutSystems project</span>
+                  <Icon name="arrow-right" size={14} />
+                </a>
+              </article>
+
+              <article class="stage-card service-card card-mastercard">
+                <div class="service-meta">
+                  <span class="stage-tag primary-tint">High-Code (MERN)</span>
+                  <h3 class="card-heading">Custom Full-Stack Development</h3>
+                  <p class="card-copy">
+                    Full-stack engineering with complete architectural autonomy, high performance, and zero platform licensing ceilings.
+                  </p>
+                </div>
+                <a href="#contact" class="btn btn-secondary btn-sm service-action">
+                  <span>Build custom software</span>
+                  <Icon name="arrow-right" size={14} />
+                </a>
+              </article>
+            </div>
+
+            <!-- Accelerators Row -->
+            <div class="accelerators-block">
+              <div class="accelerators-label">Accelerators (Ready Building Blocks)</div>
+              <div class="accelerators-grid">
+                <a href="/solutions/clm" class="accelerator-item card-mastercard">
+                  <div class="accelerator-content">
+                    <span class="accelerator-code">CLM</span>
+                    <h4 class="accelerator-title">Contract Lifecycle Management</h4>
+                    <p class="accelerator-desc">Drafting, approvals, redlining, and digital execution.</p>
+                  </div>
+                  <span class="accelerator-link-icon" aria-hidden="true">
+                    <Icon name="arrow-right" size={16} />
+                  </span>
+                </a>
+
+                <a href="/solutions/dms" class="accelerator-item card-mastercard">
+                  <div class="accelerator-content">
+                    <span class="accelerator-code">DMS</span>
+                    <h4 class="accelerator-title">Document Management System</h4>
+                    <p class="accelerator-desc">Intelligent indexing, access control, and compliant document workflows.</p>
+                  </div>
+                  <span class="accelerator-link-icon" aria-hidden="true">
+                    <Icon name="arrow-right" size={16} />
+                  </span>
+                </a>
+
+                <a href="/solutions/whatsapp-journeys" class="accelerator-item card-mastercard">
+                  <div class="accelerator-content">
+                    <span class="accelerator-code">WHATSAPP</span>
+                    <h4 class="accelerator-title">WhatsApp Journeys</h4>
+                    <p class="accelerator-desc">Two-way customer engagement, transactional updates, and automated alerts.</p>
+                  </div>
+                  <span class="accelerator-link-icon" aria-hidden="true">
+                    <Icon name="arrow-right" size={16} />
+                  </span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- PANEL 3: GEN-AI -->
+          <div
+            id="stage-panel-genai"
+            class="stage-panel"
+            role="tabpanel"
+            aria-labelledby="tab-peg-genai"
+          >
+            <div class="panel-header">
+              <div class="panel-eyebrow">
+                <span class="pillar-indicator" style="background-color: #EE4B2B;">G</span>
+                <span class="eyebrow-text" style="color: #B82810;">GEN-AI</span>
+              </div>
+              <h2 class="panel-title">
+                <strong>Gen-AI</strong> the leap.
+              </h2>
+              <p class="panel-desc">
+                Private, catalogue-grounded, production-ready AI operating inside your walls.
+              </p>
+            </div>
+
+            <div class="cards-grid genai-grid">
+              <!-- Solution 1: Sonakshi -->
+              <article class="stage-card solution-card card-mastercard">
+                <div class="card-tags-row">
+                  <span class="stage-tag highlight-tag" style="background-color: rgba(238, 75, 43, 0.12); color: #B82810;">High-code (MERN)</span>
+                  <span class="stage-tag">Retail Deployment</span>
+                </div>
+                <h3 class="card-heading">Sonakshi – AI Voice Agent</h3>
+                <p class="card-copy">
+                  Multilingual voice assistant built in MERN, deployed for a retail store. Helps showroom customers find, compare, and order with live catalogue grounding.
+                </p>
+                <div class="card-footer-action">
+                  <a href="/solutions/sonakshi" class="solution-link" aria-label="Explore Sonakshi solution">
+                    <span>Explore Sonakshi</span>
+                    <Icon name="arrow-right" size={14} />
+                  </a>
+                </div>
+              </article>
+
+              <!-- Solution 2: Sovereign AI -->
+              <article class="stage-card solution-card card-mastercard">
+                <div class="card-tags-row">
+                  <span class="stage-tag highlight-tag" style="background-color: rgba(238, 75, 43, 0.12); color: #B82810;">Private Infrastructure</span>
+                  <span class="stage-tag">Zero Leakage</span>
+                </div>
+                <h3 class="card-heading">Sovereign AI</h3>
+                <p class="card-copy">
+                  Private enterprise LLM deployments running entirely on your infrastructure with strict data boundaries and no external data exposure.
+                </p>
+                <div class="card-footer-action">
+                  <a href="/solutions/sovereign-ai" class="solution-link" aria-label="Explore Sovereign AI solution">
+                    <span>Explore Sovereign AI</span>
+                    <Icon name="arrow-right" size={14} />
+                  </a>
+                </div>
+              </article>
+
+              <!-- Solution 3: AskMeAnything -->
+              <article class="stage-card solution-card card-mastercard">
+                <div class="card-tags-row">
+                  <span class="stage-tag highlight-tag" style="background-color: rgba(238, 75, 43, 0.12); color: #B82810;">RAG Search</span>
+                  <span class="stage-tag">Enterprise Knowledge</span>
+                </div>
+                <h3 class="card-heading">AskMeAnything</h3>
+                <p class="card-copy">
+                  Enterprise search and conversational intelligence grounded in your private documents, contracts, spreadsheets, and databases.
+                </p>
+                <div class="card-footer-action">
+                  <a href="/solutions/ask-me-anything" class="solution-link" aria-label="Explore AskMeAnything solution">
+                    <span>Explore AskMeAnything</span>
+                    <Icon name="arrow-right" size={14} />
+                  </a>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Sticky Header (<900px) -->
+  <div class="mobile-peg-header" id="mobile-peg-header" aria-label="Pillar navigation">
+    <div class="mobile-header-inner">
+      <div class="mobile-logo-mark">
+        <span class="mobile-cube-icon">P·E·G</span>
+      </div>
+      <div class="mobile-pill-tabs" role="tablist">
+        <a href="#mobile-pillar-plan" class="mobile-tab is-active" data-pillar="plan">Plan</a>
+        <a href="#mobile-pillar-engineer" class="mobile-tab" data-pillar="engineer">Engineer</a>
+        <a href="#mobile-pillar-genai" class="mobile-tab" data-pillar="genai">Gen-AI</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Stacked Content (<900px) -->
+  <div class="mobile-stacked-content" aria-label="Pillar solutions">
+    <div id="mobile-pillar-plan" class="mobile-pillar-section" data-pillar="plan">
+      <div class="container">
+        <div class="panel-header">
+          <div class="panel-eyebrow">
+            <span class="pillar-indicator" style="background-color: #1E4B8F;">P</span>
+            <span class="eyebrow-text" style="color: #1E4B8F;">PLAN</span>
+          </div>
+          <h2 class="panel-title"><strong>Plan</strong> with foresight.</h2>
+          <p class="panel-desc">Objective platform selection, architecture blueprints, and founder-led advisory before writing code.</p>
+        </div>
+        <div class="mobile-cards-stack">
+          <article class="stage-card card-mastercard">
+            <h3 class="card-heading">Platform Selection</h3>
+            <p class="card-copy">Low-code OutSystems vs. high-code MERN vs. hybrid architecture with objective evaluation.</p>
+          </article>
+          <article class="stage-card card-mastercard">
+            <h3 class="card-heading">Architecture Blueprints</h3>
+            <p class="card-copy">Resilient system design, data boundaries, and phased implementation roadmaps.</p>
+          </article>
+          <article class="stage-card card-mastercard">
+            <h3 class="card-heading">Founder-Led Advisory</h3>
+            <p class="card-copy">Direct senior technical guidance for high-stakes digital investments.</p>
+          </article>
+        </div>
+        <a href="#contact" class="btn btn-primary plan-cta-btn" style="margin-top: 1.25rem;">
+          <span>Talk to our consultants</span>
+          <Icon name="arrow-right" size={16} />
+        </a>
+      </div>
+    </div>
+
+    <div id="mobile-pillar-engineer" class="mobile-pillar-section" data-pillar="engineer">
+      <div class="container">
+        <div class="panel-header">
+          <div class="panel-eyebrow">
+            <span class="pillar-indicator" style="background-color: #F7941D;">E</span>
+            <span class="eyebrow-text" style="color: #B86200;">ENGINEER</span>
+          </div>
+          <h2 class="panel-title"><strong>Engineer</strong> with precision.</h2>
+          <p class="panel-desc">OutSystems speed or custom MERN engineering, built around enterprise workflows.</p>
+        </div>
+        <div class="mobile-cards-stack">
+          <article class="stage-card card-mastercard">
+            <span class="stage-tag primary-tint">OutSystems Low-Code</span>
+            <h3 class="card-heading">Implementation &amp; Transformation</h3>
+            <p class="card-copy">Enterprise apps deployed in weeks with built-in governance and security.</p>
+            <a href="#contact" class="btn btn-secondary btn-sm" style="margin-top: 0.75rem;">Start an OutSystems project →</a>
+          </article>
+          <article class="stage-card card-mastercard">
+            <span class="stage-tag primary-tint">High-Code (MERN)</span>
+            <h3 class="card-heading">Custom Full-Stack Development</h3>
+            <p class="card-copy">Full-stack engineering with complete architectural autonomy and high performance.</p>
+            <a href="#contact" class="btn btn-secondary btn-sm" style="margin-top: 0.75rem;">Build custom software →</a>
+          </article>
+        </div>
+        <div class="mobile-accelerators" style="margin-top: 1.5rem;">
+          <div class="accelerators-label">Accelerators</div>
+          <div class="mobile-cards-stack" style="gap: 0.75rem; margin-top: 0.5rem;">
+            <a href="/solutions/clm" class="accelerator-item card-mastercard">
+              <span class="accelerator-code">CLM</span>
+              <span class="accelerator-title">Contract Lifecycle Management</span>
+            </a>
+            <a href="/solutions/dms" class="accelerator-item card-mastercard">
+              <span class="accelerator-code">DMS</span>
+              <span class="accelerator-title">Document Management System</span>
+            </a>
+            <a href="/solutions/whatsapp-journeys" class="accelerator-item card-mastercard">
+              <span class="accelerator-code">WHATSAPP</span>
+              <span class="accelerator-title">WhatsApp Journeys</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="mobile-pillar-genai" class="mobile-pillar-section" data-pillar="genai">
+      <div class="container">
+        <div class="panel-header">
+          <div class="panel-eyebrow">
+            <span class="pillar-indicator" style="background-color: #EE4B2B;">G</span>
+            <span class="eyebrow-text" style="color: #B82810;">GEN-AI</span>
+          </div>
+          <h2 class="panel-title"><strong>Gen-AI</strong> the leap.</h2>
+          <p class="panel-desc">Private, catalogue-grounded, production-ready AI operating inside your walls.</p>
+        </div>
+        <div class="mobile-cards-stack">
+          <article class="stage-card card-mastercard">
+            <span class="stage-tag" style="color: #B82810;">High-code (MERN)</span>
+            <h3 class="card-heading">Sonakshi – AI Voice Agent</h3>
+            <p class="card-copy">Multilingual voice assistant built in MERN, deployed for a retail store.</p>
+            <a href="/solutions/sonakshi" class="solution-link" style="margin-top: 0.75rem;">Explore Sonakshi →</a>
+          </article>
+          <article class="stage-card card-mastercard">
+            <span class="stage-tag" style="color: #B82810;">Private Cloud</span>
+            <h3 class="card-heading">Sovereign AI</h3>
+            <p class="card-copy">Private enterprise LLM deployments running entirely on your infrastructure.</p>
+            <a href="/solutions/sovereign-ai" class="solution-link" style="margin-top: 0.75rem;">Explore Sovereign AI →</a>
+          </article>
+          <article class="stage-card card-mastercard">
+            <span class="stage-tag" style="color: #B82810;">RAG Search</span>
+            <h3 class="card-heading">AskMeAnything</h3>
+            <p class="card-copy">Enterprise search across private documents, spreadsheets, and databases.</p>
+            <a href="/solutions/ask-me-anything" class="solution-link" style="margin-top: 0.75rem;">Explore AskMeAnything →</a>
+          </article>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .peg-solutions-section {
+    position: relative;
+    width: 100%;
+    background-color: var(--color-bg);
+  }
+
+  /* Desktop Sticky 400vh Track */
+  .peg-solutions-track {
+    position: relative;
+    height: 380vh;
+    min-height: 3000px;
+    width: 100%;
+  }
+
+  .peg-solutions-stage {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 2rem 0;
+    box-sizing: border-box;
+  }
+
+  /* Intro Overlay at p≈0 */
+  .stage-intro-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 10vh;
+    text-align: center;
+    pointer-events: none;
+    z-index: 5;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  .intro-headline {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0.5rem 0 0.5rem;
+    letter-spacing: -0.02em;
+  }
+
+  .intro-subline {
+    font-size: var(--fs-md);
+    color: var(--color-text-secondary);
+    max-width: 480px;
+  }
+
+  .intro-scroll-cue {
+    position: absolute;
+    bottom: 8vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--color-text-muted);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    animation: bounceDown 2s infinite ease-in-out;
+  }
+
+  @keyframes bounceDown {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(6px); }
+  }
+
+  /* Main Container */
+  .stage-container {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 3.5rem;
+    align-items: center;
+    width: 100%;
+    max-width: 1280px;
+    height: 100%;
+    max-height: 85vh;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Left Column: Cube Scene */
+  .stage-cube-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transform-origin: center center;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .cube-scene-wrapper {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1200px;
+    user-select: none;
+    touch-action: pan-y;
+    cursor: grab;
+  }
+
+  .cube-scene-wrapper:active {
+    cursor: grabbing;
+  }
+
+  .cube-viewport {
+    position: relative;
+    width: 160px;
+    height: 160px;
+    transform-style: preserve-3d;
+    z-index: 2;
+  }
+
+  .cube-assembly {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    transform-style: preserve-3d;
+    transform: rotateX(-30deg) rotateY(45deg);
+    transition: transform 0.6s cubic-bezier(0.34, 1.25, 0.64, 1);
+  }
+
+  .cube-face {
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFFFFF;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    box-sizing: border-box;
+    backface-visibility: visible;
+    border-radius: 4px;
+    overflow: hidden;
+    transition: transform 0.4s cubic-bezier(0.34, 1.25, 0.64, 1), box-shadow 0.3s ease;
+  }
+
+  /* Top Face: P - Plan (Navy) */
+  .face-top {
+    transform: rotateX(90deg) translateZ(80px);
+    background: linear-gradient(135deg, #1E4B8F 0%, #0F2A4A 100%);
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.2);
+  }
+
+  .face-top.is-popped {
+    transform: rotateX(90deg) translateZ(96px);
+  }
+
+  /* Left Face: E - Engineer (Orange) */
+  .face-left {
+    transform: rotateY(-90deg) translateZ(80px);
+    background: linear-gradient(135deg, #FF9E2C 0%, #F7941D 100%);
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.15);
+  }
+
+  .face-left.is-popped {
+    transform: rotateY(-90deg) translateZ(96px);
+  }
+
+  /* Right Face: G - Gen-AI (Red) */
+  .face-right {
+    transform: translateZ(80px);
+    background: linear-gradient(135deg, #FF5B3B 0%, #EE4B2B 100%);
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.15);
+  }
+
+  .face-right.is-popped {
+    transform: translateZ(96px);
+  }
+
+  /* Enclosure Faces */
+  .face-bottom {
+    transform: rotateX(-90deg) translateZ(80px);
+    background: #0A1B30;
+    pointer-events: none;
+  }
+
+  .face-back {
+    transform: rotateY(180deg) translateZ(80px);
+    background: #C43818;
+    pointer-events: none;
+  }
+
+  .face-back-left {
+    transform: rotateY(90deg) translateZ(80px);
+    background: #0F2A4A;
+    pointer-events: none;
+  }
+
+  .face-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    pointer-events: none;
+  }
+
+  .face-letter {
+    font-size: 2.85rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  }
+
+  .face-word {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.95;
+  }
+
+  /* Socket Pedestal */
+  .cube-socket-ellipse {
+    position: absolute;
+    bottom: 24px;
+    width: 220px;
+    height: 60px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(30, 75, 143, 0.28) 0%, rgba(30, 75, 143, 0.08) 50%, transparent 75%);
+    pointer-events: none;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .socket-inner-depth {
+    width: 130px;
+    height: 32px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(15, 42, 74, 0.45) 0%, transparent 70%);
+  }
+
+  /* Pill Tabs below cube */
+  .stage-pill-tabs {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    padding: 4px;
+    box-shadow: var(--shadow-subtle);
+    margin-top: 1rem;
+    z-index: 3;
+  }
+
+  .peg-tab-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.85rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid transparent;
+    background: transparent;
+    font-family: var(--font-sans);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .peg-tab-btn:hover {
+    color: var(--color-text-primary);
+    background-color: var(--color-surface-hover);
+  }
+
+  .peg-tab-btn.is-active {
+    background-color: var(--color-surface-elevated, #FFFFFF);
+    color: var(--color-text-primary);
+    border-color: var(--color-border);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+
+  :global(.dark) .peg-tab-btn.is-active {
+    background-color: var(--color-surface-hover);
+  }
+
+  .tab-badge {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: #FFFFFF;
+  }
+
+  .plan-badge { background-color: #1E4B8F; }
+  .engineer-badge { background-color: #F7941D; }
+  .genai-badge { background-color: #EE4B2B; }
+
+  /* Right Column: Stage Content Panels */
+  .stage-content-col {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  .stage-panel {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(16px);
+    transition: opacity 0.35s ease, transform 0.35s ease, visibility 0.35s;
+    pointer-events: none;
+  }
+
+  .stage-panel.is-active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  /* Panel Header */
+  .panel-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .panel-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .pillar-indicator {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .eyebrow-text {
+    font-size: var(--fs-eyebrow);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .panel-title {
+    font-size: clamp(1.75rem, 2.75vw, 2.4rem);
+    font-weight: 400;
+    color: var(--color-text-primary);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.5rem;
+  }
+
+  .panel-title strong {
+    font-weight: 700;
+  }
+
+  .panel-desc {
+    font-size: var(--fs-sm);
+    color: var(--color-text-secondary);
+    max-width: 600px;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* Card Grids */
+  .cards-grid {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .plan-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .stage-card {
+    padding: 1.25rem;
+    border: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .card-top-icon {
+    margin-bottom: 0.75rem;
+  }
+
+  .card-heading {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin: 0 0 0.4rem;
+    line-height: 1.3;
+  }
+
+  .card-copy {
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    margin: 0 0 0.85rem;
+    flex-grow: 1;
+  }
+
+  .card-tags-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: auto;
+  }
+
+  .stage-tag {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 0.15rem 0.5rem;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-surface-alt);
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border);
+  }
+
+  .stage-tag.primary-tint {
+    background-color: rgba(247, 148, 29, 0.12);
+    color: #B86200;
+    border-color: rgba(247, 148, 29, 0.25);
+  }
+
+  :global(.dark) .stage-tag.primary-tint {
+    color: #F7941D;
+  }
+
+  .panel-action {
+    margin-top: 1.5rem;
+  }
+
+  .plan-cta-btn {
+    background-color: #1E4B8F;
+    border-color: #1E4B8F;
+    color: #FFFFFF;
+    font-size: var(--fs-sm);
+    padding: 0 1.25rem;
+    height: 42px;
+  }
+
+  .plan-cta-btn:hover {
+    background-color: #163666;
+    border-color: #163666;
+  }
+
+  /* Engineer Panel Layout */
+  .services-duo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .service-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .service-action {
+    margin-top: 0.75rem;
+    align-self: flex-start;
+  }
+
+  .accelerators-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .accelerators-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .accelerators-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+  }
+
+  .accelerator-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--color-border);
+    text-decoration: none;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .accelerator-item:hover {
+    border-color: #F7941D;
+    transform: translateY(-2px);
+  }
+
+  .accelerator-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .accelerator-code {
+    font-size: 10px;
+    font-weight: 700;
+    color: #B86200;
+    letter-spacing: 0.06em;
+  }
+
+  :global(.dark) .accelerator-code {
+    color: #F7941D;
+  }
+
+  .accelerator-title {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin: 0;
+  }
+
+  .accelerator-desc {
+    font-size: 11px;
+    color: var(--color-text-secondary);
+    margin: 0;
+    line-height: 1.35;
+  }
+
+  .accelerator-link-icon {
+    color: var(--color-text-muted);
+    transition: transform 0.2s ease, color 0.2s ease;
+    margin-left: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .accelerator-item:hover .accelerator-link-icon {
+    color: #F7941D;
+    transform: translateX(3px);
+  }
+
+  /* Gen-AI Panel Layout */
+  .genai-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .solution-card {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card-footer-action {
+    margin-top: auto;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .solution-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: #B82810;
+    text-decoration: none;
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+
+  :global(.dark) .solution-link {
+    color: #EE4B2B;
+  }
+
+  .solution-link:hover {
+    transform: translateX(3px);
+  }
+
+  /* Mobile Elements default hidden on desktop */
+  .mobile-peg-header {
+    display: none;
+  }
+
+  .mobile-stacked-content {
+    display: none;
+  }
+
+  /* Responsive & Mobile Breakpoints */
+  @media (max-width: 1024px) {
+    .stage-container {
+      grid-template-columns: 260px 1fr;
+      gap: 2rem;
+    }
+
+    .cube-scene-wrapper {
+      width: 240px;
+      height: 240px;
+    }
+
+    .cube-viewport {
+      width: 130px;
+      height: 130px;
+    }
+
+    .cube-face {
+      width: 130px;
+      height: 130px;
+    }
+
+    .face-top { transform: rotateX(90deg) translateZ(65px); }
+    .face-top.is-popped { transform: rotateX(90deg) translateZ(80px); }
+    .face-left { transform: rotateY(-90deg) translateZ(65px); }
+    .face-left.is-popped { transform: rotateY(-90deg) translateZ(80px); }
+    .face-right { transform: translateZ(65px); }
+    .face-right.is-popped { transform: translateZ(80px); }
+    .face-bottom { transform: rotateX(-90deg) translateZ(65px); }
+    .face-back { transform: rotateY(180deg) translateZ(65px); }
+    .face-back-left { transform: rotateY(90deg) translateZ(65px); }
+
+    .face-letter { font-size: 2.2rem; }
+    .face-word { font-size: 0.65rem; }
+  }
+
+  @media (max-width: 899px) {
+    .peg-solutions-track {
+      display: none;
+    }
+
+    /* Mobile Sticky Header */
+    .mobile-peg-header {
+      display: block;
+      position: sticky;
+      top: 60px;
+      z-index: 40;
+      background-color: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      padding: 0.75rem 1rem;
+      backdrop-filter: blur(8px);
+    }
+
+    .mobile-header-inner {
+      max-width: 600px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .mobile-logo-mark {
+      font-size: var(--fs-xs);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--color-text-secondary);
+    }
+
+    .mobile-pill-tabs {
+      display: flex;
+      gap: 0.35rem;
+      background-color: var(--color-surface-alt);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-pill);
+      padding: 3px;
+    }
+
+    .mobile-tab {
+      padding: 0.3rem 0.75rem;
+      border-radius: var(--radius-pill);
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .mobile-tab.is-active {
+      background-color: var(--color-surface);
+      color: var(--color-text-primary);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Mobile Stacked Sections */
+    .mobile-stacked-content {
+      display: block;
+      padding: 2.5rem 0 4rem;
+    }
+
+    .mobile-pillar-section {
+      padding: 3rem 0;
+      border-bottom: 1px solid var(--color-border);
+      scroll-margin-top: 140px;
+    }
+
+    .mobile-cards-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 1.25rem;
+    }
+  }
+
+  /* Reduced Motion Fallback */
+  @media (prefers-reduced-motion: reduce) {
+    .peg-solutions-track {
+      height: auto !important;
+      min-height: 0 !important;
+    }
+
+    .peg-solutions-stage {
+      position: static !important;
+      height: auto !important;
+      padding: 3rem 0 !important;
+    }
+
+    .stage-intro-overlay {
+      display: none !important;
+    }
+
+    .stage-container {
+      grid-template-columns: 1fr !important;
+      max-height: none !important;
+    }
+
+    .stage-cube-col {
+      display: none !important;
+    }
+
+    .stage-content-col {
+      position: static !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 3rem !important;
+    }
+
+    .stage-panel {
+      position: static !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      transform: none !important;
+      pointer-events: auto !important;
+    }
+  }
+</style>
+
+<script>
+  function initPegSolutions() {
+    const track = document.getElementById('peg-solutions-track');
+    const stage = document.getElementById('peg-solutions-stage');
+    const introOverlay = document.getElementById('stage-intro-overlay');
+    const cubeCol = document.getElementById('stage-cube-col');
+    const cubeAssembly = document.getElementById('cube-assembly');
+    const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('.stage-pill-tabs .peg-tab-btn'));
+    const panels = {
+      plan: document.getElementById('stage-panel-plan'),
+      engineer: document.getElementById('stage-panel-engineer'),
+      genai: document.getElementById('stage-panel-genai')
+    };
+    const faces = {
+      plan: document.getElementById('cube-face-plan'),
+      engineer: document.getElementById('cube-face-engineer'),
+      genai: document.getElementById('cube-face-genai')
+    };
+
+    if (!track || !stage || !cubeAssembly) return;
+
+    // Cube rotation angles for pillars
+    const pillarAngles: Record<string, { x: number; y: number }> = {
+      intro: { x: -30, y: 45 },
+      plan: { x: -65, y: 45 },
+      engineer: { x: -12, y: 90 },
+      genai: { x: -12, y: 0 }
+    };
+
+    let activePillar = 'plan';
+    let isTicking = false;
+    let isUserDragging = false;
+
+    // Helper: linear interpolation
+    function lerp(a: number, b: number, t: number) {
+      return a + (b - a) * t;
+    }
+
+    function setPanelActive(pillar: 'plan' | 'engineer' | 'genai') {
+      if (activePillar === pillar) return;
+      activePillar = pillar;
+
+      // Update Tabs
+      tabs.forEach(tab => {
+        const isMatch = tab.getAttribute('data-pillar') === pillar;
+        tab.classList.toggle('is-active', isMatch);
+        tab.setAttribute('aria-selected', isMatch ? 'true' : 'false');
+      });
+
+      // Update Panels
+      Object.entries(panels).forEach(([key, panel]) => {
+        if (!panel) return;
+        panel.classList.toggle('is-active', key === pillar);
+      });
+
+      // Face Pop Out
+      Object.entries(faces).forEach(([key, face]) => {
+        if (!face) return;
+        face.classList.toggle('is-popped', key === pillar);
+      });
+    }
+
+    function updateScroll() {
+      if (!track || !cubeAssembly) return;
+      if (window.innerWidth < 900 || isUserDragging) {
+        isTicking = false;
+        return;
+      }
+
+      const rect = track.getBoundingClientRect();
+      const trackHeight = track.offsetHeight - window.innerHeight;
+      if (trackHeight <= 0) {
+        isTicking = false;
+        return;
+      }
+
+      // Progress p from 0 to 1
+      const p = Math.max(0, Math.min(1, -rect.top / trackHeight));
+
+      // 1. Intro Transition (p: 0 -> 0.12)
+      if (p <= 0.12) {
+        const introP = p / 0.12;
+        if (introOverlay) {
+          introOverlay.style.opacity = `${1 - introP * 1.5}`;
+          introOverlay.style.transform = `translateY(${-introP * 30}px)`;
+          introOverlay.style.pointerEvents = introP > 0.8 ? 'none' : 'auto';
+        }
+
+        // Cube centered scaling down to left column
+        if (cubeCol) {
+          const scale = lerp(1.15, 1.0, introP);
+          const translateX = lerp(window.innerWidth > 1200 ? 180 : 120, 0, introP);
+          cubeCol.style.transform = `translateX(${translateX}px) scale(${scale})`;
+        }
+
+        // Interpolate cube angle: intro -> plan
+        const ang = {
+          x: lerp(pillarAngles.intro.x, pillarAngles.plan.x, introP),
+          y: lerp(pillarAngles.intro.y, pillarAngles.plan.y, introP)
+        };
+        cubeAssembly.style.transform = `rotateX(${ang.x}deg) rotateY(${ang.y}deg)`;
+        setPanelActive('plan');
+      } 
+      // 2. Plan Phase (p: 0.12 -> 0.40)
+      else if (p <= 0.40) {
+        if (introOverlay) {
+          introOverlay.style.opacity = '0';
+          introOverlay.style.pointerEvents = 'none';
+        }
+        if (cubeCol) {
+          cubeCol.style.transform = 'translateX(0) scale(1.0)';
+        }
+
+        // Near end of plan phase (0.35 -> 0.40), smoothly interpolate to engineer
+        if (p > 0.35) {
+          const t = (p - 0.35) / 0.05;
+          const ang = {
+            x: lerp(pillarAngles.plan.x, pillarAngles.engineer.x, t),
+            y: lerp(pillarAngles.plan.y, pillarAngles.engineer.y, t)
+          };
+          cubeAssembly.style.transform = `rotateX(${ang.x}deg) rotateY(${ang.y}deg)`;
+        } else {
+          cubeAssembly.style.transform = `rotateX(${pillarAngles.plan.x}deg) rotateY(${pillarAngles.plan.y}deg)`;
+        }
+        setPanelActive('plan');
+      }
+      // 3. Engineer Phase (p: 0.40 -> 0.70)
+      else if (p <= 0.70) {
+        if (cubeCol) {
+          cubeCol.style.transform = 'translateX(0) scale(1.0)';
+        }
+
+        // Near end of engineer phase (0.65 -> 0.70), smoothly interpolate to genai
+        if (p > 0.65) {
+          const t = (p - 0.65) / 0.05;
+          const ang = {
+            x: lerp(pillarAngles.engineer.x, pillarAngles.genai.x, t),
+            y: lerp(pillarAngles.engineer.y, pillarAngles.genai.y, t)
+          };
+          cubeAssembly.style.transform = `rotateX(${ang.x}deg) rotateY(${ang.y}deg)`;
+        } else {
+          cubeAssembly.style.transform = `rotateX(${pillarAngles.engineer.x}deg) rotateY(${pillarAngles.engineer.y}deg)`;
+        }
+        setPanelActive('engineer');
+      }
+      // 4. Gen-AI Phase (p: 0.70 -> 1.0)
+      else {
+        if (cubeCol) {
+          cubeCol.style.transform = 'translateX(0) scale(1.0)';
+        }
+        cubeAssembly.style.transform = `rotateX(${pillarAngles.genai.x}deg) rotateY(${pillarAngles.genai.y}deg)`;
+        setPanelActive('genai');
+      }
+
+      isTicking = false;
+    }
+
+    function onScroll() {
+      if (!isTicking) {
+        requestAnimationFrame(updateScroll);
+        isTicking = true;
+      }
+    }
+
+    // Tab buttons click: smoothly scroll page to that pillar's scroll target
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const pillar = tab.getAttribute('data-pillar');
+        if (!pillar) return;
+
+        const trackTop = track.getBoundingClientRect().top + window.scrollY;
+        const trackHeight = track.offsetHeight - window.innerHeight;
+
+        let targetP = 0.25;
+        if (pillar === 'engineer') targetP = 0.55;
+        if (pillar === 'genai') targetP = 0.85;
+
+        const targetScroll = trackTop + trackHeight * targetP;
+        window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+      });
+    });
+
+    // Interactive Cube Drag
+    const sceneWrapper = document.getElementById('cube-scene-wrapper');
+    if (sceneWrapper) {
+      let startX = 0;
+      let deltaX = 0;
+
+      sceneWrapper.addEventListener('pointerdown', (e) => {
+        isUserDragging = true;
+        startX = e.clientX;
+        deltaX = 0;
+        cubeAssembly.style.transition = 'none';
+        sceneWrapper.setPointerCapture(e.pointerId);
+      });
+
+      sceneWrapper.addEventListener('pointermove', (e) => {
+        if (!isUserDragging) return;
+        deltaX = e.clientX - startX;
+        const currentAng = pillarAngles[activePillar] || pillarAngles.plan;
+        cubeAssembly.style.transform = `rotateX(${currentAng.x}deg) rotateY(${currentAng.y + deltaX * 0.4}deg)`;
+      });
+
+      const endDrag = (e: PointerEvent) => {
+        if (!isUserDragging) return;
+        isUserDragging = false;
+        cubeAssembly.style.transition = 'transform 0.6s cubic-bezier(0.34, 1.25, 0.64, 1)';
+        try {
+          sceneWrapper.releasePointerCapture(e.pointerId);
+        } catch (_) {}
+
+        // Determine snap target
+        const pillarOrder: Array<'plan' | 'engineer' | 'genai'> = ['plan', 'engineer', 'genai'];
+        let currentIdx = pillarOrder.indexOf(activePillar as any);
+        if (currentIdx === -1) currentIdx = 0;
+
+        if (deltaX < -35 && currentIdx < 2) {
+          currentIdx += 1;
+        } else if (deltaX > 35 && currentIdx > 0) {
+          currentIdx -= 1;
+        }
+
+        const nextPillar = pillarOrder[currentIdx];
+        const trackTop = track.getBoundingClientRect().top + window.scrollY;
+        const trackHeight = track.offsetHeight - window.innerHeight;
+        let targetP = 0.25;
+        if (nextPillar === 'engineer') targetP = 0.55;
+        if (nextPillar === 'genai') targetP = 0.85;
+
+        window.scrollTo({ top: trackTop + trackHeight * targetP, behavior: 'smooth' });
+      };
+
+      sceneWrapper.addEventListener('pointerup', endDrag);
+      sceneWrapper.addEventListener('pointercancel', endDrag);
+    }
+
+    // Scroll listener throttled by rAF
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    updateScroll();
+
+    // Mobile Section Intersection Observer (<900px)
+    if (typeof IntersectionObserver !== 'undefined') {
+      const mobileSections = document.querySelectorAll('.mobile-pillar-section');
+      const mobileTabs = document.querySelectorAll('.mobile-tab');
+
+      const mobileObs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const pillar = entry.target.getAttribute('data-pillar');
+            mobileTabs.forEach(t => {
+              t.classList.toggle('is-active', t.getAttribute('data-pillar') === pillar);
+            });
+          }
+        });
+      }, {
+        rootMargin: '-30% 0px -50% 0px',
+        threshold: 0
+      });
+
+      mobileSections.forEach(s => mobileObs.observe(s));
+    }
+  }
+
+  initPegSolutions();
+  document.addEventListener('astro:after-swap', initPegSolutions);
+</script>
