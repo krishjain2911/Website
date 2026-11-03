@@ -12,6 +12,8 @@ badges:
   - "Knowledge Engine"
 oneLiner: "Grounded enterprise knowledge search answering operational questions across internal documents and systems."
 outcomeHeadline: "Instant answers for staff drawn directly from your verified enterprise repositories."
+# TODO: add built examples
+builtExamples: []
 problem: "Enterprise documents and knowledge reside across fragmented folders, wikis, and databases, slowing employee resolution times."
 painPoints:
   - "Employees spend hours searching across disconnected internal drives and portals."

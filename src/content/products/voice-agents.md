@@ -13,6 +13,11 @@ badges:
 seoDescription: "Multilingual AI voice assistant for retail showrooms. Catalogue-grounded product guidance, automated catalogue ingestion and assisted checkout."
 oneLiner: "Multilingual voice assistant that helps showroom customers find, compare and cart appliances on a tablet."
 outcomeHeadline: "Every walk-in gets an expert salesperson instantly"
+builtExamples:
+  - name: "Sonakshi"
+    oneLiner: "AI voice agent that handles customer calls end to end."
+    deployedFor: "A retail store"
+    stack: "High-code (MERN)"
 problem: "In a busy multi-brand appliance showroom, customers wait for a free salesperson, and staff can’t remember specs and prices for thousands of models across dozens of brands. Product knowledge sits scattered across Excel price lists and brand PDF brochures, so answers are slow, inconsistent and sometimes wrong."
 painPoints:
   - "Customers wait or walk out when salespeople are busy"

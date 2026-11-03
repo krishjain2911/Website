@@ -12,6 +12,8 @@ badges:
   - "Documents"
 oneLiner: "Centralized enterprise document archival, metadata classification, and compliance retention on OutSystems."
 outcomeHeadline: "Secure and structured enterprise document custody with instant retrieval."
+# TODO: add built examples
+builtExamples: []
 problem: "Disorganized digital file storage, unversioned copies, and lack of audit trails make document retrieval difficult."
 painPoints:
   - "Critical records are scattered across local machines and uncontrolled network shares."

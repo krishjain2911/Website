@@ -12,6 +12,8 @@ badges:
   - "Contracts"
 oneLiner: "End-to-end contract drafting, multi-stakeholder approval routing, and renewal tracking built on OutSystems."
 outcomeHeadline: "Accelerate agreement turnaround with clear audit trails from draft to signature."
+# TODO: add built examples
+builtExamples: []
 problem: "Disjointed contract drafting, uncoordinated email approvals, and manual milestone tracking introduce operational delays."
 painPoints:
   - "Agreements stall across multiple department review inboxes without visibility."

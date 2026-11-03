@@ -12,6 +12,8 @@ badges:
   - "Messaging"
 oneLiner: "Customer service workflows, automated updates, and self-service interactions running on WhatsApp."
 outcomeHeadline: "Meet customers on their preferred channel with automated enterprise workflows."
+# TODO: add built examples
+builtExamples: []
 problem: "Low consumer email open rates and portal login hurdles slow down time-sensitive customer communications."
 painPoints:
   - "Critical notification emails often remain unread or land in spam folders."

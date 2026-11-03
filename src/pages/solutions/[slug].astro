@@ -286,6 +286,37 @@ const relatedProducts = allProducts
       </div>
     </section>
 
+    <!-- What We've Built (Deployed Proof) -->
+    {p.builtExamples && p.builtExamples.length > 0 && (
+      <section class="built-examples-section" aria-labelledby="built-examples-heading">
+        <div class="container">
+          <div class="section-lead-block reveal-on-scroll">
+            <span class="eyebrow">PROOF OF CAPABILITY</span>
+            <h2 id="built-examples-heading" class="section-headline">What we've built.</h2>
+            <p class="section-lead-subline">Real systems deployed and operational in enterprise environments.</p>
+          </div>
+
+          <div class="built-examples-grid">
+            {p.builtExamples.map((example) => (
+              <article class="built-example-card card-mastercard reveal-on-scroll">
+                <div class="built-example-header">
+                  <div class="example-title-meta">
+                    <h3 class="example-name">{example.name}</h3>
+                    <span class="example-deployed-for">Deployed for {example.deployedFor}</span>
+                  </div>
+                  <div class="example-badges">
+                    <span class="example-stack-badge">{example.stack}</span>
+                    <span class="example-ready-badge">Ready to deploy &middot; customizable</span>
+                  </div>
+                </div>
+                <p class="example-oneliner">{example.oneLiner}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
     <!-- 5. Interactive Demo Slot -->
     <section id="demo" class="product-demo-section" aria-labelledby="demo-heading">
       <div class="container">
@@ -1409,6 +1440,91 @@ const relatedProducts = allProducts
     font-size: 0.8rem;
     font-weight: 500;
     color: var(--color-text-primary);
+  }
+
+  /* What We've Built Section */
+  .built-examples-section {
+    padding: var(--section-spacing-desktop) 0;
+    background-color: var(--color-bg-alt);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .built-examples-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .built-example-card {
+    background-color: var(--color-surface);
+    border-radius: var(--radius-card);
+    padding: 2.5rem 2.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-subtle);
+  }
+
+  .built-example-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .example-title-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .example-name {
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin: 0;
+  }
+
+  .example-deployed-for {
+    font-size: var(--fs-body);
+    color: var(--color-text-secondary);
+    font-weight: 500;
+  }
+
+  .example-badges {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .example-stack-badge {
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-surface-alt);
+    border: 1px solid var(--color-border);
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    color: var(--color-text-primary);
+  }
+
+  .example-ready-badge {
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-pill);
+    background-color: rgba(30, 75, 143, 0.08);
+    border: 1px solid rgba(30, 75, 143, 0.2);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-brand-primary, #1E4B8F);
+  }
+
+  .example-oneliner {
+    font-size: var(--fs-body-lg);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin: 0;
   }
 </style>
 

@@ -7,16 +7,22 @@ import Icon from './Icon.astro';
 const products = await getCollection('products');
 products.sort((a, b) => a.data.order - b.data.order);
 
-// Feature card is Voice Agents
+const genAiSlugs = ['voice-agents', 'sovereign-ai', 'ask-me-anything'];
+const engineerSlugs = ['clm', 'dms', 'whatsapp-journeys'];
+
+const isDefined = <T>(val: T | undefined): val is T => Boolean(val);
+const genAiProducts = genAiSlugs.map(slug => products.find(p => p.slug === slug)).filter(isDefined);
+const engineerProducts = engineerSlugs.map(slug => products.find(p => p.slug === slug)).filter(isDefined);
+
 const featureProduct = products.find(p => p.slug === 'voice-agents') || products[0];
-const standardProducts = products.filter(p => p.slug !== featureProduct.slug);
+const otherGenAiProducts = genAiProducts.filter(p => p.slug !== featureProduct.slug);
 ---
 
 <section id="solutions" class="solutions-section" aria-labelledby="solutions-heading">
   <div class="container">
     <!-- Header -->
-    <div class="solutions-header">
-      <span class="eyebrow">SOLUTIONS</span>
+    <div class="solutions-header reveal-on-scroll">
+      <span class="eyebrow">SOLUTIONS &amp; CAPABILITIES</span>
       <h2 id="solutions-heading" class="solutions-title">
         Shaped for the way you already work.
       </h2>
@@ -25,77 +31,175 @@ const standardProducts = products.filter(p => p.slug !== featureProduct.slug);
       </p>
     </div>
 
-    <!-- Mastercard-Style Grid: 1 Feature (2 cols) + 5 Standard Cards -->
-    <div class="solutions-cards-grid">
-      <!-- Large Feature Card: Voice Agents (2 Columns Wide on Desktop) -->
-      <article class="solution-card feature-card card-mastercard reveal-on-scroll">
-        <div class="card-inner-content">
-          <div class="card-media-wrapper feature-media">
-            <MediaAsset
-              assetKey={featureProduct.data.imageKey || `product-${featureProduct.slug}`}
-              alt={featureProduct.data.title}
-              aspectRatio="16/9"
-              crop="quarter"
-              focus={featureProduct.data.focus}
-              hoverVideoKey={`video-${featureProduct.slug}`}
-              theme="navy"
-            />
-          </div>
-          <div class="card-body feature-body">
-            <span class="card-pillar-eyebrow">{featureProduct.data.pillar}</span>
-            <h3 class="card-title feature-title">{featureProduct.data.title}</h3>
-            <p class="card-desc">
-              {featureProduct.data.oneLiner.replace(/^\[PLACEHOLDER\]\s*/i, '')}
-            </p>
-            <div class="card-action">
-              <LearnMore
-                href={`/solutions/${featureProduct.slug}`}
-                text={`Explore ${featureProduct.data.title}`}
-                ariaLabel={`Explore ${featureProduct.data.title}`}
-              />
-            </div>
+    <!-- Group 1: Gen-AI (Enterprise Intelligence) -->
+    <div class="capability-group-block">
+      <div class="group-header-row reveal-on-scroll">
+        <div class="group-title-meta">
+          <span class="group-badge" style="background-color: #EE4B2B;">G</span>
+          <div>
+            <span class="group-eyebrow" style="color: #EE4B2B;">GEN-AI</span>
+            <h3 class="group-title">Enterprise Intelligence</h3>
           </div>
         </div>
-      </article>
+        <LearnMore href="/solutions#gen-ai" text="All Gen-AI solutions" />
+      </div>
 
-      <!-- Standard 5 Cards -->
-      {standardProducts.map((product) => (
-        <article class="solution-card standard-card card-mastercard reveal-on-scroll">
+      <div class="solutions-cards-grid">
+        <!-- Large Feature Card: Voice Agents -->
+        <article class="solution-card feature-card card-mastercard reveal-on-scroll">
           <div class="card-inner-content">
-            <div class="card-media-wrapper">
+            <div class="card-media-wrapper feature-media">
               <MediaAsset
-                assetKey={product.data.imageKey || `product-${product.slug}`}
-                alt={product.data.title}
-                aspectRatio="4/5"
+                assetKey={featureProduct.data.imageKey || `product-${featureProduct.slug}`}
+                alt={featureProduct.data.title}
+                aspectRatio="16/9"
                 crop="quarter"
-                focus={product.data.focus}
-                hoverVideoKey={`video-${product.slug}`}
-                theme={product.data.pillar === 'Gen-AI' ? 'navy' : 'warm'}
+                focus={featureProduct.data.focus}
+                hoverVideoKey={`video-${featureProduct.slug}`}
+                theme="navy"
               />
             </div>
-            <div class="card-body">
-              <span class="card-pillar-eyebrow">{product.data.pillar}</span>
-              <h3 class="card-title">{product.data.title}</h3>
+            <div class="card-body feature-body">
+              <div class="card-tags-row">
+                <span class="card-pillar-eyebrow" style="color: #EE4B2B;">Gen-AI</span>
+                {featureProduct.data.builtExamples && featureProduct.data.builtExamples.map((ex) => (
+                  <span class="example-chip">Built: {ex.name}</span>
+                ))}
+              </div>
+              <h3 class="card-title feature-title">{featureProduct.data.title}</h3>
               <p class="card-desc">
-                {product.data.oneLiner.replace(/^\[PLACEHOLDER\]\s*/i, '')}
+                {featureProduct.data.oneLiner.replace(/^\[PLACEHOLDER\]\s*/i, '')}
               </p>
               <div class="card-action">
                 <LearnMore
-                  href={`/solutions/${product.slug}`}
-                  text={`Explore ${product.data.title}`}
-                  ariaLabel={`Explore ${product.data.title}`}
+                  href={`/solutions/${featureProduct.slug}`}
+                  text={`Explore ${featureProduct.data.title}`}
+                  ariaLabel={`Explore ${featureProduct.data.title}`}
                 />
               </div>
             </div>
           </div>
         </article>
-      ))}
+
+        <!-- Other Gen-AI cards -->
+        {otherGenAiProducts.map((product) => (
+          <article class="solution-card standard-card card-mastercard reveal-on-scroll">
+            <div class="card-inner-content">
+              <div class="card-media-wrapper">
+                <MediaAsset
+                  assetKey={product.data.imageKey || `product-${product.slug}`}
+                  alt={product.data.title}
+                  aspectRatio="4/5"
+                  crop="quarter"
+                  focus={product.data.focus}
+                  hoverVideoKey={`video-${product.slug}`}
+                  theme="navy"
+                />
+              </div>
+              <div class="card-body">
+                <div class="card-tags-row">
+                  <span class="card-pillar-eyebrow" style="color: #EE4B2B;">Gen-AI</span>
+                  {product.data.builtExamples && product.data.builtExamples.map((ex) => (
+                    <span class="example-chip">Built: {ex.name}</span>
+                  ))}
+                </div>
+                <h3 class="card-title">{product.data.title}</h3>
+                <p class="card-desc">
+                  {product.data.oneLiner.replace(/^\[PLACEHOLDER\]\s*/i, '')}
+                </p>
+                <div class="card-action">
+                  <LearnMore
+                    href={`/solutions/${product.slug}`}
+                    text={`Explore ${product.data.title}`}
+                    ariaLabel={`Explore ${product.data.title}`}
+                  />
+                </div>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+
+    <!-- Group 2: Engineer (Enterprise Applications on OutSystems & MERN) -->
+    <div class="capability-group-block">
+      <div class="group-header-row reveal-on-scroll">
+        <div class="group-title-meta">
+          <span class="group-badge" style="background-color: #F7941D;">E</span>
+          <div>
+            <span class="group-eyebrow" style="color: #F7941D;">ENGINEER</span>
+            <h3 class="group-title">Enterprise Applications on OutSystems &amp; MERN</h3>
+          </div>
+        </div>
+        <LearnMore href="/solutions#engineer" text="All Engineer solutions" />
+      </div>
+
+      <div class="solutions-cards-grid standard-3-grid">
+        {engineerProducts.map((product) => (
+          <article class="solution-card standard-card card-mastercard reveal-on-scroll">
+            <div class="card-inner-content">
+              <div class="card-media-wrapper">
+                <MediaAsset
+                  assetKey={product.data.imageKey || `product-${product.slug}`}
+                  alt={product.data.title}
+                  aspectRatio="4/5"
+                  crop="quarter"
+                  focus={product.data.focus}
+                  hoverVideoKey={`video-${product.slug}`}
+                  theme="warm"
+                />
+              </div>
+              <div class="card-body">
+                <div class="card-tags-row">
+                  <span class="card-pillar-eyebrow" style="color: #F7941D;">Engineer</span>
+                  {product.data.builtExamples && product.data.builtExamples.map((ex) => (
+                    <span class="example-chip">Built: {ex.name}</span>
+                  ))}
+                </div>
+                <h3 class="card-title">{product.data.title}</h3>
+                <p class="card-desc">
+                  {product.data.oneLiner.replace(/^\[PLACEHOLDER\]\s*/i, '')}
+                </p>
+                <div class="card-action">
+                  <LearnMore
+                    href={`/solutions/${product.slug}`}
+                    text={`Explore ${product.data.title}`}
+                    ariaLabel={`Explore ${product.data.title}`}
+                  />
+                </div>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+
+    <!-- Plan Advisory Banner Strip -->
+    <div class="plan-strip-card card-mastercard reveal-on-scroll">
+      <div class="plan-strip-left">
+        <div class="group-title-meta">
+          <span class="group-badge" style="background-color: #1E4B8F;">P</span>
+          <div>
+            <span class="group-eyebrow" style="color: #1E4B8F;">PLAN</span>
+            <h3 class="strip-headline">Technology Consulting &amp; Architecture Roadmaps</h3>
+          </div>
+        </div>
+        <p class="strip-desc">
+          Strategic clarity before coding. Objective evaluation of low-code OutSystems vs. high-code MERN with zero vendor bias.
+        </p>
+      </div>
+      <div class="plan-strip-right">
+        <a href="/solutions#plan" class="btn btn-secondary">
+          <span>Explore Plan advisory</span>
+          <Icon name="arrow-right" size={16} />
+        </a>
+      </div>
     </div>
 
     <!-- Bottom Directory CTA -->
-    <div class="solutions-footer-cta">
-      <a href="/solutions" class="btn btn-secondary solutions-all-btn">
-        <span>Explore all 6 solutions</span>
+    <div class="solutions-footer-cta reveal-on-scroll">
+      <a href="/solutions" class="btn btn-primary solutions-all-btn">
+        <span>Explore all enterprise solutions</span>
         <Icon name="arrow-right" size={16} />
       </a>
       <div class="solutions-footer-learnmore">
@@ -108,57 +212,128 @@ const standardProducts = products.filter(p => p.slug !== featureProduct.slug);
 <style>
   .solutions-section {
     background-color: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+    scroll-margin-top: 96px;
   }
 
   .solutions-header {
-    text-align: center;
-    max-width: 680px;
-    margin: 0 auto 4.5rem auto;
+    margin-bottom: 3.5rem;
+    max-width: 720px;
   }
 
   .solutions-title {
     font-size: var(--fs-h2);
     font-weight: 500;
     margin-bottom: 1rem;
+    line-height: 1.2;
   }
 
   .solutions-subline {
-    margin: 0 auto;
     font-size: var(--fs-body-lg);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
   }
 
-  /* Grid Layout: 3 Columns on Desktop */
+  .capability-group-block {
+    margin-bottom: 4rem;
+  }
+
+  .group-header-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .group-title-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .group-badge {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    color: #FFFFFF;
+    font-weight: 700;
+    font-size: 1.15rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .group-eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: block;
+  }
+
+  .group-title {
+    font-size: 1.35rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--color-text-primary);
+  }
+
   .solutions-cards-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 2.5rem;
+    gap: 2rem;
   }
 
   @media (min-width: 768px) {
     .solutions-cards-grid {
       grid-template-columns: repeat(2, 1fr);
     }
+
+    .solutions-cards-grid.standard-3-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .feature-card {
+      grid-column: span 2;
+    }
+
+    .feature-card .card-inner-content {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      align-items: center;
+    }
   }
 
   @media (min-width: 1024px) {
     .solutions-cards-grid {
       grid-template-columns: repeat(3, 1fr);
+      gap: 2.5rem;
     }
 
-    /* Feature card spans 2 columns */
     .feature-card {
       grid-column: span 2;
     }
   }
 
   .solution-card {
-    position: relative;
-    background-color: var(--color-surface-alt);
+    background-color: var(--color-surface);
     border-radius: var(--radius-card);
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    transition: transform 0.4s var(--ease-out-expo), box-shadow 0.4s var(--ease-out-expo);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-subtle);
+    transition: transform 0.35s var(--ease-out-expo), box-shadow 0.35s var(--ease-out-expo);
+  }
+
+  .solution-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-card-hover);
   }
 
   .card-inner-content {
@@ -167,77 +342,127 @@ const standardProducts = products.filter(p => p.slug !== featureProduct.slug);
     height: 100%;
   }
 
-  .card-action :global(.learn-more-link)::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-  }
-
   .card-media-wrapper {
-    width: 100%;
-    overflow: hidden;
     position: relative;
-    background-color: var(--color-surface);
+    width: 100%;
+    aspect-ratio: 16/10;
+    overflow: hidden;
   }
 
   .feature-media {
-    max-height: 380px;
+    aspect-ratio: 16/10;
+    height: 100%;
+    min-height: 280px;
   }
 
   .card-body {
-    padding: 2rem 2.25rem 2.25rem;
+    padding: 2rem;
     display: flex;
     flex-direction: column;
+    gap: 0.75rem;
     flex: 1;
-    gap: 0.5rem;
+  }
+
+  .feature-body {
+    padding: 2.5rem;
+  }
+
+  .card-tags-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
   }
 
   .card-pillar-eyebrow {
-    font-family: var(--font-sans);
-    font-size: var(--fs-eyebrow);
-    font-weight: 600;
+    font-size: 12px;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--color-text-secondary);
+    letter-spacing: 0.06em;
+  }
+
+  .example-chip {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-pill);
+    background-color: rgba(30, 75, 143, 0.08);
+    border: 1px solid rgba(30, 75, 143, 0.2);
+    color: var(--color-brand-primary, #1E4B8F);
   }
 
   .card-title {
-    font-size: clamp(1.25rem, 2vw, 1.5rem); /* 20-24px */
-    font-weight: 500;
-    color: var(--color-text-primary);
-    line-height: 1.25;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
   }
 
   .feature-title {
-    font-size: clamp(1.5rem, 2.5vw, 1.85rem);
+    font-size: 1.5rem;
   }
 
   .card-desc {
-    font-size: var(--fs-sm);
+    font-size: var(--fs-body);
     color: var(--color-text-secondary);
     line-height: 1.55;
-    margin-bottom: 1rem;
+    margin: 0;
     flex: 1;
   }
 
   .card-action {
-    margin-top: auto;
-    padding-top: 0.5rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border);
   }
 
+  /* Plan Strip Card */
+  .plan-strip-card {
+    background-color: var(--color-surface);
+    border-radius: var(--radius-card);
+    padding: 2.5rem;
+    border: 1px solid var(--color-border);
+    border-left: 4px solid #1E4B8F;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-bottom: 3.5rem;
+  }
+
+  .plan-strip-left {
+    max-width: 680px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .strip-headline {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin: 0;
+  }
+
+  .strip-desc {
+    font-size: var(--fs-body);
+    color: var(--color-text-secondary);
+    margin: 0;
+    line-height: 1.55;
+  }
+
+  /* Footer CTA */
   .solutions-footer-cta {
     display: flex;
-    justify-content: center;
-    margin-top: 4rem;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    text-align: center;
   }
 
   .solutions-all-btn {
-    min-height: 52px;
+    min-height: 50px;
     padding: 0 2rem;
-  }
-
-  .solutions-footer-learnmore {
-    margin-top: 1.25rem;
+    font-size: 1rem;
   }
 </style>

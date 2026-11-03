@@ -14,6 +14,12 @@ const products = defineCollection({
     oneLiner: z.string(),
     outcomeHeadline: z.string(),
     problem: z.string(),
+    builtExamples: z.array(z.object({
+      name: z.string(),
+      oneLiner: z.string(),
+      deployedFor: z.string(),
+      stack: z.string()
+    })).default([]),
     whatWeBuilt: z.string().optional(),
     painPoints: z.array(z.string()).default([]),
     howItWorks: z.array(z.object({

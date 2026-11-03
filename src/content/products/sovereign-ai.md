@@ -12,6 +12,8 @@ badges:
   - "Sovereign AI"
 oneLiner: "Private enterprise AI deployments that keep sensitive organization data strictly within your perimeter."
 outcomeHeadline: "Enterprise AI utility without exposing corporate intellectual property to public clouds."
+# TODO: add built examples
+builtExamples: []
 problem: "Public multi-tenant AI services present compliance, data sovereignty, and security concerns for regulated enterprise data."
 painPoints:
   - "Strict regulatory guidelines prohibit sending proprietary data to external cloud services."

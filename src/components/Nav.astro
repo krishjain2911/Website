@@ -165,7 +165,7 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
           >
             <div class="panel-header">
               <span class="eyebrow">ENGINEER PILLAR</span>
-              <h3 class="panel-title">Low-code speed or high-code freedom</h3>
+              <h3 class="panel-title">Enterprise applications on OutSystems &amp; MERN</h3>
             </div>
             <ul class="mega-links-list">
               <li>
@@ -208,14 +208,14 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
           >
             <div class="panel-header">
               <span class="eyebrow">GEN-AI PILLAR</span>
-              <h3 class="panel-title">AI that works on your data, inside your walls.</h3>
+              <h3 class="panel-title">Enterprise intelligence</h3>
             </div>
             <ul class="mega-links-list">
               <li>
                 <a href="/solutions/voice-agents" class="mega-link-card">
                   <div class="mega-link-info">
-                    <span class="mega-link-title">Voice Agents</span>
-                    <span class="mega-link-desc">Voice interfaces for enterprise customer communication</span>
+                    <span class="mega-link-title">Voice Agents <span class="nav-built-chip">Built: Sonakshi</span></span>
+                    <span class="mega-link-desc">Multilingual voice assistant for showrooms and calls</span>
                   </div>
                   <Icon name="arrow-right" size={18} class="mega-link-arrow" />
                 </a>
@@ -251,13 +251,13 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
           >
             <div class="panel-header">
               <span class="eyebrow">PLAN PILLAR</span>
-              <h3 class="panel-title">Architecture clarity before code</h3>
+              <h3 class="panel-title">Technology consulting</h3>
             </div>
             <ul class="mega-links-list">
               <li>
-                <a href="/about#peg" class="mega-link-card">
+                <a href="/solutions#plan" class="mega-link-card">
                   <div class="mega-link-info">
-                    <span class="mega-link-title">Technology Consultancy</span>
+                    <span class="mega-link-title">Technology Consulting</span>
                     <span class="mega-link-desc">Evaluate OutSystems vs High-Code with zero vendor bias</span>
                   </div>
                   <Icon name="arrow-right" size={18} class="mega-link-arrow" />
@@ -1079,6 +1079,18 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     width: 100%;
     min-height: 50px;
     font-size: 1rem;
+  }
+
+  .nav-built-chip {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: var(--radius-pill);
+    background-color: rgba(30, 75, 143, 0.08);
+    border: 1px solid rgba(30, 75, 143, 0.2);
+    color: var(--color-brand-primary, #1E4B8F);
+    margin-left: 0.5rem;
+    vertical-align: middle;
   }
 </style>
 
