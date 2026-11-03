@@ -13,124 +13,63 @@ const engineerSlugs = ['clm', 'dms', 'whatsapp-journeys'];
 const isDefined = <T>(val: T | undefined): val is T => Boolean(val);
 const genAiProducts = genAiSlugs.map(slug => products.find(p => p.slug === slug)).filter(isDefined);
 const engineerProducts = engineerSlugs.map(slug => products.find(p => p.slug === slug)).filter(isDefined);
-
-const featureProduct = products.find(p => p.slug === 'voice-agents') || products[0];
-const otherGenAiProducts = genAiProducts.filter(p => p.slug !== featureProduct.slug);
 ---
 
 <section id="solutions" class="solutions-section" aria-labelledby="solutions-heading">
   <div class="container">
     <!-- Header -->
     <div class="solutions-header reveal-on-scroll">
-      <span class="eyebrow">SOLUTIONS &amp; CAPABILITIES</span>
+      <span class="eyebrow">SOLUTIONS</span>
       <h2 id="solutions-heading" class="solutions-title">
-        Built around how your business runs.
+        Capabilities &amp; Solutions
       </h2>
       <p class="solutions-subline">
         Enterprise solutions engineered for OutSystems speed or high-code freedom, built around how your business runs.
       </p>
     </div>
 
-    <!-- Group 1: Gen-AI (Enterprise Intelligence) -->
+    <!-- Group 1: Plan (Technology Consulting) -->
     <div class="capability-group-block">
       <div class="group-header-row reveal-on-scroll">
         <div class="group-title-meta">
-          <span class="group-badge" style="background-color: #EE4B2B;">G</span>
+          <span class="group-badge" style="background-color: #1E4B8F;">P</span>
           <div>
-            <span class="group-eyebrow" style="color: #EE4B2B;">GEN-AI</span>
-            <h3 class="group-title">Enterprise Intelligence</h3>
+            <span class="group-eyebrow" style="color: #1E4B8F;">PLAN</span>
+            <h3 class="group-title">Technology Consulting</h3>
           </div>
         </div>
-        <LearnMore href="/solutions#gen-ai" text="All Gen-AI solutions" />
+        <LearnMore href="/solutions#plan" text="Explore Plan advisory" />
       </div>
 
-      <div class="solutions-cards-grid">
-        <!-- Large Feature Card: Voice Agents -->
-        <article class="solution-card feature-card card-mastercard reveal-on-scroll">
-          <div class="card-inner-content">
-            <div class="card-media-wrapper feature-media">
-              <MediaAsset
-                assetKey={featureProduct.data.imageKey || `product-${featureProduct.slug}`}
-                alt={featureProduct.data.title}
-                aspectRatio="16/9"
-                crop="quarter"
-                focus={featureProduct.data.focus}
-                hoverVideoKey={`video-${featureProduct.slug}`}
-                theme="navy"
-              />
-            </div>
-            <div class="card-body feature-body">
-              <div class="card-tags-row">
-                <span class="card-pillar-eyebrow" style="color: #EE4B2B;">Gen-AI</span>
-                <span class="card-stack-tag">{featureProduct.data.badge}</span>
-                {featureProduct.data.builtExamples && featureProduct.data.builtExamples.map((ex) => (
-                  <span class="example-chip">Built: {ex.name}</span>
-                ))}
-              </div>
-              <h3 class="card-title feature-title">{featureProduct.data.title}</h3>
-              <p class="card-desc">
-                {featureProduct.data.oneLiner.replace(/^\[PLACEHOLDER\]\s*/i, '')}
-              </p>
-              <div class="card-action">
-                <LearnMore
-                  href={`/solutions/${featureProduct.slug}`}
-                  text={`Explore ${featureProduct.data.title}`}
-                  ariaLabel={`Explore ${featureProduct.data.title}`}
-                />
-              </div>
-            </div>
+      <div class="plan-strip-card card-mastercard reveal-on-scroll">
+        <div class="plan-strip-left">
+          <h4 class="strip-headline">Technology Consulting &amp; Architecture Roadmaps</h4>
+          <p class="strip-desc">
+            Strategic clarity before coding. Objective evaluation of low-code OutSystems vs. high-code MERN with zero vendor bias.
+          </p>
+          <div class="card-tags-row" style="margin-top: 1rem;">
+            <span class="card-stack-tag">Strategy &amp; Roadmaps</span>
+            <span class="card-stack-tag">Architecture Assessment</span>
+            <span class="card-stack-tag">Platform Selection</span>
           </div>
-        </article>
-
-        <!-- Other Gen-AI cards -->
-        {otherGenAiProducts.map((product) => (
-          <article class="solution-card standard-card card-mastercard reveal-on-scroll">
-            <div class="card-inner-content">
-              <div class="card-media-wrapper">
-                <MediaAsset
-                  assetKey={product.data.imageKey || `product-${product.slug}`}
-                  alt={product.data.title}
-                  aspectRatio="4/5"
-                  crop="quarter"
-                  focus={product.data.focus}
-                  hoverVideoKey={`video-${product.slug}`}
-                  theme="navy"
-                />
-              </div>
-              <div class="card-body">
-                <div class="card-tags-row">
-                  <span class="card-pillar-eyebrow" style="color: #EE4B2B;">Gen-AI</span>
-                  <span class="card-stack-tag">{product.data.badge}</span>
-                  {product.data.builtExamples && product.data.builtExamples.map((ex) => (
-                    <span class="example-chip">Built: {ex.name}</span>
-                  ))}
-                </div>
-                <h3 class="card-title">{product.data.title}</h3>
-                <p class="card-desc">
-                  {product.data.oneLiner.replace(/^\[PLACEHOLDER\]\s*/i, '')}
-                </p>
-                <div class="card-action">
-                  <LearnMore
-                    href={`/solutions/${product.slug}`}
-                    text={`Explore ${product.data.title}`}
-                    ariaLabel={`Explore ${product.data.title}`}
-                  />
-                </div>
-              </div>
-            </div>
-          </article>
-        ))}
+        </div>
+        <div class="plan-strip-right">
+          <a href="/solutions#plan" class="btn btn-secondary">
+            <span>Explore Plan advisory</span>
+            <Icon name="arrow-right" size={16} />
+          </a>
+        </div>
       </div>
     </div>
 
-    <!-- Group 2: Engineer (Enterprise Applications on OutSystems & MERN) -->
+    <!-- Group 2: Engineer (OutSystems & MERN Applications: CLM, DMS, WhatsApp Journeys) -->
     <div class="capability-group-block">
       <div class="group-header-row reveal-on-scroll">
         <div class="group-title-meta">
           <span class="group-badge" style="background-color: #F7941D;">E</span>
           <div>
             <span class="group-eyebrow" style="color: #F7941D;">ENGINEER</span>
-            <h3 class="group-title">Enterprise Applications on OutSystems &amp; MERN</h3>
+            <h3 class="group-title">OutSystems &amp; MERN Applications</h3>
           </div>
         </div>
         <LearnMore href="/solutions#engineer" text="All Engineer solutions" />
@@ -177,25 +116,61 @@ const otherGenAiProducts = genAiProducts.filter(p => p.slug !== featureProduct.s
       </div>
     </div>
 
-    <!-- Plan Advisory Banner Strip -->
-    <div class="plan-strip-card card-mastercard reveal-on-scroll">
-      <div class="plan-strip-left">
+    <!-- Group 3: Gen-AI (Voice Agents, Sovereign AI, AskMeAnything) -->
+    <div class="capability-group-block">
+      <div class="group-header-row reveal-on-scroll">
         <div class="group-title-meta">
-          <span class="group-badge" style="background-color: #1E4B8F;">P</span>
+          <span class="group-badge" style="background-color: #EE4B2B;">G</span>
           <div>
-            <span class="group-eyebrow" style="color: #1E4B8F;">PLAN</span>
-            <h3 class="strip-headline">Technology Consulting &amp; Architecture Roadmaps</h3>
+            <span class="group-eyebrow" style="color: #EE4B2B;">GEN-AI</span>
+            <h3 class="group-title">Gen-AI Systems</h3>
           </div>
         </div>
-        <p class="strip-desc">
-          Strategic clarity before coding. Objective evaluation of low-code OutSystems vs. high-code MERN with zero vendor bias.
-        </p>
+        <LearnMore href="/solutions#gen-ai" text="All Gen-AI solutions" />
       </div>
-      <div class="plan-strip-right">
-        <a href="/solutions#plan" class="btn btn-secondary">
-          <span>Explore Plan advisory</span>
-          <Icon name="arrow-right" size={16} />
-        </a>
+
+      <div class="solutions-cards-grid standard-3-grid">
+        {genAiProducts.map((product) => (
+          <article class="solution-card standard-card card-mastercard reveal-on-scroll">
+            <div class="card-inner-content">
+              <div class="card-media-wrapper">
+                <MediaAsset
+                  assetKey={product.data.imageKey || `product-${product.slug}`}
+                  alt={product.data.title}
+                  aspectRatio="4/5"
+                  crop="quarter"
+                  focus={product.data.focus}
+                  hoverVideoKey={`video-${product.slug}`}
+                  theme="navy"
+                />
+              </div>
+              <div class="card-body">
+                <div class="card-tags-row">
+                  <span class="card-pillar-eyebrow" style="color: #EE4B2B;">Gen-AI</span>
+                  <span class="card-stack-tag">{product.data.badge}</span>
+                  {product.slug === 'voice-agents' ? (
+                    <span class="example-chip">Built: Sonakshi</span>
+                  ) : (
+                    product.data.builtExamples && product.data.builtExamples.map((ex) => (
+                      <span class="example-chip">Built: {ex.name}</span>
+                    ))
+                  )}
+                </div>
+                <h3 class="card-title">{product.data.title}</h3>
+                <p class="card-desc">
+                  {product.data.oneLiner.replace(/^\[PLACEHOLDER\]\s*/i, '')}
+                </p>
+                <div class="card-action">
+                  <LearnMore
+                    href={`/solutions/${product.slug}`}
+                    text={`Explore ${product.data.title}`}
+                    ariaLabel={`Explore ${product.data.title}`}
+                  />
+                </div>
+              </div>
+            </div>
+          </article>
+        ))}
       </div>
     </div>
 
