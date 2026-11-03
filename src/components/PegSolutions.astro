@@ -1436,7 +1436,14 @@ import Icon from './Icon.astro';
             scrollCue.style.pointerEvents = introP > 0.6 ? 'none' : 'auto';
           }
 
-          // Cube centered in stage
+          // Cube centered in stage with hand-off crossfade
+          let cubeAlpha = 1;
+          if (vp.scrollY < trackTop) {
+            const hStart = trackTop - vp.viewportHeight * 0.35;
+            const hEnd = trackTop - vp.viewportHeight * 0.05;
+            cubeAlpha = smoothstep(0, 1, clamp((vp.scrollY - hStart) / Math.max(1, hEnd - hStart), 0, 1));
+          }
+          cubeCol.style.opacity = `${cubeAlpha}`;
           cubeCol.style.transform = `translateX(${centerOffset}px) scale(1.15)`;
 
           // Content column completely hidden
@@ -1467,6 +1474,7 @@ import Icon from './Icon.astro';
           }
 
           // Cube transitions from center to left column (scale 1.15 -> 1.0)
+          cubeCol.style.opacity = '1';
           const currentX = lerp(centerOffset, 0, ease1);
           const currentScale = lerp(1.15, 1.0, ease1);
           cubeCol.style.transform = `translateX(${currentX}px) scale(${currentScale})`;

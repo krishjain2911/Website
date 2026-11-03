@@ -301,6 +301,7 @@
     const heroVisual = document.getElementById('hero-visual-container');
     const approachSection = document.getElementById('approach');
     const finishMarker = document.getElementById('journey-finish-marker');
+    const solutionsSection = document.getElementById('solutions');
 
     if (!layer || !bgPath || !activePath || !cube || !heroTrack) return;
 
@@ -309,6 +310,7 @@
     let heroHeight = 0;
     let approachTop = 0;
     let approachHeight = 0;
+    let solutionsTop = 0;
     let holePos = { x: 500, y: 800 };
     let finishPos = { x: 500, y: 3000 };
     let stopPoints: Array<{ x: number; y: number }> = [];
@@ -409,6 +411,11 @@
           approachHeight = approachSection.offsetHeight;
         }
 
+        if (solutionsSection) {
+          const solRect = solutionsSection.getBoundingClientRect();
+          solutionsTop = solRect.top + vp.scrollY;
+        }
+
         rebuildPath();
       },
       update: (vp) => {
@@ -489,8 +496,23 @@
           const aheadDist = Math.min(pathLength, dist + 2);
           const aheadPt = activePath.getPointAtLength(aheadDist);
           const angleRad = Math.atan2(aheadPt.y - pt.y, aheadPt.x - pt.x);
-          const angleDeg = (angleRad * 180) / Math.PI - 90; // Align forward
+          let angleDeg = (angleRad * 180) / Math.PI - 90; // Align forward
 
+          // Part B: Journey -> PEG Cube Hand-Off
+          let handoffAlpha = 1;
+          if (currentProgress >= 0.95 && solutionsTop > 0) {
+            const handoffStart = solutionsTop - vp.viewportHeight * 0.40;
+            const handoffEnd = solutionsTop - vp.viewportHeight * 0.05;
+            if (vp.scrollY >= handoffStart) {
+              const hT = clamp((vp.scrollY - handoffStart) / Math.max(1, handoffEnd - handoffStart), 0, 1);
+              handoffAlpha = 1 - smoothstep(0, 1, hT);
+              // Cube grows as it arrives at the PEG section to match the 3D cube
+              cubeScale = lerp(1.0, 1.55, smoothstep(0, 1, hT));
+              angleDeg = lerp(angleDeg, 0, hT); // Ease angle to front
+            }
+          }
+
+          cube.style.opacity = `${handoffAlpha}`;
           cube.style.transform = `translate(${pt.x.toFixed(1)}px, ${pt.y.toFixed(1)}px)`;
 
           if (cubeInner) {
@@ -500,7 +522,7 @@
           // Contact Shadow scales with motion and scale
           if (contactShadow) {
             contactShadow.style.transform = `translateX(-50%) scale(${cubeScale.toFixed(2)})`;
-            contactShadow.style.opacity = `${0.35 * cubeScale}`;
+            contactShadow.style.opacity = `${0.35 * cubeScale * handoffAlpha}`;
           }
 
           // Update Road Light Trail
