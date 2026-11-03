@@ -47,20 +47,17 @@ const planPillar = siteConfig.pegMethod.pillars.find(p => p.id === 'plan');
 
           <!-- Jump Bar -->
           <nav class="solutions-jump-bar" id="solutions-jump-bar" aria-label="Jump to capability sections">
-            <a href="#plan" class="jump-pill" data-target="plan">
+            <a href="#plan" class="jump-pill" data-target="plan" aria-label="Plan — Technology Consulting">
               <span class="jump-dot" style="background-color: #1E4B8F;"></span>
-              <span class="pill-full">Plan — Technology Consulting</span>
-              <span class="pill-short">Plan</span>
+              <span>Plan</span>
             </a>
-            <a href="#engineer" class="jump-pill" data-target="engineer">
+            <a href="#engineer" class="jump-pill" data-target="engineer" aria-label="Engineer — Enterprise Applications">
               <span class="jump-dot" style="background-color: #F7941D;"></span>
-              <span class="pill-full">Engineer — Enterprise Applications</span>
-              <span class="pill-short">Engineer</span>
+              <span>Engineer</span>
             </a>
-            <a href="#gen-ai" class="jump-pill" data-target="gen-ai">
+            <a href="#gen-ai" class="jump-pill" data-target="gen-ai" aria-label="Gen-AI — Enterprise Intelligence">
               <span class="jump-dot" style="background-color: #EE4B2B;"></span>
-              <span class="pill-full">Gen-AI — Enterprise Intelligence</span>
-              <span class="pill-short">Gen-AI</span>
+              <span>Gen-AI</span>
             </a>
           </nav>
         </div>
@@ -318,10 +315,6 @@ const planPillar = siteConfig.pegMethod.pillars.find(p => p.id === 'plan');
     flex-shrink: 0;
   }
 
-  .pill-short {
-    display: none;
-  }
-
   @media (max-width: 767px) {
     .solutions-jump-bar {
       width: 100%;
@@ -331,6 +324,7 @@ const planPillar = siteConfig.pegMethod.pillars.find(p => p.id === 'plan');
       -webkit-overflow-scrolling: touch;
       display: flex;
       justify-content: space-between;
+      gap: 0.25rem;
       padding: 4px;
     }
 
@@ -338,18 +332,10 @@ const planPillar = siteConfig.pegMethod.pillars.find(p => p.id === 'plan');
       display: none;
     }
 
-    .pill-full {
-      display: none;
-    }
-
-    .pill-short {
-      display: inline;
-    }
-
     .jump-pill {
       flex: 1;
       justify-content: center;
-      padding: 0.45rem 0.65rem;
+      padding: 0.45rem 0.5rem;
       font-size: 13px;
     }
   }
