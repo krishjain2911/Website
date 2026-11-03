@@ -67,7 +67,7 @@ faq:
   - question: "Can we update or swap foundation models later?"
     answer: "Yes, the architecture decouples application interfaces from the underlying inference engine to allow model adjustments."
 related:
-  - "voice-agents"
+  - "sonakshi"
   - "ask-me-anything"
 ctaText: "Let's talk"
 ---

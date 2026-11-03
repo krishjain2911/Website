@@ -73,7 +73,6 @@ export const siteConfig = {
 
   nav: {
     links: [
-      { label: "Solutions", href: "/solutions" },
       { label: "About Us", href: "/about" },
       { label: "PEG Board", href: "#", comingSoon: true },
       { label: "Contact", href: "/#contact" }
@@ -217,9 +216,9 @@ export const siteConfig = {
   featuredStories: [
     {
       id: "story-1",
-      title: "Voice agents that pick up every call",
+      title: "Sonakshi – voice agents that pick up every call",
       tag: "Solution",
-      href: "/solutions/voice-agents",
+      href: "/solutions/sonakshi",
       imageKey: "feature-voice",
       focus: "center",
       alt: "Retail and showroom customer interacting with voice AI assistant on a tablet",
@@ -249,7 +248,7 @@ export const siteConfig = {
       id: "story-4",
       title: "OutSystems or MERN? We choose per project",
       tag: "Insight",
-      href: "/#peg-cube",
+      href: "/#solutions",
       imageKey: "feature-build-stack",
       focus: "center",
       alt: "Balanced engineering blueprint comparing OutSystems low-code with high-code MERN architecture",
@@ -259,7 +258,7 @@ export const siteConfig = {
       id: "story-5",
       title: "Plan, Engineer, Gen-AI",
       tag: "Approach",
-      href: "/#peg-cube",
+      href: "/#solutions",
       imageKey: "feature-peg",
       focus: "center",
       alt: "The Plan, Engineer, and Gen-AI method building adapters around enterprise reality",

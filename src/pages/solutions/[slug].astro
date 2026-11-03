@@ -36,7 +36,6 @@ const relatedProducts = allProducts
   description={p.seoDescription || p.oneLiner}
   breadcrumbs={[
     { name: 'Home', item: '/' },
-    { name: 'Solutions', item: '/solutions' },
     { name: p.title, item: `/solutions/${product.slug}` }
   ]}
 >
@@ -50,7 +49,7 @@ const relatedProducts = allProducts
           <div class="product-hero-content reveal-on-scroll">
             <!-- Breadcrumbs with prominent Back to Solutions link -->
             <nav class="breadcrumb-row" aria-label="Breadcrumb">
-              <a href="/solutions" class="breadcrumb-back-link">
+              <a href="/#solutions" class="breadcrumb-back-link">
                 <Icon name="arrow-left" size={14} />
                 <span>Back to solutions</span>
               </a>
@@ -58,7 +57,7 @@ const relatedProducts = allProducts
               <ol class="breadcrumb-list">
                 <li class="breadcrumb-item"><a href="/" class="breadcrumb-link">Home</a></li>
                 <li class="breadcrumb-sep" aria-hidden="true">/</li>
-                <li class="breadcrumb-item"><a href="/solutions" class="breadcrumb-link">Solutions</a></li>
+                <li class="breadcrumb-item"><a href="/#solutions" class="breadcrumb-link">Solutions</a></li>
                 <li class="breadcrumb-sep" aria-hidden="true">/</li>
                 <li class="breadcrumb-item" aria-current="page"><span class="breadcrumb-current">{p.pillar}</span></li>
               </ol>

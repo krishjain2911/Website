@@ -5,6 +5,10 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://roundholesquarepeg.com',
   output: 'static',
+  redirects: {
+    '/solutions': '/#solutions',
+    '/solutions/voice-agents': '/solutions/sonakshi'
+  },
   integrations: [sitemap()],
   compressHTML: true,
   devToolbar: {

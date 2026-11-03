@@ -2,15 +2,11 @@
 import LogoMark from './brand/LogoMark.astro';
 import ThemeToggle from './ThemeToggle.astro';
 import Icon from './Icon.astro';
-import LearnMore from './LearnMore.astro';
-import MediaAsset from './MediaAsset.astro';
-import SearchDialog from './SearchDialog.astro';
 import { siteConfig } from '../config/site';
 
 const { nav } = siteConfig;
 const currentPath = Astro.url.pathname;
 const isAboutActive = currentPath === '/about' || currentPath.startsWith('/about/');
-const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith('/solutions/');
 ---
 
 <header id="main-nav-header" class="site-header">
@@ -23,20 +19,6 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     <!-- Center: Main Nav Links -->
     <nav class="desktop-nav" aria-label="Main Navigation">
       <ul class="nav-links">
-        <li>
-          <button
-            type="button"
-            class={`nav-link-btn mega-trigger ${isSolutionsActive ? 'is-active' : ''}`}
-            id="mega-menu-trigger"
-            aria-expanded="false"
-            aria-haspopup="true"
-            aria-controls="mega-menu-panel"
-            aria-current={isSolutionsActive ? 'page' : undefined}
-          >
-            <span>Solutions</span>
-            <Icon name="chevron-down" size={14} class="mega-chevron" />
-          </button>
-        </li>
         <li>
           <a
             href="/about"
@@ -63,21 +45,8 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
       </ul>
     </nav>
 
-    <!-- Right: Search Pill + Theme + Black CTA -->
+    <!-- Right: Theme + Black CTA + Mobile Toggle -->
     <div class="header-actions">
-      <!-- Search Pill (opens interactive search modal) -->
-      <button
-        type="button"
-        class="search-pill-btn"
-        data-search-trigger
-        aria-label="Search solutions"
-        aria-haspopup="dialog"
-      >
-        <Icon name="search" size={15} class="search-icon" />
-        <span class="search-pill-text">Search</span>
-        <kbd class="search-kbd" aria-hidden="true">⌘K</kbd>
-      </button>
-
       <!-- Theme Toggle -->
       <ThemeToggle />
 
@@ -100,273 +69,6 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     </div>
   </div>
 
-  <!-- Full-Width Mastercard-Style Mega Menu Panel -->
-  <div
-    id="mega-menu-panel"
-    class="mega-menu-panel"
-    role="region"
-    aria-label="Solutions and Navigation Explorer"
-    aria-hidden="true"
-  >
-    <div class="container mega-menu-inner">
-      <div class="mega-menu-grid">
-        <!-- Col 1: Categories -->
-        <div class="mega-categories-col" role="tablist" aria-label="Solution Categories">
-          <button
-            type="button"
-            class="mega-category-item is-active"
-            role="tab"
-            aria-selected="true"
-            aria-controls="cat-engineer"
-            id="tab-engineer"
-            data-target="cat-engineer"
-          >
-            <span class="cat-name">Engineer</span>
-            <Icon name="chevron-right" size={16} class="cat-arrow" />
-          </button>
-          <button
-            type="button"
-            class="mega-category-item"
-            role="tab"
-            aria-selected="false"
-            aria-controls="cat-gen-ai"
-            id="tab-gen-ai"
-            data-target="cat-gen-ai"
-          >
-            <span class="cat-name">Gen-AI</span>
-            <Icon name="chevron-right" size={16} class="cat-arrow" />
-          </button>
-          <button
-            type="button"
-            class="mega-category-item"
-            role="tab"
-            aria-selected="false"
-            aria-controls="cat-plan"
-            id="tab-plan"
-            data-target="cat-plan"
-          >
-            <span class="cat-name">Plan</span>
-            <Icon name="chevron-right" size={16} class="cat-arrow" />
-          </button>
-          <button
-            type="button"
-            class="mega-category-item"
-            role="tab"
-            aria-selected="false"
-            aria-controls="cat-company"
-            id="tab-company"
-            data-target="cat-company"
-          >
-            <span class="cat-name">Company</span>
-            <Icon name="chevron-right" size={16} class="cat-arrow" />
-          </button>
-        </div>
-
-        <!-- Col 2: Category Links Content Panels -->
-        <div class="mega-links-col">
-          <!-- Engineer Panel -->
-          <div
-            id="cat-engineer"
-            class="mega-links-panel is-active"
-            role="tabpanel"
-            aria-labelledby="tab-engineer"
-          >
-            <div class="panel-header">
-              <span class="eyebrow">ENGINEER PILLAR</span>
-              <h3 class="panel-title">Enterprise applications on OutSystems &amp; MERN</h3>
-            </div>
-            <ul class="mega-links-list">
-              <li>
-                <a href="/solutions/clm" class="mega-link-card">
-                  <div class="mega-link-info">
-                    <span class="mega-link-title">CLM (Contracts Lifecycle)</span>
-                    <span class="mega-link-desc">Extract, track milestones, eliminate manual review</span>
-                  </div>
-                  <Icon name="arrow-right" size={18} class="mega-link-arrow" />
-                </a>
-              </li>
-              <li>
-                <a href="/solutions/dms" class="mega-link-card">
-                  <div class="mega-link-info">
-                    <span class="mega-link-title">DMS (Document Management)</span>
-                    <span class="mega-link-desc">SLA tracking, intelligent routing, compliance audits</span>
-                  </div>
-                  <Icon name="arrow-right" size={18} class="mega-link-arrow" />
-                </a>
-              </li>
-              <li>
-                <a href="/solutions/whatsapp-journeys" class="mega-link-card">
-                  <div class="mega-link-info">
-                    <span class="mega-link-title">WhatsApp Journeys</span>
-                    <span class="mega-link-desc">Verified business flows without portal logins</span>
-                  </div>
-                  <Icon name="arrow-right" size={18} class="mega-link-arrow" />
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <!-- Gen-AI Panel -->
-          <div
-            id="cat-gen-ai"
-            class="mega-links-panel"
-            role="tabpanel"
-            aria-labelledby="tab-gen-ai"
-            hidden
-          >
-            <div class="panel-header">
-              <span class="eyebrow">GEN-AI PILLAR</span>
-              <h3 class="panel-title">Enterprise intelligence</h3>
-            </div>
-            <ul class="mega-links-list">
-              <li>
-                <a href="/solutions/voice-agents" class="mega-link-card">
-                  <div class="mega-link-info">
-                    <span class="mega-link-title">Voice Agents <span class="nav-built-chip">Built: Sonakshi</span></span>
-                    <span class="mega-link-desc">Multilingual voice assistant for showrooms and calls</span>
-                  </div>
-                  <Icon name="arrow-right" size={18} class="mega-link-arrow" />
-                </a>
-              </li>
-              <li>
-                <a href="/solutions/sovereign-ai" class="mega-link-card">
-                  <div class="mega-link-info">
-                    <span class="mega-link-title">Sovereign AI</span>
-                    <span class="mega-link-desc">Private enterprise AI deployed within your perimeter</span>
-                  </div>
-                  <Icon name="arrow-right" size={18} class="mega-link-arrow" />
-                </a>
-              </li>
-              <li>
-                <a href="/solutions/ask-me-anything" class="mega-link-card">
-                  <div class="mega-link-info">
-                    <span class="mega-link-title">AskMeAnything</span>
-                    <span class="mega-link-desc">Enterprise knowledge search across internal documentation</span>
-                  </div>
-                  <Icon name="arrow-right" size={18} class="mega-link-arrow" />
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <!-- Plan Panel -->
-          <div
-            id="cat-plan"
-            class="mega-links-panel"
-            role="tabpanel"
-            aria-labelledby="tab-plan"
-            hidden
-          >
-            <div class="panel-header">
-              <span class="eyebrow">PLAN PILLAR</span>
-              <h3 class="panel-title">Technology consulting</h3>
-            </div>
-            <ul class="mega-links-list">
-              <li>
-                <a href="/solutions#plan" class="mega-link-card">
-                  <div class="mega-link-info">
-                    <span class="mega-link-title">Technology Consulting</span>
-                    <span class="mega-link-desc">Evaluate OutSystems vs High-Code with zero vendor bias</span>
-                  </div>
-                  <Icon name="arrow-right" size={18} class="mega-link-arrow" />
-                </a>
-              </li>
-              <li>
-                <a href="/#approach" class="mega-link-card">
-                  <div class="mega-link-info">
-                    <span class="mega-link-title">Our Approach</span>
-                    <span class="mega-link-desc">Six-stage journey from discovery to enablement</span>
-                  </div>
-                  <Icon name="arrow-right" size={18} class="mega-link-arrow" />
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <!-- Company Panel -->
-          <div
-            id="cat-company"
-            class="mega-links-panel"
-            role="tabpanel"
-            aria-labelledby="tab-company"
-            hidden
-          >
-            <div class="panel-header">
-              <span class="eyebrow">COMPANY</span>
-              <h3 class="panel-title">Mumbai-based enterprise technology partner</h3>
-            </div>
-            <ul class="mega-links-list">
-              <li>
-                <a href="/about" class="mega-link-card">
-                  <div class="mega-link-info">
-                    <span class="mega-link-title">About RHSP</span>
-                    <span class="mega-link-desc">Our origin story, mission, purpose and philosophy</span>
-                  </div>
-                  <Icon name="arrow-right" size={18} class="mega-link-arrow" />
-                </a>
-              </li>
-              <li>
-                <a href="/about#team" class="mega-link-card">
-                  <div class="mega-link-info">
-                    <span class="mega-link-title">Leadership Team</span>
-                    <span class="mega-link-desc">Meet founders Subramaniam Iyer &amp; Abhishek Bagwe</span>
-                  </div>
-                  <Icon name="arrow-right" size={18} class="mega-link-arrow" />
-                </a>
-              </li>
-              <li>
-                <a href="/#contact" class="mega-link-card">
-                  <div class="mega-link-info">
-                    <span class="mega-link-title">Get in Touch</span>
-                    <span class="mega-link-desc">Start a conversation with our technology architects</span>
-                  </div>
-                  <Icon name="arrow-right" size={18} class="mega-link-arrow" />
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Col 3: Featured Card (Voice Agents) -->
-        <div class="mega-featured-col">
-          <div class="featured-card">
-            <div class="featured-image-wrapper">
-              <MediaAsset
-                assetKey="solutions/voice-agents-hero"
-                alt="Voice Agents Feature Preview"
-                aspectRatio="16/10"
-                crop="quarter"
-                theme="navy"
-              />
-            </div>
-            <div class="featured-card-body">
-              <span class="eyebrow">FEATURED SOLUTION</span>
-              <h4 class="featured-title">Voice Agents for Enterprise</h4>
-              <p class="featured-desc">
-                Multilingual AI speech agents operating in Hindi, Marathi &amp; English with real CRM integration.
-              </p>
-              <LearnMore href="/solutions/voice-agents" text="Explore Voice Agents" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Bottom Quick-Link Chips Bar -->
-      <div class="mega-chips-bar">
-        <span class="chips-label">Popular:</span>
-        <div class="chips-scroll">
-          <a href="/solutions/voice-agents" class="chip-item">Voice Agents</a>
-          <a href="/solutions/sovereign-ai" class="chip-item">Sovereign AI</a>
-          <a href="/solutions/clm" class="chip-item">CLM</a>
-          <a href="/solutions/dms" class="chip-item">DMS</a>
-          <a href="/solutions/ask-me-anything" class="chip-item">AskMeAnything</a>
-          <a href="/solutions/whatsapp-journeys" class="chip-item">WhatsApp Journeys</a>
-          <a href="/solutions" class="chip-item chip-view-all">All Solutions Directory &rarr;</a>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- Mobile Full-Screen Drawer Menu -->
   <div id="mobile-menu-drawer" class="mobile-drawer" aria-hidden="true">
     <div class="mobile-drawer-header">
@@ -382,52 +84,9 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     </div>
 
     <div class="mobile-drawer-body">
-      <!-- Search Input on Mobile (opens search dialog) -->
-      <button
-        type="button"
-        class="mobile-search-pill"
-        data-search-trigger
-        aria-label="Search solutions and architecture"
-      >
-        <Icon name="search" size={16} />
-        <span>Search solutions &amp; architecture...</span>
-      </button>
-
       <!-- Mobile Navigation Sections -->
       <div class="mobile-nav-sections">
-        <!-- 1. Solutions -->
-        <div class="mobile-section">
-          <span class="eyebrow">SOLUTIONS</span>
-          <div class="mobile-links-grid">
-            <a href="/solutions/voice-agents" class="mobile-nav-link">
-              <strong>Voice Agents</strong>
-              <span>Enterprise voice solutions</span>
-            </a>
-            <a href="/solutions/sovereign-ai" class="mobile-nav-link">
-              <strong>Sovereign AI</strong>
-              <span>Private enterprise AI</span>
-            </a>
-            <a href="/solutions/clm" class="mobile-nav-link">
-              <strong>CLM</strong>
-              <span>Contract lifecycle</span>
-            </a>
-            <a href="/solutions/dms" class="mobile-nav-link">
-              <strong>DMS</strong>
-              <span>Intelligent documents</span>
-            </a>
-            <a href="/solutions/whatsapp-journeys" class="mobile-nav-link">
-              <strong>WhatsApp Journeys</strong>
-              <span>Appless transactions</span>
-            </a>
-            <a href="/solutions/ask-me-anything" class="mobile-nav-link">
-              <strong>AskMeAnything</strong>
-              <span>Enterprise knowledge search</span>
-            </a>
-          </div>
-          <a href="/solutions" class="mobile-all-link">Explore all solutions &rarr;</a>
-        </div>
-
-        <!-- 2. About Us -->
+        <!-- 1. About Us -->
         <div class="mobile-section">
           <span class="eyebrow">ABOUT US</span>
           <div class="mobile-links-grid">
@@ -442,7 +101,7 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
           </div>
         </div>
 
-        <!-- 3. PEG Board (Coming Soon) -->
+        <!-- 2. PEG Board (Coming Soon) -->
         <div class="mobile-section">
           <span class="eyebrow">PEG BOARD</span>
           <div class="mobile-links-grid">
@@ -456,7 +115,7 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
           </div>
         </div>
 
-        <!-- 4. Contact -->
+        <!-- 3. Contact -->
         <div class="mobile-section">
           <span class="eyebrow">CONTACT</span>
           <div class="mobile-links-grid">
@@ -465,17 +124,6 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
               <span>Start a conversation with our technology architects</span>
             </a>
           </div>
-        </div>
-      </div>
-
-      <!-- Quick Chips on Mobile -->
-      <div class="mobile-chips-group">
-        <span class="eyebrow">QUICK ACCESS</span>
-        <div class="mobile-chips-wrap">
-          <a href="/solutions/voice-agents" class="chip-item">Voice Agents</a>
-          <a href="/solutions/clm" class="chip-item">CLM</a>
-          <a href="/solutions/sovereign-ai" class="chip-item">Sovereign AI</a>
-          <a href="/#peg-cube" class="chip-item">PEG Cube</a>
         </div>
       </div>
     </div>
@@ -493,9 +141,6 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
 
   <!-- Thin Scroll Progress Line -->
   <div id="scroll-progress-line" class="scroll-progress-bar" aria-hidden="true"></div>
-
-  <!-- Client-Side Search Dialog (Command Palette) -->
-  <SearchDialog />
 </header>
 
 <style>
@@ -550,6 +195,9 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     align-items: center;
     justify-content: space-between;
     height: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
   }
 
   .brand-logo-link {
@@ -576,7 +224,7 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     list-style: none;
     display: flex;
     align-items: center;
-    gap: 1.75rem;
+    gap: 2rem;
     margin: 0;
     padding: 0;
   }
@@ -587,8 +235,7 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     flex-shrink: 0;
   }
 
-  .nav-link,
-  .nav-link-btn {
+  .nav-link {
     font-family: var(--font-sans);
     font-size: var(--fs-body);
     font-weight: 500;
@@ -607,25 +254,15 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     transition: color 0.2s ease, background-color 0.2s ease;
   }
 
-  .nav-link:hover,
-  .nav-link-btn:hover {
+  .nav-link:hover {
     color: var(--color-text-primary);
     background-color: var(--color-surface-alt);
   }
 
-  .nav-link.is-active,
-  .nav-link-btn.is-active {
+  .nav-link.is-active {
     color: var(--color-text-primary);
     background-color: var(--color-surface-alt);
     font-weight: 600;
-  }
-
-  :global(.mega-chevron) {
-    transition: transform 0.3s var(--ease-out-expo);
-  }
-
-  .nav-link-btn.is-active :global(.mega-chevron) {
-    transform: rotate(180deg);
   }
 
   /* PEG Board Coming Soon Pill & Non-Clickable Link */
@@ -659,101 +296,12 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     white-space: nowrap;
   }
 
-  .mobile-nav-link--disabled {
-    cursor: default;
-    opacity: 0.9;
-  }
-
-  .mobile-pegboard-title-row {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.2rem;
-  }
-
   /* Header Actions */
   .header-actions {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1.25rem;
     flex-shrink: 0;
-  }
-
-  /* Search Pill */
-  .search-pill-btn {
-    display: none;
-    align-items: center;
-    gap: 0.6rem;
-    height: 42px;
-    background-color: var(--color-surface-alt);
-    border: 1px solid var(--color-border);
-    color: var(--color-text-secondary);
-    font-family: var(--font-sans);
-    font-size: var(--fs-sm);
-    font-weight: 400;
-    cursor: pointer;
-    white-space: nowrap;
-    flex-shrink: 0;
-    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-  }
-
-  .search-pill-text {
-    white-space: nowrap;
-  }
-
-  .search-kbd {
-    display: inline-block;
-    padding: 0.1rem 0.35rem;
-    margin-left: 0.25rem;
-    border-radius: 4px;
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
-    font-family: var(--font-mono);
-    font-size: 10px;
-    font-weight: 600;
-    color: var(--color-text-muted);
-    white-space: nowrap;
-  }
-
-  /* Below 1280px (1100px - 1279px): collapse to icon-only round button */
-  @media (min-width: 1100px) and (max-width: 1279px) {
-    .search-pill-btn {
-      display: inline-flex;
-      width: 42px;
-      padding: 0;
-      border-radius: 50%;
-      justify-content: center;
-    }
-
-    .search-pill-text,
-    .search-kbd {
-      display: none;
-    }
-  }
-
-  /* 1280px and above: single-line full pill with "Search" and ⌘K hint */
-  @media (min-width: 1280px) {
-    .search-pill-btn {
-      display: inline-flex;
-      width: auto;
-      padding: 0 1.125rem;
-      border-radius: var(--radius-pill);
-      justify-content: flex-start;
-    }
-
-    .search-pill-text {
-      display: inline;
-    }
-
-    .search-kbd {
-      display: inline-block;
-    }
-  }
-
-  .search-pill-btn:hover {
-    background-color: var(--color-surface-hover);
-    color: var(--color-text-primary);
-    border-color: var(--color-text-secondary);
   }
 
   /* Thin Scroll Progress Bar */
@@ -773,27 +321,25 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    height: 34px;
-    min-height: 34px;
-    padding: 0 0.95rem;
-    font-size: 13px;
+    height: 40px;
+    min-height: 40px;
+    padding: 0 1.25rem;
+    font-size: var(--fs-sm);
     font-weight: 600;
     white-space: nowrap;
     flex-shrink: 0;
   }
 
-  @media (min-width: 640px) {
-    .nav-cta-pill {
-      height: 44px;
-      min-height: 44px;
-      padding: 0 1.5rem;
-      font-size: var(--fs-sm);
-    }
-  }
-
   @media (max-width: 767px) {
     .header-actions {
       gap: 0.5rem;
+    }
+
+    .nav-cta-pill {
+      height: 34px;
+      min-height: 34px;
+      padding: 0 0.85rem;
+      font-size: 13px;
     }
 
     .mobile-menu-hamburger {
@@ -817,252 +363,6 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     .mobile-menu-hamburger {
       display: none;
     }
-  }
-
-  /* Mega Menu Panel */
-  .mega-menu-panel {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    background-color: var(--color-bg);
-    border-bottom: 1px solid var(--color-border);
-    box-shadow: var(--shadow-dropdown);
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-8px);
-    transition: opacity 0.3s var(--ease-out-expo),
-                transform 0.3s var(--ease-out-expo),
-                visibility 0.3s;
-    pointer-events: none;
-    z-index: 1001;
-  }
-
-  @media (max-width: 1099px) {
-    .mega-menu-panel {
-      display: none !important;
-    }
-  }
-
-  .mega-menu-panel.is-open {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-    pointer-events: auto;
-  }
-
-  .mega-menu-inner {
-    padding-top: 2.5rem;
-    padding-bottom: 2rem;
-  }
-
-  .mega-menu-grid {
-    display: grid;
-    grid-template-columns: 200px 1fr 340px;
-    gap: 3rem;
-  }
-
-  /* Categories Col */
-  .mega-categories-col {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    border-right: 1px solid var(--color-border);
-    padding-right: 1.5rem;
-  }
-
-  .mega-category-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    padding: 0.85rem 1.25rem;
-    border-radius: var(--radius-pill);
-    background: transparent;
-    border: none;
-    font-family: var(--font-sans);
-    font-size: var(--fs-body);
-    font-weight: 500;
-    color: var(--color-text-secondary);
-    text-align: left;
-    cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease;
-  }
-
-  .mega-category-item:hover {
-    color: var(--color-text-primary);
-    background-color: var(--color-surface-alt);
-  }
-
-  .mega-category-item.is-active {
-    background-color: var(--color-btn-primary-bg);
-    color: var(--color-btn-primary-text);
-  }
-
-  :global(.cat-arrow) {
-    opacity: 0;
-    transition: opacity 0.2s ease, transform 0.2s ease;
-  }
-
-  .mega-category-item.is-active :global(.cat-arrow) {
-    opacity: 1;
-  }
-
-  /* Links Panel */
-  .mega-links-col {
-    min-height: 280px;
-  }
-
-  .mega-links-panel {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-  }
-
-  .mega-links-panel[hidden] {
-    display: none;
-  }
-
-  .panel-title {
-    font-size: var(--fs-h3);
-    margin-top: -0.5rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .mega-links-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .mega-link-card {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1rem 1.25rem;
-    border-radius: 16px;
-    background-color: var(--color-surface-alt);
-    text-decoration: none;
-    transition: background-color 0.2s ease, transform 0.2s ease;
-  }
-
-  .mega-link-card:hover {
-    background-color: var(--color-surface-hover);
-    transform: translateX(4px);
-  }
-
-  .mega-link-info {
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-  }
-
-  .mega-link-title {
-    font-size: 1rem;
-    font-weight: 500;
-    color: var(--color-text-primary);
-  }
-
-  .mega-link-desc {
-    font-size: var(--fs-sm);
-    color: var(--color-text-secondary);
-  }
-
-  :global(.mega-link-arrow) {
-    color: var(--color-text-secondary);
-    transition: transform 0.2s ease, color 0.2s ease;
-  }
-
-  .mega-link-card:hover :global(.mega-link-arrow) {
-    transform: translateX(4px);
-    color: var(--color-text-primary);
-  }
-
-  /* Featured Card Col */
-  .mega-featured-col {
-    border-left: 1px solid var(--color-border);
-    padding-left: 2rem;
-  }
-
-  .featured-card {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .featured-image-wrapper {
-    height: 150px;
-    border-radius: var(--radius-card);
-    overflow: hidden;
-  }
-
-  .featured-card-body {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .featured-title {
-    font-size: 1.15rem;
-    margin-top: -0.5rem;
-  }
-
-  .featured-desc {
-    font-size: var(--fs-sm);
-    color: var(--color-text-secondary);
-    line-height: 1.45;
-  }
-
-  /* Quick-Link Chips Bar */
-  .mega-chips-bar {
-    margin-top: 2rem;
-    padding-top: 1.25rem;
-    border-top: 1px solid var(--color-border);
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .chips-label {
-    font-size: var(--fs-sm);
-    color: var(--color-text-secondary);
-    font-weight: 500;
-    flex-shrink: 0;
-  }
-
-  .chips-scroll {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    overflow-x: auto;
-    padding-bottom: 2px;
-  }
-
-  .chip-item {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.35rem 0.95rem;
-    border-radius: var(--radius-pill);
-    background-color: var(--color-surface-alt);
-    border: 1px solid var(--color-border);
-    font-size: var(--fs-sm);
-    color: var(--color-text-secondary);
-    text-decoration: none;
-    white-space: nowrap;
-    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-  }
-
-  .chip-item:hover {
-    background-color: var(--color-surface-hover);
-    color: var(--color-text-primary);
-    border-color: var(--color-text-secondary);
-  }
-
-  .chip-view-all {
-    font-weight: 500;
-    color: var(--color-text-primary);
-    border-color: var(--color-text-primary);
   }
 
   /* Mobile Drawer Menu */
@@ -1121,19 +421,6 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     gap: 2rem;
   }
 
-  .mobile-search-pill {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.85rem 1.25rem;
-    border-radius: var(--radius-pill);
-    background-color: var(--color-surface-alt);
-    border: 1px solid var(--color-border);
-    color: var(--color-text-secondary);
-    text-decoration: none;
-    font-size: var(--fs-body);
-  }
-
   .mobile-nav-sections {
     display: flex;
     flex-direction: column;
@@ -1167,20 +454,16 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     color: var(--color-text-secondary);
   }
 
-  .mobile-all-link {
-    display: inline-block;
-    margin-top: 0.75rem;
-    font-size: var(--fs-sm);
-    font-weight: 500;
-    color: var(--color-text-primary);
-    text-decoration: none;
+  .mobile-nav-link--disabled {
+    cursor: default;
+    opacity: 0.9;
   }
 
-  .mobile-chips-wrap {
+  .mobile-pegboard-title-row {
     display: flex;
-    flex-wrap: wrap;
+    align-items: center;
     gap: 0.5rem;
-    margin-top: 0.5rem;
+    margin-bottom: 0.2rem;
   }
 
   .mobile-drawer-footer {
@@ -1209,33 +492,17 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     min-height: 50px;
     font-size: 1rem;
   }
-
-  .nav-built-chip {
-    font-size: 11px;
-    font-weight: 600;
-    padding: 0.15rem 0.5rem;
-    border-radius: var(--radius-pill);
-    background-color: rgba(30, 75, 143, 0.08);
-    border: 1px solid rgba(30, 75, 143, 0.2);
-    color: var(--color-brand-primary, #1E4B8F);
-    margin-left: 0.5rem;
-    vertical-align: middle;
-  }
 </style>
 
 <script>
-  function setupMegaMenu() {
+  function setupNav() {
     const header = document.getElementById('main-nav-header');
-    const megaTriggers = document.querySelectorAll('.mega-trigger');
-    const megaPanel = document.getElementById('mega-menu-panel');
-    const categoryButtons = document.querySelectorAll('.mega-category-item');
-    const linkPanels = document.querySelectorAll('.mega-links-panel');
     const mobileOpenBtn = document.getElementById('mobile-menu-open-btn');
     const mobileCloseBtn = document.getElementById('mobile-menu-close-btn');
     const mobileDrawer = document.getElementById('mobile-menu-drawer');
     const mobileCtaBtn = document.getElementById('mobile-cta-btn');
 
-    if (!header || !megaPanel) return;
+    if (!header) return;
 
     // Sticky header shrink & mobile hide on scroll down
     let lastScrollY = window.scrollY;
@@ -1279,97 +546,7 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     }, { passive: true });
     handleScroll();
 
-    // Toggle Mega Menu
-    let isOpen = false;
-    let hoverTimeout: any = null;
-
-    function openMegaMenu() {
-      isOpen = true;
-      megaPanel?.classList.add('is-open');
-      megaPanel?.setAttribute('aria-hidden', 'false');
-      megaTriggers.forEach(t => t.setAttribute('aria-expanded', 'true'));
-      document.getElementById('mega-menu-trigger')?.classList.add('is-active');
-    }
-
-    function closeMegaMenu() {
-      isOpen = false;
-      megaPanel?.classList.remove('is-open');
-      megaPanel?.setAttribute('aria-hidden', 'true');
-      megaTriggers.forEach(t => t.setAttribute('aria-expanded', 'false'));
-      document.getElementById('mega-menu-trigger')?.classList.remove('is-active');
-    }
-
-    megaTriggers.forEach(trigger => {
-      trigger.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if (isOpen) {
-          closeMegaMenu();
-        } else {
-          openMegaMenu();
-        }
-      });
-
-      // Desktop Hover with intent
-      trigger.addEventListener('mouseenter', () => {
-        if (window.innerWidth >= 1100) {
-          clearTimeout(hoverTimeout);
-          openMegaMenu();
-        }
-      });
-    });
-
-    header.addEventListener('mouseleave', () => {
-      if (window.innerWidth >= 1100 && isOpen) {
-        hoverTimeout = setTimeout(closeMegaMenu, 250);
-      }
-    });
-
-    megaPanel.addEventListener('mouseenter', () => {
-      clearTimeout(hoverTimeout);
-    });
-
-    // Close on click outside or Esc
-    document.addEventListener('click', (e) => {
-      if (isOpen && !header.contains(e.target as Node)) {
-        closeMegaMenu();
-      }
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        if (isOpen) closeMegaMenu();
-        if (mobileDrawer?.classList.contains('is-open')) closeMobileMenu();
-      }
-    });
-
-    // Category Tabs Switching
-    categoryButtons.forEach(btn => {
-      const targetId = btn.getAttribute('data-target');
-
-      function activateTab() {
-        categoryButtons.forEach(b => {
-          b.classList.remove('is-active');
-          b.setAttribute('aria-selected', 'false');
-        });
-        btn.classList.add('is-active');
-        btn.setAttribute('aria-selected', 'true');
-
-        linkPanels.forEach(panel => {
-          if (panel.id === targetId) {
-            panel.removeAttribute('hidden');
-            panel.classList.add('is-active');
-          } else {
-            panel.setAttribute('hidden', '');
-            panel.classList.remove('is-active');
-          }
-        });
-      }
-
-      btn.addEventListener('click', activateTab);
-      btn.addEventListener('mouseenter', activateTab);
-    });
-
-    // Mobile Drawer
+    // Mobile Drawer Open / Close
     function openMobileMenu() {
       mobileDrawer?.classList.add('is-open');
       mobileDrawer?.setAttribute('aria-hidden', 'false');
@@ -1385,6 +562,13 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
       document.body.style.overflow = '';
       mobileOpenBtn?.focus();
     }
+
+    // Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (mobileDrawer?.classList.contains('is-open')) closeMobileMenu();
+      }
+    });
 
     // Focus trap inside mobile drawer
     mobileDrawer?.addEventListener('keydown', (e) => {
@@ -1417,6 +601,6 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     });
   }
 
-  setupMegaMenu();
-  document.addEventListener('astro:after-swap', setupMegaMenu);
+  setupNav();
+  document.addEventListener('astro:after-swap', setupNav);
 </script>

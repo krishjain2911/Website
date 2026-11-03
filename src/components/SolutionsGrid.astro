@@ -7,7 +7,7 @@ import Icon from './Icon.astro';
 const products = await getCollection('products');
 products.sort((a, b) => a.data.order - b.data.order);
 
-const genAiSlugs = ['voice-agents', 'sovereign-ai', 'ask-me-anything'];
+const genAiSlugs = ['sonakshi', 'sovereign-ai', 'ask-me-anything'];
 const engineerSlugs = ['clm', 'dms', 'whatsapp-journeys'];
 
 const isDefined = <T>(val: T | undefined): val is T => Boolean(val);
@@ -38,7 +38,7 @@ const engineerProducts = engineerSlugs.map(slug => products.find(p => p.slug ===
             <h3 class="group-title">Technology Consulting</h3>
           </div>
         </div>
-        <LearnMore href="/solutions#plan" text="Explore Plan advisory" />
+        <LearnMore href="/#solutions" text="Explore Plan advisory" />
       </div>
 
       <div class="plan-strip-card card-mastercard reveal-on-scroll">
@@ -54,7 +54,7 @@ const engineerProducts = engineerSlugs.map(slug => products.find(p => p.slug ===
           </div>
         </div>
         <div class="plan-strip-right">
-          <a href="/solutions#plan" class="btn btn-secondary">
+          <a href="/#solutions" class="btn btn-secondary">
             <span>Explore Plan advisory</span>
             <Icon name="arrow-right" size={16} />
           </a>
@@ -72,7 +72,7 @@ const engineerProducts = engineerSlugs.map(slug => products.find(p => p.slug ===
             <h3 class="group-title">OutSystems &amp; MERN Applications</h3>
           </div>
         </div>
-        <LearnMore href="/solutions#engineer" text="All Engineer solutions" />
+        <LearnMore href="/#solutions" text="All Engineer solutions" />
       </div>
 
       <div class="solutions-cards-grid standard-3-grid">
@@ -126,7 +126,7 @@ const engineerProducts = engineerSlugs.map(slug => products.find(p => p.slug ===
             <h3 class="group-title">Gen-AI Systems</h3>
           </div>
         </div>
-        <LearnMore href="/solutions#gen-ai" text="All Gen-AI solutions" />
+        <LearnMore href="/#solutions" text="All Gen-AI solutions" />
       </div>
 
       <div class="solutions-cards-grid standard-3-grid">
@@ -148,13 +148,6 @@ const engineerProducts = engineerSlugs.map(slug => products.find(p => p.slug ===
                 <div class="card-tags-row">
                   <span class="card-pillar-eyebrow" style="color: #EE4B2B;">Gen-AI</span>
                   <span class="card-stack-tag">{product.data.badge}</span>
-                  {product.slug === 'voice-agents' ? (
-                    <span class="example-chip">Built: Sonakshi</span>
-                  ) : (
-                    product.data.builtExamples && product.data.builtExamples.map((ex) => (
-                      <span class="example-chip">Built: {ex.name}</span>
-                    ))
-                  )}
                 </div>
                 <h3 class="card-title">{product.data.title}</h3>
                 <p class="card-desc">
@@ -176,12 +169,12 @@ const engineerProducts = engineerSlugs.map(slug => products.find(p => p.slug ===
 
     <!-- Bottom Directory CTA -->
     <div class="solutions-footer-cta reveal-on-scroll">
-      <a href="/solutions" class="btn btn-primary solutions-all-btn">
+      <a href="/#solutions" class="btn btn-primary solutions-all-btn">
         <span>Explore all enterprise solutions</span>
         <Icon name="arrow-right" size={16} />
       </a>
       <div class="solutions-footer-learnmore">
-        <LearnMore href="/solutions" text="Browse full capabilities &amp; solutions directory" />
+        <LearnMore href="/#solutions" text="Browse full capabilities &amp; solutions directory" />
       </div>
     </div>
   </div>

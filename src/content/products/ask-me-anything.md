@@ -68,7 +68,7 @@ faq:
     answer: "Yes, the interface can be embedded as an iframe, web component, or accessed directly as a standalone web portal."
 related:
   - "sovereign-ai"
-  - "voice-agents"
+  - "sonakshi"
 ctaText: "Let's talk"
 ---
 AskMeAnything knowledge discovery framework and implementation details.
