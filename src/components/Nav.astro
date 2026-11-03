@@ -24,18 +24,6 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     <nav class="desktop-nav" aria-label="Main Navigation">
       <ul class="nav-links">
         <li>
-          <a
-            href={nav.links[0].href}
-            class={`nav-link ${isAboutActive ? 'is-active' : ''}`}
-            aria-current={isAboutActive ? 'page' : undefined}
-          >
-            {nav.links[0].label}
-          </a>
-        </li>
-        <li>
-          <a href={nav.links[1].href} class="nav-link">{nav.links[1].label}</a>
-        </li>
-        <li>
           <button
             type="button"
             class={`nav-link-btn mega-trigger ${isSolutionsActive ? 'is-active' : ''}`}
@@ -45,9 +33,24 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
             aria-controls="mega-menu-panel"
             aria-current={isSolutionsActive ? 'page' : undefined}
           >
-            <span>{nav.links[2].label}</span>
+            <span>Solutions</span>
             <Icon name="chevron-down" size={14} class="mega-chevron" />
           </button>
+        </li>
+        <li>
+          <a
+            href="/about"
+            class={`nav-link ${isAboutActive ? 'is-active' : ''}`}
+            aria-current={isAboutActive ? 'page' : undefined}
+          >
+            About Us
+          </a>
+        </li>
+        <li>
+          <a href="/about#how" class="nav-link">How We Work</a>
+        </li>
+        <li>
+          <a href="/#contact" class="nav-link">Contact</a>
         </li>
       </ul>
     </nav>
@@ -304,7 +307,7 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
                 </a>
               </li>
               <li>
-                <a href="#contact" class="mega-link-card">
+                <a href="/#contact" class="mega-link-card">
                   <div class="mega-link-info">
                     <span class="mega-link-title">Get in Touch</span>
                     <span class="mega-link-desc">Start a conversation with our technology architects</span>
@@ -382,39 +385,9 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
         <span>Search solutions &amp; architecture...</span>
       </button>
 
-      <!-- Accordion Navigation -->
+      <!-- Mobile Navigation Sections -->
       <div class="mobile-nav-sections">
-        <!-- 1. About Us -->
-        <div class="mobile-section">
-          <span class="eyebrow">ABOUT US</span>
-          <div class="mobile-links-grid">
-            <a href="/about" class="mobile-nav-link">
-              <strong>About RHSP</strong>
-              <span>Our story &amp; mission</span>
-            </a>
-            <a href="/about#peg" class="mobile-nav-link">
-              <strong>The PEG Method</strong>
-              <span>Plan · Engineer · Gen-AI</span>
-            </a>
-            <a href="/about#team" class="mobile-nav-link">
-              <strong>Founders &amp; Team</strong>
-              <span>Subramaniam Iyer &amp; Abhishek Bagwe</span>
-            </a>
-          </div>
-        </div>
-
-        <!-- 2. Contacts -->
-        <div class="mobile-section">
-          <span class="eyebrow">CONTACTS</span>
-          <div class="mobile-links-grid">
-            <a href="#contact" class="mobile-nav-link">
-              <strong>Get in Touch</strong>
-              <span>Start a conversation with our technology architects</span>
-            </a>
-          </div>
-        </div>
-
-        <!-- 3. Solutions -->
+        <!-- 1. Solutions -->
         <div class="mobile-section">
           <span class="eyebrow">SOLUTIONS</span>
           <div class="mobile-links-grid">
@@ -444,6 +417,51 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
             </a>
           </div>
           <a href="/solutions" class="mobile-all-link">Explore all solutions &rarr;</a>
+        </div>
+
+        <!-- 2. About Us -->
+        <div class="mobile-section">
+          <span class="eyebrow">ABOUT US</span>
+          <div class="mobile-links-grid">
+            <a href="/about" class="mobile-nav-link">
+              <strong>About RHSP</strong>
+              <span>Our story &amp; mission</span>
+            </a>
+            <a href="/about#peg" class="mobile-nav-link">
+              <strong>The PEG Method</strong>
+              <span>Plan · Engineer · Gen-AI</span>
+            </a>
+            <a href="/about#team" class="mobile-nav-link">
+              <strong>Founders &amp; Team</strong>
+              <span>Subramaniam Iyer &amp; Abhishek Bagwe</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- 3. How We Work -->
+        <div class="mobile-section">
+          <span class="eyebrow">HOW WE WORK</span>
+          <div class="mobile-links-grid">
+            <a href="/about#how" class="mobile-nav-link">
+              <strong>Delivery Methodology</strong>
+              <span>Four-phase agile delivery cycle</span>
+            </a>
+            <a href="/about#fit" class="mobile-nav-link">
+              <strong>Find Your Approach</strong>
+              <span>Interactive architecture recommender</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- 4. Contact -->
+        <div class="mobile-section">
+          <span class="eyebrow">CONTACT</span>
+          <div class="mobile-links-grid">
+            <a href="/#contact" class="mobile-nav-link">
+              <strong>Get in Touch</strong>
+              <span>Start a conversation with our technology architects</span>
+            </a>
+          </div>
         </div>
       </div>
 

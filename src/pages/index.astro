@@ -3,11 +3,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import Hero from '../components/Hero.astro';
-import PegCube from '../components/PegCube.astro';
-import SolutionsGrid from '../components/SolutionsGrid.astro';
-import AgileApproachFlow from '../components/AgileApproachFlow.astro';
 import WhoWeAre from '../components/WhoWeAre.astro';
+import SolutionsGrid from '../components/SolutionsGrid.astro';
+import PegCube from '../components/PegCube.astro';
+import AgileApproachFlow from '../components/AgileApproachFlow.astro';
 import BuildYourWay from '../components/BuildYourWay.astro';
+import FeaturedCarousel from '../components/FeaturedCarousel.astro';
+import LeadershipTeaser from '../components/LeadershipTeaser.astro';
 import ContactSection from '../components/ContactSection.astro';
 ---
 
@@ -18,25 +20,31 @@ import ContactSection from '../components/ContactSection.astro';
   <Nav />
 
   <main id="main-content" tabindex="-1">
-    <!-- 1. Hero: Pinned 3D Logo Cube & Scroll Pass-Through -->
+    <!-- 1. Hero: Pinned 3D Logo Cube & Scroll Pass-Through + Quick Links -->
     <Hero />
 
-    <!-- 2. The PEG Cube (Centrepiece Interaction) -->
-    <PegCube />
-
-    <!-- 3. Solutions: 1 Large Feature Card + 5 Standard Cards with Quarter-Circle Crop -->
-    <SolutionsGrid />
-
-    <!-- 4. Agile Approach: Interactive Sprint Flow -->
-    <AgileApproachFlow />
-
-    <!-- 5. Who We Are: Mission · Purpose · Vision -->
+    <!-- 2. Who We Are: Mission · Purpose · Vision -->
     <WhoWeAre />
 
-    <!-- 6. Build Your Way: Split Card with OutSystems | MERN Toggle -->
+    <!-- 3. Solutions: Capabilities & Proof -->
+    <SolutionsGrid />
+
+    <!-- 4. The PEG Cube: How We Think -->
+    <PegCube />
+
+    <!-- 5. Agile Approach: How We Deliver -->
+    <AgileApproachFlow />
+
+    <!-- 6. Build Your Way: OutSystems | MERN Toggle -->
     <BuildYourWay />
 
-    <!-- 7. Contact Section (Above Footer) -->
+    <!-- 7. Featured Ideas & Insights Carousel -->
+    <FeaturedCarousel />
+
+    <!-- 8. Leadership Teaser -->
+    <LeadershipTeaser />
+
+    <!-- 9. Contact Section -->
     <ContactSection />
   </main>
 

@@ -1,0 +1,172 @@
+---
+import { siteConfig } from '../config/site';
+import MediaAsset from './MediaAsset.astro';
+import LearnMore from './LearnMore.astro';
+
+const { team } = siteConfig;
+---
+
+<section id="team" class="leadership-teaser-section" aria-labelledby="leadership-heading">
+  <div class="container">
+    <div class="leadership-header reveal-on-scroll">
+      <div class="header-text">
+        <span class="eyebrow">{team.label}</span>
+        <h2 id="leadership-heading" class="leadership-headline">{team.headline}</h2>
+      </div>
+      <div class="header-action">
+        <LearnMore href="/about#team" text="Meet the team" />
+      </div>
+    </div>
+
+    <!-- Founders Compact Grid -->
+    <div class="leadership-grid">
+      {team.members.map((member) => (
+        <article class="founder-card card-mastercard reveal-on-scroll">
+          <div class="founder-top-row">
+            <div class="founder-avatar-circle" aria-hidden="true">
+              {member.imageKey ? (
+                <MediaAsset
+                  assetKey={member.imageKey}
+                  alt={member.name}
+                  crop="circle"
+                  aspectRatio="1/1"
+                  width={64}
+                  height={64}
+                  loading="lazy"
+                  theme="warm"
+                />
+              ) : (
+                <span class="avatar-initials">{member.initials}</span>
+              )}
+            </div>
+            <div class="founder-title-meta">
+              <h3 class="founder-name">{member.name}</h3>
+              <span class="founder-role-tag">{member.role}</span>
+            </div>
+          </div>
+
+          <p class="founder-bio">{member.bio.split('.')[0]}.</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .leadership-teaser-section {
+    padding: 72px 0;
+    background-color: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+    scroll-margin-top: 96px;
+  }
+
+  @media (max-width: 767px) {
+    .leadership-teaser-section {
+      padding: 48px 0;
+    }
+  }
+
+  .leadership-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+  }
+
+  .leadership-headline {
+    font-size: var(--fs-h2);
+    font-weight: 500;
+  }
+
+  .leadership-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  @media (min-width: 840px) {
+    .leadership-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2.5rem;
+    }
+  }
+
+  .founder-card {
+    background-color: var(--color-surface-alt);
+    border-radius: var(--radius-card);
+    padding: 2.25rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    border: 1px solid var(--color-border-subtle);
+  }
+
+  .founder-top-row {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .founder-avatar-circle {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: var(--rhsp-peg-gradient);
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 1.15rem;
+    flex-shrink: 0;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    border: 2px solid var(--color-border);
+  }
+
+  .founder-avatar-circle :global(.media-asset-container) {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+  }
+
+  .founder-avatar-circle :global(.media-img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+
+  .founder-card:hover .founder-avatar-circle :global(.media-img) {
+    transform: scale(1.05);
+  }
+
+  .founder-title-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .founder-name {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+  }
+
+  .founder-role-tag {
+    font-size: var(--fs-sm);
+    color: var(--color-text-secondary);
+    font-weight: 500;
+  }
+
+  .founder-bio {
+    font-size: var(--fs-body);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin: 0;
+  }
+</style>

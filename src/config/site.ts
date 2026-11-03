@@ -73,13 +73,14 @@ export const siteConfig = {
 
   nav: {
     links: [
+      { label: "Solutions", href: "/solutions" },
       { label: "About Us", href: "/about" },
-      { label: "Contacts", href: "#contact" },
-      { label: "Solutions", href: "/solutions" }
+      { label: "How We Work", href: "/about#how" },
+      { label: "Contact", href: "/#contact" }
     ],
     cta: {
       label: "Let's talk",
-      href: "#contact"
+      href: "/#contact"
     }
   },
 

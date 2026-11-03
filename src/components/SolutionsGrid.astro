@@ -98,6 +98,9 @@ const standardProducts = products.filter(p => p.slug !== featureProduct.slug);
         <span>Explore all 6 solutions</span>
         <Icon name="arrow-right" size={16} />
       </a>
+      <div class="solutions-footer-learnmore">
+        <LearnMore href="/solutions" text="Browse full capabilities &amp; solutions directory" />
+      </div>
     </div>
   </div>
 </section>
@@ -232,5 +235,9 @@ const standardProducts = products.filter(p => p.slug !== featureProduct.slug);
   .solutions-all-btn {
     min-height: 52px;
     padding: 0 2rem;
+  }
+
+  .solutions-footer-learnmore {
+    margin-top: 1.25rem;
   }
 </style>

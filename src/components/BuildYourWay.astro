@@ -1,6 +1,7 @@
 ---
 import { siteConfig } from '../config/site';
 import Icon from './Icon.astro';
+import LearnMore from './LearnMore.astro';
 
 const { buildYourWay } = siteConfig;
 ---
@@ -63,6 +64,10 @@ const { buildYourWay } = siteConfig;
               <li>Full-stack engineering tailored to operational needs</li>
             </ul>
           </div>
+        </div>
+
+        <div class="stack-footer-action">
+          <LearnMore href="/about#fit" text="Find your approach in 30 seconds" />
         </div>
       </div>
 
@@ -403,6 +408,10 @@ router.<span class="token-fn">post</span>(<span class="token-str">'/process'</sp
     flex-wrap: wrap;
     gap: 0.5rem;
     justify-content: center;
+  }
+
+  .stack-footer-action {
+    margin-top: 2rem;
   }
 </style>
 

@@ -4,7 +4,8 @@ import MediaAsset from './MediaAsset.astro';
 import LearnMore from './LearnMore.astro';
 
 const { about } = siteConfig;
-const items = [
+interface MandateItem { id: string; title: string; imageKey: string; text: string; href: string; tag?: string; }
+const items: MandateItem[] = [
   {
     id: 'mission',
     title: about.mandate.cards[0].title,
@@ -64,6 +65,13 @@ const items = [
           </div>
         </article>
       ))}
+    </div>
+
+    <!-- Section End Links -->
+    <div class="who-footer-links reveal-on-scroll">
+      <LearnMore href="/about#story" text="Read our origin story" />
+      <span class="sep-dot" aria-hidden="true">&middot;</span>
+      <LearnMore href="/about#mission" text="Explore mission, purpose &amp; vision" />
     </div>
   </div>
 </section>
@@ -195,5 +203,19 @@ const items = [
     margin-top: auto;
     padding-top: 1rem;
     border-top: 1px solid var(--color-border);
+  }
+
+  .who-footer-links {
+    margin-top: 3.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .sep-dot {
+    color: var(--color-border);
+    user-select: none;
   }
 </style>
