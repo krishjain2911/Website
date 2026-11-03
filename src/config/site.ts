@@ -61,8 +61,8 @@ export interface BeforeAfterTab {
 export const siteConfig = {
   name: "RHSP",
   legalName: "Round Hole Square Peg",
-  tagline: "Where every challenge meets its solution.",
-  description: "Enterprise software built around how your business runs. Low-code speed on OutSystems, high-code depth in MERN, and sovereign AI.",
+  tagline: "Tech that adapts to business.",
+  description: "RHSP is a technology partner for enterprises: consulting, implementation services and digital transformation, accelerators, and custom development.",
   url: "https://roundholesquarepeg.com",
   city: "Mumbai, India",
   copyrightYear: "2026",
@@ -85,9 +85,9 @@ export const siteConfig = {
   },
 
   hero: {
-    label: "WHERE EVERY CHALLENGE MEETS ITS SOLUTION",
-    headline: "Square peg, meet round hole.",
-    subline: "Low-code speed on OutSystems, high-code depth in MERN, and enterprise AI that runs on your data.",
+    label: "ROUND HOLE SQUARE PEG",
+    headline: "Tech that adapts to business.",
+    subline: "RHSP is a technology partner for enterprises: consulting, implementation services and digital transformation, accelerators, and custom development.",
     primaryCta: {
       label: "Let's talk",
       href: "#contact"

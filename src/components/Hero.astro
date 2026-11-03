@@ -24,6 +24,14 @@ const { hero } = siteConfig;
           {hero.subline}
         </p>
 
+        <!-- 4 Small Chips (Core Offerings) -->
+        <div class="hero-chips" aria-label="Core offerings">
+          <span class="hero-chip">Consulting</span>
+          <span class="hero-chip">Implementation & Digital Transformation</span>
+          <span class="hero-chip">Accelerators</span>
+          <span class="hero-chip">Custom Development</span>
+        </div>
+
         <div class="hero-cta-group">
           <a href={hero.primaryCta.href} class="btn btn-primary hero-btn-main">
             <span>{hero.primaryCta.label}</span>
@@ -60,7 +68,7 @@ const { hero } = siteConfig;
         </nav>
 
         <!-- Scroll cue at bottom -->
-        <a href="#who-we-are" class="hero-scroll-cue" id="hero-scroll-indicator" aria-label="Scroll down to approach">
+        <a href="#approach" class="hero-scroll-cue" id="hero-scroll-indicator" aria-label="Scroll down to approach">
           <span class="cue-label">SCROLL</span>
           <Icon name="chevron-down" size={16} class="cue-chevron" />
         </a>
@@ -172,7 +180,7 @@ const { hero } = siteConfig;
     font-weight: 500;
     color: var(--color-text-primary);
     margin-bottom: 1.5rem;
-    max-width: 16ch;
+    max-width: 20ch;
     text-wrap: balance;
   }
 
@@ -180,8 +188,30 @@ const { hero } = siteConfig;
     font-size: var(--fs-body-lg);
     line-height: 1.55;
     color: var(--color-text-secondary);
+    margin-bottom: 1.5rem;
+    max-width: 52ch;
+  }
+
+  .hero-chips {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
     margin-bottom: 2.25rem;
-    max-width: 48ch;
+  }
+
+  .hero-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.85rem;
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    line-height: 1.25;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-surface-alt);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    white-space: nowrap;
   }
 
   .hero-cta-group {
