@@ -46,18 +46,21 @@ const planPillar = siteConfig.pegMethod.pillars.find(p => p.id === 'plan');
           </p>
 
           <!-- Jump Bar -->
-          <nav class="solutions-jump-bar" aria-label="Jump to capability sections">
-            <a href="#plan" class="jump-pill">
+          <nav class="solutions-jump-bar" id="solutions-jump-bar" aria-label="Jump to capability sections">
+            <a href="#plan" class="jump-pill" data-target="plan">
               <span class="jump-dot" style="background-color: #1E4B8F;"></span>
-              <span>Plan — Technology Consulting</span>
+              <span class="pill-full">Plan — Technology Consulting</span>
+              <span class="pill-short">Plan</span>
             </a>
-            <a href="#engineer" class="jump-pill">
+            <a href="#engineer" class="jump-pill" data-target="engineer">
               <span class="jump-dot" style="background-color: #F7941D;"></span>
-              <span>Engineer — Enterprise Applications</span>
+              <span class="pill-full">Engineer — Enterprise Applications</span>
+              <span class="pill-short">Engineer</span>
             </a>
-            <a href="#gen-ai" class="jump-pill">
+            <a href="#gen-ai" class="jump-pill" data-target="gen-ai">
               <span class="jump-dot" style="background-color: #EE4B2B;"></span>
-              <span>Gen-AI — Enterprise Intelligence</span>
+              <span class="pill-full">Gen-AI — Enterprise Intelligence</span>
+              <span class="pill-short">Gen-AI</span>
             </a>
           </nav>
         </div>
@@ -269,31 +272,43 @@ const planPillar = siteConfig.pegMethod.pillars.find(p => p.id === 'plan');
 
   /* Jump Bar */
   .solutions-jump-bar {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-top: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    padding: 4px;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-surface-alt);
+    border: 1px solid var(--color-border);
+    max-width: 100%;
   }
 
   .jump-pill {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.5rem 1.15rem;
+    padding: 0.45rem 1.15rem;
     border-radius: var(--radius-pill);
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
     font-size: var(--fs-sm);
     font-weight: 500;
-    color: var(--color-text-primary);
+    color: var(--color-text-secondary);
     text-decoration: none;
-    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    white-space: nowrap;
+    border: 1px solid transparent;
+    transition: all 0.2s var(--ease-out-expo);
   }
 
   .jump-pill:hover {
+    color: var(--color-text-primary);
     background-color: var(--color-surface-hover);
-    border-color: var(--color-text-secondary);
-    transform: translateY(-1px);
+  }
+
+  .jump-pill.is-active {
+    background-color: var(--color-surface);
+    color: var(--color-text-primary);
+    border-color: var(--color-border);
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
 
   .jump-dot {
@@ -301,6 +316,42 @@ const planPillar = siteConfig.pegMethod.pillars.find(p => p.id === 'plan');
     height: 8px;
     border-radius: 50%;
     flex-shrink: 0;
+  }
+
+  .pill-short {
+    display: none;
+  }
+
+  @media (max-width: 767px) {
+    .solutions-jump-bar {
+      width: 100%;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      -webkit-overflow-scrolling: touch;
+      display: flex;
+      justify-content: space-between;
+      padding: 4px;
+    }
+
+    .solutions-jump-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .pill-full {
+      display: none;
+    }
+
+    .pill-short {
+      display: inline;
+    }
+
+    .jump-pill {
+      flex: 1;
+      justify-content: center;
+      padding: 0.45rem 0.65rem;
+      font-size: 13px;
+    }
   }
 
   /* Capability Group Sections */
@@ -551,3 +602,46 @@ const planPillar = siteConfig.pegMethod.pillars.find(p => p.id === 'plan');
     border-top: 1px solid var(--color-border);
   }
 </style>
+
+<script>
+  function setupSolutionsJumpBar() {
+    const jumpBar = document.getElementById('solutions-jump-bar');
+    if (!jumpBar) return;
+
+    const pills = Array.from(jumpBar.querySelectorAll<HTMLAnchorElement>('.jump-pill'));
+    const sectionIds = pills.map(p => p.getAttribute('data-target')).filter(Boolean) as string[];
+    const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean) as HTMLElement[];
+
+    function setActiveJump(id: string) {
+      pills.forEach(pill => {
+        const isMatch = pill.getAttribute('data-target') === id;
+        pill.classList.toggle('is-active', isMatch);
+      });
+    }
+
+    pills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        const targetId = pill.getAttribute('data-target');
+        if (targetId) setActiveJump(targetId);
+      });
+    });
+
+    if ('IntersectionObserver' in window && sections.length > 0) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            setActiveJump(entry.target.id);
+          }
+        });
+      }, {
+        rootMargin: '-20% 0px -60% 0px',
+        threshold: 0
+      });
+
+      sections.forEach(s => observer.observe(s));
+    }
+  }
+
+  setupSolutionsJumpBar();
+  document.addEventListener('astro:after-swap', setupSolutionsJumpBar);
+</script>

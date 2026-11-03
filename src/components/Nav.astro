@@ -503,12 +503,28 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
     width: 100%;
     height: 72px;
     z-index: 1000;
-    background-color: var(--color-bg);
+    background-color: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--color-border);
     transition: height 0.3s var(--ease-out-expo),
                 box-shadow 0.3s var(--ease-out-expo),
                 background-color 0.25s ease,
                 transform 0.3s var(--ease-out-expo);
+  }
+
+  :global([data-theme="dark"]) .site-header {
+    background-color: rgba(14, 14, 14, 0.9);
+  }
+
+  @media (max-width: 767px) {
+    .site-header {
+      height: 60px;
+    }
+
+    .site-header.is-scrolled {
+      height: 52px;
+    }
   }
 
   @media (max-width: 959px) {
@@ -661,15 +677,32 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
   }
 
   .nav-cta-pill {
-    display: none;
-    height: 44px;
-    padding: 0 1.5rem;
-    font-size: var(--fs-sm);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 34px;
+    min-height: 34px;
+    padding: 0 0.95rem;
+    font-size: 13px;
+    font-weight: 600;
   }
 
   @media (min-width: 640px) {
     .nav-cta-pill {
-      display: inline-flex;
+      height: 44px;
+      min-height: 44px;
+      padding: 0 1.5rem;
+      font-size: var(--fs-sm);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .header-actions {
+      gap: 0.5rem;
+    }
+
+    .mobile-menu-hamburger {
+      padding: 0.35rem;
     }
   }
 
@@ -1120,10 +1153,10 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
         header?.classList.remove('is-scrolled');
       }
 
-      if (window.innerWidth < 960 && currentScrollY > 120) {
-        if (currentScrollY > lastScrollY + 10) {
+      if (window.innerWidth < 960 && currentScrollY > 140) {
+        if (currentScrollY > lastScrollY + 20) {
           header?.classList.add('is-hidden');
-        } else if (currentScrollY < lastScrollY - 10) {
+        } else if (currentScrollY < lastScrollY - 15) {
           header?.classList.remove('is-hidden');
         }
       } else {
