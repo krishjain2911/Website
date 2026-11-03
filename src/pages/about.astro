@@ -185,30 +185,24 @@ const { about, pegMethod } = siteConfig;
         </div>
 
         <div class="mission-cards-grid">
-          {about.mandate.cards.map((card, index) => (
-            <article
-              class="mission-card card-mastercard reveal-on-scroll"
-              style={`transition-delay: ${index * 80}ms;`}
-            >
-              <div class="mission-circle-avatar">
-                <MediaAsset
-                  assetKey={card.imageKey}
-                  alt=""
-                  crop="circle"
-                  sizes="(min-width: 960px) 88px, 72px"
-                  width={88}
-                  height={88}
-                  theme="warm"
-                />
-              </div>
-
-              <div class="mission-card-content">
-                <span class="mission-eyebrow-label">{card.label}</span>
-                <h3 class="mission-card-title">{card.title}</h3>
-                <p class="mission-card-body">{card.text}</p>
-              </div>
-            </article>
-          ))}
+          {about.mandate.cards.map((card, index) => {
+            const colors = ['#1E4B8F', '#F7941D', '#EE4B2B'];
+            const color = colors[index % colors.length];
+            return (
+              <article
+                class="mission-card card-mastercard reveal-on-scroll"
+                style={`transition-delay: ${index * 80}ms; border-top: 3px solid ${color};`}
+              >
+                <div class="mission-card-content">
+                  <span class="mission-eyebrow-label" style={`color: ${color};`}>
+                    0{index + 1} / {card.title.toUpperCase()}
+                  </span>
+                  <h3 class="mission-card-title">{card.title}</h3>
+                  <p class="mission-card-body">{card.text}</p>
+                </div>
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -729,56 +723,15 @@ const { about, pegMethod } = siteConfig;
   .mission-card {
     background-color: var(--color-surface-alt);
     border-radius: var(--radius-card);
-    padding: 32px;
+    padding: 2.75rem 2.25rem;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 1.5rem;
+    gap: 1.25rem;
     border: 1px solid var(--color-border-subtle);
     height: 100%;
-    min-height: 0;
+    min-height: 240px;
     transition: transform 0.4s var(--ease-out-expo), box-shadow 0.4s var(--ease-out-expo);
-  }
-
-  .mission-circle-avatar {
-    width: 88px;
-    height: 88px;
-    border-radius: 50%;
-    overflow: hidden;
-    background-color: #F6F6F4;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-  }
-
-  @media (max-width: 767px) {
-    .mission-circle-avatar {
-      width: 72px;
-      height: 72px;
-    }
-  }
-
-  :global([data-theme="dark"]) .mission-circle-avatar {
-    background-color: #1A1A1A;
-  }
-
-  .mission-circle-avatar :global(.media-asset-container) {
-    width: 100%;
-    height: 100%;
-    background: transparent;
-  }
-
-  .mission-circle-avatar :global(.media-img) {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.4s var(--ease-out-expo);
-  }
-
-  .mission-card:hover .mission-circle-avatar :global(.media-img) {
-    transform: scale(1.06);
   }
 
   .mission-card-content {
