@@ -1,0 +1,524 @@
+---
+// JourneyThread.astro: Continuous DOM-anchored SVG road bridging Hero and Approach Journey
+---
+
+<div class="journey-thread-layer" id="journey-thread-layer" aria-hidden="true">
+  <!-- Dynamic SVG canvas spanning the full hero + journey height -->
+  <svg class="journey-thread-svg" id="journey-thread-svg">
+    <defs>
+      <linearGradient id="threadRoadGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#1E4B8F" />
+        <stop offset="50%" stop-color="#F7941D" />
+        <stop offset="100%" stop-color="#EE4B2B" />
+      </linearGradient>
+
+      <!-- Soft glow for visited road -->
+      <filter id="roadLightTrailGlow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#F7941D" flood-opacity="0.35" />
+      </filter>
+    </defs>
+
+    <!-- Inactive Background Track (Faint grey) -->
+    <path id="thread-bg-path" class="thread-path-bg" />
+
+    <!-- Active Progressive Track (Brand Gradient with Light Trail) -->
+    <path id="thread-active-path" class="thread-path-active" stroke="url(#threadRoadGrad)" />
+
+    <!-- Dashed Center Line -->
+    <path id="thread-dash-line" class="thread-path-dash" />
+  </svg>
+
+  <!-- Hole Pop-Out Effects (At Hero Socket) -->
+  <div class="hole-fx-anchor" id="hole-fx-anchor">
+    <div class="hole-ripple-ring" id="hole-ripple-ring"></div>
+    <div class="hole-ambient-glow" id="hole-ambient-glow"></div>
+    <div class="hole-sparks-wrap" id="hole-sparks-wrap">
+      <span class="spark s1"></span>
+      <span class="spark s2"></span>
+      <span class="spark s3"></span>
+      <span class="spark s4"></span>
+      <span class="spark s5"></span>
+      <span class="spark s6"></span>
+      <span class="spark s7"></span>
+      <span class="spark s8"></span>
+    </div>
+  </div>
+
+  <!-- Animated Guide Cube (Using optimized WebP) -->
+  <div class="thread-guide-cube" id="thread-guide-cube">
+    <div class="guide-cube-inner" id="guide-cube-inner">
+      <img
+        src="/media/guide-cube-128.webp"
+        srcset="/media/guide-cube-128.webp 1x, /media/guide-cube-256.webp 2x"
+        alt=""
+        width="44"
+        height="44"
+        class="guide-cube-img"
+        loading="eager"
+        decoding="async"
+      />
+    </div>
+    <!-- Contact shadow below cube -->
+    <div class="guide-contact-shadow" id="guide-contact-shadow"></div>
+  </div>
+</div>
+
+<style>
+  .journey-thread-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 3;
+    overflow: hidden;
+  }
+
+  .journey-thread-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  /* Road Paths */
+  .thread-path-bg {
+    fill: none;
+    stroke: rgba(140, 150, 165, 0.18);
+    stroke-width: 24px;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  :global(.dark) .thread-path-bg {
+    stroke: rgba(255, 255, 255, 0.08);
+  }
+
+  .thread-path-active {
+    fill: none;
+    stroke-width: 24px;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 5000;
+    stroke-dashoffset: 5000;
+    filter: url(#roadLightTrailGlow);
+    transition: stroke-dashoffset 0.05s linear;
+  }
+
+  .thread-path-dash {
+    fill: none;
+    stroke: #FFFFFF;
+    stroke-width: 2.5px;
+    stroke-linecap: round;
+    stroke-dasharray: 10 14;
+    opacity: 0.85;
+  }
+
+  :global(.dark) .thread-path-dash {
+    opacity: 0.95;
+  }
+
+  /* Hole Pop-Out Effects */
+  .hole-fx-anchor {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+    z-index: 4;
+  }
+
+  .hole-ripple-ring {
+    position: absolute;
+    top: -30px;
+    left: -60px;
+    width: 120px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid #F7941D;
+    opacity: 0;
+    transform: scale(0.6);
+    pointer-events: none;
+    transition: transform 0.6s var(--ease-out-expo), opacity 0.6s ease;
+  }
+
+  .hole-ripple-ring.is-popped {
+    opacity: 0.8;
+    transform: scale(1.6);
+  }
+
+  .hole-ambient-glow {
+    position: absolute;
+    top: -40px;
+    left: -70px;
+    width: 140px;
+    height: 80px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(247, 148, 29, 0.35) 0%, transparent 70%);
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  .hole-ambient-glow.is-popped {
+    opacity: 1;
+    transform: scale(1.3);
+  }
+
+  /* Small Sparks */
+  .hole-sparks-wrap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .hole-sparks-wrap.is-popped {
+    opacity: 1;
+  }
+
+  .spark {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: #F7941D;
+    opacity: 0;
+  }
+
+  .hole-sparks-wrap.is-popped .spark {
+    animation: sparkPop 0.6s ease-out forwards;
+  }
+
+  .s1 { top: -20px; left: -25px; animation-delay: 0.02s; }
+  .s2 { top: -35px; left: -10px; animation-delay: 0.05s; }
+  .s3 { top: -38px; left: 15px; animation-delay: 0.03s; }
+  .s4 { top: -22px; left: 30px; animation-delay: 0.06s; }
+  .s5 { top: -10px; left: -35px; animation-delay: 0.04s; }
+  .s6 { top: -12px; left: 35px; animation-delay: 0.08s; }
+  .s7 { top: -28px; left: -2px; animation-delay: 0.01s; }
+  .s8 { top: -32px; left: 24px; animation-delay: 0.07s; }
+
+  @keyframes sparkPop {
+    0% { transform: translate(0, 0) scale(1); opacity: 1; }
+    100% { transform: translate(var(--tx, 15px), var(--ty, -25px)) scale(0); opacity: 0; }
+  }
+
+  /* Guide Cube */
+  .thread-guide-cube {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 44px;
+    height: 44px;
+    margin-top: -22px;
+    margin-left: -22px;
+    will-change: transform, opacity;
+    z-index: 6;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  .guide-cube-inner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform-origin: center center;
+    transition: transform 0.2s cubic-bezier(0.34, 1.25, 0.64, 1);
+  }
+
+  .guide-cube-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.24));
+  }
+
+  .guide-contact-shadow {
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 28px;
+    height: 8px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.28) 0%, transparent 70%);
+    pointer-events: none;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  @media (max-width: 899px) {
+    .thread-path-bg,
+    .thread-path-active {
+      stroke-width: 18px;
+    }
+    .thread-guide-cube {
+      width: 36px;
+      height: 36px;
+      margin-top: -18px;
+      margin-left: -18px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .thread-path-active {
+      stroke-dashoffset: 0 !important;
+    }
+    .thread-guide-cube {
+      display: none !important;
+    }
+    .hole-fx-anchor {
+      display: none !important;
+    }
+  }
+</style>
+
+<script>
+  import { getScrollStory, lerp, smoothstep, clamp } from '../scripts/scrollStory';
+
+  function initJourneyThread() {
+    const layer = document.getElementById('journey-thread-layer');
+    const bgPath = document.getElementById('thread-bg-path') as SVGPathElement | null;
+    const activePath = document.getElementById('thread-active-path') as SVGPathElement | null;
+    const dashLine = document.getElementById('thread-dash-line') as SVGPathElement | null;
+    const cube = document.getElementById('thread-guide-cube');
+    const cubeInner = document.getElementById('guide-cube-inner');
+    const contactShadow = document.getElementById('guide-contact-shadow');
+
+    const fxAnchor = document.getElementById('hole-fx-anchor');
+    const rippleRing = document.getElementById('hole-ripple-ring');
+    const ambientGlow = document.getElementById('hole-ambient-glow');
+    const sparksWrap = document.getElementById('hole-sparks-wrap');
+
+    const heroTrack = document.getElementById('hero-scroll-wrapper');
+    const heroVisual = document.getElementById('hero-visual-container');
+    const approachSection = document.getElementById('approach');
+    const finishMarker = document.getElementById('journey-finish-marker');
+
+    if (!layer || !bgPath || !activePath || !cube || !heroTrack) return;
+
+    let pathLength = 0;
+    let heroTop = 0;
+    let heroHeight = 0;
+    let approachTop = 0;
+    let approachHeight = 0;
+    let holePos = { x: 500, y: 800 };
+    let finishPos = { x: 500, y: 3000 };
+    let stopPoints: Array<{ x: number; y: number }> = [];
+
+    // Animation state
+    let targetProgress = 0;
+    let currentProgress = 0;
+    let isPoppedOut = false;
+
+    // Build the SVG path from real DOM coordinates
+    function rebuildPath() {
+      if (!layer || !bgPath || !activePath) return;
+
+      const layerRect = layer.getBoundingClientRect();
+
+      // 1. Hero Hole Position
+      if (heroVisual) {
+        const vRect = heroVisual.getBoundingClientRect();
+        // The hero canvas hole sits horizontally centered and ~70% from top of visual container
+        holePos.x = vRect.left + vRect.width * 0.5 - layerRect.left;
+        holePos.y = vRect.top + vRect.height * 0.70 - layerRect.top;
+      }
+
+      // Position hole FX anchor
+      if (fxAnchor) {
+        fxAnchor.style.transform = `translate(${holePos.x}px, ${holePos.y}px)`;
+      }
+
+      // 2. Measure Each Stop Pin Position
+      stopPoints = [];
+      const stopPins = Array.from(document.querySelectorAll<HTMLElement>('.journey-stop .road-pin-marker'));
+      stopPins.forEach((pin) => {
+        const pRect = pin.getBoundingClientRect();
+        stopPoints.push({
+          x: pRect.left + pRect.width * 0.5 - layerRect.left,
+          y: pRect.top + pRect.height * 0.5 - layerRect.top
+        });
+      });
+
+      // 3. Finish Marker Position
+      if (finishMarker) {
+        const fRect = finishMarker.getBoundingClientRect();
+        finishPos.x = fRect.left + fRect.width * 0.5 - layerRect.left;
+        finishPos.y = fRect.top + fRect.height * 0.5 - layerRect.top;
+      } else if (stopPoints.length > 0) {
+        const last = stopPoints[stopPoints.length - 1];
+        finishPos.x = last.x;
+        finishPos.y = last.y + 160;
+      }
+
+      if (stopPoints.length === 0) return;
+
+      // Construct Smooth Cubic Bezier S-Curve Path
+      // Start at hero hole -> curve past right of approach header -> Stop 0 -> ... -> Stop 5 -> Finish
+      let d = `M ${holePos.x.toFixed(1)},${holePos.y.toFixed(1)}`;
+
+      // Transition from hero hole to first stop
+      const p0 = stopPoints[0];
+      const startDx = (p0.x - holePos.x) * 0.5;
+      const startDy = (p0.y - holePos.y) * 0.5;
+      d += ` C ${(holePos.x + startDx).toFixed(1)},${(holePos.y + startDy * 0.6).toFixed(1)} ${p0.x.toFixed(1)},${(p0.y - 120).toFixed(1)} ${p0.x.toFixed(1)},${p0.y.toFixed(1)}`;
+
+      // Connect stops
+      for (let i = 0; i < stopPoints.length - 1; i++) {
+        const curr = stopPoints[i];
+        const next = stopPoints[i + 1];
+        const dy = next.y - curr.y;
+        d += ` C ${curr.x.toFixed(1)},${(curr.y + dy * 0.5).toFixed(1)} ${next.x.toFixed(1)},${(next.y - dy * 0.5).toFixed(1)} ${next.x.toFixed(1)},${next.y.toFixed(1)}`;
+      }
+
+      // Connect to finish
+      const lastStop = stopPoints[stopPoints.length - 1];
+      d += ` C ${lastStop.x.toFixed(1)},${(lastStop.y + 80).toFixed(1)} ${finishPos.x.toFixed(1)},${(finishPos.y - 40).toFixed(1)} ${finishPos.x.toFixed(1)},${finishPos.y.toFixed(1)}`;
+
+      bgPath.setAttribute('d', d);
+      activePath.setAttribute('d', d);
+      if (dashLine) dashLine.setAttribute('d', d);
+
+      pathLength = activePath.getTotalLength();
+      activePath.style.strokeDasharray = `${pathLength}`;
+      activePath.style.strokeDashoffset = `${pathLength}`;
+    }
+
+    // Subscribe to shared scrollStory controller
+    const story = getScrollStory();
+
+    story.subscribe({
+      id: 'journey-thread',
+      gateElement: layer,
+      measure: (vp) => {
+        const heroRect = heroTrack.getBoundingClientRect();
+        heroTop = heroRect.top + vp.scrollY;
+        heroHeight = heroTrack.offsetHeight - vp.viewportHeight;
+
+        if (approachSection) {
+          const appRect = approachSection.getBoundingClientRect();
+          approachTop = appRect.top + vp.scrollY;
+          approachHeight = approachSection.offsetHeight;
+        }
+
+        rebuildPath();
+      },
+      update: (vp) => {
+        if (pathLength <= 0) return;
+
+        // 1. Hero Scroll Progress (0 to 1)
+        const heroP = clamp((vp.scrollY - heroTop) / (heroHeight > 0 ? heroHeight : 1), 0, 1);
+
+        // Pop-Out Moment at ~98% Hero Scroll
+        const shouldPop = heroP >= 0.96;
+        if (shouldPop !== isPoppedOut) {
+          isPoppedOut = shouldPop;
+          if (rippleRing) rippleRing.classList.toggle('is-popped', shouldPop);
+          if (ambientGlow) ambientGlow.classList.toggle('is-popped', shouldPop);
+          if (sparksWrap) sparksWrap.classList.toggle('is-popped', shouldPop);
+        }
+
+        // 2. Journey Progress Calculation
+        // Active from hero pop-out (heroP ≈ 0.98) through the end of the approach section
+        const journeyStartScroll = heroTop + heroHeight * 0.96;
+        const journeyEndScroll = approachTop + approachHeight * 0.85;
+        const journeySpan = Math.max(1, journeyEndScroll - journeyStartScroll);
+
+        const rawJourneyP = clamp((vp.scrollY - journeyStartScroll) / journeySpan, 0, 1);
+
+        // Piecewise mapping: dwell at each of the 6 stops
+        const numStops = 6;
+        const segmentSize = 1 / numStops;
+        let mappedP = 0;
+
+        for (let i = 0; i < numStops; i++) {
+          const segStart = i * segmentSize;
+          const segEnd = (i + 1) * segmentSize;
+
+          if (rawJourneyP >= segStart && rawJourneyP < segEnd) {
+            const localP = (rawJourneyP - segStart) / segmentSize;
+            // First 75% travels smoothly between stops, last 25% dwells at the stop
+            if (localP < 0.75) {
+              const moveT = localP / 0.75;
+              const eased = smoothstep(0, 1, moveT);
+              mappedP = (i + eased) / numStops;
+            } else {
+              mappedP = (i + 1) / numStops;
+            }
+            break;
+          } else if (rawJourneyP >= 1) {
+            mappedP = 1;
+          }
+        }
+
+        targetProgress = mappedP;
+
+        // Lerp Smoothing: 0.12 factor for fluid gliding
+        currentProgress = lerp(currentProgress, targetProgress, 0.12);
+        if (Math.abs(targetProgress - currentProgress) < 0.0005) {
+          currentProgress = targetProgress;
+        }
+
+        // Visibility of cube & Pop-Out Squash Stretch
+        if (heroP < 0.95 && currentProgress <= 0.01) {
+          cube.style.opacity = '0';
+          cube.style.transform = `translate(${holePos.x}px, ${holePos.y}px) scale(0.2)`;
+        } else {
+          cube.style.opacity = '1';
+
+          // Pop emergence scale (0.2 -> 1.0)
+          let cubeScale = 1.0;
+          if (currentProgress < 0.04) {
+            const emergeT = currentProgress / 0.04;
+            cubeScale = lerp(0.3, 1.0, smoothstep(0, 1, emergeT));
+          }
+
+          // Follow Path Position & Tangent Rotation
+          const dist = clamp(currentProgress * pathLength, 0, pathLength);
+          const pt = activePath.getPointAtLength(dist);
+
+          // Sample slightly ahead for tangent angle
+          const aheadDist = Math.min(pathLength, dist + 2);
+          const aheadPt = activePath.getPointAtLength(aheadDist);
+          const angleRad = Math.atan2(aheadPt.y - pt.y, aheadPt.x - pt.x);
+          const angleDeg = (angleRad * 180) / Math.PI - 90; // Align forward
+
+          cube.style.transform = `translate(${pt.x.toFixed(1)}px, ${pt.y.toFixed(1)}px)`;
+
+          if (cubeInner) {
+            cubeInner.style.transform = `rotate(${clamp(angleDeg, -25, 25).toFixed(1)}deg) scale(${cubeScale.toFixed(2)})`;
+          }
+
+          // Contact Shadow scales with motion and scale
+          if (contactShadow) {
+            contactShadow.style.transform = `translateX(-50%) scale(${cubeScale.toFixed(2)})`;
+            contactShadow.style.opacity = `${0.35 * cubeScale}`;
+          }
+
+          // Update Road Light Trail
+          const offset = pathLength - dist;
+          activePath.style.strokeDashoffset = `${offset.toFixed(1)}`;
+        }
+      }
+    });
+
+    // ResizeObserver on approachSection for layout changes
+    if (typeof ResizeObserver !== 'undefined' && approachSection) {
+      const ro = new ResizeObserver(() => {
+        rebuildPath();
+      });
+      ro.observe(approachSection);
+    }
+  }
+
+  initJourneyThread();
+  document.addEventListener('astro:after-swap', initJourneyThread);
+</script>
