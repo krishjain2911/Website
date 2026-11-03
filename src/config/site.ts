@@ -171,6 +171,7 @@ export const siteConfig = {
         number: 1,
         title: "Understand the business",
         description: "We study your processes, goals and challenges before proposing anything.",
+        detail: "OT and IT experience lets us read both the floor-level process and the system of record.",
         icon: "compass" as const,
         color: "#1E4B8F"
       },
@@ -178,6 +179,7 @@ export const siteConfig = {
         number: 2,
         title: "Identify latent revenue",
         description: "We find the untapped value hiding in your workflows, data and customer journeys.",
+        detail: "Enterprise strategy experience helps us size the value in cost, cycle time and revenue before we build.",
         icon: "sparkles" as const,
         color: "#27599D"
       },
@@ -185,6 +187,7 @@ export const siteConfig = {
         number: 3,
         title: "Design adaptive systems",
         description: "We architect intelligent systems that adapt to how your business runs and unlock that value.",
+        detail: "Low-code or high-code is chosen on merit: OutSystems for speed, MERN for depth, AI where the data calls for it.",
         icon: "sliders" as const,
         color: "#C28026"
       },
@@ -192,6 +195,7 @@ export const siteConfig = {
         number: 4,
         title: "Pilot with on-ground teams",
         description: "We test the solution with the people who will use it, on real workflows.",
+        detail: "Pilots run with the operators who use the system daily, as in our robotics and warehouse automation work.",
         icon: "users" as const,
         color: "#F7941D"
       },
@@ -199,6 +203,7 @@ export const siteConfig = {
         number: 5,
         title: "Refine and deploy",
         description: "We improve from pilot feedback and launch with confidence.",
+        detail: "Paperless, audit-ready releases informed by regulated financial-services delivery.",
         icon: "code" as const,
         color: "#F16524"
       },
@@ -206,6 +211,7 @@ export const siteConfig = {
         number: 6,
         title: "Enable and monitor",
         description: "We train your teams and keep watching the system so the value keeps growing.",
+        detail: "Training, SLAs and monitoring keep adoption high and the value growing at scale.",
         icon: "shield" as const,
         color: "#EE4B2B"
       }

@@ -234,8 +234,8 @@ const headlineWords = approach.headline.split(' ');
                 </div>
                 <h3 class="card-heading">{step.title}</h3>
                 <p class="card-copy">{step.description}</p>
-                {'detail' in step && (step as any).detail && (
-                  <p class="card-detail">{(step as any).detail}</p>
+                {step.detail && (
+                  <p class="card-detail">{step.detail}</p>
                 )}
               </article>
             </li>
