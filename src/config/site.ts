@@ -61,8 +61,8 @@ export interface BeforeAfterTab {
 export const siteConfig = {
   name: "RHSP",
   legalName: "Round Hole Square Peg",
-  tagline: "Wrong shape. Right fit.",
-  description: "Enterprise software shaped around your business. Low-code speed on OutSystems, high-code depth in MERN, and sovereign AI.",
+  tagline: "ROUND HOLE SQUARE PEG",
+  description: "Enterprise software built around how your business runs. Low-code speed on OutSystems, high-code depth in MERN, and sovereign AI.",
   url: "https://roundholesquarepeg.com",
   city: "Mumbai, India",
   copyrightYear: "2026",
@@ -85,9 +85,9 @@ export const siteConfig = {
   },
 
   hero: {
-    label: "WRONG SHAPE. RIGHT FIT.",
-    headline: "Square peg, meet round hole.",
-    subline: "Your business isn't standard-shaped. Your technology shouldn't be either.",
+    label: "ROUND HOLE SQUARE PEG",
+    headline: "We engineer the bridge from challenge to solution.",
+    subline: "Low-code speed on OutSystems, high-code depth in MERN, and enterprise AI that runs on your data.",
     primaryCta: {
       label: "Let's talk",
       href: "#contact"
@@ -101,8 +101,8 @@ export const siteConfig = {
   // Brand Framework: The PEG Method
   pegMethod: {
     badge: "HOW WE THINK",
-    headline: "Every PEG, shaped.",
-    primaryTagline: "We don't fit pegs. We shape them.",
+    headline: "Plan. Engineer. Gen-AI.",
+    primaryTagline: "Three disciplines. One accountable team.",
     pillars: [
       {
         id: 'plan',
@@ -127,7 +127,7 @@ export const siteConfig = {
         name: 'Engineer',
         title: 'Built fast. Built to scale.',
         color: '#F7941D', // Orange
-        tagline: 'Speed when you need it. Freedom when you don’t want limits.',
+        tagline: 'Low-code speed or high-code freedom, chosen per project.',
         description: 'OutSystems or MERN, chosen per budget and requirements.',
         bullets: [
           'OutSystems: live in weeks, not quarters',
@@ -192,7 +192,7 @@ export const siteConfig = {
     },
     {
       id: "story-4",
-      title: "OutSystems or MERN? We pick what fits",
+      title: "OutSystems or MERN? We choose per project",
       tag: "Insight",
       href: "/#stack",
       imageKey: "feature-build-stack",
@@ -202,12 +202,12 @@ export const siteConfig = {
     },
     {
       id: "story-5",
-      title: "Every PEG, shaped",
+      title: "Plan, Engineer, Gen-AI",
       tag: "Approach",
       href: "/about#peg",
       imageKey: "feature-peg",
       focus: "center",
-      alt: "The Plan, Engineer, and Gen-AI method shaping adapters around business reality",
+      alt: "The Plan, Engineer, and Gen-AI method building adapters around enterprise reality",
       summary: "How Plan, Engineer, and Gen-AI unite to adapt technology around the business."
     }
   ] as StoryCard[],
@@ -215,7 +215,7 @@ export const siteConfig = {
   // Solutions Section on Homepage
   solutionsSection: {
     eyebrow: "SOLUTIONS",
-    headline: "Shaped for the way you already work.",
+    headline: "Built around how your business runs.",
     subline: "Enterprise platforms built around your existing workflows, not someone else's templates."
   },
 
@@ -223,7 +223,7 @@ export const siteConfig = {
   beforeAfter: {
     eyebrow: "THE SHIFT",
     headline: "From paperwork to platform.",
-    subline: "See the operational transformation when manual friction becomes a custom-fitted interface.",
+    subline: "See what changes when manual steps become a purpose-built platform.",
     disclaimer: "Representative interface - styled in RHSP design tokens.",
     tabs: [
       {
@@ -232,8 +232,8 @@ export const siteConfig = {
         productName: "Contract Lifecycle Management",
         productSlug: "clm",
         tagline: "From lost drafts in email threads to audit-trailed digital sign-offs.",
-        beforeLabel: "Manual Reality",
-        afterLabel: "RHSP Platform",
+        beforeLabel: "Today",
+        afterLabel: "With RHSP",
         beforeImageKey: "before-clm",
         stats: [
           { label: "Draft to Approval Cycle", before: "[PLACEHOLDER] 14 Days", after: "[PLACEHOLDER] 2 Days" },
@@ -247,8 +247,8 @@ export const siteConfig = {
         productName: "Document Management System",
         productSlug: "dms",
         tagline: "From scattered local drives and lost scans to indexed, role-governed custody.",
-        beforeLabel: "Manual Reality",
-        afterLabel: "RHSP Platform",
+        beforeLabel: "Today",
+        afterLabel: "With RHSP",
         beforeImageKey: "before-dms",
         stats: [
           { label: "Document Retrieval Time", before: "[PLACEHOLDER] Hours", after: "[PLACEHOLDER] Seconds" },
@@ -262,8 +262,8 @@ export const siteConfig = {
         productName: "WhatsApp Journeys",
         productSlug: "whatsapp-journeys",
         tagline: "From unanswered emails and app download barriers to instant conversational self-service.",
-        beforeLabel: "Manual Reality",
-        afterLabel: "RHSP Platform",
+        beforeLabel: "Today",
+        afterLabel: "With RHSP",
         beforeImageKey: "before-whatsapp",
         stats: [
           { label: "Notification Open Rate", before: "[PLACEHOLDER] ~15%", after: "[PLACEHOLDER] ~90%" },
@@ -276,7 +276,7 @@ export const siteConfig = {
 
   // Build Your Way (OutSystems vs MERN interactive band)
   buildYourWay: {
-    headline: "Same problem. The right stack.",
+    headline: "One challenge. The stack it deserves.",
     subline: "We choose per project - budget, timeline and complexity decide, not habit.",
     options: {
       outsystems: {
@@ -297,7 +297,7 @@ export const siteConfig = {
   // Statement Band
   statementBand: {
     headline: "Got a square peg?",
-    subline: "Tell us the shape of your business. We will engineer the adapter.",
+    subline: "Tell us about your operational workflows. We will engineer the adapter.",
     cta: {
       label: "Let's talk",
       href: "#contact"
@@ -307,7 +307,7 @@ export const siteConfig = {
   // How We Work (Methodology track for /about page)
   howWeWork: {
     badge: "METHODOLOGY",
-    headline: "From odd shape to perfect fit.",
+    headline: "From first conversation to live system.",
     subline: "A disciplined, four-phase delivery cycle that ensures the technology adapts to your organization.",
     steps: [
       {
@@ -319,8 +319,8 @@ export const siteConfig = {
       },
       {
         step: "02",
-        title: "Shape",
-        whatWeDo: "Determine the exact technical fit: OutSystems low-code, bespoke MERN high-code, or private AI integration.",
+        title: "Design",
+        whatWeDo: "Determine the technical architecture: OutSystems low-code, bespoke MERN high-code, or private AI integration.",
         deliverable: "Technical Blueprint & Interactive Wireframes",
         duration: "[PLACEHOLDER] 2–3 Weeks"
       },
@@ -341,9 +341,9 @@ export const siteConfig = {
     ] as WorkStep[],
 
     findYourFit: {
-      headline: "Find your fit in 30 seconds",
+      headline: "Find your approach in 30 seconds",
       subline: "Select your project parameters to see our recommended PEG approach.",
-      disclaimer: "A starting point - every fit is decided together.",
+      disclaimer: "A starting point. We finalize the approach together.",
       questions: [
         {
           id: "speed",
@@ -450,8 +450,8 @@ export const siteConfig = {
   // Origin Story & Why RHSP (for /about)
   about: {
     hero: {
-      headline: "We don't fit pegs. We shape them.",
-      subline: "Born from the engineering principle that enterprise systems should mold to organizational reality, not force compromise.",
+      headline: "Tech that adapts to business.",
+      subline: "Every challenge gets its own adapter.",
       imageKey: "about-hero",
       focus: "center 70%"
     },
@@ -489,14 +489,14 @@ export const siteConfig = {
       headline: "The Apollo 13 imperative.",
       originLines: [
         "In April 1970, Apollo 13 suffered an explosion 200,000 miles from Earth.",
-        "NASA engineers were challenged to fit square lithium hydroxide canisters into round sockets using only what was on board.",
-        "They didn't force the socket. They engineered the adapter."
+        "NASA engineers had to connect square lithium hydroxide canisters to round sockets using only what was on board.",
+        "They engineered the adapter using only what was on board."
       ],
-      conclusion: "Round Hole Square Peg was built on the exact same idea: we don't force your business to fit technology - we shape the technology around your business."
+      conclusion: "Round Hole Square Peg is built on the same principle: understand the challenge, then engineer the bridge to the solution."
     },
     whyRhsp: {
       badge: "WHY RHSP",
-      headline: "Enterprise engineering without ideological baggage.",
+      headline: "Enterprise engineering, chosen on merit.",
       differentiators: [
         {
           title: "Low-code speed, high-code freedom.",
@@ -561,7 +561,7 @@ export const siteConfig = {
   contact: {
     label: "CONNECT",
     headline: "Every problem has an angle. Let's find yours.",
-    subline: "Low-code, high-code or sovereign AI: the right answer starts with the right question. Tell us what you’re building, and let’s start there.",
+    subline: "Low-code, high-code or sovereign AI: our engineers are ready to build it with you.",
     email: "LetsTalk@roundholesquarepeg.com",
     address: "ThePlayce, 17th Floor, Marathon Millennium, Lal Bahadur Shastri Marg, beside Nirmal Lifestyle Road, Moti Nagar, Mulund Colony, Mulund West, Mumbai, Maharashtra 400080",
     mapUrl: "https://maps.app.goo.gl/CZZiZs7fzmFmLVCf6"

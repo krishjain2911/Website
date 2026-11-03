@@ -18,7 +18,7 @@ builtExamples:
     oneLiner: "AI voice agent that handles customer calls end to end."
     deployedFor: "A retail store"
     stack: "High-code (MERN)"
-problem: "In a busy multi-brand appliance showroom, customers wait for a free salesperson, and staff can’t remember specs and prices for thousands of models across dozens of brands. Product knowledge sits scattered across Excel price lists and brand PDF brochures, so answers are slow, inconsistent and sometimes wrong."
+problem: "In a busy multi-brand appliance showroom, customers wait for a free salesperson, and staff can’t remember specs and prices for thousands of models across dozens of brands. Product knowledge sits scattered across Excel price lists and brand PDF brochures, so answers are slow, inconsistent and variable."
 painPoints:
   - "Customers wait or walk out when salespeople are busy"
   - "Staff can’t recall specs and prices across thousands of models"
@@ -100,7 +100,7 @@ makeItYours:
       description: "Voice access to SOPs, manuals and policies for staff on the floor."
     - title: "Feedback & surveys"
       description: "Natural voice conversations that capture richer customer insight than forms."
-  closing: "Every deployment, tailored to you: your data, your guidelines, your branding, your customers’ languages."
+  closing: "Every deployment, configured for your business: your data, your guidelines, your branding, your customers’ languages."
 hideAudienceStack: true
 faq:
   - question: "How do you prevent the AI from giving incorrect prices or specs?"

@@ -57,7 +57,7 @@ makeItYours:
       description: "Automated invoice notifications with one-tap payment links and downloadable receipts."
     - title: "Feedback & NPS surveys"
       description: "Interactive rating questions and quick-reply feedback loops right after service delivery."
-  closing: "Tailored to your CRM systems, communication policies, and customer journey touchpoints."
+  closing: "Engineered for your CRM systems, communication policies, and customer journey touchpoints."
 hideAudienceStack: true
 faq:
   - question: "Is an official WhatsApp Business Account required?"

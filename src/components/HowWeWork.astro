@@ -658,7 +658,7 @@ const initialRule = findYourFit.rules[0];
       if (descEl) descEl.textContent = match.description;
       if (badgeEl) badgeEl.textContent = match.pegCombo || match.stackBadge;
       if (discussBtn) {
-        const subject = encodeURIComponent(`Project Fit Inquiry: ${match.approach} (${match.pegCombo || match.stackBadge})`);
+        const subject = encodeURIComponent(`Project Approach Inquiry: ${match.approach} (${match.pegCombo || match.stackBadge})`);
         discussBtn.setAttribute('href', `mailto:${contactEmail}?subject=${subject}`);
       }
     }
