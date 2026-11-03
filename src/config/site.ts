@@ -519,7 +519,7 @@ export const siteConfig = {
           num: "01",
           label: "01 MISSION",
           title: "Mission",
-          text: "We deploy technology that adapts to your unique business process, unlocking latent revenue.",
+          text: "We deploy technology that adapts to your unique business processes, unlocking latent revenue.",
           imageKey: "about-mission-icon"
         },
         {
@@ -547,7 +547,7 @@ export const siteConfig = {
         "NASA engineers had to connect square lithium hydroxide canisters to round sockets using only what was on board.",
         "They engineered the adapter using only what was on board."
       ],
-      conclusion: "Round Hole Square Peg is built on the same principle: understand the challenge, then engineer the bridge to the solution."
+      conclusion: "Round Hole Square Peg is built on the same principle: understand the challenge, then engineer the adapter to the solution."
     },
     whyRhsp: {
       badge: "WHY RHSP",
