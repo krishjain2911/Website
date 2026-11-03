@@ -15,91 +15,183 @@ const steps = approach.steps;
       <p class="approach-subline">{approach.subline}</p>
     </div>
 
-    <!-- Journey Track Wrapper -->
-    <div class="approach-journey-wrap" id="approach-journey-wrap">
-      <!-- Desktop SVG Road (aria-hidden) -->
-      <div class="road-svg-canvas" aria-hidden="true">
+    <!-- Vertical Journey Stage Container -->
+    <div class="approach-journey-stage" id="approach-journey-stage">
+      <!-- Desktop Journey View (>= 900px) -->
+      <div class="journey-desktop-view" aria-hidden="true">
         <svg
-          class="road-svg"
-          viewBox="0 0 1200 460"
-          preserveAspectRatio="none"
+          class="journey-desktop-svg"
+          viewBox="0 0 1000 2360"
+          preserveAspectRatio="xMidYMid meet"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
           <defs>
-            <linearGradient id="approachRoadGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <linearGradient id="journeyRoadGrad" x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" stop-color="#1E4B8F" />
               <stop offset="50%" stop-color="#F7941D" />
               <stop offset="100%" stop-color="#EE4B2B" />
             </linearGradient>
+
+            <filter id="cubeSoftShadow" x="-30%" y="-30%" width="160%" height="160%">
+              <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#000000" flood-opacity="0.22" />
+            </filter>
           </defs>
 
-          <!-- Inactive Background Road Track -->
+          <!-- Start: Elliptical Dark Hole Socket (Hero continuation) -->
+          <g class="journey-start-socket" transform="translate(500, 50)">
+            <ellipse cx="0" cy="0" rx="52" ry="18" class="socket-outer-rim" />
+            <ellipse cx="0" cy="0" rx="44" ry="13" class="socket-inner-hole" />
+            <ellipse cx="0" cy="2" rx="36" ry="9" class="socket-depth-vignette" />
+          </g>
+
+          <!-- Inactive Background Track (Faint grey) -->
           <path
-            class="road-track-bg"
-            d="M 30,195 C 60,195 70,195 100,195 C 170,195 230,265 300,265 C 370,265 430,195 500,195 C 570,195 630,265 700,265 C 770,265 830,195 900,195 C 970,195 1030,265 1100,265 C 1130,265 1150,265 1170,265"
+            class="road-bg-track"
+            d="M 500,50 C 500,120 480,160 480,220 C 480,380 520,440 520,600 C 520,760 480,820 480,980 C 480,1140 520,1200 520,1360 C 520,1520 480,1580 480,1740 C 480,1900 500,1960 500,2120 L 500,2260"
           />
 
-          <!-- Active Brand-Gradient Road (Progress Drawn) -->
+          <!-- Active Progressive Road (Brand Gradient) -->
           <path
-            id="approach-active-road"
-            class="road-track-fill"
-            d="M 30,195 C 60,195 70,195 100,195 C 170,195 230,265 300,265 C 370,265 430,195 500,195 C 570,195 630,265 700,265 C 770,265 830,195 900,195 C 970,195 1030,265 1100,265 C 1130,265 1150,265 1170,265"
-            stroke="url(#approachRoadGradient)"
+            id="journey-desktop-path"
+            class="road-active-track"
+            d="M 500,50 C 500,120 480,160 480,220 C 480,380 520,440 520,600 C 520,760 480,820 480,980 C 480,1140 520,1200 520,1360 C 520,1520 480,1580 480,1740 C 480,1900 500,1960 500,2120 L 500,2260"
+            stroke="url(#journeyRoadGrad)"
           />
 
           <!-- Dashed Center Line -->
           <path
-            class="road-track-centerline"
-            d="M 30,195 C 60,195 70,195 100,195 C 170,195 230,265 300,265 C 370,265 430,195 500,195 C 570,195 630,265 700,265 C 770,265 830,195 900,195 C 970,195 1030,265 1100,265 C 1130,265 1150,265 1170,265"
+            class="road-center-line"
+            d="M 500,50 C 500,120 480,160 480,220 C 480,380 520,440 520,600 C 520,760 480,820 480,980 C 480,1140 520,1200 520,1360 C 520,1520 480,1580 480,1740 C 480,1900 500,1960 500,2120 L 500,2260"
           />
 
-          <!-- Traveling Orange Square-Peg Marker -->
-          <g id="approach-peg-traveler" class="peg-traveler" transform="translate(30, 195)" style="opacity: 0;">
-            <rect
-              x="-9"
-              y="-9"
-              width="18"
-              height="18"
-              rx="4"
-              fill="#F7941D"
-              stroke="#FFFFFF"
-              stroke-width="2.5"
-              class="peg-marker-rect"
+          <!-- Thin Connector Lines from Road Pins to Alternating Cards -->
+          <!-- Stop 1 (Left): Pin at (480, 220) -> connects to card at x=410 -->
+          <line x1="480" y1="220" x2="410" y2="220" class="connector-line" id="desktop-conn-0" />
+          <!-- Stop 2 (Right): Pin at (520, 600) -> connects to card at x=590 -->
+          <line x1="520" y1="600" x2="590" y2="600" class="connector-line" id="desktop-conn-1" />
+          <!-- Stop 3 (Left): Pin at (480, 980) -> connects to card at x=410 -->
+          <line x1="480" y1="980" x2="410" y2="980" class="connector-line" id="desktop-conn-2" />
+          <!-- Stop 4 (Right): Pin at (520, 1360) -> connects to card at x=590 -->
+          <line x1="520" y1="1360" x2="590" y2="1360" class="connector-line" id="desktop-conn-3" />
+          <!-- Stop 5 (Left): Pin at (480, 1740) -> connects to card at x=410 -->
+          <line x1="480" y1="1740" x2="410" y2="1740" class="connector-line" id="desktop-conn-4" />
+          <!-- Stop 6 (Right): Pin at (500, 2120) -> connects to card at x=590 -->
+          <line x1="500" y1="2120" x2="590" y2="2120" class="connector-line" id="desktop-conn-5" />
+
+          <!-- End Finish Marker (Concentric rings) -->
+          <g class="journey-finish-marker" transform="translate(500, 2260)">
+            <circle cx="0" cy="0" r="24" class="finish-ring-outer" />
+            <circle cx="0" cy="0" r="16" class="finish-ring-mid" />
+            <circle cx="0" cy="0" r="8" class="finish-ring-center" />
+          </g>
+
+          <!-- Guide Cube (Desktop SVG Element) -->
+          <g id="guide-cube-desktop" class="journey-guide-cube" transform="translate(500, 50)" filter="url(#cubeSoftShadow)">
+            <image
+              href="/brand/rhsp-logo.png"
+              x="-22"
+              y="-22"
+              width="44"
+              height="44"
+              preserveAspectRatio="xMidYMid meet"
             />
           </g>
         </svg>
       </div>
 
-      <!-- Mobile Vertical Track Line (aria-hidden) -->
-      <div class="mobile-track-container" aria-hidden="true">
-        <div class="mobile-track-bg"></div>
-        <div id="approach-mobile-fill" class="mobile-track-fill"></div>
-        <div id="approach-mobile-peg" class="mobile-peg-marker"></div>
+      <!-- Mobile Journey View (< 900px) -->
+      <div class="journey-mobile-view" aria-hidden="true">
+        <svg
+          class="journey-mobile-svg"
+          viewBox="0 0 380 1860"
+          preserveAspectRatio="xMidYMid meet"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <!-- Mobile Start Socket -->
+          <g class="journey-start-socket" transform="translate(42, 35)">
+            <ellipse cx="0" cy="0" rx="34" ry="12" class="socket-outer-rim" />
+            <ellipse cx="0" cy="0" rx="28" ry="8" class="socket-inner-hole" />
+            <ellipse cx="0" cy="1" rx="22" ry="6" class="socket-depth-vignette" />
+          </g>
+
+          <!-- Mobile Road Track -->
+          <path
+            class="road-bg-track"
+            d="M 42,35 C 42,90 38,120 38,160 C 38,280 46,340 46,460 C 46,580 38,640 38,760 C 38,880 46,940 46,1060 C 46,1180 38,1240 38,1360 C 38,1480 42,1540 42,1660 L 42,1780"
+          />
+          <path
+            id="journey-mobile-path"
+            class="road-active-track"
+            d="M 42,35 C 42,90 38,120 38,160 C 38,280 46,340 46,460 C 46,580 38,640 38,760 C 38,880 46,940 46,1060 C 46,1180 38,1240 38,1360 C 38,1480 42,1540 42,1660 L 42,1780"
+            stroke="url(#journeyRoadGrad)"
+          />
+          <path
+            class="road-center-line"
+            d="M 42,35 C 42,90 38,120 38,160 C 38,280 46,340 46,460 C 46,580 38,640 38,760 C 38,880 46,940 46,1060 C 46,1180 38,1240 38,1360 C 38,1480 42,1540 42,1660 L 42,1780"
+          />
+
+          <!-- Mobile Connector Lines to Cards -->
+          <line x1="38" y1="160" x2="80" y2="160" class="connector-line" id="mobile-conn-0" />
+          <line x1="46" y1="460" x2="80" y2="460" class="connector-line" id="mobile-conn-1" />
+          <line x1="38" y1="760" x2="80" y2="760" class="connector-line" id="mobile-conn-2" />
+          <line x1="46" y1="1060" x2="80" y2="1060" class="connector-line" id="mobile-conn-3" />
+          <line x1="38" y1="1360" x2="80" y2="1360" class="connector-line" id="mobile-conn-4" />
+          <line x1="42" y1="1660" x2="80" y2="1660" class="connector-line" id="mobile-conn-5" />
+
+          <!-- Mobile Finish Marker -->
+          <g class="journey-finish-marker" transform="translate(42, 1780)">
+            <circle cx="0" cy="0" r="18" class="finish-ring-outer" />
+            <circle cx="0" cy="0" r="12" class="finish-ring-mid" />
+            <circle cx="0" cy="0" r="6" class="finish-ring-center" />
+          </g>
+
+          <!-- Guide Cube (Mobile SVG Element: 36px) -->
+          <g id="guide-cube-mobile" class="journey-guide-cube" transform="translate(42, 35)">
+            <image
+              href="/brand/rhsp-logo.png"
+              x="-18"
+              y="-18"
+              width="36"
+              height="36"
+              preserveAspectRatio="xMidYMid meet"
+            />
+          </g>
+        </svg>
       </div>
 
-      <!-- Accessible Semantic List of 6 Stops -->
-      <ol class="approach-stops-list" id="approach-stops-list">
+      <!-- Semantic Accessible Stops List (<ol>) -->
+      <ol class="journey-stops-list" id="journey-stops-list">
         {steps.map((step, idx) => {
-          const isOdd = idx % 2 === 0; // 0, 2, 4 -> 1st, 3rd, 5th stops (above road)
+          const isLeft = idx % 2 === 0; // 0, 2, 4 -> Left on desktop; 1, 3, 5 -> Right
           return (
             <li
-              class={`approach-stop approach-stop--${isOdd ? 'above' : 'below'}`}
+              class={`journey-stop journey-stop--${isLeft ? 'left' : 'right'} is-upcoming`}
+              id={`journey-stop-${idx}`}
               data-index={idx}
-              style={`--step-color: ${step.color};`}
+              style={`--step-accent: ${step.color};`}
             >
-              {/* Pin Marker */}
-              <div class="stop-pin" aria-hidden="true">
-                <span class="pin-number">0{step.number}</span>
-                <Icon name={step.icon} size={15} class="pin-icon" />
+              <!-- Pin Marker on Road -->
+              <div class="road-pin-marker" aria-hidden="true">
+                <span class="pin-ring-pulse"></span>
+                <div class="pin-inner-badge">
+                  <span class="pin-num">0{step.number}</span>
+                  <Icon name={step.icon} size={13} class="pin-glyph" />
+                </div>
               </div>
 
-              {/* Stop Card */}
-              <div class="stop-card">
-                <div class="stop-card-badge">Stage 0{step.number}</div>
-                <h3 class="stop-title">{step.title}</h3>
-                <p class="stop-description">{step.description}</p>
-              </div>
+              <!-- Stop Card -->
+              <article class="stop-content-card card-mastercard">
+                <div class="card-accent-bar" style={`background-color: ${step.color};`}></div>
+                <div class="card-meta-row">
+                  <span class="card-stage-eyebrow" style={`color: ${step.color};`}>
+                    STAGE 0{step.number}
+                  </span>
+                </div>
+                <h3 class="card-heading">{step.title}</h3>
+                <p class="card-copy">{step.description}</p>
+              </article>
             </li>
           );
         })}
@@ -108,9 +200,9 @@ const steps = approach.steps;
 
     <!-- Closing Callout under the road -->
     <div class="approach-closing">
-      <a href={approach.closingCta.href} class="approach-closing-link">
+      <a href={approach.closingCta.href} class="btn btn-secondary approach-cta-link">
         <span>{approach.closingCta.label}</span>
-        <Icon name="arrow-right" size={18} class="closing-arrow" />
+        <Icon name="arrow-right" size={18} class="cta-arrow" />
       </a>
     </div>
   </div>
@@ -133,7 +225,7 @@ const steps = approach.steps;
   .approach-header {
     text-align: center;
     max-width: 680px;
-    margin-bottom: 3.5rem;
+    margin-bottom: 4rem;
   }
 
   .approach-title {
@@ -150,445 +242,548 @@ const steps = approach.steps;
     margin: 0 auto;
   }
 
-  /* Journey Track Wrapper */
-  .approach-journey-wrap {
+  /* Journey Stage Wrapper */
+  .approach-journey-stage {
     position: relative;
     width: 100%;
+    max-width: 1080px;
     margin: 0 auto 3.5rem auto;
   }
 
-  /* Desktop View: SVG and 6 Columns */
+  /* Road SVG Styling */
+  .road-bg-track {
+    stroke: var(--color-border);
+    stroke-width: 20;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0.55;
+  }
+
+  .road-active-track {
+    stroke-width: 20;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 2600;
+    stroke-dashoffset: 2600;
+  }
+
+  .road-center-line {
+    stroke: #FFFFFF;
+    stroke-width: 2.25;
+    stroke-dasharray: 6 6;
+    stroke-linecap: round;
+    opacity: 0.9;
+  }
+
+  :global([data-theme="dark"]) .road-center-line {
+    opacity: 0.8;
+  }
+
+  .connector-line {
+    stroke: var(--color-border);
+    stroke-width: 1.5;
+    stroke-dasharray: 4 4;
+    transition: stroke 0.3s ease;
+  }
+
+  /* Socket (Hero continuation) */
+  .socket-outer-rim {
+    fill: var(--color-surface-alt);
+    stroke: var(--rhsp-navy);
+    stroke-width: 2.5;
+  }
+
+  .socket-inner-hole {
+    fill: var(--rhsp-hole, #0F2A4A);
+  }
+
+  .socket-depth-vignette {
+    fill: #000000;
+    opacity: 0.55;
+  }
+
+  :global([data-theme="dark"]) .socket-outer-rim {
+    fill: #1C1C1C;
+    stroke: #2E5FA3;
+  }
+
+  /* Finish Marker */
+  .finish-ring-outer {
+    fill: none;
+    stroke: #EE4B2B;
+    stroke-width: 2;
+    opacity: 0.35;
+  }
+
+  .finish-ring-mid {
+    fill: none;
+    stroke: #F7941D;
+    stroke-width: 2;
+    opacity: 0.7;
+  }
+
+  .finish-ring-center {
+    fill: #EE4B2B;
+  }
+
+  /* Guide Cube */
+  .journey-guide-cube {
+    cursor: default;
+    user-select: none;
+    pointer-events: none;
+    will-change: transform;
+    transition: transform 0.08s linear;
+  }
+
+  /* Desktop View Layout (>= 900px) */
   @media (min-width: 900px) {
-    .approach-journey-wrap {
-      min-height: 480px;
+    .journey-mobile-view {
+      display: none;
     }
 
-    .road-svg-canvas {
+    .approach-journey-stage {
+      min-height: 2360px;
+    }
+
+    .journey-desktop-view {
       position: absolute;
-      top: 0;
-      left: 0;
+      inset: 0;
       width: 100%;
       height: 100%;
       pointer-events: none;
       z-index: 1;
     }
 
-    .road-svg {
+    .journey-desktop-svg {
       width: 100%;
       height: 100%;
       overflow: visible;
     }
 
-    .road-track-bg {
-      stroke: var(--color-border);
-      stroke-width: 18;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      opacity: 0.6;
-    }
-
-    .road-track-fill {
-      stroke-width: 18;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      stroke-dasharray: 2000;
-      stroke-dashoffset: 2000;
-      transition: stroke-dashoffset 0.1s linear;
-    }
-
-    .road-track-centerline {
-      stroke: #FFFFFF;
-      stroke-width: 2.25;
-      stroke-dasharray: 6 6;
-      stroke-linecap: round;
-      opacity: 0.9;
-    }
-
-    :global([data-theme="dark"]) .road-track-centerline {
-      stroke: #FFFFFF;
-      opacity: 0.85;
-    }
-
-    .peg-traveler-rect {
-      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.25));
-    }
-
-    .mobile-track-container {
-      display: none;
-    }
-
-    /* 6 Columns Grid for Stops */
-    .approach-stops-list {
+    .journey-stops-list {
       list-style: none;
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 0.75rem;
-      position: relative;
-      z-index: 2;
-      min-height: 480px;
       margin: 0;
       padding: 0;
-    }
-
-    .approach-stop {
       position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      opacity: 0.35;
-      transform: translateY(8px);
-      transition: opacity 0.45s ease, transform 0.45s var(--ease-out-expo);
+      z-index: 2;
+      min-height: 2360px;
     }
 
-    .approach-stop.is-revealed {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* Odd Stops (1, 3, 5): Card above road, Pin at road */
-    .approach-stop--above {
-      justify-content: flex-start;
-      padding-top: 10px;
-    }
-
-    .approach-stop--above .stop-pin {
+    /* Absolute stop placement */
+    .journey-stop {
       position: absolute;
-      top: 195px;
-      left: 50%;
+      width: 390px;
+      transition: opacity 0.4s ease, transform 0.4s var(--ease-out-expo);
+    }
+
+    /* Stop vertical positions aligned to SVG path points */
+    #journey-stop-0 { top: 140px; }
+    #journey-stop-1 { top: 520px; }
+    #journey-stop-2 { top: 900px; }
+    #journey-stop-3 { top: 1280px; }
+    #journey-stop-4 { top: 1660px; }
+    #journey-stop-5 { top: 2040px; }
+
+    /* Left stops: card sits to the left of the center road (x <= 410px) */
+    .journey-stop--left {
+      left: 10px;
+    }
+
+    .journey-stop--left .road-pin-marker {
+      position: absolute;
+      left: 470px; /* Aligned to path x=480 */
+      top: 80px;
       transform: translate(-50%, -50%);
     }
 
-    .approach-stop--above .stop-card {
-      margin-bottom: auto;
+    /* Right stops: card sits to the right of the center road (x >= 590px) */
+    .journey-stop--right {
+      right: 10px;
     }
 
-    /* Even Stops (2, 4, 6): Pin at road, Card below road */
-    .approach-stop--below {
-      justify-content: flex-end;
-      padding-bottom: 10px;
-    }
-
-    .approach-stop--below .stop-pin {
+    .journey-stop--right .road-pin-marker {
       position: absolute;
-      top: 265px;
-      left: 50%;
+      left: -80px; /* Aligned to path x=520 (590 - 80 = 510/520) */
+      top: 80px;
       transform: translate(-50%, -50%);
     }
 
-    .approach-stop--below .stop-card {
-      margin-top: auto;
-    }
-
-    .stop-card {
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-inner);
-      padding: 1.1rem 0.95rem;
-      width: 100%;
-      box-shadow: var(--shadow-subtle);
-      transition: border-color 0.25s ease, box-shadow 0.25s ease;
-      min-height: 155px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .approach-stop.is-revealed .stop-card {
-      border-color: color-mix(in srgb, var(--step-color) 45%, var(--color-border));
-      box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.08);
+    #journey-stop-5.journey-stop--right .road-pin-marker {
+      left: -100px; /* Aligned to x=500 */
     }
   }
 
-  /* Shared Pin Styles */
-  .stop-pin {
+  /* Road Pin Marker */
+  .road-pin-marker {
+    width: 44px;
+    height: 44px;
+    position: relative;
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  .pin-inner-badge {
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    background: var(--color-surface);
-    border: 2.5px solid var(--step-color);
+    background-color: var(--color-surface);
+    border: 2.5px solid var(--step-accent);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
-    z-index: 3;
-    transition: transform 0.3s var(--ease-out-expo), box-shadow 0.3s ease;
+    position: relative;
+    z-index: 2;
+    transition: transform 0.3s var(--ease-out-expo), box-shadow 0.3s ease, border-color 0.3s ease;
   }
 
-  .approach-stop.is-revealed .stop-pin {
-    transform: translate(-50%, -50%) scale(1.05);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
-  }
-
-  .pin-number {
+  .pin-num {
     font-size: 11px;
     font-weight: 700;
     line-height: 1;
     color: var(--color-text-primary);
   }
 
-  .pin-icon {
-    color: var(--step-color);
+  .pin-glyph {
+    color: var(--step-accent);
     margin-top: 2px;
   }
 
-  /* Stop Card Typography */
-  .stop-card-badge {
+  /* Pulse Ring for active stop */
+  .pin-ring-pulse {
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 2px solid var(--step-accent);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Stop Content Card */
+  .stop-content-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-inner);
+    padding: 1.6rem 1.75rem;
+    box-shadow: var(--shadow-subtle);
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s var(--ease-out-expo);
+  }
+
+  .card-accent-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+  }
+
+  .card-stage-eyebrow {
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--step-color);
-    margin-bottom: 0.4rem;
+    display: inline-block;
+    margin-bottom: 0.5rem;
   }
 
-  .stop-title {
-    font-size: 0.9375rem;
+  .card-heading {
+    font-size: 1.125rem;
     font-weight: 600;
-    line-height: 1.25;
+    line-height: 1.3;
     color: var(--color-text-primary);
-    margin-bottom: 0.45rem;
+    margin-bottom: 0.6rem;
   }
 
-  .stop-description {
-    font-size: 0.8125rem;
+  .card-copy {
+    font-size: 0.875rem;
+    line-height: 1.55;
     color: var(--color-text-secondary);
-    line-height: 1.45;
+    margin: 0;
   }
 
-  /* Mobile Layout (<900px): Vertical road down left edge */
+  /* Progressive Journey States */
+  /* 1. Upcoming: 40% opacity */
+  .journey-stop.is-upcoming {
+    opacity: 0.4;
+  }
+
+  /* 2. Active Stop: scale 1.02 + pulse ring */
+  .journey-stop.is-active {
+    opacity: 1;
+  }
+
+  .journey-stop.is-active .stop-content-card {
+    border-color: color-mix(in srgb, var(--step-accent) 55%, var(--color-border));
+    box-shadow: 0 10px 30px -8px rgba(0, 0, 0, 0.12);
+    transform: scale(1.02);
+  }
+
+  .journey-stop.is-active .pin-inner-badge {
+    transform: scale(1.12);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
+  }
+
+  .journey-stop.is-active .pin-ring-pulse {
+    opacity: 0.8;
+    animation: pinPulseAnim 2s infinite ease-out;
+  }
+
+  @keyframes pinPulseAnim {
+    0% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.35); opacity: 0; }
+    100% { transform: scale(1.35); opacity: 0; }
+  }
+
+  /* 3. Passed Stop: full opacity + filled pin */
+  .journey-stop.is-passed {
+    opacity: 1;
+  }
+
+  .journey-stop.is-passed .pin-inner-badge {
+    background-color: var(--color-surface-alt);
+    border-color: var(--step-accent);
+  }
+
+  /* Mobile Layout (< 900px) */
   @media (max-width: 899px) {
-    .road-svg-canvas {
+    .journey-desktop-view {
       display: none;
     }
 
-    .approach-journey-wrap {
-      padding-left: 3rem;
-      position: relative;
+    .approach-journey-stage {
+      min-height: 1860px;
     }
 
-    .mobile-track-container {
-      position: absolute;
-      left: 19px;
-      top: 12px;
-      bottom: 24px;
-      width: 4px;
-    }
-
-    .mobile-track-bg {
+    .journey-mobile-view {
       position: absolute;
       inset: 0;
-      background-color: var(--color-border);
-      border-radius: 2px;
-      opacity: 0.6;
-    }
-
-    .mobile-track-fill {
-      position: absolute;
-      top: 0;
-      left: 0;
       width: 100%;
-      height: 0%;
-      background: linear-gradient(180deg, #1E4B8F 0%, #F7941D 50%, #EE4B2B 100%);
-      border-radius: 2px;
-      transition: height 0.1s linear;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
     }
 
-    .mobile-peg-marker {
-      position: absolute;
-      left: -6px;
-      top: 0%;
-      width: 16px;
-      height: 16px;
-      border-radius: 3px;
-      background-color: #F7941D;
-      border: 2px solid #FFFFFF;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
-      transform: translateY(-50%);
-      opacity: 0;
-      transition: opacity 0.2s ease;
-      z-index: 4;
+    .journey-mobile-svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
     }
 
-    .approach-stops-list {
+    .journey-stops-list {
       list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 1.75rem;
       margin: 0;
       padding: 0;
+      position: relative;
+      z-index: 2;
+      min-height: 1860px;
     }
 
-    .approach-stop {
-      position: relative;
-      opacity: 0.35;
-      transform: translateX(10px);
+    .journey-stop {
+      position: absolute;
+      left: 76px;
+      right: 12px;
       transition: opacity 0.4s ease, transform 0.4s var(--ease-out-expo);
     }
 
-    .approach-stop.is-revealed {
-      opacity: 1;
-      transform: translateX(0);
-    }
+    #journey-stop-0 { top: 90px; }
+    #journey-stop-1 { top: 390px; }
+    #journey-stop-2 { top: 690px; }
+    #journey-stop-3 { top: 990px; }
+    #journey-stop-4 { top: 1290px; }
+    #journey-stop-5 { top: 1590px; }
 
-    .stop-pin {
+    .road-pin-marker {
       position: absolute;
-      left: -48px;
-      top: 14px;
-      transform: translateY(-50%);
+      left: -54px;
+      top: 70px;
+      transform: translate(-50%, -50%);
     }
 
-    .approach-stop.is-revealed .stop-pin {
-      transform: translateY(-50%) scale(1.05);
-    }
-
-    .stop-card {
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-inner);
-      padding: 1.25rem 1.15rem;
-      box-shadow: var(--shadow-subtle);
+    .stop-content-card {
+      padding: 1.25rem 1.35rem;
     }
   }
 
-  /* Closing CTA Link */
+  /* Closing Callout */
   .approach-closing {
     text-align: center;
-    margin-top: 1rem;
+    margin-top: 2rem;
   }
 
-  .approach-closing-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: var(--fs-body);
-    font-weight: 600;
-    color: var(--color-text-primary);
-    text-decoration: none;
-    padding: 0.75rem 1.75rem;
-    border-radius: var(--radius-pill);
-    background-color: var(--color-surface-alt);
-    border: 1px solid var(--color-border);
-    transition: all 0.25s var(--ease-out-expo);
+  .approach-cta-link {
+    min-height: 48px;
+    padding: 0 1.75rem;
   }
 
-  .approach-closing-link:hover {
-    border-color: var(--rhsp-peg-start);
-    color: var(--rhsp-peg-start);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-subtle);
-  }
-
-  .closing-arrow {
+  .cta-arrow {
     transition: transform 0.25s var(--ease-out-expo);
   }
 
-  .approach-closing-link:hover .closing-arrow {
+  .approach-cta-link:hover .cta-arrow {
     transform: translateX(4px);
   }
 
   /* Accessibility & Reduced Motion */
   @media (prefers-reduced-motion: reduce) {
-    .road-track-fill {
+    .road-active-track {
       stroke-dashoffset: 0 !important;
     }
-    .mobile-track-fill {
-      height: 100% !important;
-    }
-    .peg-traveler,
-    .mobile-peg-marker {
-      display: none !important;
-    }
-    .approach-stop {
+
+    .journey-stop {
       opacity: 1 !important;
       transform: none !important;
+    }
+
+    .journey-guide-cube {
+      transition: none !important;
+    }
+
+    .pin-ring-pulse {
+      display: none !important;
     }
   }
 </style>
 
 <script>
-  function setupApproachJourney() {
-    const section = document.getElementById('approach');
-    if (!section) return;
+  function setupVerticalJourney() {
+    const stage = document.getElementById('approach-journey-stage');
+    if (!stage) return;
 
-    // Check reduced motion
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const stops = Array.from(section.querySelectorAll<HTMLElement>('.approach-stop'));
-    const roadFill = document.getElementById('approach-active-road') as SVGPathElement | null;
-    const traveler = document.getElementById('approach-peg-traveler') as SVGGElement | null;
-    const mobileFill = document.getElementById('approach-mobile-fill') as HTMLElement | null;
-    const mobilePeg = document.getElementById('approach-mobile-peg') as HTMLElement | null;
+    const isDesktop = window.innerWidth >= 900;
+
+    const path = (isDesktop
+      ? document.getElementById('journey-desktop-path')
+      : document.getElementById('journey-mobile-path')) as SVGPathElement | null;
+
+    const cube = (isDesktop
+      ? document.getElementById('guide-cube-desktop')
+      : document.getElementById('guide-cube-mobile')) as SVGGElement | null;
+
+    const stops = Array.from(document.querySelectorAll<HTMLElement>('.journey-stop'));
+
+    if (!path || !cube || stops.length === 0) return;
+
+    const totalPathLength = path.getTotalLength();
+    path.style.strokeDasharray = `${totalPathLength}`;
 
     if (prefersReducedMotion) {
-      stops.forEach(s => s.classList.add('is-revealed'));
-      if (roadFill) roadFill.style.strokeDashoffset = '0';
-      if (mobileFill) mobileFill.style.height = '100%';
+      path.style.strokeDashoffset = '0';
+      stops.forEach(s => {
+        s.classList.remove('is-upcoming');
+        s.classList.add('is-passed');
+      });
+      // Park cube at the end
+      const endPoint = path.getPointAtLength(totalPathLength);
+      cube.setAttribute('transform', `translate(${endPoint.x}, ${endPoint.y})`);
       return;
     }
 
-    let totalLength = 0;
-    if (roadFill) {
-      totalLength = roadFill.getTotalLength();
-      roadFill.style.strokeDasharray = `${totalLength}`;
-      roadFill.style.strokeDashoffset = `${totalLength}`;
+    // Stop target percentages along the path (6 stops)
+    // Desktop: y = [220, 600, 980, 1360, 1740, 2120] out of 2260
+    // Normalized path fraction targets for the 6 stops:
+    const stopTargets = [
+      0.08,  // Stop 1
+      0.25,  // Stop 2
+      0.42,  // Stop 3
+      0.60,  // Stop 4
+      0.78,  // Stop 5
+      0.94   // Stop 6
+    ];
+
+    /**
+     * Piecewise scroll progress mapping with dwell window:
+     * Divides progress p in [0, 1] into 6 segments.
+     * Within segment i:
+     * - First 75%: smoothstep easing from stop i-1 to stop i
+     * - Last 25%: dwell at stop i
+     */
+    function mapProgressWithDwell(p: number): { pathFraction: number; activeIndex: number } {
+      if (p <= 0) return { pathFraction: 0, activeIndex: -1 };
+      if (p >= 1) return { pathFraction: 1, activeIndex: 5 };
+
+      const numSegments = 6;
+      const scaledP = p * numSegments;
+      const segIndex = Math.min(numSegments - 1, Math.floor(scaledP));
+      const u = scaledP - segIndex; // Local progress [0, 1] in current segment
+
+      const prevFraction = segIndex === 0 ? 0 : stopTargets[segIndex - 1];
+      const targetFraction = stopTargets[segIndex];
+
+      const travelLimit = 0.75; // Travel takes 75% of segment, dwell takes 25%
+
+      let currentFraction: number;
+      if (u <= travelLimit) {
+        // Smoothstep: 3t^2 - 2t^3
+        const t = u / travelLimit;
+        const eased = t * t * (3 - 2 * t);
+        currentFraction = prevFraction + (targetFraction - prevFraction) * eased;
+      } else {
+        // Dwell at the stop
+        currentFraction = targetFraction;
+      }
+
+      return { pathFraction: currentFraction, activeIndex: segIndex };
     }
 
-    function onScroll() {
-      if (!section) return;
-      const rect = section.getBoundingClientRect();
+    function onScrollUpdate() {
+      if (!stage || !path || !cube) return;
+
+      const rect = stage.getBoundingClientRect();
       const vh = window.innerHeight;
 
-      // Section starts animating when top enters 80% of viewport, finishes when bottom passes 30%
-      const start = vh * 0.75;
-      const end = vh * 0.25;
-      const scrollableRange = rect.height + (start - end);
-      const currentScroll = start - rect.top;
+      // Progress p: 0 when container top hits ~70% vh, 1 when bottom hits ~40% vh
+      const startTrigger = vh * 0.70;
+      const endTrigger = vh * 0.40;
+      const scrollableRange = rect.height + (startTrigger - endTrigger);
+      const currentScroll = startTrigger - rect.top;
 
-      let progress = currentScroll / scrollableRange;
-      progress = Math.max(0, Math.min(1, progress));
+      let p = currentScroll / scrollableRange;
+      p = Math.max(0, Math.min(1, p));
 
-      // Desktop SVG Road update
-      if (roadFill && totalLength > 0) {
-        const offset = totalLength * (1 - progress);
-        roadFill.style.strokeDashoffset = `${offset}`;
+      const { pathFraction, activeIndex } = mapProgressWithDwell(p);
+      const currentDistance = pathFraction * totalPathLength;
 
-        if (traveler) {
-          if (progress > 0.01) {
-            const distance = totalLength * progress;
-            const pt = roadFill.getPointAtLength(distance);
-            traveler.setAttribute('transform', `translate(${pt.x}, ${pt.y})`);
-            traveler.style.opacity = '1';
-          } else {
-            traveler.style.opacity = '0';
-          }
-        }
+      // 1. Draw road progressively
+      path.style.strokeDashoffset = `${totalPathLength - currentDistance}`;
+
+      // 2. Guide cube follows path via getPointAtLength + tangent angle
+      if (totalPathLength > 0) {
+        const pt = path.getPointAtLength(currentDistance);
+        const ptNext = path.getPointAtLength(Math.min(totalPathLength, currentDistance + 2));
+        const ptPrev = path.getPointAtLength(Math.max(0, currentDistance - 2));
+
+        const angleRad = Math.atan2(ptNext.y - ptPrev.y, ptNext.x - ptPrev.x);
+        const angleDeg = (angleRad * 180 / Math.PI) - 90;
+        const subtleRotation = Math.max(-18, Math.min(18, angleDeg * 0.35));
+
+        cube.setAttribute(
+          'transform',
+          `translate(${pt.x.toFixed(1)}, ${pt.y.toFixed(1)}) rotate(${subtleRotation.toFixed(1)})`
+        );
       }
 
-      // Mobile Track update
-      if (mobileFill) {
-        mobileFill.style.height = `${progress * 100}%`;
-      }
-      if (mobilePeg) {
-        mobilePeg.style.top = `${progress * 100}%`;
-        mobilePeg.style.opacity = progress > 0.01 ? '1' : '0';
-      }
-
-      // Reveal cards sequentially as progress passes thresholds
-      stops.forEach((stop, index) => {
-        const threshold = (index + 0.1) / (stops.length + 0.2);
-        if (progress >= threshold) {
-          stop.classList.add('is-revealed');
+      // 3. Stop status: passed (full opacity + filled pin), active (scale + pulse), upcoming (40% opacity)
+      stops.forEach((stop, idx) => {
+        stop.classList.remove('is-passed', 'is-active', 'is-upcoming');
+        if (idx < activeIndex) {
+          stop.classList.add('is-passed');
+        } else if (idx === activeIndex) {
+          stop.classList.add('is-active');
         } else {
-          stop.classList.remove('is-revealed');
+          stop.classList.add('is-upcoming');
         }
       });
     }
 
-    // IntersectionObserver to attach/detach scroll listener
     let ticking = false;
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          onScroll();
+          onScrollUpdate();
           ticking = false;
         });
         ticking = true;
@@ -600,20 +795,28 @@ const steps = approach.steps;
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             window.addEventListener('scroll', handleScroll, { passive: true });
-            onScroll();
+            onScrollUpdate();
           } else {
             window.removeEventListener('scroll', handleScroll);
           }
         });
       }, { rootMargin: '100px 0px 100px 0px' });
 
-      observer.observe(section);
+      observer.observe(stage);
     } else {
       window.addEventListener('scroll', handleScroll, { passive: true });
-      onScroll();
+      onScrollUpdate();
+    }
+
+    // ResizeObserver to handle layout recomputation
+    if (typeof ResizeObserver !== 'undefined') {
+      const resizeObserver = new ResizeObserver(() => {
+        onScrollUpdate();
+      });
+      resizeObserver.observe(stage);
     }
   }
 
-  setupApproachJourney();
-  document.addEventListener('astro:after-swap', setupApproachJourney);
+  setupVerticalJourney();
+  document.addEventListener('astro:after-swap', setupVerticalJourney);
 </script>
