@@ -75,7 +75,7 @@ export const siteConfig = {
     links: [
       { label: "Solutions", href: "/solutions" },
       { label: "About Us", href: "/about" },
-      { label: "How We Work", href: "/about#how" },
+      { label: "PEG Board", href: "#", comingSoon: true },
       { label: "Contact", href: "/#contact" }
     ],
     cta: {
@@ -239,7 +239,7 @@ export const siteConfig = {
       id: "story-3",
       title: "From paper to platform",
       tag: "Approach",
-      href: "/#shift",
+      href: "/solutions/clm",
       imageKey: "feature-paper-to-platform",
       focus: "center",
       alt: "Architectural transformation from manual paper ledgers to a modern web application",
@@ -249,7 +249,7 @@ export const siteConfig = {
       id: "story-4",
       title: "OutSystems or MERN? We choose per project",
       tag: "Insight",
-      href: "/#stack",
+      href: "/#peg-cube",
       imageKey: "feature-build-stack",
       focus: "center",
       alt: "Balanced engineering blueprint comparing OutSystems low-code with high-code MERN architecture",
@@ -259,7 +259,7 @@ export const siteConfig = {
       id: "story-5",
       title: "Plan, Engineer, Gen-AI",
       tag: "Approach",
-      href: "/about#peg",
+      href: "/#peg-cube",
       imageKey: "feature-peg",
       focus: "center",
       alt: "The Plan, Engineer, and Gen-AI method building adapters around enterprise reality",

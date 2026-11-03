@@ -42,21 +42,21 @@ const { socials, contact, copyrightYear, tagline } = siteConfig;
       <div class="footer-nav-col">
         <span class="footer-col-title">Approach</span>
         <ul class="footer-nav-list">
-          <li><a href="/about#peg" class="footer-link">Plan</a></li>
-          <li><a href="/about#peg" class="footer-link">Engineer</a></li>
-          <li><a href="/about#peg" class="footer-link">Gen-AI</a></li>
-          <li><a href="/about#how" class="footer-link">How We Work</a></li>
-          <li><a href="/about#fit" class="footer-link">Find Your Approach</a></li>
+          <li><a href="/#peg-cube" class="footer-link">Plan</a></li>
+          <li><a href="/#peg-cube" class="footer-link">Engineer</a></li>
+          <li><a href="/#peg-cube" class="footer-link">Gen-AI</a></li>
+          <li><a href="/#approach" class="footer-link">Our Approach</a></li>
         </ul>
       </div>
 
-      <!-- Company Column (About, Mission & Vision, Team) -->
+      <!-- Company Column (About, Mission & Vision, Team, PEG Board) -->
       <div class="footer-nav-col">
         <span class="footer-col-title">Company</span>
         <ul class="footer-nav-list">
           <li><a href="/about" class="footer-link">About RHSP</a></li>
           <li><a href="/about#mission" class="footer-link">Mission &amp; Vision</a></li>
           <li><a href="/about#team" class="footer-link">Leadership Team</a></li>
+          <li><span class="footer-plain-text">PEG Board — Coming soon</span></li>
           <li><a href="/#contact" class="footer-link">Let's Talk</a></li>
         </ul>
       </div>
@@ -224,6 +224,13 @@ const { socials, contact, copyrightYear, tagline } = siteConfig;
     color: var(--color-text-secondary);
     text-decoration: none;
     transition: color 0.2s ease;
+  }
+
+  .footer-plain-text {
+    font-size: var(--fs-sm);
+    color: var(--color-text-muted);
+    user-select: none;
+    line-height: 1.4;
   }
 
   .footer-link:hover {

@@ -47,7 +47,15 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
           </a>
         </li>
         <li>
-          <a href="/about#how" class="nav-link">How We Work</a>
+          <span
+            class="nav-link nav-link--pegboard"
+            role="link"
+            aria-disabled="true"
+            title="PEG Board — coming soon"
+          >
+            <span>PEG Board</span>
+            <span class="nav-coming-soon-pill">Coming soon</span>
+          </span>
         </li>
         <li>
           <a href="/#contact" class="nav-link">Contact</a>
@@ -264,10 +272,10 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
                 </a>
               </li>
               <li>
-                <a href="/about#how" class="mega-link-card">
+                <a href="/#approach" class="mega-link-card">
                   <div class="mega-link-info">
-                    <span class="mega-link-title">Architecture &amp; Roadmaps</span>
-                    <span class="mega-link-desc">From discovery to scaling enterprise systems</span>
+                    <span class="mega-link-title">Our Approach</span>
+                    <span class="mega-link-desc">Six-stage journey from discovery to enablement</span>
                   </div>
                   <Icon name="arrow-right" size={18} class="mega-link-arrow" />
                 </a>
@@ -427,10 +435,6 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
               <strong>About RHSP</strong>
               <span>Our story &amp; mission</span>
             </a>
-            <a href="/about#peg" class="mobile-nav-link">
-              <strong>The PEG Method</strong>
-              <span>Plan · Engineer · Gen-AI</span>
-            </a>
             <a href="/about#team" class="mobile-nav-link">
               <strong>Founders &amp; Team</strong>
               <span>Subramaniam Iyer &amp; Abhishek Bagwe</span>
@@ -438,18 +442,17 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
           </div>
         </div>
 
-        <!-- 3. How We Work -->
+        <!-- 3. PEG Board (Coming Soon) -->
         <div class="mobile-section">
-          <span class="eyebrow">HOW WE WORK</span>
+          <span class="eyebrow">PEG BOARD</span>
           <div class="mobile-links-grid">
-            <a href="/about#how" class="mobile-nav-link">
-              <strong>Delivery Methodology</strong>
-              <span>Four-phase agile delivery cycle</span>
-            </a>
-            <a href="/about#fit" class="mobile-nav-link">
-              <strong>Find Your Approach</strong>
-              <span>Interactive architecture recommender</span>
-            </a>
+            <div class="mobile-nav-link mobile-nav-link--disabled" title="PEG Board — coming soon">
+              <div class="mobile-pegboard-title-row">
+                <strong>PEG Board</strong>
+                <span class="nav-coming-soon-pill">Coming soon</span>
+              </div>
+              <span>Proprietary enterprise board and frameworks</span>
+            </div>
           </div>
         </div>
 
@@ -472,7 +475,7 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
           <a href="/solutions/voice-agents" class="chip-item">Voice Agents</a>
           <a href="/solutions/clm" class="chip-item">CLM</a>
           <a href="/solutions/sovereign-ai" class="chip-item">Sovereign AI</a>
-          <a href="/about#peg" class="chip-item">PEG Cube</a>
+          <a href="/#peg-cube" class="chip-item">PEG Cube</a>
         </div>
       </div>
     </div>
@@ -623,6 +626,49 @@ const isSolutionsActive = currentPath === '/solutions' || currentPath.startsWith
 
   .nav-link-btn.is-active :global(.mega-chevron) {
     transform: rotate(180deg);
+  }
+
+  /* PEG Board Coming Soon Pill & Non-Clickable Link */
+  .nav-link--pegboard {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    cursor: default;
+    user-select: none;
+    pointer-events: auto;
+  }
+
+  .nav-link--pegboard:hover {
+    color: var(--color-text-secondary);
+    background-color: transparent;
+  }
+
+  .nav-coming-soon-pill {
+    display: inline-flex;
+    align-items: center;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.15rem 0.45rem;
+    border-radius: var(--radius-pill);
+    background-color: rgba(247, 148, 29, 0.14);
+    color: #F7941D;
+    line-height: 1.1;
+    border: 1px solid rgba(247, 148, 29, 0.3);
+    white-space: nowrap;
+  }
+
+  .mobile-nav-link--disabled {
+    cursor: default;
+    opacity: 0.9;
+  }
+
+  .mobile-pegboard-title-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.2rem;
   }
 
   /* Header Actions */
