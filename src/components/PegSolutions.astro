@@ -3,22 +3,23 @@ import Icon from './Icon.astro';
 ---
 
 <section id="solutions" class="peg-solutions-section" aria-label="How we think and capabilities">
-  <!-- Desktop / Interactive Scroll Track (~400vh) -->
+  <!-- Desktop / Interactive Scroll Track (~380vh) -->
   <div class="peg-solutions-track" id="peg-solutions-track">
     <div class="peg-solutions-stage" id="peg-solutions-stage">
-      <!-- 0. Intro Overlay: Centered Cube & "Scroll to explore" cue at p ≈ 0 -->
-      <div class="stage-intro-overlay" id="stage-intro-overlay" aria-hidden="true">
-        <span class="eyebrow">HOW WE THINK</span>
-        <h2 class="intro-headline">Plan. Engineer. Gen-AI.</h2>
+      <!-- 0. Phase 0 Intro Header (Center-aligned above the cube in Phase 0) -->
+      <div class="stage-intro-header" id="stage-intro-header" aria-hidden="false">
+        <span class="eyebrow intro-eyebrow">HOW WE THINK</span>
+        <h2 class="intro-headline">
+          <span class="color-word-plan">Plan.</span>
+          <span class="color-word-engineer">Engineer.</span>
+          <span class="color-word-genai">Gen-AI.</span>
+        </h2>
         <p class="intro-subline">Three disciplines. One accountable team.</p>
-        <div class="intro-scroll-cue">
-          <span class="cue-text">Scroll to explore</span>
-          <Icon name="chevron-down" size={16} class="cue-arrow" />
-        </div>
       </div>
 
-      <div class="container stage-container">
-        <!-- Left Column: The 3D CSS Cube & P/E/G Tabs -->
+      <!-- Main Stage Container: 2-Column Grid (38% Left / 62% Right) -->
+      <div class="container stage-container" id="stage-main-container">
+        <!-- Left Column: 3D CSS Cube + Pedestal + Pill Tabs -->
         <div class="stage-cube-col" id="stage-cube-col">
           <div class="cube-scene-wrapper" id="cube-scene-wrapper" aria-label="Interactive 3D PEG Cube">
             <div class="cube-viewport" id="cube-viewport">
@@ -81,7 +82,7 @@ import Icon from './Icon.astro';
             </div>
           </div>
 
-          <!-- P/E/G Pill Tabs below Cube -->
+          <!-- P/E/G Pill Tabs (always positioned directly below the cube in left column) -->
           <div class="stage-pill-tabs" id="stage-pill-tabs" role="tablist" aria-label="PEG Pillars">
             <button
               type="button"
@@ -120,14 +121,20 @@ import Icon from './Icon.astro';
               <span>Gen-AI</span>
             </button>
           </div>
+
+          <!-- Scroll to Explore Hint (Appears ONLY in Phase 0 below the tabs) -->
+          <div class="intro-scroll-cue" id="intro-scroll-cue" aria-hidden="true">
+            <span class="cue-text">Scroll to explore</span>
+            <Icon name="chevron-down" size={14} class="cue-arrow" />
+          </div>
         </div>
 
-        <!-- Right Column: Pillar Content Panels -->
+        <!-- Right Column: Pillar Content Panels (Phases 2-4 only) -->
         <div class="stage-content-col" id="stage-content-col">
           <!-- PANEL 1: PLAN -->
           <div
             id="stage-panel-plan"
-            class="stage-panel is-active"
+            class="stage-panel"
             role="tabpanel"
             aria-labelledby="tab-peg-plan"
           >
@@ -137,7 +144,7 @@ import Icon from './Icon.astro';
                 <span class="eyebrow-text" style="color: #1E4B8F;">PLAN</span>
               </div>
               <h2 class="panel-title">
-                <strong>Plan</strong> with foresight.
+                <strong class="highlight-plan">Plan</strong> with foresight.
               </h2>
               <p class="panel-desc">
                 Objective platform selection, architecture blueprints, and founder-led advisory before writing code.
@@ -145,14 +152,13 @@ import Icon from './Icon.astro';
             </div>
 
             <div class="cards-grid plan-grid">
-              <!-- Card 1 -->
               <article class="stage-card card-mastercard">
                 <div class="card-top-icon" style="color: #1E4B8F;">
-                  <Icon name="compass" size={24} />
+                  <Icon name="compass" size={20} />
                 </div>
                 <h3 class="card-heading">Platform Selection</h3>
                 <p class="card-copy">
-                  Low-code OutSystems vs. high-code MERN vs. hybrid architecture. Objective evaluation based on organizational capability, velocity, and total cost of ownership.
+                  Low-code OutSystems vs. high-code MERN vs. hybrid architecture with unbiased evaluation.
                 </p>
                 <div class="card-tags-row">
                   <span class="stage-tag">Low-Code vs High-Code</span>
@@ -160,14 +166,13 @@ import Icon from './Icon.astro';
                 </div>
               </article>
 
-              <!-- Card 2 -->
               <article class="stage-card card-mastercard">
                 <div class="card-top-icon" style="color: #1E4B8F;">
-                  <Icon name="layers" size={24} />
+                  <Icon name="layers" size={20} />
                 </div>
                 <h3 class="card-heading">Architecture Blueprints</h3>
                 <p class="card-copy">
-                  Resilient system design, data boundaries, and phased implementation roadmaps that your engineering team can actually execute.
+                  Resilient system design, data boundaries, and phased implementation roadmaps that your team can execute.
                 </p>
                 <div class="card-tags-row">
                   <span class="stage-tag">System Architecture</span>
@@ -175,14 +180,13 @@ import Icon from './Icon.astro';
                 </div>
               </article>
 
-              <!-- Card 3 -->
               <article class="stage-card card-mastercard">
                 <div class="card-top-icon" style="color: #1E4B8F;">
-                  <Icon name="shield" size={24} />
+                  <Icon name="shield" size={20} />
                 </div>
                 <h3 class="card-heading">Founder-Led Advisory</h3>
                 <p class="card-copy">
-                  Direct senior technical guidance for high-stakes digital investments, architecture governance, and enterprise transformation.
+                  Direct senior technical guidance for high-stakes digital investments and transformation decisions.
                 </p>
                 <div class="card-tags-row">
                   <span class="stage-tag">Executive Advisory</span>
@@ -191,6 +195,7 @@ import Icon from './Icon.astro';
               </article>
             </div>
 
+            <!-- CTA strictly under cards in right column -->
             <div class="panel-action">
               <a href="#contact" class="btn btn-primary plan-cta-btn">
                 <span>Talk to our consultants</span>
@@ -212,7 +217,7 @@ import Icon from './Icon.astro';
                 <span class="eyebrow-text" style="color: #B86200;">ENGINEER</span>
               </div>
               <h2 class="panel-title">
-                <strong>Engineer</strong> with precision.
+                <strong class="highlight-engineer">Engineer</strong> with precision.
               </h2>
               <p class="panel-desc">
                 OutSystems speed or custom MERN engineering, built around enterprise workflows.
@@ -226,7 +231,7 @@ import Icon from './Icon.astro';
                   <span class="stage-tag primary-tint">OutSystems Low-Code</span>
                   <h3 class="card-heading">Implementation &amp; Transformation</h3>
                   <p class="card-copy">
-                    Enterprise web and mobile applications deployed in weeks with built-in governance, security, and enterprise connectivity.
+                    Enterprise applications deployed in weeks with built-in governance, security, and connectivity.
                   </p>
                 </div>
                 <a href="#contact" class="btn btn-secondary btn-sm service-action">
@@ -240,7 +245,7 @@ import Icon from './Icon.astro';
                   <span class="stage-tag primary-tint">High-Code (MERN)</span>
                   <h3 class="card-heading">Custom Full-Stack Development</h3>
                   <p class="card-copy">
-                    Full-stack engineering with complete architectural autonomy, high performance, and zero platform licensing ceilings.
+                    Full-stack engineering with complete architectural autonomy, speed, and zero platform ceilings.
                   </p>
                 </div>
                 <a href="#contact" class="btn btn-secondary btn-sm service-action">
@@ -257,22 +262,22 @@ import Icon from './Icon.astro';
                 <a href="/solutions/clm" class="accelerator-item card-mastercard">
                   <div class="accelerator-content">
                     <span class="accelerator-code">CLM</span>
-                    <h4 class="accelerator-title">Contract Lifecycle Management</h4>
-                    <p class="accelerator-desc">Drafting, approvals, redlining, and digital execution.</p>
+                    <h4 class="accelerator-title">Contract Lifecycle</h4>
+                    <p class="accelerator-desc">Drafting, approvals, redlining, digital signing.</p>
                   </div>
                   <span class="accelerator-link-icon" aria-hidden="true">
-                    <Icon name="arrow-right" size={16} />
+                    <Icon name="arrow-right" size={14} />
                   </span>
                 </a>
 
                 <a href="/solutions/dms" class="accelerator-item card-mastercard">
                   <div class="accelerator-content">
                     <span class="accelerator-code">DMS</span>
-                    <h4 class="accelerator-title">Document Management System</h4>
-                    <p class="accelerator-desc">Intelligent indexing, access control, and compliant document workflows.</p>
+                    <h4 class="accelerator-title">Document Management</h4>
+                    <p class="accelerator-desc">Intelligent indexing, access control, compliant flows.</p>
                   </div>
                   <span class="accelerator-link-icon" aria-hidden="true">
-                    <Icon name="arrow-right" size={16} />
+                    <Icon name="arrow-right" size={14} />
                   </span>
                 </a>
 
@@ -280,10 +285,10 @@ import Icon from './Icon.astro';
                   <div class="accelerator-content">
                     <span class="accelerator-code">WHATSAPP</span>
                     <h4 class="accelerator-title">WhatsApp Journeys</h4>
-                    <p class="accelerator-desc">Two-way customer engagement, transactional updates, and automated alerts.</p>
+                    <p class="accelerator-desc">Two-way customer engagement &amp; automated alerts.</p>
                   </div>
                   <span class="accelerator-link-icon" aria-hidden="true">
-                    <Icon name="arrow-right" size={16} />
+                    <Icon name="arrow-right" size={14} />
                   </span>
                 </a>
               </div>
@@ -303,7 +308,7 @@ import Icon from './Icon.astro';
                 <span class="eyebrow-text" style="color: #B82810;">GEN-AI</span>
               </div>
               <h2 class="panel-title">
-                <strong>Gen-AI</strong> the leap.
+                <strong class="highlight-genai">Gen-AI</strong> the leap.
               </h2>
               <p class="panel-desc">
                 Private, catalogue-grounded, production-ready AI operating inside your walls.
@@ -337,7 +342,7 @@ import Icon from './Icon.astro';
                 </div>
                 <h3 class="card-heading">Sovereign AI</h3>
                 <p class="card-copy">
-                  Private enterprise LLM deployments running entirely on your infrastructure with strict data boundaries and no external data exposure.
+                  Private enterprise LLM deployments running entirely on your infrastructure with strict boundaries and zero third-party data exposure.
                 </p>
                 <div class="card-footer-action">
                   <a href="/solutions/sovereign-ai" class="solution-link" aria-label="Explore Sovereign AI solution">
@@ -394,7 +399,7 @@ import Icon from './Icon.astro';
             <span class="pillar-indicator" style="background-color: #1E4B8F;">P</span>
             <span class="eyebrow-text" style="color: #1E4B8F;">PLAN</span>
           </div>
-          <h2 class="panel-title"><strong>Plan</strong> with foresight.</h2>
+          <h2 class="panel-title"><strong class="highlight-plan">Plan</strong> with foresight.</h2>
           <p class="panel-desc">Objective platform selection, architecture blueprints, and founder-led advisory before writing code.</p>
         </div>
         <div class="mobile-cards-stack">
@@ -425,7 +430,7 @@ import Icon from './Icon.astro';
             <span class="pillar-indicator" style="background-color: #F7941D;">E</span>
             <span class="eyebrow-text" style="color: #B86200;">ENGINEER</span>
           </div>
-          <h2 class="panel-title"><strong>Engineer</strong> with precision.</h2>
+          <h2 class="panel-title"><strong class="highlight-engineer">Engineer</strong> with precision.</h2>
           <p class="panel-desc">OutSystems speed or custom MERN engineering, built around enterprise workflows.</p>
         </div>
         <div class="mobile-cards-stack">
@@ -469,7 +474,7 @@ import Icon from './Icon.astro';
             <span class="pillar-indicator" style="background-color: #EE4B2B;">G</span>
             <span class="eyebrow-text" style="color: #B82810;">GEN-AI</span>
           </div>
-          <h2 class="panel-title"><strong>Gen-AI</strong> the leap.</h2>
+          <h2 class="panel-title"><strong class="highlight-genai">Gen-AI</strong> the leap.</h2>
           <p class="panel-desc">Private, catalogue-grounded, production-ready AI operating inside your walls.</p>
         </div>
         <div class="mobile-cards-stack">
@@ -504,91 +509,103 @@ import Icon from './Icon.astro';
     background-color: var(--color-bg);
   }
 
-  /* Desktop Sticky 400vh Track */
+  /* Desktop Sticky Track (~380vh) */
   .peg-solutions-track {
     position: relative;
     height: 380vh;
-    min-height: 3000px;
+    min-height: 2800px;
     width: 100%;
   }
 
+  /* Stage height fitted to viewport minus header */
   .peg-solutions-stage {
     position: sticky;
-    top: 0;
-    height: 100vh;
+    top: var(--nav-height, 72px);
+    height: calc(100vh - var(--nav-height, 72px));
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    padding: 2rem 0;
+    box-sizing: border-box;
+    padding: 1rem 0;
+  }
+
+  /* Phase 0 Intro Header (Center-aligned, positioned near top of stage in Phase 0) */
+  .stage-intro-header {
+    position: absolute;
+    top: 6vh;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 10;
+    pointer-events: none;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+    width: 100%;
+    max-width: 720px;
+    padding: 0 1rem;
     box-sizing: border-box;
   }
 
-  /* Intro Overlay at p≈0 */
-  .stage-intro-overlay {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding-top: 10vh;
-    text-align: center;
-    pointer-events: none;
-    z-index: 5;
-    transition: opacity 0.4s ease, transform 0.4s ease;
+  .intro-eyebrow {
+    letter-spacing: 0.1em;
+    font-weight: 700;
   }
 
   .intro-headline {
-    font-size: clamp(2rem, 4vw, 3rem);
+    font-size: clamp(2rem, 3.5vw, 2.85rem);
     font-weight: 700;
     color: var(--color-text-primary);
-    margin: 0.5rem 0 0.5rem;
-    letter-spacing: -0.02em;
+    margin: 0.4rem 0;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+  }
+
+  .color-word-plan {
+    color: #1E4B8F;
+  }
+
+  :global(.dark) .color-word-plan {
+    color: #4D8BFF;
+  }
+
+  .color-word-engineer {
+    color: #F7941D;
+  }
+
+  :global(.dark) .color-word-engineer {
+    color: #FFA940;
+  }
+
+  .color-word-genai {
+    color: #EE4B2B;
+  }
+
+  :global(.dark) .color-word-genai {
+    color: #FF6647;
   }
 
   .intro-subline {
     font-size: var(--fs-md);
     color: var(--color-text-secondary);
-    max-width: 480px;
+    margin: 0;
   }
 
-  .intro-scroll-cue {
-    position: absolute;
-    bottom: 8vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.4rem;
-    color: var(--color-text-muted);
-    font-size: var(--fs-xs);
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    animation: bounceDown 2s infinite ease-in-out;
-  }
-
-  @keyframes bounceDown {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(6px); }
-  }
-
-  /* Main Container */
+  /* 2-Column Grid Stage Container: 38% Cube / 62% Content */
   .stage-container {
     display: grid;
-    grid-template-columns: 340px 1fr;
-    gap: 3.5rem;
+    grid-template-columns: 38% 62%;
+    gap: 3rem;
     align-items: center;
     width: 100%;
     max-width: 1280px;
     height: 100%;
-    max-height: 85vh;
+    max-height: calc(100vh - 120px);
     position: relative;
     z-index: 2;
   }
 
-  /* Left Column: Cube Scene */
+  /* Left Column: Cube Scene + Tabs (Fixed on the left in Phases 1-4) */
   .stage-cube-col {
     display: flex;
     flex-direction: column;
@@ -596,13 +613,14 @@ import Icon from './Icon.astro';
     justify-content: center;
     position: relative;
     transform-origin: center center;
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
+    z-index: 5;
   }
 
   .cube-scene-wrapper {
     position: relative;
-    width: 300px;
-    height: 300px;
+    width: 240px;
+    height: 240px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -618,8 +636,8 @@ import Icon from './Icon.astro';
 
   .cube-viewport {
     position: relative;
-    width: 160px;
-    height: 160px;
+    width: 140px;
+    height: 140px;
     transform-style: preserve-3d;
     z-index: 2;
   }
@@ -635,8 +653,8 @@ import Icon from './Icon.astro';
 
   .cube-face {
     position: absolute;
-    width: 160px;
-    height: 160px;
+    width: 140px;
+    height: 140px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -652,52 +670,52 @@ import Icon from './Icon.astro';
 
   /* Top Face: P - Plan (Navy) */
   .face-top {
-    transform: rotateX(90deg) translateZ(80px);
+    transform: rotateX(90deg) translateZ(70px);
     background: linear-gradient(135deg, #1E4B8F 0%, #0F2A4A 100%);
     box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.2);
   }
 
   .face-top.is-popped {
-    transform: rotateX(90deg) translateZ(96px);
+    transform: rotateX(90deg) translateZ(85px);
   }
 
   /* Left Face: E - Engineer (Orange) */
   .face-left {
-    transform: rotateY(-90deg) translateZ(80px);
+    transform: rotateY(-90deg) translateZ(70px);
     background: linear-gradient(135deg, #FF9E2C 0%, #F7941D 100%);
     box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.15);
   }
 
   .face-left.is-popped {
-    transform: rotateY(-90deg) translateZ(96px);
+    transform: rotateY(-90deg) translateZ(85px);
   }
 
   /* Right Face: G - Gen-AI (Red) */
   .face-right {
-    transform: translateZ(80px);
+    transform: translateZ(70px);
     background: linear-gradient(135deg, #FF5B3B 0%, #EE4B2B 100%);
     box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.15);
   }
 
   .face-right.is-popped {
-    transform: translateZ(96px);
+    transform: translateZ(85px);
   }
 
   /* Enclosure Faces */
   .face-bottom {
-    transform: rotateX(-90deg) translateZ(80px);
+    transform: rotateX(-90deg) translateZ(70px);
     background: #0A1B30;
     pointer-events: none;
   }
 
   .face-back {
-    transform: rotateY(180deg) translateZ(80px);
+    transform: rotateY(180deg) translateZ(70px);
     background: #C43818;
     pointer-events: none;
   }
 
   .face-back-left {
-    transform: rotateY(90deg) translateZ(80px);
+    transform: rotateY(90deg) translateZ(70px);
     background: #0F2A4A;
     pointer-events: none;
   }
@@ -707,12 +725,12 @@ import Icon from './Icon.astro';
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.2rem;
+    gap: 0.15rem;
     pointer-events: none;
   }
 
   .face-letter {
-    font-size: 2.85rem;
+    font-size: 2.5rem;
     font-weight: 700;
     line-height: 1;
     letter-spacing: -0.03em;
@@ -720,7 +738,7 @@ import Icon from './Icon.astro';
   }
 
   .face-word {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 600;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -730,9 +748,9 @@ import Icon from './Icon.astro';
   /* Socket Pedestal */
   .cube-socket-ellipse {
     position: absolute;
-    bottom: 24px;
-    width: 220px;
-    height: 60px;
+    bottom: 16px;
+    width: 190px;
+    height: 50px;
     border-radius: 50%;
     background: radial-gradient(ellipse at center, rgba(30, 75, 143, 0.28) 0%, rgba(30, 75, 143, 0.08) 50%, transparent 75%);
     pointer-events: none;
@@ -743,8 +761,8 @@ import Icon from './Icon.astro';
   }
 
   .socket-inner-depth {
-    width: 130px;
-    height: 32px;
+    width: 110px;
+    height: 26px;
     border-radius: 50%;
     background: radial-gradient(ellipse at center, rgba(15, 42, 74, 0.45) 0%, transparent 70%);
   }
@@ -753,21 +771,21 @@ import Icon from './Icon.astro';
   .stage-pill-tabs {
     display: flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: 0.35rem;
     background-color: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-pill);
-    padding: 4px;
+    padding: 3px;
     box-shadow: var(--shadow-subtle);
-    margin-top: 1rem;
+    margin-top: 0.75rem;
     z-index: 3;
   }
 
   .peg-tab-btn {
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
-    padding: 0.4rem 0.85rem;
+    gap: 0.35rem;
+    padding: 0.35rem 0.75rem;
     border-radius: var(--radius-pill);
     border: 1px solid transparent;
     background: transparent;
@@ -796,13 +814,13 @@ import Icon from './Icon.astro';
   }
 
   .tab-badge {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
     color: #FFFFFF;
   }
@@ -811,13 +829,37 @@ import Icon from './Icon.astro';
   .engineer-badge { background-color: #F7941D; }
   .genai-badge { background-color: #EE4B2B; }
 
-  /* Right Column: Stage Content Panels */
+  /* "Scroll to explore" cue (Phase 0 only, directly below tabs) */
+  .intro-scroll-cue {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 1.5rem;
+    color: var(--color-text-muted);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    animation: gentleBounce 2s infinite ease-in-out;
+  }
+
+  @keyframes gentleBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(5px); }
+  }
+
+  /* Right Column: Stage Content Panels (Opacity 0 by default in Phase 0) */
   .stage-content-col {
     position: relative;
     width: 100%;
     height: 100%;
     display: flex;
     align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.35s ease, visibility 0.35s ease;
   }
 
   .stage-panel {
@@ -828,7 +870,7 @@ import Icon from './Icon.astro';
     justify-content: center;
     opacity: 0;
     visibility: hidden;
-    transform: translateY(16px);
+    transform: translateY(12px);
     transition: opacity 0.35s ease, transform 0.35s ease, visibility 0.35s;
     pointer-events: none;
   }
@@ -842,22 +884,22 @@ import Icon from './Icon.astro';
 
   /* Panel Header */
   .panel-header {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
   }
 
   .panel-eyebrow {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.4rem;
+    gap: 0.4rem;
+    margin-bottom: 0.25rem;
   }
 
   .pillar-indicator {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     border-radius: 4px;
     color: #FFFFFF;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700;
     display: inline-flex;
     align-items: center;
@@ -865,37 +907,60 @@ import Icon from './Icon.astro';
   }
 
   .eyebrow-text {
-    font-size: var(--fs-eyebrow);
+    font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
   }
 
   .panel-title {
-    font-size: clamp(1.75rem, 2.75vw, 2.4rem);
+    font-size: clamp(1.6rem, 2.4vw, 2.2rem);
     font-weight: 400;
     color: var(--color-text-primary);
     line-height: 1.15;
     letter-spacing: -0.02em;
-    margin: 0 0 0.5rem;
+    margin: 0 0 0.35rem;
   }
 
-  .panel-title strong {
+  .highlight-plan {
+    color: #1E4B8F;
     font-weight: 700;
+  }
+
+  :global(.dark) .highlight-plan {
+    color: #4D8BFF;
+  }
+
+  .highlight-engineer {
+    color: #F7941D;
+    font-weight: 700;
+  }
+
+  :global(.dark) .highlight-engineer {
+    color: #FFA940;
+  }
+
+  .highlight-genai {
+    color: #EE4B2B;
+    font-weight: 700;
+  }
+
+  :global(.dark) .highlight-genai {
+    color: #FF6647;
   }
 
   .panel-desc {
     font-size: var(--fs-sm);
     color: var(--color-text-secondary);
-    max-width: 600px;
-    line-height: 1.5;
+    max-width: 620px;
+    line-height: 1.45;
     margin: 0;
   }
 
   /* Card Grids */
   .cards-grid {
     display: grid;
-    gap: 1rem;
+    gap: 0.75rem;
   }
 
   .plan-grid {
@@ -903,7 +968,7 @@ import Icon from './Icon.astro';
   }
 
   .stage-card {
-    padding: 1.25rem;
+    padding: 1rem;
     border: 1px solid var(--color-border);
     display: flex;
     flex-direction: column;
@@ -911,36 +976,36 @@ import Icon from './Icon.astro';
   }
 
   .card-top-icon {
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
   }
 
   .card-heading {
-    font-size: 1rem;
+    font-size: 0.9375rem;
     font-weight: 600;
     color: var(--color-text-primary);
-    margin: 0 0 0.4rem;
+    margin: 0 0 0.3rem;
     line-height: 1.3;
   }
 
   .card-copy {
     font-size: 0.8125rem;
     color: var(--color-text-secondary);
-    line-height: 1.5;
-    margin: 0 0 0.85rem;
+    line-height: 1.45;
+    margin: 0 0 0.65rem;
     flex-grow: 1;
   }
 
   .card-tags-row {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.35rem;
+    gap: 0.3rem;
     margin-top: auto;
   }
 
   .stage-tag {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 500;
-    padding: 0.15rem 0.5rem;
+    padding: 0.12rem 0.45rem;
     border-radius: var(--radius-pill);
     background-color: var(--color-surface-alt);
     color: var(--color-text-secondary);
@@ -958,7 +1023,7 @@ import Icon from './Icon.astro';
   }
 
   .panel-action {
-    margin-top: 1.5rem;
+    margin-top: 1rem;
   }
 
   .plan-cta-btn {
@@ -967,7 +1032,7 @@ import Icon from './Icon.astro';
     color: #FFFFFF;
     font-size: var(--fs-sm);
     padding: 0 1.25rem;
-    height: 42px;
+    height: 40px;
   }
 
   .plan-cta-btn:hover {
@@ -979,29 +1044,30 @@ import Icon from './Icon.astro';
   .services-duo-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-    margin-bottom: 1.25rem;
+    gap: 0.75rem;
+    margin-bottom: 0.85rem;
   }
 
   .service-card {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    padding: 1rem;
   }
 
   .service-action {
-    margin-top: 0.75rem;
+    margin-top: 0.65rem;
     align-self: flex-start;
   }
 
   .accelerators-block {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.35rem;
   }
 
   .accelerators-label {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -1011,14 +1077,14 @@ import Icon from './Icon.astro';
   .accelerators-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 0.75rem;
+    gap: 0.6rem;
   }
 
   .accelerator-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.85rem 1rem;
+    padding: 0.75rem 0.85rem;
     border: 1px solid var(--color-border);
     text-decoration: none;
     transition: border-color 0.2s ease, transform 0.2s ease;
@@ -1032,7 +1098,7 @@ import Icon from './Icon.astro';
   .accelerator-content {
     display: flex;
     flex-direction: column;
-    gap: 0.15rem;
+    gap: 0.1rem;
   }
 
   .accelerator-code {
@@ -1057,13 +1123,13 @@ import Icon from './Icon.astro';
     font-size: 11px;
     color: var(--color-text-secondary);
     margin: 0;
-    line-height: 1.35;
+    line-height: 1.3;
   }
 
   .accelerator-link-icon {
     color: var(--color-text-muted);
     transition: transform 0.2s ease, color 0.2s ease;
-    margin-left: 0.5rem;
+    margin-left: 0.4rem;
     flex-shrink: 0;
   }
 
@@ -1084,7 +1150,7 @@ import Icon from './Icon.astro';
 
   .card-footer-action {
     margin-top: auto;
-    padding-top: 0.75rem;
+    padding-top: 0.65rem;
     border-top: 1px solid var(--color-border);
   }
 
@@ -1117,39 +1183,25 @@ import Icon from './Icon.astro';
   }
 
   /* Responsive & Mobile Breakpoints */
-  @media (max-width: 1024px) {
+  @media (max-width: 1099px) {
     .stage-container {
-      grid-template-columns: 260px 1fr;
-      gap: 2rem;
+      grid-template-columns: 35% 65%;
+      gap: 1.5rem;
     }
 
-    .cube-scene-wrapper {
-      width: 240px;
-      height: 240px;
+    .plan-grid,
+    .genai-grid {
+      grid-template-columns: 1fr;
+      gap: 0.6rem;
     }
 
-    .cube-viewport {
-      width: 130px;
-      height: 130px;
+    .services-duo-grid {
+      grid-template-columns: 1fr;
     }
 
-    .cube-face {
-      width: 130px;
-      height: 130px;
+    .accelerators-grid {
+      grid-template-columns: 1fr;
     }
-
-    .face-top { transform: rotateX(90deg) translateZ(65px); }
-    .face-top.is-popped { transform: rotateX(90deg) translateZ(80px); }
-    .face-left { transform: rotateY(-90deg) translateZ(65px); }
-    .face-left.is-popped { transform: rotateY(-90deg) translateZ(80px); }
-    .face-right { transform: translateZ(65px); }
-    .face-right.is-popped { transform: translateZ(80px); }
-    .face-bottom { transform: rotateX(-90deg) translateZ(65px); }
-    .face-back { transform: rotateY(180deg) translateZ(65px); }
-    .face-back-left { transform: rotateY(90deg) translateZ(65px); }
-
-    .face-letter { font-size: 2.2rem; }
-    .face-word { font-size: 0.65rem; }
   }
 
   @media (max-width: 899px) {
@@ -1243,8 +1295,10 @@ import Icon from './Icon.astro';
       padding: 3rem 0 !important;
     }
 
-    .stage-intro-overlay {
-      display: none !important;
+    .stage-intro-header {
+      position: static !important;
+      transform: none !important;
+      margin-bottom: 2rem !important;
     }
 
     .stage-container {
@@ -1261,6 +1315,9 @@ import Icon from './Icon.astro';
       display: flex !important;
       flex-direction: column !important;
       gap: 3rem !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto !important;
     }
 
     .stage-panel {
@@ -1274,27 +1331,33 @@ import Icon from './Icon.astro';
 </style>
 
 <script>
+  import { getScrollStory, smoothstep, lerp, clamp } from '../scripts/scrollStory';
+
   function initPegSolutions() {
     const track = document.getElementById('peg-solutions-track');
     const stage = document.getElementById('peg-solutions-stage');
-    const introOverlay = document.getElementById('stage-intro-overlay');
+    const introHeader = document.getElementById('stage-intro-header');
+    const scrollCue = document.getElementById('intro-scroll-cue');
     const cubeCol = document.getElementById('stage-cube-col');
     const cubeAssembly = document.getElementById('cube-assembly');
+    const contentCol = document.getElementById('stage-content-col');
+    const container = document.getElementById('stage-main-container');
+
     const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('.stage-pill-tabs .peg-tab-btn'));
-    const panels = {
+    const panels: Record<string, HTMLElement | null> = {
       plan: document.getElementById('stage-panel-plan'),
       engineer: document.getElementById('stage-panel-engineer'),
       genai: document.getElementById('stage-panel-genai')
     };
-    const faces = {
+    const faces: Record<string, HTMLElement | null> = {
       plan: document.getElementById('cube-face-plan'),
       engineer: document.getElementById('cube-face-engineer'),
       genai: document.getElementById('cube-face-genai')
     };
 
-    if (!track || !stage || !cubeAssembly) return;
+    if (!track || !stage || !cubeAssembly || !cubeCol || !contentCol) return;
 
-    // Cube rotation angles for pillars
+    // Cube rotation angles
     const pillarAngles: Record<string, { x: number; y: number }> = {
       intro: { x: -30, y: 45 },
       plan: { x: -65, y: 45 },
@@ -1303,20 +1366,16 @@ import Icon from './Icon.astro';
     };
 
     let activePillar = 'plan';
-    let isTicking = false;
-    let isUserDragging = false;
-
-    // Helper: linear interpolation
-    function lerp(a: number, b: number, t: number) {
-      return a + (b - a) * t;
-    }
+    let trackTop = 0;
+    let trackHeight = 0;
+    let centerOffset = 0;
 
     function setPanelActive(pillar: 'plan' | 'engineer' | 'genai') {
       if (activePillar === pillar) return;
       activePillar = pillar;
 
       // Update Tabs
-      tabs.forEach(tab => {
+      tabs.forEach((tab) => {
         const isMatch = tab.getAttribute('data-pillar') === pillar;
         tab.classList.toggle('is-active', isMatch);
         tab.setAttribute('aria-selected', isMatch ? 'true' : 'false');
@@ -1335,120 +1394,170 @@ import Icon from './Icon.astro';
       });
     }
 
-    function updateScroll() {
-      if (!track || !cubeAssembly) return;
-      if (window.innerWidth < 900 || isUserDragging) {
-        isTicking = false;
-        return;
-      }
+    // Subscribe to shared scrollStory controller
+    const story = getScrollStory();
 
-      const rect = track.getBoundingClientRect();
-      const trackHeight = track.offsetHeight - window.innerHeight;
-      if (trackHeight <= 0) {
-        isTicking = false;
-        return;
-      }
+    story.subscribe({
+      id: 'peg-solutions',
+      gateElement: track,
+      measure: (vp) => {
+        if (vp.viewportWidth < 900) return;
+        const rect = track.getBoundingClientRect();
+        trackTop = rect.top + vp.scrollY;
+        trackHeight = track.offsetHeight - vp.viewportHeight;
 
-      // Progress p from 0 to 1
-      const p = Math.max(0, Math.min(1, -rect.top / trackHeight));
-
-      // 1. Intro Transition (p: 0 -> 0.12)
-      if (p <= 0.12) {
-        const introP = p / 0.12;
-        if (introOverlay) {
-          introOverlay.style.opacity = `${1 - introP * 1.5}`;
-          introOverlay.style.transform = `translateY(${-introP * 30}px)`;
-          introOverlay.style.pointerEvents = introP > 0.8 ? 'none' : 'auto';
+        // Calculate translation needed to place cube in exact center of container during Phase 0
+        if (container && cubeCol) {
+          const containerWidth = container.offsetWidth;
+          const cubeColWidth = cubeCol.offsetWidth;
+          centerOffset = (containerWidth - cubeColWidth) / 2;
         }
+      },
+      update: (vp) => {
+        if (vp.viewportWidth < 900 || trackHeight <= 0) return;
 
-        // Cube centered scaling down to left column
-        if (cubeCol) {
-          const scale = lerp(1.15, 1.0, introP);
-          const translateX = lerp(window.innerWidth > 1200 ? 180 : 120, 0, introP);
-          cubeCol.style.transform = `translateX(${translateX}px) scale(${scale})`;
-        }
+        // Calculate scroll progress p in [0, 1]
+        const p = clamp((vp.scrollY - trackTop) / trackHeight, 0, 1);
 
-        // Interpolate cube angle: intro -> plan
-        const ang = {
-          x: lerp(pillarAngles.intro.x, pillarAngles.plan.x, introP),
-          y: lerp(pillarAngles.intro.y, pillarAngles.plan.y, introP)
-        };
-        cubeAssembly.style.transform = `rotateX(${ang.x}deg) rotateY(${ang.y}deg)`;
-        setPanelActive('plan');
-      } 
-      // 2. Plan Phase (p: 0.12 -> 0.40)
-      else if (p <= 0.40) {
-        if (introOverlay) {
-          introOverlay.style.opacity = '0';
-          introOverlay.style.pointerEvents = 'none';
-        }
-        if (cubeCol) {
-          cubeCol.style.transform = 'translateX(0) scale(1.0)';
-        }
+        // --- PHASE 0: Intro only (p: 0 -> 0.15) ---
+        if (p <= 0.15) {
+          const introP = p / 0.15; // 0 to 1 inside phase 0
 
-        // Near end of plan phase (0.35 -> 0.40), smoothly interpolate to engineer
-        if (p > 0.35) {
-          const t = (p - 0.35) / 0.05;
+          // Intro header visible
+          if (introHeader) {
+            introHeader.style.opacity = `${1 - introP * 0.8}`;
+            introHeader.style.transform = `translateX(-50%) translateY(${-introP * 15}px)`;
+            introHeader.style.pointerEvents = introP > 0.8 ? 'none' : 'auto';
+          }
+
+          // "Scroll to explore" visible only in phase 0
+          if (scrollCue) {
+            scrollCue.style.opacity = `${1 - introP * 1.5}`;
+            scrollCue.style.pointerEvents = introP > 0.6 ? 'none' : 'auto';
+          }
+
+          // Cube centered in stage
+          cubeCol.style.transform = `translateX(${centerOffset}px) scale(1.15)`;
+
+          // Content column completely hidden
+          contentCol.style.opacity = '0';
+          contentCol.style.visibility = 'hidden';
+          contentCol.style.pointerEvents = 'none';
+
+          // Cube is on Face P (Plan)
+          cubeAssembly.style.transform = `rotateX(${pillarAngles.intro.x}deg) rotateY(${pillarAngles.intro.y}deg)`;
+          setPanelActive('plan');
+        }
+        // --- PHASE 1: Transition into left column (p: 0.15 -> 0.30) ---
+        else if (p <= 0.30) {
+          const t1 = (p - 0.15) / 0.15; // 0 to 1 inside phase 1
+          const ease1 = smoothstep(0, 1, t1);
+
+          // Intro header fades out
+          if (introHeader) {
+            introHeader.style.opacity = `${(1 - ease1) * 0.2}`;
+            introHeader.style.transform = `translateX(-50%) translateY(${-15 - ease1 * 25}px)`;
+            introHeader.style.pointerEvents = 'none';
+          }
+
+          // "Scroll to explore" cue completely hidden
+          if (scrollCue) {
+            scrollCue.style.opacity = '0';
+            scrollCue.style.pointerEvents = 'none';
+          }
+
+          // Cube transitions from center to left column (scale 1.15 -> 1.0)
+          const currentX = lerp(centerOffset, 0, ease1);
+          const currentScale = lerp(1.15, 1.0, ease1);
+          cubeCol.style.transform = `translateX(${currentX}px) scale(${currentScale})`;
+
+          // Cube interpolates angle: intro -> plan
           const ang = {
-            x: lerp(pillarAngles.plan.x, pillarAngles.engineer.x, t),
-            y: lerp(pillarAngles.plan.y, pillarAngles.engineer.y, t)
+            x: lerp(pillarAngles.intro.x, pillarAngles.plan.x, ease1),
+            y: lerp(pillarAngles.intro.y, pillarAngles.plan.y, ease1)
           };
           cubeAssembly.style.transform = `rotateX(${ang.x}deg) rotateY(${ang.y}deg)`;
-        } else {
-          cubeAssembly.style.transform = `rotateX(${pillarAngles.plan.x}deg) rotateY(${pillarAngles.plan.y}deg)`;
-        }
-        setPanelActive('plan');
-      }
-      // 3. Engineer Phase (p: 0.40 -> 0.70)
-      else if (p <= 0.70) {
-        if (cubeCol) {
-          cubeCol.style.transform = 'translateX(0) scale(1.0)';
-        }
 
-        // Near end of engineer phase (0.65 -> 0.70), smoothly interpolate to genai
-        if (p > 0.65) {
-          const t = (p - 0.65) / 0.05;
-          const ang = {
-            x: lerp(pillarAngles.engineer.x, pillarAngles.genai.x, t),
-            y: lerp(pillarAngles.engineer.y, pillarAngles.genai.y, t)
-          };
-          cubeAssembly.style.transform = `rotateX(${ang.x}deg) rotateY(${ang.y}deg)`;
-        } else {
-          cubeAssembly.style.transform = `rotateX(${pillarAngles.engineer.x}deg) rotateY(${pillarAngles.engineer.y}deg)`;
-        }
-        setPanelActive('engineer');
-      }
-      // 4. Gen-AI Phase (p: 0.70 -> 1.0)
-      else {
-        if (cubeCol) {
-          cubeCol.style.transform = 'translateX(0) scale(1.0)';
-        }
-        cubeAssembly.style.transform = `rotateX(${pillarAngles.genai.x}deg) rotateY(${pillarAngles.genai.y}deg)`;
-        setPanelActive('genai');
-      }
+          // Content column begins fading in toward end of phase 1
+          if (t1 > 0.6) {
+            const contentAlpha = (t1 - 0.6) / 0.4;
+            contentCol.style.opacity = `${contentAlpha}`;
+            contentCol.style.visibility = 'visible';
+            contentCol.style.pointerEvents = 'auto';
+          } else {
+            contentCol.style.opacity = '0';
+            contentCol.style.visibility = 'hidden';
+            contentCol.style.pointerEvents = 'none';
+          }
 
-      isTicking = false;
-    }
+          setPanelActive('plan');
+        }
+        // --- PHASES 2-4: Pillar Stages (p: 0.30 -> 1.0) ---
+        else {
+          // Intro & scroll cue fully hidden
+          if (introHeader) {
+            introHeader.style.opacity = '0';
+            introHeader.style.pointerEvents = 'none';
+          }
+          if (scrollCue) {
+            scrollCue.style.opacity = '0';
+            scrollCue.style.pointerEvents = 'none';
+          }
 
-    function onScroll() {
-      if (!isTicking) {
-        requestAnimationFrame(updateScroll);
-        isTicking = true;
+          // Cube column fixed in left column
+          cubeCol.style.transform = 'translateX(0px) scale(1.0)';
+
+          // Content column fully active
+          contentCol.style.opacity = '1';
+          contentCol.style.visibility = 'visible';
+          contentCol.style.pointerEvents = 'auto';
+
+          // Phase 2: Plan (0.30 -> 0.55)
+          if (p <= 0.55) {
+            if (p > 0.48) {
+              const blend = (p - 0.48) / 0.07;
+              const ang = {
+                x: lerp(pillarAngles.plan.x, pillarAngles.engineer.x, blend),
+                y: lerp(pillarAngles.plan.y, pillarAngles.engineer.y, blend)
+              };
+              cubeAssembly.style.transform = `rotateX(${ang.x}deg) rotateY(${ang.y}deg)`;
+            } else {
+              cubeAssembly.style.transform = `rotateX(${pillarAngles.plan.x}deg) rotateY(${pillarAngles.plan.y}deg)`;
+            }
+            setPanelActive('plan');
+          }
+          // Phase 3: Engineer (0.55 -> 0.78)
+          else if (p <= 0.78) {
+            if (p > 0.72) {
+              const blend = (p - 0.72) / 0.06;
+              const ang = {
+                x: lerp(pillarAngles.engineer.x, pillarAngles.genai.x, blend),
+                y: lerp(pillarAngles.engineer.y, pillarAngles.genai.y, blend)
+              };
+              cubeAssembly.style.transform = `rotateX(${ang.x}deg) rotateY(${ang.y}deg)`;
+            } else {
+              cubeAssembly.style.transform = `rotateX(${pillarAngles.engineer.x}deg) rotateY(${pillarAngles.engineer.y}deg)`;
+            }
+            setPanelActive('engineer');
+          }
+          // Phase 4: Gen-AI (0.78 -> 1.0)
+          else {
+            cubeAssembly.style.transform = `rotateX(${pillarAngles.genai.x}deg) rotateY(${pillarAngles.genai.y}deg)`;
+            setPanelActive('genai');
+          }
+        }
       }
-    }
+    });
 
     // Tab buttons click: smoothly scroll page to that pillar's scroll target
-    tabs.forEach(tab => {
+    tabs.forEach((tab) => {
       tab.addEventListener('click', () => {
         const pillar = tab.getAttribute('data-pillar');
         if (!pillar) return;
 
-        const trackTop = track.getBoundingClientRect().top + window.scrollY;
-        const trackHeight = track.offsetHeight - window.innerHeight;
-
-        let targetP = 0.25;
-        if (pillar === 'engineer') targetP = 0.55;
-        if (pillar === 'genai') targetP = 0.85;
+        let targetP = 0.40;
+        if (pillar === 'engineer') targetP = 0.65;
+        if (pillar === 'genai') targetP = 0.88;
 
         const targetScroll = trackTop + trackHeight * targetP;
         window.scrollTo({ top: targetScroll, behavior: 'smooth' });
@@ -1460,9 +1569,10 @@ import Icon from './Icon.astro';
     if (sceneWrapper) {
       let startX = 0;
       let deltaX = 0;
+      let isDragging = false;
 
       sceneWrapper.addEventListener('pointerdown', (e) => {
-        isUserDragging = true;
+        isDragging = true;
         startX = e.clientX;
         deltaX = 0;
         cubeAssembly.style.transition = 'none';
@@ -1470,21 +1580,20 @@ import Icon from './Icon.astro';
       });
 
       sceneWrapper.addEventListener('pointermove', (e) => {
-        if (!isUserDragging) return;
+        if (!isDragging) return;
         deltaX = e.clientX - startX;
         const currentAng = pillarAngles[activePillar] || pillarAngles.plan;
         cubeAssembly.style.transform = `rotateX(${currentAng.x}deg) rotateY(${currentAng.y + deltaX * 0.4}deg)`;
       });
 
       const endDrag = (e: PointerEvent) => {
-        if (!isUserDragging) return;
-        isUserDragging = false;
+        if (!isDragging) return;
+        isDragging = false;
         cubeAssembly.style.transition = 'transform 0.6s cubic-bezier(0.34, 1.25, 0.64, 1)';
         try {
           sceneWrapper.releasePointerCapture(e.pointerId);
         } catch (_) {}
 
-        // Determine snap target
         const pillarOrder: Array<'plan' | 'engineer' | 'genai'> = ['plan', 'engineer', 'genai'];
         let currentIdx = pillarOrder.indexOf(activePillar as any);
         if (currentIdx === -1) currentIdx = 0;
@@ -1496,44 +1605,15 @@ import Icon from './Icon.astro';
         }
 
         const nextPillar = pillarOrder[currentIdx];
-        const trackTop = track.getBoundingClientRect().top + window.scrollY;
-        const trackHeight = track.offsetHeight - window.innerHeight;
-        let targetP = 0.25;
-        if (nextPillar === 'engineer') targetP = 0.55;
-        if (nextPillar === 'genai') targetP = 0.85;
+        let targetP = 0.40;
+        if (nextPillar === 'engineer') targetP = 0.65;
+        if (nextPillar === 'genai') targetP = 0.88;
 
         window.scrollTo({ top: trackTop + trackHeight * targetP, behavior: 'smooth' });
       };
 
       sceneWrapper.addEventListener('pointerup', endDrag);
       sceneWrapper.addEventListener('pointercancel', endDrag);
-    }
-
-    // Scroll listener throttled by rAF
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll, { passive: true });
-    updateScroll();
-
-    // Mobile Section Intersection Observer (<900px)
-    if (typeof IntersectionObserver !== 'undefined') {
-      const mobileSections = document.querySelectorAll('.mobile-pillar-section');
-      const mobileTabs = document.querySelectorAll('.mobile-tab');
-
-      const mobileObs = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const pillar = entry.target.getAttribute('data-pillar');
-            mobileTabs.forEach(t => {
-              t.classList.toggle('is-active', t.getAttribute('data-pillar') === pillar);
-            });
-          }
-        });
-      }, {
-        rootMargin: '-30% 0px -50% 0px',
-        threshold: 0
-      });
-
-      mobileSections.forEach(s => mobileObs.observe(s));
     }
   }
 
