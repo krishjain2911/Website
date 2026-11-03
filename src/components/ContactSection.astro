@@ -4,12 +4,6 @@ import Icon from './Icon.astro';
 import MediaAsset from './MediaAsset.astro';
 
 const { contact, team } = siteConfig;
-
-const sanitizedMembers = team.members.map(m => ({
-  ...m,
-  cleanPhone: m.phone.replace(/^\[PLACEHOLDER\]\s*/i, '').trim(),
-  rawTel: m.phone.replace(/^\[PLACEHOLDER\]\s*/i, '').replace(/[\s-]/g, '')
-}));
 ---
 
 <section id="contact" class="contact-section" aria-labelledby="contact-heading">
@@ -20,17 +14,17 @@ const sanitizedMembers = team.members.map(m => ({
       <div class="contact-col-left">
         <!-- Curved line sweeping from behind cube to left edge below headline -->
         <div class="contact-curved-sweep" aria-hidden="true">
-          <svg viewBox="0 0 1000 240" fill="none" class="contact-sweep-svg" preserveAspectRatio="none">
+          <svg viewBox="0 0 1000 280" fill="none" class="contact-sweep-svg" preserveAspectRatio="none">
             <path
-              d="M 900 60 C 650 60, 380 200, 0 215"
+              d="M 880 100 C 620 170, 320 235, 0 245"
               stroke="url(#contact-sweep-grad)"
-              stroke-width="2"
+              stroke-width="1.25"
               stroke-linecap="round"
             />
             <defs>
               <linearGradient id="contact-sweep-grad" x1="100%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="#F7941D" stop-opacity="0.85" />
-                <stop offset="100%" stop-color="#EE4B2B" stop-opacity="0.35" />
+                <stop offset="0%" stop-color="#F7941D" stop-opacity="0.25" />
+                <stop offset="100%" stop-color="#EE4B2B" stop-opacity="0.06" />
               </linearGradient>
             </defs>
           </svg>
@@ -132,7 +126,7 @@ const sanitizedMembers = team.members.map(m => ({
       <div class="contact-col-right">
         <span class="eyebrow">FOUNDER DIRECT CHANNELS</span>
         <div class="founders-cards-list">
-          {sanitizedMembers.map((member) => (
+          {team.members.map((member) => (
             <div class="founder-mini-card">
               <div class="founder-left-info">
                 <!-- Circular Photo Avatar (falls back to monogram) -->
@@ -159,24 +153,12 @@ const sanitizedMembers = team.members.map(m => ({
               </div>
 
               <div class="founder-actions-row">
-                <!-- Phone Reveal on Tap -->
-                <button
-                  type="button"
-                  class="founder-action-btn founder-phone-btn"
-                  data-phone={member.cleanPhone}
-                  data-tel={member.rawTel}
-                  aria-label={`Call or reveal direct phone number for ${member.name}`}
-                >
-                  <Icon name="phone" size={14} />
-                  <span class="phone-label">Call</span>
-                </button>
-
                 <!-- LinkedIn Link -->
                 <a
                   href={member.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="founder-action-btn founder-linkedin-btn"
+                  class="founder-linkedin-btn"
                   aria-label={`${member.name} on LinkedIn`}
                 >
                   <Icon name="external-link" size={14} />
@@ -545,16 +527,14 @@ const sanitizedMembers = team.members.map(m => ({
   .founder-actions-row {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    flex-wrap: wrap;
+    gap: 0.75rem;
   }
 
-  .founder-action-btn {
+  .founder-linkedin-btn {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    min-height: 40px;
-    padding: 0.45rem 0.9rem;
+    padding: 0.45rem 1rem;
     border-radius: var(--radius-pill);
     border: 1px solid var(--color-border);
     background-color: var(--color-surface-alt);
@@ -567,16 +547,10 @@ const sanitizedMembers = team.members.map(m => ({
     transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
   }
 
-  .founder-action-btn:hover {
+  .founder-linkedin-btn:hover {
     background-color: var(--color-surface-hover);
     color: var(--color-text-primary);
     border-color: var(--color-text-secondary);
-  }
-
-  .founder-phone-btn.is-revealed {
-    background-color: var(--color-btn-primary-bg);
-    color: var(--color-btn-primary-text);
-    border-color: var(--color-btn-primary-bg);
   }
 </style>
 
@@ -604,25 +578,6 @@ const sanitizedMembers = team.members.map(m => ({
         }
       });
     }
-
-    // Founder phone number reveal on tap
-    const phoneBtns = document.querySelectorAll<HTMLButtonElement>('.founder-phone-btn');
-    phoneBtns.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const phone = btn.getAttribute('data-phone');
-        const tel = btn.getAttribute('data-tel');
-        const label = btn.querySelector('.phone-label');
-        if (!phone) return;
-
-        if (btn.classList.contains('is-revealed')) {
-          window.location.href = `tel:${tel}`;
-        } else {
-          btn.classList.add('is-revealed');
-          if (label) label.textContent = phone;
-          btn.setAttribute('title', `Click to dial ${phone}`);
-        }
-      });
-    });
   }
 
   setupContactSection();

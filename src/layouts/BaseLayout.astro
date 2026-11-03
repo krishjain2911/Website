@@ -68,6 +68,8 @@ const orgSchema = {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="author" content="Krish Jain" />
+    <link rel="author" href="/humans.txt" />
     <link rel="canonical" href={canonicalURL} />
 
     <!-- Favicon -->
@@ -175,6 +177,95 @@ const orgSchema = {
 
       setupScrollObserver();
       document.addEventListener('astro:after-swap', setupScrollObserver);
+    </script>
+
+    <!-- Console Easter Eggs (Crafted by Krish Jain) -->
+    <script is:inline>
+      (function() {
+        if (window.__rhsp_easter_egg_init) return;
+        window.__rhsp_easter_egg_init = true;
+
+        const brandHeader = 'background: linear-gradient(135deg, #F7941D 0%, #EE4B2B 100%); color: #FFFFFF; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-weight: 700; font-size: 13px; padding: 8px 16px; border-radius: 6px; text-shadow: 0 1px 2px rgba(0,0,0,0.25); display: inline-block; margin-bottom: 6px;';
+        const authorBadge = 'background: #141413; color: #F7941D; font-family: monospace; font-weight: 700; font-size: 12px; padding: 4px 10px; border-radius: 4px; border: 1px solid #F7941D;';
+        const linkStyle = 'color: #1E4B8F; font-weight: 600; text-decoration: underline; font-family: monospace; font-size: 11px;';
+        const labelStyle = 'color: #888888; font-size: 11px; font-family: sans-serif;';
+        const cmdBadge = 'background: #F6F6F4; color: #EE4B2B; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-weight: 600; border: 1px solid #E6E6E3;';
+
+        console.log(
+          '%c⬡ RHSP | Round Hole Square Peg — Enterprise Low-Code & Sovereign AI',
+          brandHeader
+        );
+
+        console.log(
+          '%cCrafted & Developed with Precision by Krish Jain\n' +
+          '%cLinkedIn: %chttps://www.linkedin.com/in/thekrishjain/\n' +
+          '%cBuilt with Astro, WebGL/OGL 3D engine, custom shaders & zero layout shift.',
+          authorBadge,
+          labelStyle,
+          linkStyle,
+          labelStyle
+        );
+
+        console.log(
+          '%c💡 Exploring the codebase? Try running %ckrish()%c or %crhsp()%c in the console! ✨',
+          labelStyle,
+          cmdBadge,
+          labelStyle,
+          cmdBadge,
+          labelStyle
+        );
+
+        // Interactive Console Easter Eggs
+        window.krish = function() {
+          console.log(
+            '%c👋 Hey there! I\'m Krish Jain.\n' +
+            'Frontend Engineer & Creative Technologist.\n\n' +
+            '🚀 Connect with me on LinkedIn:\nhttps://www.linkedin.com/in/thekrishjain/\n\n' +
+            '✨ Fun facts about this build:\n' +
+            '• Frame-by-frame responsive 3D cube scroll engine\n' +
+            '• Near-zero CLS (< 0.01) across mobile and desktop\n' +
+            '• Custom AVIF/WebP image processing pipeline with alpha defringing',
+            'color: #F7941D; font-size: 13px; font-weight: 600; line-height: 1.6; font-family: sans-serif;'
+          );
+          return '✨ Krish Jain: https://www.linkedin.com/in/thekrishjain/';
+        };
+
+        window.rhsp = function() {
+          console.log(
+            '%c🔷 Round Hole Square Peg — We shape technology to fit the business.\n' +
+            '• Plan: Automate high-friction workflows\n' +
+            '• Engineer: OutSystems speed + MERN high-code architecture\n' +
+            '• Gen-AI: Private, on-prem sovereign models with verified grounding\n\n' +
+            '📍 ThePlayce, 17th Floor, Marathon Millennium, Mulund West, Mumbai\n' +
+            '📧 LetsTalk@roundholesquarepeg.com',
+            'color: #1E4B8F; font-size: 12px; font-weight: 600; line-height: 1.6; font-family: sans-serif;'
+          );
+          return '🚀 https://roundholesquarepeg.com';
+        };
+
+        window.developedBy = window.krish;
+        window.author = window.krish;
+
+        // Easter Egg: Konami Code triggers a celebration in console
+        const konami = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        let konamiIdx = 0;
+        window.addEventListener('keydown', function(e) {
+          if (e.key.toLowerCase() === konami[konamiIdx].toLowerCase()) {
+            konamiIdx++;
+            if (konamiIdx === konami.length) {
+              konamiIdx = 0;
+              console.log(
+                '%c🎉 KONAMI CODE UNLOCKED! 🎉\n' +
+                'You found the secret easter egg! You have great taste in code.\n' +
+                'Say hi to Krish Jain: https://www.linkedin.com/in/thekrishjain/',
+                'background: #141413; color: #00FF66; font-size: 15px; font-weight: bold; padding: 10px; border-radius: 6px;'
+              );
+            }
+          } else {
+            konamiIdx = 0;
+          }
+        });
+      })();
     </script>
   </body>
 </html>

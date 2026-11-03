@@ -543,7 +543,6 @@ export const siteConfig = {
         role: "Founder",
         bio: "18+ years bringing together operational technology and IT, from robotics and ASRS in steel, tyre and semiconductor industries to paperless loan origination systems in BFSI; specialises in OutSystems and Enterprise AI.",
         linkedin: "https://linkedin.com/in/thesubuiyer",
-        phone: "[PLACEHOLDER] +91 98200 00001",
         initials: "SI",
         imageKey: "founder-subu"
       },
@@ -552,7 +551,6 @@ export const siteConfig = {
         role: "Co-founder",
         bio: "An 18-year corporate career leading strategic initiatives at Tata Power and Tata Motors; drives RHSP's growth, scalability and client acquisition.",
         linkedin: "https://linkedin.com/in/abhishek-bagwe-90ba8710",
-        phone: "[PLACEHOLDER] +91 98200 00002",
         initials: "AB",
         imageKey: "founder-abhishek"
       }
