@@ -6,10 +6,10 @@ order: 1
 pillar: "Gen-AI"
 imageKey: "product-voice-agents"
 focus: "center"
-badge: "High Level"
+badge: "High-code (MERN)"
 badges:
-  - "High Level"
-  - "Voice Agents"
+  - "Gen-AI"
+  - "High-code (MERN)"
 seoDescription: "Multilingual AI voice assistant for retail showrooms. Catalogue-grounded product guidance, automated catalogue ingestion and assisted checkout."
 oneLiner: "Multilingual voice assistant that helps showroom customers find, compare and cart appliances on a tablet."
 outcomeHeadline: "Every walk-in gets an expert salesperson instantly"

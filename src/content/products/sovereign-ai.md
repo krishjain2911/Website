@@ -6,10 +6,10 @@ order: 2
 pillar: "Gen-AI"
 imageKey: "product-sovereign-ai"
 focus: "center"
-badge: "High Level"
+badge: "Low-code (OutSystems)"
 badges:
-  - "High Level"
-  - "Sovereign AI"
+  - "Gen-AI"
+  - "Low-code (OutSystems)"
 oneLiner: "Private enterprise AI deployments that keep sensitive organization data strictly within your perimeter."
 outcomeHeadline: "Enterprise AI utility without exposing corporate intellectual property to public clouds."
 # TODO: add built examples

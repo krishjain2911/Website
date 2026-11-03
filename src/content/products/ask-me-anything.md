@@ -6,10 +6,10 @@ order: 3
 pillar: "Gen-AI"
 imageKey: "product-ask-me-anything"
 focus: "center"
-badge: "High Level"
+badge: "Low-code (OutSystems)"
 badges:
-  - "High Level"
-  - "Knowledge Engine"
+  - "Gen-AI"
+  - "Low-code (OutSystems)"
 oneLiner: "Grounded enterprise knowledge search answering operational questions across internal documents and systems."
 outcomeHeadline: "Instant answers for staff drawn directly from your verified enterprise repositories."
 # TODO: add built examples

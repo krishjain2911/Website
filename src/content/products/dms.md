@@ -6,10 +6,10 @@ order: 5
 pillar: "Engineer"
 imageKey: "product-dms"
 focus: "center"
-badge: "High Level"
+badge: "Low-code (OutSystems)"
 badges:
-  - "High Level"
-  - "Documents"
+  - "Engineer"
+  - "Low-code (OutSystems)"
 oneLiner: "Centralized enterprise document archival, metadata classification, and compliance retention on OutSystems."
 outcomeHeadline: "Secure and structured enterprise document custody with instant retrieval."
 # TODO: add built examples

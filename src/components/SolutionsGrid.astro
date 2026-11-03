@@ -62,6 +62,7 @@ const otherGenAiProducts = genAiProducts.filter(p => p.slug !== featureProduct.s
             <div class="card-body feature-body">
               <div class="card-tags-row">
                 <span class="card-pillar-eyebrow" style="color: #EE4B2B;">Gen-AI</span>
+                <span class="card-stack-tag">{featureProduct.data.badge}</span>
                 {featureProduct.data.builtExamples && featureProduct.data.builtExamples.map((ex) => (
                   <span class="example-chip">Built: {ex.name}</span>
                 ))}
@@ -99,6 +100,7 @@ const otherGenAiProducts = genAiProducts.filter(p => p.slug !== featureProduct.s
               <div class="card-body">
                 <div class="card-tags-row">
                   <span class="card-pillar-eyebrow" style="color: #EE4B2B;">Gen-AI</span>
+                  <span class="card-stack-tag">{product.data.badge}</span>
                   {product.data.builtExamples && product.data.builtExamples.map((ex) => (
                     <span class="example-chip">Built: {ex.name}</span>
                   ))}
@@ -152,6 +154,7 @@ const otherGenAiProducts = genAiProducts.filter(p => p.slug !== featureProduct.s
               <div class="card-body">
                 <div class="card-tags-row">
                   <span class="card-pillar-eyebrow" style="color: #F7941D;">Engineer</span>
+                  <span class="card-stack-tag">{product.data.badge}</span>
                   {product.data.builtExamples && product.data.builtExamples.map((ex) => (
                     <span class="example-chip">Built: {ex.name}</span>
                   ))}
@@ -379,6 +382,16 @@ const otherGenAiProducts = genAiProducts.filter(p => p.slug !== featureProduct.s
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
+  }
+
+  .card-stack-tag {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 0.15rem 0.55rem;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-surface-alt);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
   }
 
   .example-chip {

@@ -6,10 +6,10 @@ order: 4
 pillar: "Engineer"
 imageKey: "product-clm"
 focus: "center"
-badge: "High Level"
+badge: "Low-code (OutSystems)"
 badges:
-  - "High Level"
-  - "Contracts"
+  - "Engineer"
+  - "Low-code (OutSystems)"
 oneLiner: "End-to-end contract drafting, multi-stakeholder approval routing, and renewal tracking built on OutSystems."
 outcomeHeadline: "Accelerate agreement turnaround with clear audit trails from draft to signature."
 # TODO: add built examples

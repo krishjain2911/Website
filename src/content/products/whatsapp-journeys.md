@@ -6,10 +6,10 @@ order: 6
 pillar: "Engineer"
 imageKey: "product-whatsapp-journeys"
 focus: "center"
-badge: "High Level"
+badge: "Low-code (OutSystems)"
 badges:
-  - "High Level"
-  - "Messaging"
+  - "Engineer"
+  - "Low-code (OutSystems)"
 oneLiner: "Customer service workflows, automated updates, and self-service interactions running on WhatsApp."
 outcomeHeadline: "Meet customers on their preferred channel with automated enterprise workflows."
 # TODO: add built examples
