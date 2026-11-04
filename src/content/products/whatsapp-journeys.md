@@ -180,15 +180,5 @@ makeItYours:
   closing: "Engineered for your CRM systems, communication policies, and customer journey touchpoints."
 hideAudienceStack: true
 beforeAfterId: "whatsapp"
-faq:
-  - question: "Is an official WhatsApp Business Account required?"
-    answer: "Yes, messages are routed through verified business accounts according to Meta business messaging policies."
-  - question: "Can customers upload documents or receipts?"
-    answer: "Yes, the system supports media intake (images, PDFs) which can be routed to the DMS or verification queue."
-  - question: "How does the system ensure data confidentiality?"
-    answer: "All messaging adheres to end-to-end transport encryption standards and internal data privacy retention policies."
-related:
-  - "clm"
-  - "dms"
 ctaText: "Let's talk"
 ---

@@ -1,5 +1,4 @@
 ---
-import MediaSlot from './MediaSlot.astro';
 import Icon from '../Icon.astro';
 import StageComingSoon from './StageComingSoon.astro';
 
@@ -11,6 +10,12 @@ interface MetricItem {
 }
 
 interface Props {
+  slug?: string;
+  stage2?: {
+    tagline: string;
+    intro: string;
+    points: string[];
+  };
   valueData?: {
     tagline?: string;
     headline?: string;
@@ -23,12 +28,14 @@ interface Props {
   tagline?: string;
 }
 
-const { valueData } = Astro.props;
-const tagline = Astro.props.tagline || valueData?.tagline;
+const { stage2, valueData } = Astro.props;
+const tagline = stage2?.tagline || Astro.props.tagline || valueData?.tagline;
 const story = valueData?.story;
-const hasContent = !!(valueData && (valueData.story || valueData.metrics?.length || valueData.levers?.length || valueData.points?.length));
-
-const primaryMedia = valueData?.media && valueData.media.length > 0 ? valueData.media[0] : undefined;
+const hasContent = !!(
+  stage2 ||
+  (valueData &&
+    (valueData.story || valueData.metrics?.length || valueData.levers?.length || valueData.points?.length))
+);
 ---
 
 <section
@@ -40,23 +47,46 @@ const primaryMedia = valueData?.media && valueData.media.length > 0 ? valueData.
   tabindex="-1"
 >
   <div class="chapter-header">
-    <span class="chapter-eyebrow" style="color: #163666;">STAGE 02</span>
+    <span class="chapter-eyebrow" style="color: #163666;">Stage 2 of 6</span>
     <h2 id="heading-stage-02" class="chapter-heading">Identify latent revenue</h2>
     {tagline && <p class="chapter-tagline" style="color: #163666;">{tagline}</p>}
-    {story && <p class="chapter-story">{story}</p>}
+    {!stage2 && story && <p class="chapter-story">{story}</p>}
   </div>
 
-  {!hasContent ? (
+  {stage2 ? (
+    <div class="stage-streamlined-body">
+      <p class="chapter-intro-text">{stage2.intro}</p>
+      <ul class="blue-bullet-list" aria-label="Value points">
+        {stage2.points.map((pt) => (
+          <li>{pt}</li>
+        ))}
+      </ul>
+    </div>
+  ) : !hasContent ? (
     <StageComingSoon stageNumber="02" stageTitle="Identify latent revenue" color="#163666" />
   ) : (
     <>
-      <!-- Metric Comparison Cards -->
+      <!-- Value Levers List (with bold lead-ins) -->
+      {valueData?.levers && valueData.levers.length > 0 && (
+        <div class="value-levers-block">
+          <ul class="value-levers-grid" aria-label="Value levers">
+            {valueData.levers.map((lever) => (
+              <li class="value-lever-card card-mastercard">
+                <span class="lever-peg-dot" aria-hidden="true"></span>
+                <div class="lever-content" set:html={lever}></div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <!-- Legacy / Un-refactored Metrics (Only for untouched pages if present) -->
       {valueData?.metrics && valueData.metrics.length > 0 && (
         <div class="value-metrics-block">
           <span class="block-mini-title">MEASURED PERFORMANCE SHIFTS</span>
           <div class="metrics-grid">
             {valueData.metrics.map((m, idx) => (
-              <div class="metric-card card-mastercard" data-metric-card>
+              <div class="metric-card card-mastercard">
                 <div class="metric-card-header">
                   <span class="metric-badge">KPI 0{idx + 1}</span>
                   <span class="metric-label">{m.label}</span>
@@ -67,9 +97,7 @@ const primaryMedia = valueData?.media && valueData.media.length > 0 ? valueData.
                     <span class="delta-value before-val">{m.before}</span>
                   </div>
                   <div class="metric-arrow" aria-hidden="true">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
+                    <Icon name="arrow-right" size={18} />
                   </div>
                   <div class="metric-after-box">
                     <span class="delta-label">AFTER</span>
@@ -82,343 +110,240 @@ const primaryMedia = valueData?.media && valueData.media.length > 0 ? valueData.
           </div>
         </div>
       )}
-
-      <!-- Two-Column Levers & Media/Key Points -->
-      <div class="value-details-grid">
-        <!-- Value Levers Column -->
-        {valueData?.levers && valueData.levers.length > 0 && (
-          <div class="levers-column card-mastercard">
-            <span class="block-mini-title">VALUE-CREATION LEVERS</span>
-            <div class="levers-chip-list">
-              {valueData.levers.map((lever) => (
-                <div class="lever-chip">
-                  <span class="lever-icon" aria-hidden="true">
-                    <Icon name="check" size={16} />
-                  </span>
-                  <span class="lever-text">{lever}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        <!-- Media or Key Points Column -->
-        <div class="value-media-column">
-          {primaryMedia ? (
-            <MediaSlot item={primaryMedia} />
-          ) : valueData?.points && valueData.points.length > 0 ? (
-            <div class="value-points-card card-mastercard">
-              <span class="block-mini-title">KEY VALUE DRIVERS</span>
-              <ul class="value-points-list">
-                {valueData.points.map((pt) => (
-                  <li class="value-point-item">
-                    <span class="pt-bullet" aria-hidden="true">&bull;</span>
-                    <span>{pt}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
-        </div>
-      </div>
-
-      <!-- Remaining points if media consumed the right column -->
-      {primaryMedia && valueData?.points && valueData.points.length > 0 && (
-        <div class="value-extra-points card-mastercard">
-          <span class="block-mini-title">KEY VALUE DRIVERS</span>
-          <ul class="points-horizontal-grid">
-            {valueData.points.map((pt) => (
-              <li class="point-bubble">
-                <span class="point-tick" aria-hidden="true">&#x2713;</span>
-                <span>{pt}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
     </>
   )}
 </section>
 
 <style>
   .project-chapter-section {
-    padding: clamp(2.5rem, 5vh, 3.75rem) 0;
-    border-bottom: 1px solid var(--color-border);
-    scroll-margin-top: calc(var(--nav-height, 72px) + 2rem);
+    position: relative;
+    border-radius: 24px;
+    border: 1px solid var(--color-border);
+    padding: 40px;
+    background-color: #FFFFFF;
+    overflow: hidden;
+    scroll-margin-top: calc(var(--nav-height, 72px) + 24px);
+    outline: none;
+    box-sizing: border-box;
+  }
+
+  :global(.dark) .project-chapter-section {
+    background-color: var(--color-surface);
+  }
+
+  .project-chapter-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background-color: #F7941D;
+    z-index: 2;
+  }
+
+  @media (max-width: 768px) {
+    .project-chapter-section {
+      padding: 24px;
+      border-radius: 24px;
+    }
   }
 
   .chapter-header {
-    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-bottom: 1.5rem;
   }
 
   .chapter-eyebrow {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 0.1em;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    margin-bottom: 0.4rem;
   }
 
   .chapter-heading {
-    font-size: clamp(1.75rem, 3.2vw, 2.25rem);
+    font-size: clamp(1.75rem, 2.8vw, 2.25rem);
     font-weight: 800;
-    color: var(--color-text-primary);
-    margin: 0 0 0.4rem 0;
     line-height: 1.2;
-    letter-spacing: -0.015em;
+    color: var(--color-text-primary);
+    margin: 0;
+    overflow: visible;
+    padding-left: 1px;
   }
 
   .chapter-tagline {
-    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
-    font-weight: 700;
-    margin: 0 0 0.75rem 0;
-    letter-spacing: -0.01em;
-    line-height: 1.35;
+    font-size: 1.15rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin: 0.2rem 0 0 0;
   }
 
-  .chapter-story {
+  .chapter-intro-text {
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: var(--color-text-secondary);
+    margin: 0 0 1.25rem 0;
+    max-width: 62ch;
+  }
+
+  .blue-bullet-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-width: 62ch;
+  }
+
+  .blue-bullet-list li {
+    position: relative;
+    padding-left: 1.25rem;
     font-size: 1rem;
     line-height: 1.6;
     color: var(--color-text-secondary);
-    max-width: 680px;
+  }
+
+  .blue-bullet-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.65rem;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #1E4B8F;
+  }
+
+  .chapter-story {
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: var(--color-text-secondary);
+    margin: 0.5rem 0 0 0;
+    max-width: 780px;
+  }
+
+  /* Value Levers Grid */
+  .value-levers-block {
+    margin-top: 1.25rem;
+  }
+
+  .value-levers-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    list-style: none;
+    padding: 0;
     margin: 0;
   }
 
-  .block-mini-title {
-    display: block;
-    font-size: 10.5px;
-    font-weight: 800;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--color-text-muted);
-    margin-bottom: 1rem;
+  @media (min-width: 640px) {
+    .value-levers-grid {
+      grid-template-columns: 1fr 1fr;
+    }
   }
 
+  .value-lever-card {
+    padding: 1.25rem;
+    border-radius: 10px;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .lever-peg-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    background-color: #F7941D;
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+
+  .lever-content {
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: var(--color-text-secondary);
+  }
+
+  .lever-content :global(strong) {
+    color: var(--color-text-primary);
+    font-weight: 700;
+    display: block;
+    margin-bottom: 0.2rem;
+  }
+
+  /* Metrics Block */
   .value-metrics-block {
-    margin-bottom: 2rem;
+    margin-top: 1.75rem;
+  }
+
+  .block-mini-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    display: block;
+    margin-bottom: 0.75rem;
   }
 
   .metrics-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 1rem;
   }
 
   .metric-card {
     padding: 1.25rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 0.75rem;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md, 8px);
-  }
-
-  :global(.dark) .metric-card {
-    background: var(--color-surface-raised);
+    border-radius: 10px;
   }
 
   .metric-card-header {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    gap: 0.5rem;
+    margin-bottom: 0.75rem;
   }
 
   .metric-badge {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     font-weight: 700;
-    color: var(--color-text-muted);
-    background: var(--color-bg);
-    border: 1px solid var(--color-border);
-    padding: 2px 6px;
-    border-radius: 4px;
-  }
-
-  .metric-label {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--color-text-secondary);
-    text-align: right;
+    color: #163666;
   }
 
   .metric-delta-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 0.75rem;
-    padding: 0.75rem 0;
-    border-top: 1px dashed var(--color-border);
-    border-bottom: 1px dashed var(--color-border);
+    gap: 0.5rem;
+  }
+
+  .metric-before-box,
+  .metric-after-box {
+    display: flex;
+    flex-direction: column;
   }
 
   .delta-label {
-    display: block;
     font-size: 0.65rem;
-    letter-spacing: 0.05em;
+    font-weight: 700;
     color: var(--color-text-muted);
-    margin-bottom: 2px;
   }
 
   .delta-value {
-    font-size: 1.25rem;
-    font-weight: 700;
-    line-height: 1.1;
-  }
-
-  .before-val {
-    color: var(--color-text-muted);
-    text-decoration: line-through;
-    opacity: 0.85;
+    font-size: 0.95rem;
+    font-weight: 600;
   }
 
   .after-val {
-    color: #163666;
-  }
-
-  :global(.dark) .after-val {
-    color: #5B8FE0;
-  }
-
-  .metric-arrow {
-    color: #163666;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0.8;
-  }
-
-  :global(.dark) .metric-arrow {
-    color: #5B8FE0;
+    color: #10B981;
   }
 
   .metric-note {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: var(--color-text-muted);
-    line-height: 1.4;
-  }
-
-  .value-details-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    align-items: start;
-    margin-bottom: 1.5rem;
-  }
-
-  .levers-column, .value-points-card {
-    padding: 1.25rem;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md, 8px);
-  }
-
-  :global(.dark) .levers-column,
-  :global(.dark) .value-points-card {
-    background: var(--color-surface-raised);
-  }
-
-  .levers-chip-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .lever-chip {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    padding: 0.6rem 0.8rem;
-    background: var(--color-bg);
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    font-size: 0.9rem;
-    color: var(--color-text-primary);
-  }
-
-  .lever-icon {
-    display: inline-flex;
-    color: #163666;
-    flex-shrink: 0;
-  }
-
-  :global(.dark) .lever-icon {
-    color: #5B8FE0;
-  }
-
-  .value-points-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .value-point-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
-    font-size: 0.95rem;
-    line-height: 1.5;
-    color: var(--color-text-secondary);
-  }
-
-  .pt-bullet {
-    color: #163666;
-    font-weight: bold;
-    font-size: 1.1rem;
-    line-height: 1;
-  }
-
-  :global(.dark) .pt-bullet {
-    color: #5B8FE0;
-  }
-
-  .value-extra-points {
-    padding: 1.25rem;
-    margin-top: 1rem;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md, 8px);
-  }
-
-  :global(.dark) .value-extra-points {
-    background: var(--color-surface-raised);
-  }
-
-  .points-horizontal-grid {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 0.75rem;
-  }
-
-  .point-bubble {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-    color: var(--color-text-secondary);
-    line-height: 1.4;
-  }
-
-  .point-tick {
-    color: #163666;
-    font-weight: 700;
-  }
-
-  :global(.dark) .point-tick {
-    color: #5B8FE0;
-  }
-
-  @media (max-width: 900px) {
-    .value-details-grid {
-      grid-template-columns: 1fr;
-    }
+    margin-top: 0.5rem;
   }
 </style>

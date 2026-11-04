@@ -185,15 +185,5 @@ makeItYours:
       description: "Immediate verification of contract terms, pricing structures, and competitive battlecards."
   closing: "Every answer grounded strictly in your verified files, with clear source attribution."
 hideAudienceStack: true
-faq:
-  - question: "What file types are supported for indexing?"
-    answer: "Common formats include PDFs, text documents, spreadsheets, wiki markdown files, and relational database fields."
-  - question: "How does the system handle access permissions?"
-    answer: "Search queries respect user permissions, preventing unauthorized staff from accessing confidential document excerpts."
-  - question: "Can AskMeAnything be embedded in our existing intranet?"
-    answer: "Yes, the interface can be embedded as an iframe, web component, or accessed directly as a standalone web portal."
-related:
-  - "sovereign-ai"
-  - "sonakshi"
 ctaText: "Let's talk"
 ---

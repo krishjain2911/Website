@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" width="100%" height="100%">
+  <defs>
+    <linearGradient id="vBg3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#1e293b" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="750" fill="url(#vBg3)" />
+
+  <!-- Top Bar -->
+  <rect x="0" y="0" width="1200" height="60" fill="#1e293b" stroke="#334155" stroke-width="1" />
+  <circle cx="36" cy="30" r="14" fill="#F7941D" />
+  <text x="64" y="36" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="16" font-weight="600">Document Generation Logs · Admin Monitoring &amp; Recovery</text>
+
+  <!-- Filter & Search Bar -->
+  <rect x="50" y="85" width="1100" height="60" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1" />
+  <text x="75" y="120" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="13">Search by Request ID, Customer Name, or Template...</text>
+  <rect x="850" y="100" width="140" height="32" rx="6" fill="#334155" />
+  <text x="870" y="121" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="12">Filter Date Range</text>
+  <rect x="1005" y="100" width="125" height="32" rx="6" fill="#1E4B8F" />
+  <text x="1025" y="121" fill="#ffffff" font-family="system-ui, sans-serif" font-size="12" font-weight="600">Export Report</text>
+
+  <!-- Table -->
+  <rect x="50" y="165" width="1100" height="530" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1" />
+  <rect x="50" y="165" width="1100" height="45" fill="#0f172a" rx="10" />
+
+  <text x="80" y="193" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="12" font-weight="700">REQUEST ID</text>
+  <text x="240" y="193" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="12" font-weight="700">TEMPLATE</text>
+  <text x="490" y="193" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="12" font-weight="700">WORD</text>
+  <text x="610" y="193" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="12" font-weight="700">PDF</text>
+  <text x="730" y="193" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="12" font-weight="700">CALLBACK</text>
+  <text x="870" y="193" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="12" font-weight="700">ACTIONS</text>
+
+  <!-- Row 1 -->
+  <text x="80" y="248" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="13" font-weight="600">REQ-2026-9041</text>
+  <text x="240" y="248" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="13">Affidavit cum undertaking · English</text>
+  <text x="490" y="248" fill="#10b981" font-family="system-ui, sans-serif" font-size="13" font-weight="600">Done</text>
+  <text x="610" y="248" fill="#10b981" font-family="system-ui, sans-serif" font-size="13" font-weight="600">Done</text>
+  <text x="730" y="248" fill="#10b981" font-family="system-ui, sans-serif" font-size="13" font-weight="600">Delivered</text>
+  <text x="870" y="248" fill="#60a5fa" font-family="system-ui, sans-serif" font-size="12">Download PDF · View JSON</text>
+
+  <!-- Row 2 -->
+  <line x1="50" y1="280" x2="1150" y2="280" stroke="#334155" stroke-width="1" />
+  <text x="80" y="323" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="13" font-weight="600">REQ-2026-9042</text>
+  <text x="240" y="323" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="13">Disbursement request · Hindi</text>
+  <text x="490" y="323" fill="#10b981" font-family="system-ui, sans-serif" font-size="13" font-weight="600">Done</text>
+  <text x="610" y="323" fill="#10b981" font-family="system-ui, sans-serif" font-size="13" font-weight="600">Done</text>
+  <text x="730" y="323" fill="#F7941D" font-family="system-ui, sans-serif" font-size="13" font-weight="600">Retrying</text>
+  <rect x="870" y="307" width="130" height="26" rx="4" fill="#334155" />
+  <text x="880" y="324" fill="#F7941D" font-family="system-ui, sans-serif" font-size="11" font-weight="600">Retrigger callback</text>
+
+  <!-- Row 3 -->
+  <line x1="50" y1="355" x2="1150" y2="355" stroke="#334155" stroke-width="1" />
+  <text x="80" y="398" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="13" font-weight="600">REQ-2026-9043</text>
+  <text x="240" y="398" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="13">Power of attorney · Marathi</text>
+  <text x="490" y="398" fill="#10b981" font-family="system-ui, sans-serif" font-size="13" font-weight="600">Done</text>
+  <text x="610" y="398" fill="#ef4444" font-family="system-ui, sans-serif" font-size="13" font-weight="600">Pending</text>
+  <text x="730" y="398" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="13">Waiting</text>
+  <rect x="870" y="382" width="120" height="26" rx="4" fill="#1E4B8F" />
+  <text x="883" y="399" fill="#ffffff" font-family="system-ui, sans-serif" font-size="11" font-weight="600">Regenerate PDF</text>
+
+  <!-- Row 4 -->
+  <line x1="50" y1="430" x2="1150" y2="430" stroke="#334155" stroke-width="1" />
+  <text x="80" y="473" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="13" font-weight="600">REQ-2026-9044</text>
+  <text x="240" y="473" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="13">Key fact statement · Tamil</text>
+  <text x="490" y="473" fill="#10b981" font-family="system-ui, sans-serif" font-size="13" font-weight="600">Done</text>
+  <text x="610" y="473" fill="#10b981" font-family="system-ui, sans-serif" font-size="13" font-weight="600">Done</text>
+  <text x="730" y="473" fill="#10b981" font-family="system-ui, sans-serif" font-size="13" font-weight="600">Delivered</text>
+  <text x="870" y="473" fill="#60a5fa" font-family="system-ui, sans-serif" font-size="12">Download PDF · View JSON</text>
+</svg>

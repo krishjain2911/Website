@@ -1,0 +1,163 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+
+interface Props {
+  slug: string;
+  file: string; // e.g. "image2.png", "image154.png", "image114.png"
+  alt: string;
+  caption?: string;
+  isHero?: boolean;
+  width?: number;
+  height?: number;
+  class?: string;
+}
+
+const {
+  slug,
+  file,
+  alt,
+  caption,
+  isHero = false,
+  width: propWidth,
+  height: propHeight,
+  class: className = ''
+} = Astro.props;
+
+const baseName = file.replace(/\.[^/.]+$/, '');
+
+// Dimensions lookup
+const knownDimensions: Record<string, { w: number; h: number }> = {
+  'image2': { w: 780, h: 372 },
+  'hero': { w: 780, h: 372 },
+  'image154': { w: 900, h: 429 },
+  'image173': { w: 515, h: 621 },
+  'image5': { w: 886, h: 420 },
+  'image47': { w: 900, h: 431 },
+  'image67': { w: 900, h: 498 },
+  'image103': { w: 1539, h: 767 },
+  'image118': { w: 900, h: 436 },
+  'image2v': { w: 900, h: 426 },
+  'image7v': { w: 900, h: 419 },
+  'image9v': { w: 900, h: 429 },
+  'image23v': { w: 900, h: 418 },
+  'image20v': { w: 900, h: 424 },
+  'image45v': { w: 900, h: 423 },
+};
+
+const dimensions = knownDimensions[baseName] || {
+  w: propWidth || 900,
+  h: propHeight || 500
+};
+
+const width = propWidth || dimensions.w;
+const height = propHeight || dimensions.h;
+
+// Check if image exists in public/images/solutions/<slug>/
+const webpPath = path.resolve(`public/images/solutions/${slug}/${baseName}.webp`);
+const pngPath = path.resolve(`public/images/solutions/${slug}/${baseName}.png`);
+const exists = fs.existsSync(webpPath) || fs.existsSync(pngPath);
+---
+
+{exists ? (
+  <figure class={`solution-media-figure ${className}`}>
+    <picture class="solution-media-picture">
+      <source
+        srcset={`/images/solutions/${slug}/${baseName}.webp${isHero ? `, /images/solutions/${slug}/${baseName}@2x.webp 2x` : ''}`}
+        type="image/webp"
+      />
+      <img
+        src={`/images/solutions/${slug}/${baseName}.png`}
+        srcset={isHero ? `/images/solutions/${slug}/${baseName}@2x.png 2x` : undefined}
+        alt={alt}
+        width={width}
+        height={height}
+        loading={isHero ? "eager" : "lazy"}
+        decoding={isHero ? "sync" : "async"}
+        class="solution-media-img"
+      />
+    </picture>
+    {caption && <figcaption class="solution-media-caption">{caption}</figcaption>}
+  </figure>
+) : (
+  <figure class={`solution-media-figure is-placeholder ${className}`}>
+    <Fragment set:html={`<!-- TODO(media): ${file} -->`} />
+    <div class="solution-media-placeholder" style={`aspect-ratio: ${width} / ${height};`}>
+      <div class="placeholder-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="3" y="3" width="18" height="18" rx="3" />
+          <circle cx="8.5" cy="8.5" r="1.5" />
+          <path d="M21 15l-5-5L5 21" />
+        </svg>
+      </div>
+      <span class="placeholder-name">{file}</span>
+      <span class="placeholder-label">Screenshot pending</span>
+    </div>
+    {caption && <figcaption class="solution-media-caption">{caption}</figcaption>}
+  </figure>
+)}
+
+<style>
+  .solution-media-figure {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .solution-media-picture {
+    display: block;
+    width: 100%;
+    line-height: 0;
+  }
+
+  .solution-media-img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    border: 1px solid var(--color-border);
+    box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.08);
+    display: block;
+    object-fit: contain;
+    background: var(--color-surface);
+  }
+
+  .solution-media-caption {
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    color: var(--color-text-muted);
+    padding-left: 0.25rem;
+  }
+
+  .solution-media-placeholder {
+    width: 100%;
+    min-width: 0;
+    border-radius: 12px;
+    border: 1px dashed var(--color-border);
+    background: var(--color-surface-subtle, rgba(0, 0, 0, 0.02));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: var(--color-text-muted);
+  }
+
+  .placeholder-icon {
+    opacity: 0.6;
+  }
+
+  .placeholder-name {
+    font-family: monospace;
+    font-size: 0.8125rem;
+    opacity: 0.75;
+  }
+
+  .placeholder-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.5;
+  }
+</style>

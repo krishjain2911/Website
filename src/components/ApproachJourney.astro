@@ -17,7 +17,7 @@ const headlineWords = approach.headline.split(' ');
 
   <!-- Journey Progress Rail (Fixed on desktop right viewport margin) -->
   <nav class="journey-progress-rail" id="journey-progress-rail" aria-label="Journey stages progress">
-    <div class="rail-indicator" id="rail-indicator-text">Stage 1 / 6</div>
+    <div class="rail-indicator" id="rail-indicator-text">STAGE 1 / 6</div>
     <div class="rail-dots-track">
       {steps.map((step, idx) => (
         <a
@@ -288,6 +288,7 @@ const headlineWords = approach.headline.split(' ');
     background-color: var(--color-bg);
     position: relative;
     overflow: visible;
+    --journey-stop-distance: 420px; /* ~420px per stop; ~2 normal wheel gestures */
   }
 
   /* Drifting Background Parallax Layers */
@@ -355,7 +356,7 @@ const headlineWords = approach.headline.split(' ');
     gap: 0.65rem;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.3s ease;
+    transition: opacity 150ms ease;
   }
 
   .journey-progress-rail.is-visible {
@@ -440,6 +441,8 @@ const headlineWords = approach.headline.split(' ');
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    column-gap: 0.32em;
+    row-gap: 0.15em;
   }
 
   .staged-word {
@@ -1168,12 +1171,7 @@ const headlineWords = approach.headline.split(' ');
           if (bgSquare) bgSquare.style.transform = `rotate(45deg) translateY(${relScroll * -0.14}px)`;
         }
 
-        // Rail visibility inside approach section
-        if (rail) {
-          const inView = vp.scrollY >= sectionTop - 80 && vp.scrollY <= sectionTop + sectionHeight - 200;
-          rail.classList.toggle('is-visible', inView && vp.viewportWidth >= 900);
-        }
-
+        // Rail visibility handled cleanly by IntersectionObserver below
         // Viewport center line in container coordinates
         const viewportCenterY = (vp.scrollY + vp.viewportHeight * 0.5) - stageTop;
 
@@ -1324,7 +1322,7 @@ const headlineWords = approach.headline.split(' ');
 
           // 5. Update Rail Indicator & Dots
           if (railText) {
-            railText.textContent = `Stage ${nearestIdx + 1} / 6`;
+            railText.textContent = `STAGE ${nearestIdx + 1} / 6`;
           }
           railDots.forEach((dot, idx) => {
             dot.classList.toggle('is-active', idx === nearestIdx);
@@ -1332,6 +1330,19 @@ const headlineWords = approach.headline.split(' ');
         }
       }
     });
+
+    // IntersectionObserver to fade pill in/out in 150ms strictly within approach journey section
+    if (rail && 'IntersectionObserver' in window) {
+      const approachObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          rail.classList.toggle('is-visible', entry.isIntersecting && window.innerWidth >= 900);
+        });
+      }, {
+        threshold: 0,
+        rootMargin: '-30px 0px -30px 0px'
+      });
+      approachObserver.observe(section);
+    }
 
     // Recompute on DOM resize / font load
     const triggerRemount = () => {

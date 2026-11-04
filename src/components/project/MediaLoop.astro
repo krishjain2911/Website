@@ -1,0 +1,182 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+
+interface Props {
+  slug: string;
+  name: string; // e.g. "clm-esign", "vernacular-template-flow", "sonakshi-admin-upload"
+  caption: string;
+  alt?: string;
+  aspectRatio?: string;
+  class?: string;
+}
+
+const {
+  slug,
+  name,
+  caption,
+  alt = caption,
+  aspectRatio = '16 / 9',
+  class: className = ''
+} = Astro.props;
+
+const mp4Path = path.resolve(`public/images/solutions/${slug}/loops/${name}.mp4`);
+const gifPath = path.resolve(`public/images/solutions/${slug}/loops/${name}.gif`);
+const webpPath = path.resolve(`public/images/solutions/${slug}/loops/${name}.webp`);
+
+const hasMp4 = fs.existsSync(mp4Path);
+const hasGif = fs.existsSync(gifPath);
+const hasWebp = fs.existsSync(webpPath);
+---
+
+<figure class={`media-loop-figure ${className}`}>
+  {hasMp4 ? (
+    <div class="media-loop-wrapper" style={`aspect-ratio: ${aspectRatio};`}>
+      <video
+        class="media-loop-video js-media-loop"
+        autoplay
+        loop
+        muted
+        playsinline
+        preload="metadata"
+        title={alt}
+      >
+        <source src={`/images/solutions/${slug}/loops/${name}.mp4`} type="video/mp4" />
+      </video>
+    </div>
+  ) : hasGif || hasWebp ? (
+    <div class="media-loop-wrapper" style={`aspect-ratio: ${aspectRatio};`}>
+      <img
+        src={`/images/solutions/${slug}/loops/${name}.${hasWebp ? 'webp' : 'gif'}`}
+        alt={alt}
+        loading="lazy"
+        class="media-loop-img"
+      />
+    </div>
+  ) : (
+    <div class="media-loop-placeholder" style={`aspect-ratio: ${aspectRatio};`}>
+      <Fragment set:html={`<!-- TODO(media): ${name}.(mp4|gif) -->`} />
+      <div class="placeholder-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="9" />
+          <polygon points="10 8 16 12 10 16 10 8" fill="currentColor" opacity="0.3" />
+        </svg>
+      </div>
+      <span class="placeholder-name">{name}.mp4</span>
+      <span class="placeholder-label">Workflow animation incoming</span>
+    </div>
+  )}
+  <figcaption class="media-loop-caption">{caption}</figcaption>
+</figure>
+
+<script>
+  // Pause video when off screen or when user prefers reduced motion
+  function initMediaLoops() {
+    const videos = document.querySelectorAll<HTMLVideoElement>('.js-media-loop');
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReducedMotion) {
+      videos.forEach((video) => {
+        video.pause();
+        video.currentTime = 0;
+      });
+      return;
+    }
+
+    if (!('IntersectionObserver' in window)) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const video = entry.target as HTMLVideoElement;
+          if (entry.isIntersecting) {
+            video.play().catch(() => {});
+          } else {
+            video.pause();
+          }
+        });
+      },
+      { threshold: 0.25 }
+    );
+
+    videos.forEach((video) => observer.observe(video));
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMediaLoops);
+  } else {
+    initMediaLoops();
+  }
+  document.addEventListener('astro:page-load', initMediaLoops);
+</script>
+
+<style>
+  .media-loop-figure {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .media-loop-wrapper {
+    width: 100%;
+    border-radius: 12px;
+    border: 1px solid var(--color-border);
+    box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    background: var(--color-surface);
+  }
+
+  .media-loop-video,
+  .media-loop-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .media-loop-placeholder {
+    width: 100%;
+    min-width: 0;
+    border-radius: 12px;
+    border: 1px dashed var(--color-border);
+    background: var(--color-surface-subtle, rgba(0, 0, 0, 0.02));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: var(--color-text-muted);
+  }
+
+  .placeholder-icon {
+    opacity: 0.6;
+  }
+
+  .placeholder-name {
+    font-family: monospace;
+    font-size: 0.8125rem;
+    opacity: 0.75;
+  }
+
+  .placeholder-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.5;
+  }
+
+  .media-loop-caption {
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    color: var(--color-text-muted);
+    padding-left: 0.25rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .media-loop-video {
+      animation: none;
+    }
+  }
+</style>

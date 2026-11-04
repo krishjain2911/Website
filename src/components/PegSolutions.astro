@@ -165,11 +165,8 @@ const genAiProjects = allProducts
           >
             <!-- Fixed Slot 1: Header -->
             <div class="panel-header">
-              <div class="panel-eyebrow">
-                <span class="pillar-indicator" style="background-color: #1E4B8F;">P</span>
-                <span class="eyebrow-text" style="color: #1E4B8F;">PLAN</span>
-              </div>
               <h2 class="panel-title staged-word-heading">
+                <span class="pillar-indicator" style="background-color: #1E4B8F;" aria-hidden="true">P</span>
                 <strong class="highlight-plan staged-word" style="--word-idx: 0;">Plan</strong>
                 <span class="staged-word" style="--word-idx: 1;">with</span>
                 <span class="staged-word" style="--word-idx: 2;">foresight.</span>
@@ -243,11 +240,8 @@ const genAiProjects = allProducts
           >
             <!-- Fixed Slot 1: Header -->
             <div class="panel-header">
-              <div class="panel-eyebrow">
-                <span class="pillar-indicator" style="background-color: #F7941D;">E</span>
-                <span class="eyebrow-text" style="color: #B86200;">ENGINEER</span>
-              </div>
               <h2 class="panel-title staged-word-heading">
+                <span class="pillar-indicator" style="background-color: #F7941D;" aria-hidden="true">E</span>
                 <strong class="highlight-engineer staged-word" style="--word-idx: 0;">Engineer</strong>
                 <span class="staged-word" style="--word-idx: 1;">with</span>
                 <span class="staged-word" style="--word-idx: 2;">precision.</span>
@@ -336,11 +330,8 @@ const genAiProjects = allProducts
           >
             <!-- Fixed Slot 1: Header (Identical positioning & height) -->
             <div class="panel-header">
-              <div class="panel-eyebrow">
-                <span class="pillar-indicator" style="background-color: #EE4B2B;">G</span>
-                <span class="eyebrow-text" style="color: #B82810;">GEN-AI</span>
-              </div>
               <h2 class="panel-title staged-word-heading">
+                <span class="pillar-indicator" style="background-color: #EE4B2B;" aria-hidden="true">G</span>
                 <strong class="highlight-genai staged-word" style="--word-idx: 0;">Gen-AI</strong>
                 <span class="staged-word" style="--word-idx: 1;">the</span>
                 <span class="staged-word" style="--word-idx: 2;">leap.</span>
@@ -467,33 +458,46 @@ const genAiProjects = allProducts
   .peg-solutions-track {
     position: relative;
     width: 100%;
-    height: 380vh; /* Smooth scroll progression through phases */
+    --peg-intro-distance: clamp(180px, 25vh, 260px); /* Intro & transition: about 20 to 30vh */
+    --peg-stop-distance: clamp(220px, 28vh, 300px); /* Each pillar change: clamp(220px, 28vh, 300px) */
+    height: calc(100vh + var(--peg-intro-distance) + 3 * var(--peg-stop-distance) + 15vh); /* Includes 15vh release buffer */
   }
 
   .peg-solutions-stage {
     position: sticky;
-    top: var(--nav-height, 72px);
+    top: 0;
     width: 100%;
-    height: calc(100vh - var(--nav-height, 72px));
-    max-height: 980px;
-    display: grid;
-    grid-template-rows: [intro-text] auto [cube-zone] minmax(0, 1fr) [tabs] auto [hint] auto;
-    row-gap: clamp(0.5rem, 1.8vh, 1.25rem);
-    padding: clamp(0.5rem, 1.5vh, 1.25rem) 0;
+    height: 100svh;
+    padding-top: var(--nav-height, 72px);
     box-sizing: border-box;
+    display: grid;
+    align-content: center;
     overflow: hidden;
     z-index: 1;
+    transition: transform 350ms cubic-bezier(.4, 0, .2, 1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .peg-solutions-stage {
+      transition: none !important;
+    }
   }
 
   /* -------------------------------------------------------------
      0. Phase 0 Intro Header (Center-aligned above the cube)
      ------------------------------------------------------------- */
   .stage-intro-header {
-    grid-row: intro-text;
+    position: absolute;
+    top: calc(var(--nav-height, 72px) + clamp(0.75rem, 2vh, 1.75rem));
+    left: 50%;
+    transform: translateX(-50%);
     width: 100%;
     max-width: 720px;
     margin: 0 auto;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     z-index: 20;
     pointer-events: auto;
     transition: opacity 0.4s ease, transform 0.4s ease;
@@ -502,7 +506,9 @@ const genAiProjects = allProducts
   }
 
   .intro-eyebrow {
-    display: inline-block;
+    display: block;
+    width: 100%;
+    text-align: center;
     font-size: var(--fs-xs);
     font-weight: 700;
     letter-spacing: 0.12em;
@@ -515,17 +521,21 @@ const genAiProjects = allProducts
     font-weight: 800;
     line-height: 1.1;
     margin: 0 0 0.5rem 0;
-    display: flex;
+    display: flex !important;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
     flex-wrap: wrap;
+    text-align: center;
+    width: 100%;
   }
 
   .intro-subline {
     font-size: clamp(0.95rem, 1.8vw, 1.15rem);
     color: var(--color-text-secondary);
     margin: 0;
+    text-align: center;
+    width: 100%;
   }
 
   /* Staged Word Highlight Colors */
@@ -535,6 +545,13 @@ const genAiProjects = allProducts
   .color-word-genai { color: #EE4B2B; }
 
   /* Staggered word reveal animation */
+  .staged-word-heading {
+    display: inline-flex;
+    flex-wrap: wrap;
+    column-gap: 0.3em;
+    row-gap: 0.15em;
+  }
+
   .staged-word-heading .staged-word {
     display: inline-block;
     opacity: 0;
@@ -551,20 +568,21 @@ const genAiProjects = allProducts
 
   /* -------------------------------------------------------------
      Stage Container Grid
-     36% Left (Cube + Tabs) / 64% Right (Content Panels)
+     Two-column layout inside container: 0.8fr Left / 1.6fr Right
      ------------------------------------------------------------- */
   .stage-container {
-    grid-row: cube-zone;
     display: grid;
-    grid-template-columns: 36% 64%;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.6fr);
     gap: 2.5rem;
     align-items: center;
     width: 100%;
-    height: 100%;
+    height: auto;
+    max-height: 100%;
     min-height: 0;
-    max-width: var(--max-w-content);
+    max-width: var(--max-width, 1240px);
     margin: 0 auto;
-    padding: 0 var(--space-container);
+    padding-left: var(--gutter);
+    padding-right: var(--gutter);
     box-sizing: border-box;
     position: relative;
     z-index: 5;
@@ -581,16 +599,17 @@ const genAiProjects = allProducts
     position: relative;
     z-index: 10;
     width: 100%;
-    height: 100%;
+    height: auto;
+    min-width: 0;
     min-height: 0;
-    gap: clamp(0.5rem, 1.2vh, 1rem);
+    gap: clamp(0.35rem, 1vh, 0.75rem);
     will-change: transform, opacity;
   }
 
   .cube-zone {
     container-type: size;
     width: 100%;
-    flex: 1 1 auto;
+    height: clamp(230px, 34vh, 320px);
     min-height: 0;
     display: flex;
     align-items: center;
@@ -599,7 +618,7 @@ const genAiProjects = allProducts
   }
 
   .cube-scene-wrapper {
-    --cube-size: min(calc(100cqh / 1.7), calc(100cqw / 1.7), 360px);
+    --cube-size: min(calc(100cqw / 1.7), 360px);
     width: var(--cube-size);
     height: var(--cube-size);
     position: relative;
@@ -779,10 +798,10 @@ const genAiProjects = allProducts
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-full);
-    padding: 0.25rem;
+    padding: clamp(0.15rem, 0.4vh, 0.25rem);
     gap: 0.25rem;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-    margin-top: 1rem;
+    margin-top: clamp(0.25rem, 0.8vh, 0.65rem);
     z-index: 10;
   }
 
@@ -865,20 +884,26 @@ const genAiProjects = allProducts
      ------------------------------------------------------------- */
   .stage-content-col {
     position: relative;
-    min-height: 480px;
+    min-height: auto;
+    min-width: 0;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* Top-aligned to guarantee identical headline Y position */
-    padding-top: 1rem;
+    justify-content: center;
+    padding-top: 0;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
     overflow: hidden; /* Prevents right edge page overflow */
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
     transition: opacity 0.4s ease;
   }
 
   .stage-panel {
     display: none;
+    min-width: 0;
+    width: 100%;
     opacity: 0;
     transform: translateY(10px);
     transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -892,40 +917,31 @@ const genAiProjects = allProducts
 
   /* Fixed Slot 1: Header (Equal height & top margin across all pillars) */
   .panel-header {
-    margin-bottom: 0.85rem;
-  }
-
-  .panel-eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    margin-bottom: 0.35rem;
+    margin-bottom: clamp(0.25rem, 0.8vh, 0.65rem);
   }
 
   .pillar-indicator {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
     border-radius: 4px;
     font-size: 11px;
     font-weight: 800;
     color: #FFFFFF;
-  }
-
-  .eyebrow-text {
-    font-size: var(--fs-xs);
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    flex-shrink: 0;
+    margin-right: 0.35rem;
   }
 
   .panel-title {
-    font-size: clamp(1.4rem, 2.5vw, 1.95rem);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: clamp(1.3rem, 2.3vw, 1.85rem);
     font-weight: 800;
     line-height: 1.15;
-    margin: 0 0 0.35rem 0;
+    margin: 0 0 clamp(0.15rem, 0.4vh, 0.25rem) 0;
     color: var(--color-text-primary);
   }
 
@@ -935,11 +951,11 @@ const genAiProjects = allProducts
   .highlight-genai { color: #EE4B2B; }
 
   .panel-desc {
-    font-size: clamp(0.85rem, 1.35vw, 0.925rem);
+    font-size: clamp(0.825rem, 1.25vw, 0.9rem);
     color: var(--color-text-secondary);
     margin: 0;
     max-width: 620px;
-    line-height: 1.45;
+    line-height: 1.4;
     display: -webkit-box;
     -webkit-line-clamp: 2; /* Maximum 2 lines */
     -webkit-box-orient: vertical;
@@ -953,9 +969,9 @@ const genAiProjects = allProducts
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 0.65rem;
-    margin-bottom: 1rem;
-    padding: 0.4rem 0.75rem;
+    gap: 0.5rem;
+    margin-bottom: clamp(0.35rem, 0.9vh, 0.75rem);
+    padding: clamp(0.2rem, 0.5vh, 0.35rem) 0.65rem;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
@@ -974,6 +990,7 @@ const genAiProjects = allProducts
   .stacks-badges-wrap {
     display: inline-flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 0.4rem;
   }
 
@@ -1011,16 +1028,32 @@ const genAiProjects = allProducts
      ------------------------------------------------------------- */
   .plan-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0.85rem;
-    margin-bottom: 1.25rem;
+    margin-bottom: clamp(0.4rem, 0.9vh, 0.85rem);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
+  }
+
+  @media (max-width: 1279px) and (min-width: 768px) {
+    .plan-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 767px) {
+    .plan-grid {
+      grid-template-columns: 1fr;
+    }
   }
 
   .stage-card {
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
-    padding: 1rem;
+    padding: clamp(0.55rem, 1.1vh, 0.85rem);
     transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
     display: flex;
     flex-direction: column;
@@ -1095,6 +1128,8 @@ const genAiProjects = allProducts
   .projects-rail-section {
     position: relative;
     width: 100%;
+    min-width: 0;
+    max-width: 100%;
     box-sizing: border-box;
   }
 
@@ -1102,7 +1137,7 @@ const genAiProjects = allProducts
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 0.5rem;
+    margin-bottom: clamp(0.25rem, 0.6vh, 0.45rem);
     width: 100%;
     padding-right: 0.25rem;
     box-sizing: border-box;
@@ -1161,22 +1196,43 @@ const genAiProjects = allProducts
     cursor: not-allowed;
   }
 
-  /* Horizontal Snap Track (no vertical wheel hijacking) */
+  /* Horizontal Carousel Grid strictly inside right column */
   .projects-rail-track {
-    display: flex;
-    gap: 0.85rem;
+    --gap: 0.85rem;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: calc((100% - 2 * var(--gap)) / 3);
+    gap: var(--gap);
     overflow-x: auto;
     overflow-y: hidden;
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
-    padding-bottom: 0.5rem;
-    padding-right: 1.5rem;
     scrollbar-width: none;
+    -ms-overflow-style: none;
     -webkit-overflow-scrolling: touch;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 0.25rem 0 0.5rem 0;
     cursor: grab;
     user-select: none;
-    width: 100%;
-    box-sizing: border-box;
+    outline: none;
+  }
+
+  .projects-rail-track:focus-visible {
+    box-shadow: 0 0 0 2px var(--color-border-strong, #CBD5E1);
+  }
+
+  @media (max-width: 1279px) and (min-width: 768px) {
+    .projects-rail-track {
+      grid-auto-columns: calc((100% - 1 * var(--gap)) / 2);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .projects-rail-track {
+      grid-auto-columns: 100%;
+    }
   }
 
   .projects-rail-track:active {
@@ -1189,8 +1245,9 @@ const genAiProjects = allProducts
 
   /* Standardized identical card width across all rails */
   .project-rail-card {
-    flex: 0 0 280px;
-    width: 280px;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
     scroll-snap-align: start;
     padding: 0;
     overflow: hidden;
@@ -1198,6 +1255,7 @@ const genAiProjects = allProducts
     display: flex;
     flex-direction: column;
     height: 100%;
+    box-sizing: border-box;
   }
 
   .spotlight-ribbon {
@@ -1220,7 +1278,7 @@ const genAiProjects = allProducts
     position: relative;
     width: 100%;
     aspect-ratio: 16 / 10;
-    max-height: 130px;
+    max-height: clamp(80px, 12vh, 120px);
     background: var(--color-bg);
     overflow: hidden;
   }
@@ -1252,7 +1310,7 @@ const genAiProjects = allProducts
   }
 
   .rail-card-body {
-    padding: 0.75rem 0.85rem;
+    padding: clamp(0.45rem, 1vh, 0.75rem);
     display: flex;
     flex-direction: column;
     flex-grow: 1;
@@ -1269,7 +1327,7 @@ const genAiProjects = allProducts
     font-size: 0.75rem;
     color: var(--color-text-secondary);
     line-height: 1.35;
-    margin: 0 0 0.5rem 0;
+    margin: 0 0 clamp(0.2rem, 0.5vh, 0.4rem) 0;
     display: -webkit-box;
     -webkit-line-clamp: 2; /* Strict 2-line clamp */
     -webkit-box-orient: vertical;
@@ -1310,23 +1368,28 @@ const genAiProjects = allProducts
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 0.35rem;
-    margin-top: 0.35rem;
+    gap: 0.4rem;
+    margin-top: clamp(0.25rem, 0.7vh, 0.5rem);
+    width: 100%;
   }
 
   .rail-dot {
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: var(--color-border);
+    background: var(--color-border-strong, #CBD5E1);
+    opacity: 0.45;
+    border: none;
+    padding: 0;
     transition: all 0.25s ease;
     cursor: pointer;
   }
 
   .rail-dot.is-active {
-    width: 16px;
+    width: 18px;
     border-radius: var(--radius-full);
     background: var(--color-text-primary);
+    opacity: 1;
   }
 
   /* Mobile Elements default hidden on desktop */
@@ -1709,6 +1772,11 @@ const genAiProjects = allProducts
       update: (vp) => {
         if (vp.viewportWidth < 900 || vp.viewportHeight < 640 || trackHeight <= 0) return;
 
+        // Intro and stop distances matching CSS variables
+        const introDist = clamp(180, Math.round(vp.viewportHeight * 0.25), 260); // 20 to 30vh
+        const stopDist = clamp(220, Math.round(vp.viewportHeight * 0.28), 300); // clamp(220px, 28vh, 300px)
+        const currentScroll = vp.scrollY - trackTop;
+
         // Intro headline staggered word reveal
         if (!introRevealed && introHeader) {
           const iRect = introHeader.getBoundingClientRect();
@@ -1719,24 +1787,21 @@ const genAiProjects = allProducts
           }
         }
 
-        // Calculate scroll progress p in [0, 1]
-        const p = clamp((vp.scrollY - trackTop) / trackHeight, 0, 1);
-
-        // --- PHASE 0: Intro only (p: 0 -> 0.15) ---
-        if (p <= 0.15) {
-          const introP = p / 0.15; // 0 to 1 inside phase 0
-
+        // --- PHASE 0: Intro only (cube centred) ---
+        if (currentScroll <= introDist * 0.35) {
           // Intro header visible
           if (introHeader) {
-            introHeader.style.opacity = `${1 - introP * 0.8}`;
-            introHeader.style.transform = `translateY(${-introP * 15}px)`;
-            introHeader.style.pointerEvents = introP > 0.8 ? 'none' : 'auto';
+            introHeader.style.opacity = '1';
+            introHeader.style.transform = 'translateX(-50%) translateY(0px)';
+            introHeader.style.visibility = 'visible';
+            introHeader.style.pointerEvents = 'auto';
           }
 
           // "Scroll to explore" visible only in phase 0
           if (scrollCue) {
-            scrollCue.style.opacity = `${1 - introP * 1.5}`;
-            scrollCue.style.pointerEvents = introP > 0.6 ? 'none' : 'auto';
+            scrollCue.style.opacity = '1';
+            scrollCue.style.visibility = 'visible';
+            scrollCue.style.pointerEvents = 'auto';
           }
 
           // Cube centered in stage with hand-off crossfade
@@ -1747,39 +1812,42 @@ const genAiProjects = allProducts
             cubeAlpha = smoothstep(0, 1, clamp((vp.scrollY - hStart) / Math.max(1, hEnd - hStart), 0, 1));
           }
           cubeCol.style.opacity = `${cubeAlpha}`;
-          cubeCol.style.transform = `translateX(${centerOffset}px) scale(1.0)`;
+          cubeCol.style.transform = `translateX(${centerOffset}px) scale(1.08)`;
 
-          // Content column completely hidden
+          // Content column completely hidden - ZERO OVERLAP
           contentCol.style.opacity = '0';
           contentCol.style.visibility = 'hidden';
           contentCol.style.pointerEvents = 'none';
 
-          // Cube is on Intro angle
+          // Cube is on Intro angle (P face forward, E face turning in)
           cubeAssembly.style.transform = `rotateX(${pillarAngles.intro.x}deg) rotateY(${pillarAngles.intro.y}deg)`;
           setPanelActive('plan');
         }
-        // --- PHASE 1: Transition into left column (p: 0.15 -> 0.30) ---
-        else if (p <= 0.30) {
-          const t1 = (p - 0.15) / 0.15; // 0 to 1 inside phase 1
-          const ease1 = smoothstep(0, 1, t1);
+        // --- PHASE 1: Transition into left column (glides to left, settles slightly smaller) ---
+        else if (currentScroll <= introDist) {
+          const t1 = (currentScroll - introDist * 0.35) / (introDist * 0.65);
+          const ease1 = smoothstep(0, 1, clamp(t1, 0, 1));
 
           // Intro header fades out
           if (introHeader) {
-            introHeader.style.opacity = `${(1 - ease1) * 0.2}`;
-            introHeader.style.transform = `translateY(${-15 - ease1 * 25}px)`;
+            introHeader.style.opacity = `${(1 - ease1) * 0.9}`;
+            introHeader.style.transform = `translateX(-50%) translateY(${-ease1 * 20}px)`;
+            introHeader.style.visibility = ease1 > 0.9 ? 'hidden' : 'visible';
             introHeader.style.pointerEvents = 'none';
           }
 
           // "Scroll to explore" cue completely hidden
           if (scrollCue) {
-            scrollCue.style.opacity = '0';
+            scrollCue.style.opacity = `${Math.max(0, 1 - ease1 * 1.5)}`;
+            scrollCue.style.visibility = ease1 > 0.6 ? 'hidden' : 'visible';
             scrollCue.style.pointerEvents = 'none';
           }
 
-          // Cube transitions from center to left column
+          // Cube transitions from center to left column and settles slightly smaller (scale 1.08 -> 1.0)
           cubeCol.style.opacity = '1';
           const currentX = lerp(centerOffset, 0, ease1);
-          cubeCol.style.transform = `translateX(${currentX}px) scale(1.0)`;
+          const currentScale = lerp(1.08, 1.0, ease1);
+          cubeCol.style.transform = `translateX(${currentX}px) scale(${currentScale})`;
 
           // Cube interpolates angle: intro -> plan
           const ang = {
@@ -1788,72 +1856,104 @@ const genAiProjects = allProducts
           };
           cubeAssembly.style.transform = `rotateX(${ang.x}deg) rotateY(${ang.y}deg)`;
 
-          // Content column begins fading in toward end of phase 1
-          if (t1 > 0.6) {
-            const contentAlpha = (t1 - 0.6) / 0.4;
-            contentCol.style.opacity = `${contentAlpha}`;
-            contentCol.style.visibility = 'visible';
-            contentCol.style.pointerEvents = 'auto';
-          } else {
-            contentCol.style.opacity = '0';
-            contentCol.style.visibility = 'hidden';
-            contentCol.style.pointerEvents = 'none';
-          }
+          // Content column fades in smoothly
+          contentCol.style.opacity = `${ease1}`;
+          contentCol.style.visibility = 'visible';
+          contentCol.style.pointerEvents = ease1 > 0.7 ? 'auto' : 'none';
 
           setPanelActive('plan');
         }
-        // --- PHASES 2-4: Pillar Stages (p: 0.30 -> 1.0) ---
+        // --- PHASES 2-4: Pillar Stops ---
         else {
-          // Intro & scroll cue fully hidden
+          // Intro & scroll cue strictly hidden
           if (introHeader) {
             introHeader.style.opacity = '0';
+            introHeader.style.visibility = 'hidden';
             introHeader.style.pointerEvents = 'none';
           }
           if (scrollCue) {
             scrollCue.style.opacity = '0';
+            scrollCue.style.visibility = 'hidden';
             scrollCue.style.pointerEvents = 'none';
           }
 
-          // Cube column fixed in left column
+          // Cube column settled in left column
+          cubeCol.style.opacity = '1';
           cubeCol.style.transform = 'translateX(0px) scale(1.0)';
 
-          // Content column fully active
+          // Content column strictly active
           contentCol.style.opacity = '1';
           contentCol.style.visibility = 'visible';
           contentCol.style.pointerEvents = 'auto';
 
-          // Phase 2: Plan (0.30 -> 0.55)
-          if (p <= 0.55) {
-            if (p > 0.48) {
-              const blend = (p - 0.48) / 0.07;
-              const ang = {
-                x: lerp(pillarAngles.plan.x, pillarAngles.engineer.x, blend),
-                y: lerp(pillarAngles.plan.y, pillarAngles.engineer.y, blend)
-              };
-              cubeAssembly.style.transform = `rotateX(${ang.x}deg) rotateY(${ang.y}deg)`;
-            } else {
+          const pillarScroll = currentScroll - introDist;
+
+          if (vp.isReducedMotion) {
+            if (pillarScroll <= stopDist) {
+              setPanelActive('plan');
               cubeAssembly.style.transform = `rotateX(${pillarAngles.plan.x}deg) rotateY(${pillarAngles.plan.y}deg)`;
-            }
-            setPanelActive('plan');
-          }
-          // Phase 3: Engineer (0.55 -> 0.78)
-          else if (p <= 0.78) {
-            if (p > 0.72) {
-              const blend = (p - 0.72) / 0.06;
-              const ang = {
-                x: lerp(pillarAngles.engineer.x, pillarAngles.genai.x, blend),
-                y: lerp(pillarAngles.engineer.y, pillarAngles.genai.y, blend)
-              };
-              cubeAssembly.style.transform = `rotateX(${ang.x}deg) rotateY(${ang.y}deg)`;
-            } else {
+            } else if (pillarScroll <= 2 * stopDist) {
+              setPanelActive('engineer');
               cubeAssembly.style.transform = `rotateX(${pillarAngles.engineer.x}deg) rotateY(${pillarAngles.engineer.y}deg)`;
+            } else {
+              setPanelActive('genai');
+              cubeAssembly.style.transform = `rotateX(${pillarAngles.genai.x}deg) rotateY(${pillarAngles.genai.y}deg)`;
             }
-            setPanelActive('engineer');
-          }
-          // Phase 4: Gen-AI (0.78 -> 1.0)
-          else {
-            cubeAssembly.style.transform = `rotateX(${pillarAngles.genai.x}deg) rotateY(${pillarAngles.genai.y}deg)`;
-            setPanelActive('genai');
+          } else {
+            // Stop 1: Plan (pillarScroll <= stopDist)
+            if (pillarScroll <= stopDist) {
+              // Smooth rotation towards Engineer near end of Plan
+              if (pillarScroll > stopDist * 0.75) {
+                const blend = (pillarScroll - stopDist * 0.75) / (stopDist * 0.25);
+                const ang = {
+                  x: lerp(pillarAngles.plan.x, pillarAngles.engineer.x, blend * 0.5),
+                  y: lerp(pillarAngles.plan.y, pillarAngles.engineer.y, blend * 0.5)
+                };
+                cubeAssembly.style.transform = `rotateX(${ang.x}deg) rotateY(${ang.y}deg)`;
+              } else {
+                cubeAssembly.style.transform = `rotateX(${pillarAngles.plan.x}deg) rotateY(${pillarAngles.plan.y}deg)`;
+              }
+              setPanelActive('plan');
+            }
+            // Stop 2: Engineer (stopDist < pillarScroll <= 2 * stopDist)
+            else if (pillarScroll <= 2 * stopDist) {
+              // First part finishes rotation from Plan
+              if (pillarScroll < stopDist * 1.25) {
+                const blend = (pillarScroll - stopDist) / (stopDist * 0.25);
+                const ang = {
+                  x: lerp(pillarAngles.plan.x, pillarAngles.engineer.x, 0.5 + blend * 0.5),
+                  y: lerp(pillarAngles.plan.y, pillarAngles.engineer.y, 0.5 + blend * 0.5)
+                };
+                cubeAssembly.style.transform = `rotateX(${ang.x}deg) rotateY(${ang.y}deg)`;
+              }
+              // Transition towards Gen-AI near end of Engineer
+              else if (pillarScroll > stopDist * 1.75) {
+                const blend = (pillarScroll - stopDist * 1.75) / (stopDist * 0.25);
+                const ang = {
+                  x: lerp(pillarAngles.engineer.x, pillarAngles.genai.x, blend * 0.5),
+                  y: lerp(pillarAngles.engineer.y, pillarAngles.genai.y, blend * 0.5)
+                };
+                cubeAssembly.style.transform = `rotateX(${ang.x}deg) rotateY(${ang.y}deg)`;
+              } else {
+                cubeAssembly.style.transform = `rotateX(${pillarAngles.engineer.x}deg) rotateY(${pillarAngles.engineer.y}deg)`;
+              }
+              setPanelActive('engineer');
+            }
+            // Stop 3: Gen-AI (pillarScroll > 2 * stopDist through 15vh release buffer)
+            else {
+              // First part finishes rotation from Engineer
+              if (pillarScroll < stopDist * 2.25) {
+                const blend = (pillarScroll - 2 * stopDist) / (stopDist * 0.25);
+                const ang = {
+                  x: lerp(pillarAngles.engineer.x, pillarAngles.genai.x, 0.5 + blend * 0.5),
+                  y: lerp(pillarAngles.engineer.y, pillarAngles.genai.y, 0.5 + blend * 0.5)
+                };
+                cubeAssembly.style.transform = `rotateX(${ang.x}deg) rotateY(${ang.y}deg)`;
+              } else {
+                cubeAssembly.style.transform = `rotateX(${pillarAngles.genai.x}deg) rotateY(${pillarAngles.genai.y}deg)`;
+              }
+              setPanelActive('genai');
+            }
           }
         }
       }
@@ -1878,11 +1978,12 @@ const genAiProjects = allProducts
           return;
         }
 
-        let targetP = 0.40;
-        if (pillar === 'engineer') targetP = 0.65;
-        if (pillar === 'genai') targetP = 0.88;
+        const introDist = clamp(180, Math.round(window.innerHeight * 0.25), 260);
+        const stopDist = clamp(220, Math.round(window.innerHeight * 0.28), 300);
+        let targetScroll = trackTop + introDist + stopDist * 0.4;
+        if (pillar === 'engineer') targetScroll = trackTop + introDist + stopDist * 1.5;
+        if (pillar === 'genai') targetScroll = trackTop + introDist + stopDist * 2.5;
 
-        const targetScroll = trackTop + trackHeight * targetP;
         window.scrollTo({ top: targetScroll, behavior: 'smooth' });
       });
     });
@@ -1951,11 +2052,13 @@ const genAiProjects = allProducts
         }
 
         const nextPillar = pillarOrder[currentIdx];
-        let targetP = 0.40;
-        if (nextPillar === 'engineer') targetP = 0.65;
-        if (nextPillar === 'genai') targetP = 0.88;
+        const introDist = clamp(180, Math.round(window.innerHeight * 0.25), 260);
+        const stopDist = clamp(220, Math.round(window.innerHeight * 0.28), 300);
+        let targetScroll = trackTop + introDist + stopDist * 0.4;
+        if (nextPillar === 'engineer') targetScroll = trackTop + introDist + stopDist * 1.5;
+        if (nextPillar === 'genai') targetScroll = trackTop + introDist + stopDist * 2.5;
 
-        window.scrollTo({ top: trackTop + trackHeight * targetP, behavior: 'smooth' });
+        window.scrollTo({ top: targetScroll, behavior: 'smooth' });
       };
 
       sceneWrapper.addEventListener('pointerup', endDrag);
@@ -1967,11 +2070,38 @@ const genAiProjects = allProducts
       const trackEl = document.getElementById(`rail-track-${railId}`);
       const prevBtn = document.querySelector<HTMLButtonElement>(`.rail-nav-prev[data-rail-target="${railId}"]`);
       const nextBtn = document.querySelector<HTMLButtonElement>(`.rail-nav-next[data-rail-target="${railId}"]`);
-      const dots = Array.from(document.querySelectorAll<HTMLElement>(`#rail-dots-${railId} .rail-dot`));
+      const dotsContainer = document.getElementById(`rail-dots-${railId}`);
 
       if (!trackEl) return;
 
-      const cardStep = 290;
+      const getScrollStep = () => {
+        const firstCard = trackEl.querySelector<HTMLElement>('.project-rail-card');
+        if (!firstCard) return 280;
+        const gap = parseFloat(getComputedStyle(trackEl).gap) || 14;
+        return firstCard.offsetWidth + gap;
+      };
+
+      const updateDots = () => {
+        if (!dotsContainer) return;
+        const cards = trackEl.querySelectorAll('.project-rail-card');
+        const count = cards.length;
+        const cardsPerPage = window.innerWidth >= 1280 ? 3 : (window.innerWidth >= 768 ? 2 : 1);
+        const pageCount = Math.ceil(count / cardsPerPage);
+
+        dotsContainer.innerHTML = '';
+        for (let i = 0; i < pageCount; i++) {
+          const dot = document.createElement('button');
+          dot.type = 'button';
+          dot.className = `rail-dot ${i === 0 ? 'is-active' : ''}`;
+          dot.setAttribute('aria-label', `Page ${i + 1}`);
+          dot.addEventListener('click', () => {
+            const maxScroll = trackEl.scrollWidth - trackEl.clientWidth;
+            const target = pageCount > 1 ? (i / (pageCount - 1)) * maxScroll : 0;
+            trackEl.scrollTo({ left: target, behavior: 'smooth' });
+          });
+          dotsContainer.appendChild(dot);
+        }
+      };
 
       const updateRailState = () => {
         const scrollLeft = trackEl.scrollLeft;
@@ -1986,28 +2116,46 @@ const genAiProjects = allProducts
           nextBtn.setAttribute('aria-disabled', scrollLeft >= maxScroll - 4 ? 'true' : 'false');
         }
 
-        const activeIdx = Math.round(scrollLeft / cardStep);
-        dots.forEach((dot, idx) => {
-          dot.classList.toggle('is-active', idx === activeIdx);
-        });
+        if (dotsContainer) {
+          const dots = dotsContainer.querySelectorAll('.rail-dot');
+          if (dots.length > 0 && maxScroll > 0) {
+            const progress = scrollLeft / maxScroll;
+            const activeIdx = Math.min(dots.length - 1, Math.max(0, Math.round(progress * (dots.length - 1))));
+            dots.forEach((dot, idx) => {
+              dot.classList.toggle('is-active', idx === activeIdx);
+            });
+          }
+        }
       };
 
       prevBtn?.addEventListener('click', () => {
-        trackEl.scrollBy({ left: -cardStep, behavior: 'smooth' });
+        trackEl.scrollBy({ left: -getScrollStep(), behavior: 'smooth' });
       });
 
       nextBtn?.addEventListener('click', () => {
-        trackEl.scrollBy({ left: cardStep, behavior: 'smooth' });
+        trackEl.scrollBy({ left: getScrollStep(), behavior: 'smooth' });
       });
 
-      dots.forEach((dot, idx) => {
-        dot.addEventListener('click', () => {
-          trackEl.scrollTo({ left: idx * cardStep, behavior: 'smooth' });
-        });
+      // Keyboard navigation (arrow keys when row is focused)
+      trackEl.setAttribute('tabindex', '0');
+      trackEl.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          trackEl.scrollBy({ left: getScrollStep(), behavior: 'smooth' });
+        } else if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          trackEl.scrollBy({ left: -getScrollStep(), behavior: 'smooth' });
+        }
       });
 
       trackEl.addEventListener('scroll', updateRailState, { passive: true });
+      updateDots();
       updateRailState();
+
+      window.addEventListener('resize', () => {
+        updateDots();
+        updateRailState();
+      }, { passive: true });
 
       // Drag to scroll horizontally on the track (without vertical wheel hijacking)
       let isRailDragging = false;

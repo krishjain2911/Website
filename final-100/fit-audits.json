@@ -1,0 +1,118 @@
+{
+  "1366x768": {
+    "viewportHeight": 768,
+    "stageRect": {
+      "top": 0,
+      "bottom": 691.1875,
+      "height": 691.1875
+    },
+    "planFit": {
+      "top": 0,
+      "bottom": 0,
+      "height": 0,
+      "fitsInViewport": true,
+      "bottomClearance": 768
+    },
+    "engineerFit": {
+      "top": 0,
+      "bottom": 0,
+      "height": 0,
+      "fitsInViewport": true,
+      "bottomClearance": 768
+    },
+    "genAiFit": {
+      "top": 210.3125,
+      "bottom": 545.65625,
+      "height": 335.34375,
+      "fitsInViewport": true,
+      "bottomClearance": 222.34375
+    }
+  },
+  "1440x900": {
+    "viewportHeight": 900,
+    "stageRect": {
+      "top": 0,
+      "bottom": 810,
+      "height": 810
+    },
+    "planFit": {
+      "top": 0,
+      "bottom": 0,
+      "height": 0,
+      "fitsInViewport": true,
+      "bottomClearance": 900
+    },
+    "engineerFit": {
+      "top": 0,
+      "bottom": 0,
+      "height": 0,
+      "fitsInViewport": true,
+      "bottomClearance": 900
+    },
+    "genAiFit": {
+      "top": 258.484375,
+      "bottom": 616.28125,
+      "height": 357.796875,
+      "fitsInViewport": true,
+      "bottomClearance": 283.71875
+    }
+  },
+  "1536x730": {
+    "viewportHeight": 730,
+    "stageRect": {
+      "top": 0,
+      "bottom": 657,
+      "height": 657
+    },
+    "planFit": {
+      "top": 0,
+      "bottom": 0,
+      "height": 0,
+      "fitsInViewport": true,
+      "bottomClearance": 730
+    },
+    "engineerFit": {
+      "top": 0,
+      "bottom": 0,
+      "height": 0,
+      "fitsInViewport": true,
+      "bottomClearance": 730
+    },
+    "genAiFit": {
+      "top": 188.140625,
+      "bottom": 537.234375,
+      "height": 349.09375,
+      "fitsInViewport": true,
+      "bottomClearance": 192.765625
+    }
+  },
+  "1920x1080": {
+    "viewportHeight": 1080,
+    "stageRect": {
+      "top": 0,
+      "bottom": 972,
+      "height": 972
+    },
+    "planFit": {
+      "top": 0,
+      "bottom": 0,
+      "height": 0,
+      "fitsInViewport": true,
+      "bottomClearance": 1080
+    },
+    "engineerFit": {
+      "top": 0,
+      "bottom": 0,
+      "height": 0,
+      "fitsInViewport": true,
+      "bottomClearance": 1080
+    },
+    "genAiFit": {
+      "top": 328.625,
+      "bottom": 708.140625,
+      "height": 379.515625,
+      "fitsInViewport": true,
+      "bottomClearance": 371.859375
+    }
+  }
+}

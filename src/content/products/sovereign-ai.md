@@ -185,15 +185,5 @@ makeItYours:
       description: "Protect internal design documents, patents, and engineering blueprints from external model ingestion."
   closing: "Every deployment configured to your exact compliance, infrastructure, and residency mandates."
 hideAudienceStack: true
-faq:
-  - question: "Does any training or query data leave our private network?"
-    answer: "In a sovereign deployment, network routes to external public AI endpoints are disabled; all processing stays within your perimeter."
-  - question: "What infrastructure is required to host localized models?"
-    answer: "We evaluate your expected workload and recommend appropriate on-premise hardware or private VPC cloud compute sizing."
-  - question: "Can we update or swap foundation models later?"
-    answer: "Yes, the architecture decouples application interfaces from the underlying inference engine to allow model adjustments."
-related:
-  - "sonakshi"
-  - "ask-me-anything"
 ctaText: "Let's talk"
 ---

@@ -180,15 +180,5 @@ makeItYours:
   closing: "Configured around your organizational hierarchy, access permissions, and archival mandates."
 hideAudienceStack: true
 beforeAfterId: "dms"
-faq:
-  - question: "Can the DMS integrate with existing ERP platforms?"
-    answer: "Yes, REST APIs and database connectors enable linking files to transactional ERP records."
-  - question: "What security protections are applied to stored files?"
-    answer: "Files are stored using encrypted storage mechanisms with strict authentication required for download."
-  - question: "Does it support audit logging for document access?"
-    answer: "Every file view, download, revision, and permission modification is recorded in an audit trail."
-related:
-  - "clm"
-  - "whatsapp-journeys"
 ctaText: "Let's talk"
 ---

@@ -12,31 +12,30 @@ const { about } = siteConfig;
 const theoryCards = [
   {
     id: 'hole',
-    step: '01',
-    label: 'ROUND HOLE',
-    title: 'The round hole — your challenge',
+    step: '01 / Round hole',
+    title: 'The round hole: your challenge',
     text: 'Defined by your people, processes and data.',
-    color: '#1E4B8F'
+    color: '#1E4B8F',
+    beat: 1
   },
   {
     id: 'adapter',
-    step: '02',
-    label: 'THE ADAPTER',
-    title: 'The adapter — RHSP',
+    step: '02 / The adapter',
+    title: 'The adapter: RHSP',
     text: 'The engineering that lets the two work together, with no compromise on either side.',
-    color: '#F7941D'
+    color: '#F7941D',
+    beat: 2
   },
   {
     id: 'peg',
-    step: '03',
-    label: 'SQUARE PEG',
-    title: 'The square peg — the solution',
+    step: '03 / Square peg',
+    title: 'The square peg: the solution',
     text: 'Powerful technology, built for the general case.',
-    color: '#EE4B2B'
+    color: '#EE4B2B',
+    beat: 3
   }
 ];
 
-// Helper to bold key phrases in mandate cards without mutating site.ts
 function formatMandateText(text: string) {
   return text
     .replace(/\badapts\b/g, '<strong>adapts</strong>')
@@ -59,9 +58,7 @@ function formatMandateText(text: string) {
   <!-- Desktop Sticky Pill Sub-Nav (Hidden below 900px) -->
   <nav class="about-sticky-subnav" id="about-sticky-subnav" aria-label="About page sections">
     <div class="subnav-pill-container">
-      <a href="#theory-hero" class="subnav-link is-active" data-section="theory-hero">Theory</a>
-      <span class="subnav-sep" aria-hidden="true">·</span>
-      <a href="#story" class="subnav-link" data-section="story">Origin</a>
+      <a href="#theory-hero" class="subnav-link is-active" data-section="theory-hero">Theory &amp; Origin</a>
       <span class="subnav-sep" aria-hidden="true">·</span>
       <a href="#mission" class="subnav-link" data-section="mission">Mission</a>
       <span class="subnav-sep" aria-hidden="true">·</span>
@@ -70,253 +67,127 @@ function formatMandateText(text: string) {
   </nav>
 
   <main id="main-content" tabindex="-1">
-    <!-- 1. Theory Hero (2-Column Grid: Text Left, Animated SVG Diagram Right) -->
+    <!-- 1. MERGED SECTION: The RHSP Theory & Apollo 13 Story inside one large rounded container -->
     <section id="theory-hero" class="about-hero-section" aria-labelledby="hero-heading">
       <div class="container">
-        <div class="hero-two-col-grid">
-          <!-- Left Column: Eyebrow, H1, Expandable Definition Pill, Subline -->
-          <div class="hero-text-col reveal-on-scroll">
-            <span class="eyebrow">THE RHSP THEORY</span>
-            <h1 id="hero-heading" class="hero-heading">The RHSP theory.</h1>
+        <div class="unified-theory-container card-mastercard reveal-on-scroll">
+          
+          <!-- 1. HEADER ROW -->
+          <div class="theory-header-row">
+            <!-- Left: small label "The RHSP theory", large heading "The RHSP theory.", expandable chip -->
+            <div class="theory-header-left">
+              <span class="eyebrow">The RHSP theory</span>
+              <h1 id="hero-heading" class="hero-heading">The RHSP theory.</h1>
 
-            <!-- Expandable Definition Pill (R · H · S · P expands on hover/focus) -->
-            <div class="definition-chip-wrap">
-              <button
-                type="button"
-                class="rhsp-expandable-pill"
-                id="rhsp-expandable-pill"
-                aria-expanded="false"
-                aria-label="RHSP stands for Round Hole Square Peg"
-              >
-                <span class="sr-only">RHSP stands for Round Hole Square Peg.</span>
-                <span class="pill-track" aria-hidden="true">
-                  <span class="pill-chunk" data-letter="R">
-                    <span class="chunk-letter letter-r">R</span><span class="chunk-word">ound</span>
-                  </span>
-                  <span class="pill-dot">·</span>
-                  <span class="pill-chunk" data-letter="H">
-                    <span class="chunk-letter letter-h">H</span><span class="chunk-word">ole</span>
-                  </span>
-                  <span class="pill-dot">·</span>
-                  <span class="pill-chunk" data-letter="S">
-                    <span class="chunk-letter letter-s">S</span><span class="chunk-word">quare</span>
-                  </span>
-                  <span class="pill-dot">·</span>
-                  <span class="pill-chunk" data-letter="P">
-                    <span class="chunk-letter letter-p">P</span><span class="chunk-word">eg</span>
-                  </span>
-                </span>
-                <span class="pill-hint" aria-hidden="true">
-                  <Icon name="chevron-right" size={12} class="pill-hint-icon" />
-                </span>
-              </button>
-              <!-- Static text maintained in DOM for search engines and assistive technology -->
-              <span class="definition-fallback-text sr-only">RHSP stands for Round Hole Square Peg.</span>
-            </div>
-
-            <p class="hero-subline">
-              Every business challenge is a round hole. Every powerful technology is a square peg. We engineer the adapter between them.
-            </p>
-          </div>
-
-          <!-- Right Column: Interactive 3-Beat Animated SVG Diagram -->
-          <div class="hero-diagram-col reveal-on-scroll" style="transition-delay: 80ms;">
-            <div class="diagram-surface card-mastercard" id="theory-diagram-wrapper" data-beat="1">
-              <!-- Replay & Beat Indicator Header -->
-              <div class="diagram-top-bar">
-                <div class="diagram-beat-pills" role="status" aria-live="polite">
-                  <span class="beat-pill" data-beat-target="1">1. Challenge</span>
-                  <span class="beat-pill" data-beat-target="2">2. Adapter</span>
-                  <span class="beat-pill" data-beat-target="3">3. Solution</span>
-                </div>
-                <button type="button" class="diagram-replay-btn" id="diagram-replay-btn" aria-label="Replay animation">
-                  <Icon name="rotate-ccw" size={13} />
-                  <span>Replay</span>
-                </button>
-              </div>
-
-              <!-- Full-Panel Animated SVG Diagram -->
-              <div class="svg-container">
-                <svg
-                  viewBox="0 0 560 320"
-                  fill="none"
-                  class="theory-interactive-svg"
-                  id="theory-interactive-svg"
-                  xmlns="http://www.w3.org/2000/svg"
-                  role="img"
-                  aria-label="Interactive RHSP animation: A square peg approaches a round hole, bumps its corners, the RHSP adapter ring slides in between, and the peg glides seamlessly through with zero compromise."
+              <!-- Expandable Definition Pill -->
+              <div class="definition-chip-wrap">
+                <button
+                  type="button"
+                  class="rhsp-expandable-pill"
+                  id="rhsp-expandable-pill"
+                  aria-expanded="false"
+                  aria-label="RHSP stands for Round Hole Square Peg"
                 >
-                  <defs>
-                    <!-- Socket Glow Gradient -->
-                    <radialGradient id="socketGlowGrad" cx="50%" cy="50%" r="50%">
-                      <stop offset="0%" stop-color="#1E4B8F" stop-opacity="0.35" />
-                      <stop offset="70%" stop-color="#1E4B8F" stop-opacity="0.08" />
-                      <stop offset="100%" stop-color="#1E4B8F" stop-opacity="0" />
-                    </radialGradient>
-                    <!-- Adapter Glow Gradient -->
-                    <radialGradient id="adapterGlowGrad" cx="50%" cy="50%" r="50%">
-                      <stop offset="0%" stop-color="#F7941D" stop-opacity="0.3" />
-                      <stop offset="100%" stop-color="#F7941D" stop-opacity="0" />
-                    </radialGradient>
-                    <!-- Grid Pattern -->
-                    <pattern id="diagGrid" width="20" height="20" patternUnits="userSpaceOnUse">
-                      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="var(--color-border)" stroke-width="0.5" stroke-opacity="0.4" />
-                    </pattern>
-                  </defs>
-
-                  <!-- Technical Blueprint Background Grid -->
-                  <rect width="560" height="320" fill="url(#diagGrid)" opacity="0.6" />
-
-                  <!-- Center Guideline Axis -->
-                  <line x1="40" y1="150" x2="520" y2="150" stroke="var(--color-border)" stroke-width="1" stroke-dasharray="4 4" />
-
-                  <!-- COMPONENT 1: ROUND HOLE (SOCKET) -->
-                  <g class="diagram-group group-hole" id="svg-group-hole" transform="translate(140, 150)">
-                    <circle cx="0" cy="0" r="76" class="hole-ambient-glow" fill="url(#socketGlowGrad)" />
-                    <circle cx="0" cy="0" r="56" class="hole-outer-ring" stroke="#1E4B8F" stroke-width="2.5" fill="rgba(30, 75, 143, 0.04)" />
-                    <circle cx="0" cy="0" r="42" class="hole-inner-ring" stroke="#1E4B8F" stroke-width="1.5" stroke-dasharray="5 4" fill="none" />
-                    <!-- Crosshair Ticks -->
-                    <line x1="-62" y1="0" x2="-48" y2="0" stroke="#1E4B8F" stroke-width="2" />
-                    <line x1="48" y1="0" x2="62" y2="0" stroke="#1E4B8F" stroke-width="2" />
-                    <line x1="0" y1="-62" x2="0" y2="-48" stroke="#1E4B8F" stroke-width="2" />
-                    <line x1="0" y1="48" x2="0" y2="62" stroke="#1E4B8F" stroke-width="2" />
-
-                    <!-- Labels (>= 13px) -->
-                    <text y="-76" class="diagram-svg-label label-hole-title" text-anchor="middle">ROUND HOLE</text>
-                    <text y="92" class="diagram-svg-sublabel" text-anchor="middle">Your challenge</text>
-                  </g>
-
-                  <!-- COMPONENT 2: THE ADAPTER RING (RHSP) -->
-                  <g class="diagram-group group-adapter" id="svg-group-adapter" transform="translate(260, 150)">
-                    <circle cx="0" cy="0" r="64" class="adapter-ambient-glow" fill="url(#adapterGlowGrad)" opacity="0" />
-                    <!-- Adapter Outer Profile: Round -->
-                    <circle cx="0" cy="0" r="54" class="adapter-outer" stroke="#F7941D" stroke-width="2.5" fill="rgba(247, 148, 29, 0.08)" />
-                    <!-- Adapter Inner Profile: Square Cutout -->
-                    <rect x="-35" y="-35" width="70" height="70" rx="4" class="adapter-inner" stroke="#F7941D" stroke-width="2" stroke-dasharray="4 3" fill="none" />
-                    <!-- Technical Corner Bevels -->
-                    <path d="M -35 -20 L -35 -35 L -20 -35" stroke="#F7941D" stroke-width="2" fill="none" />
-                    <path d="M 20 -35 L 35 -35 L 35 -20" stroke="#F7941D" stroke-width="2" fill="none" />
-                    <path d="M 35 20 L 35 35 L 20 35" stroke="#F7941D" stroke-width="2" fill="none" />
-                    <path d="M -20 35 L -35 35 L -35 20" stroke="#F7941D" stroke-width="2" fill="none" />
-
-                    <!-- Labels (>= 13px) -->
-                    <text y="-76" class="diagram-svg-label label-adapter-title" text-anchor="middle">RHSP ADAPTER</text>
-                    <text y="92" class="diagram-svg-sublabel" text-anchor="middle">The engineered interface</text>
-                  </g>
-
-                  <!-- COMPONENT 3: SQUARE PEG (SOLUTION) -->
-                  <g class="diagram-group group-peg" id="svg-group-peg" transform="translate(420, 150)">
-                    <!-- Square Peg Body -->
-                    <rect x="-35" y="-35" width="70" height="70" rx="4" class="peg-rect" stroke="#EE4B2B" stroke-width="2.5" fill="rgba(238, 75, 43, 0.08)" />
-                    <!-- Center Core -->
-                    <circle cx="0" cy="0" r="14" stroke="#EE4B2B" stroke-width="1.5" stroke-dasharray="3 2" fill="none" />
-                    <line x1="-8" y1="0" x2="8" y2="0" stroke="#EE4B2B" stroke-width="1.5" />
-                    <line x1="0" y1="-8" x2="0" y2="8" stroke="#EE4B2B" stroke-width="1.5" />
-
-                    <!-- Corner Clash Indicators (shown in Beat 1) -->
-                    <g class="peg-clash-marks">
-                      <circle cx="-35" cy="-35" r="4" fill="#EE4B2B" class="clash-dot" />
-                      <circle cx="35" cy="-35" r="4" fill="#EE4B2B" class="clash-dot" />
-                      <circle cx="35" cy="35" r="4" fill="#EE4B2B" class="clash-dot" />
-                      <circle cx="-35" cy="35" r="4" fill="#EE4B2B" class="clash-dot" />
-                    </g>
-
-                    <!-- Labels (>= 13px) -->
-                    <text y="-76" class="diagram-svg-label label-peg-title" text-anchor="middle">SQUARE PEG</text>
-                    <text y="92" class="diagram-svg-sublabel" text-anchor="middle">The technology solution</text>
-                  </g>
-
-                  <!-- Bottom Measurement Baseline with Coordinate Marks -->
-                  <line x1="60" y1="285" x2="500" y2="285" stroke="var(--color-border)" stroke-width="1" />
-                  <circle cx="140" cy="285" r="3" fill="#1E4B8F" />
-                  <circle cx="260" cy="285" r="3" fill="#F7941D" />
-                  <circle cx="420" cy="285" r="3" fill="#EE4B2B" />
-                  <text x="280" y="305" font-family="var(--font-sans)" font-size="11" font-weight="600" letter-spacing="0.08em" text-transform="uppercase" fill="var(--color-text-muted)" text-anchor="middle">
-                    Technical Architecture Interface · Apollo Principle
-                  </text>
-                </svg>
-              </div>
-
-              <!-- Narrative Beat Caption Bar -->
-              <div class="diagram-caption-footer">
-                <span class="caption-tag">Narrative</span>
-                <p class="caption-text" id="diagram-caption-text">
-                  Beat 1: The square peg approaches the round hole — its corners clash with the socket boundary.
-                </p>
+                  <span class="sr-only">RHSP stands for Round Hole Square Peg.</span>
+                  <span class="pill-track" aria-hidden="true">
+                    <span class="pill-chunk" data-letter="R">
+                      <span class="chunk-letter letter-r">R</span><span class="chunk-word">ound</span>
+                    </span>
+                    <span class="pill-dot">·</span>
+                    <span class="pill-chunk" data-letter="H">
+                      <span class="chunk-letter letter-h">H</span><span class="chunk-word">ole</span>
+                    </span>
+                    <span class="pill-dot">·</span>
+                    <span class="pill-chunk" data-letter="S">
+                      <span class="chunk-letter letter-s">S</span><span class="chunk-word">quare</span>
+                    </span>
+                    <span class="pill-dot">·</span>
+                    <span class="pill-chunk" data-letter="P">
+                      <span class="chunk-letter letter-p">P</span><span class="chunk-word">eg</span>
+                    </span>
+                  </span>
+                  <span class="pill-hint" aria-hidden="true">
+                    <Icon name="chevron-right" size={12} class="pill-hint-icon" />
+                  </span>
+                </button>
+                <span class="definition-fallback-text sr-only">RHSP stands for Round Hole Square Peg.</span>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- 2. Three Theory Cards in Equal-Height Row -->
-    <section id="theory-cards" class="about-section theory-cards-section" aria-label="Theory Pillars">
-      <div class="container">
-        <div class="three-col-cards-grid">
-          {theoryCards.map((card, idx) => (
-            <article
-              class="theory-card card-mastercard reveal-on-scroll"
-              id={`theory-card-${card.id}`}
-              data-card-id={card.id}
-              tabindex="0"
-              role="region"
-              aria-label={card.title}
-              style={`transition-delay: ${idx * 60}ms; border-top: 3px solid ${card.color};`}
-            >
-              <div class="theory-card-header">
-                <span class="theory-card-step" style={`color: ${card.color};`}>
-                  {card.step} / {card.label}
-                </span>
-                <h2 class="theory-card-title">{card.title}</h2>
-              </div>
-              <p class="theory-card-copy">{card.text}</p>
-              <div class="theory-card-link-cue">
-                <span style={`color: ${card.color};`}>Highlight in architecture &rarr;</span>
-              </div>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <!-- 3. Our Origin: The Apollo 13 Imperative (Restored Master Boxed Section) -->
-    <section id="story" class="about-story-section" aria-labelledby="story-heading">
-      <div class="container">
-        <div class="story-box-wrapper card-mastercard reveal-on-scroll">
-          <div class="story-header">
-            <span class="eyebrow">OUR ORIGIN</span>
-            <h2 id="story-heading" class="story-title">
-              The Apollo 13 imperative.
-            </h2>
+            <!-- Right: Three short paragraphs with bold lead-ins -->
+            <div class="theory-header-right">
+              <p class="theory-lead-p">
+                <strong>The Problem:</strong> Standard tech solves for the 80%, leaving your unique business processes out in the cold.
+              </p>
+              <p class="theory-lead-p">
+                <strong>The Status Quo:</strong> Too often, IT tells you to change how you operate just to fit the software.
+              </p>
+              <p class="theory-lead-p">
+                <strong>Our Approach:</strong> We don't force square pegs into round holes. We build the exact custom bridge between your technology and your requirements, preserving your operational DNA without compromise.
+              </p>
+            </div>
           </div>
 
-          <div class="story-body-grid">
-            <!-- Left: 3 Numbered Steps + Fact Chips + Quote Card -->
-            <div class="story-lines-col">
-              <ol class="story-timeline" aria-label="Apollo 13 origin sequence steps">
-                <li class="story-step-item">
-                  <span class="step-bullet" aria-hidden="true">01</span>
+          <!-- 2. THREE CARDS IN A ROW (Stack on mobile) -->
+          <div class="theory-cards-row">
+            {theoryCards.map((card) => (
+              <article
+                class="theory-row-card card-mastercard"
+                id={`theory-card-${card.id}`}
+                data-card-id={card.id}
+                data-beat={card.beat}
+                tabindex="0"
+                style={`border-top: 3px solid ${card.color};`}
+              >
+                <div class="theory-card-header">
+                  <span class="theory-card-step" style={`color: ${card.color};`}>
+                    {card.step}
+                  </span>
+                  <h2 class="theory-card-title">{card.title}</h2>
+                </div>
+                <p class="theory-card-copy">{card.text}</p>
+                <button
+                  type="button"
+                  class="theory-card-link-btn"
+                  data-beat-target={card.beat}
+                  style={`color: ${card.color};`}
+                >
+                  <span>Highlight in architecture &rarr;</span>
+                </button>
+              </article>
+            ))}
+          </div>
+
+          <!-- 3. APOLLO BLOCK (Same container) -->
+          <div class="apollo-merged-block" id="apollo-block">
+            <!-- Left Column: Apollo story & timeline -->
+            <div class="apollo-left-col">
+              <span class="eyebrow">The Inspiration</span>
+              <h2 class="apollo-heading">The Apollo 13 imperative.</h2>
+
+              <ol class="apollo-timeline" aria-label="Apollo 13 timeline sequence">
+                <li class="apollo-timeline-item" data-beat-target="1" role="button" tabindex="0">
+                  <span class="apollo-step-num circle-blue" aria-hidden="true">01</span>
                   <p class="step-text">
                     In April 1970, Apollo 13 suffered an oxygen tank explosion 200,000 miles from Earth.
                   </p>
                 </li>
-                <li class="story-step-item">
-                  <span class="step-bullet" aria-hidden="true">02</span>
+                <li class="apollo-timeline-item" data-beat-target="2" role="button" tabindex="0">
+                  <span class="apollo-step-num circle-orange" aria-hidden="true">02</span>
                   <p class="step-text">
                     NASA engineers had to connect square lithium hydroxide canisters to round sockets using only what was on board.
                   </p>
                 </li>
-                <li class="story-step-item">
-                  <span class="step-bullet" aria-hidden="true">03</span>
+                <li class="apollo-timeline-item" data-beat-target="3" role="button" tabindex="0">
+                  <span class="apollo-step-num circle-red" aria-hidden="true">03</span>
                   <p class="step-text">
                     They engineered the adapter using only what was on board.
                   </p>
                 </li>
               </ol>
 
-              <!-- Fact Chips -->
-              <div class="story-fact-chips">
+              <!-- 3 Fact Chips -->
+              <div class="apollo-chips-row">
                 <span class="fact-chip">April 1970</span>
                 <span class="fact-chip-dot" aria-hidden="true">·</span>
                 <span class="fact-chip">200,000 miles from Earth</span>
@@ -324,27 +195,122 @@ function formatMandateText(text: string) {
                 <span class="fact-chip">Only materials on board</span>
               </div>
 
-              <!-- Quote Card -->
-              <div class="story-conclusion-card">
-                <p class="conclusion-statement">
+              <!-- Quote with orange left rule -->
+              <div class="apollo-quote-box">
+                <p class="apollo-quote-text">
                   Round Hole Square Peg is built on the same principle: understand the challenge, then engineer the adapter to the solution.
                 </p>
               </div>
             </div>
 
-            <!-- Right: Apollo 13 Imperative Image Illustration -->
-            <div class="story-illustration-col">
-              <div class="blueprint-canvas">
-                <picture>
-                  <source srcset="/media/about/aboutus.webp" type="image/webp" />
-                  <img
-                    src="/media/raw/aboutus.png"
-                    alt="Apollo 13 imperative: Connecting square lithium hydroxide canisters to round sockets using an engineered adapter"
-                    class="apollo-story-image"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </picture>
+            <!-- Right Column: Interactive Diagram with 3 Tabs & Replay -->
+            <div class="apollo-right-col">
+              <div class="diagram-surface card-mastercard" id="theory-diagram-wrapper" data-beat="1">
+                <!-- Replay & Beat Indicator Header -->
+                <div class="diagram-top-bar">
+                  <div class="diagram-beat-pills" role="tablist" aria-label="Diagram beats">
+                    <button type="button" class="beat-pill is-active" data-beat-target="1" role="tab" aria-selected="true">1. Challenge</button>
+                    <button type="button" class="beat-pill" data-beat-target="2" role="tab" aria-selected="false">2. Adapter</button>
+                    <button type="button" class="beat-pill" data-beat-target="3" role="tab" aria-selected="false">3. Solution</button>
+                  </div>
+                  <button type="button" class="diagram-replay-btn" id="diagram-replay-btn" aria-label="Replay animation">
+                    <Icon name="rotate-ccw" size={13} />
+                    <span>Replay</span>
+                  </button>
+                </div>
+
+                <!-- Full-Panel Animated SVG Diagram -->
+                <div class="svg-container">
+                  <svg
+                    viewBox="0 0 560 320"
+                    fill="none"
+                    class="theory-interactive-svg"
+                    id="theory-interactive-svg"
+                    xmlns="http://www.w3.org/2000/svg"
+                    role="img"
+                    aria-label="Interactive RHSP animation: A square peg approaches a round hole, bumps its corners, the RHSP adapter ring slides in between, and the peg glides seamlessly through with zero compromise."
+                  >
+                    <defs>
+                      <radialGradient id="socketGlowGrad" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="#1E4B8F" stop-opacity="0.35" />
+                        <stop offset="70%" stop-color="#1E4B8F" stop-opacity="0.08" />
+                        <stop offset="100%" stop-color="#1E4B8F" stop-opacity="0" />
+                      </radialGradient>
+                      <radialGradient id="adapterGlowGrad" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="#F7941D" stop-opacity="0.3" />
+                        <stop offset="100%" stop-color="#F7941D" stop-opacity="0" />
+                      </radialGradient>
+                      <pattern id="diagGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+                        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="var(--color-border)" stroke-width="0.5" stroke-opacity="0.4" />
+                      </pattern>
+                    </defs>
+
+                    <rect width="560" height="320" fill="url(#diagGrid)" opacity="0.6" />
+                    <line x1="40" y1="150" x2="520" y2="150" stroke="var(--color-border)" stroke-width="1" stroke-dasharray="4 4" />
+
+                    <!-- COMPONENT 1: ROUND HOLE (SOCKET) -->
+                    <g class="diagram-group group-hole" id="svg-group-hole" transform="translate(140, 150)">
+                      <circle cx="0" cy="0" r="76" class="hole-ambient-glow" fill="url(#socketGlowGrad)" />
+                      <circle cx="0" cy="0" r="56" class="hole-outer-ring" stroke="#1E4B8F" stroke-width="2.5" fill="rgba(30, 75, 143, 0.04)" />
+                      <circle cx="0" cy="0" r="42" class="hole-inner-ring" stroke="#1E4B8F" stroke-width="1.5" stroke-dasharray="5 4" fill="none" />
+                      <line x1="-62" y1="0" x2="-48" y2="0" stroke="#1E4B8F" stroke-width="2" />
+                      <line x1="48" y1="0" x2="62" y2="0" stroke="#1E4B8F" stroke-width="2" />
+                      <line x1="0" y1="-62" x2="0" y2="-48" stroke="#1E4B8F" stroke-width="2" />
+                      <line x1="0" y1="48" x2="0" y2="62" stroke="#1E4B8F" stroke-width="2" />
+
+                      <text y="-76" class="diagram-svg-label label-hole-title" text-anchor="middle">ROUND HOLE</text>
+                      <text y="92" class="diagram-svg-sublabel" text-anchor="middle">Your challenge</text>
+                    </g>
+
+                    <!-- COMPONENT 2: THE ADAPTER RING (RHSP) -->
+                    <g class="diagram-group group-adapter" id="svg-group-adapter" transform="translate(260, 150)">
+                      <circle cx="0" cy="0" r="64" class="adapter-ambient-glow" fill="url(#adapterGlowGrad)" opacity="0" />
+                      <circle cx="0" cy="0" r="54" class="adapter-outer" stroke="#F7941D" stroke-width="2.5" fill="rgba(247, 148, 29, 0.08)" />
+                      <rect x="-35" y="-35" width="70" height="70" rx="4" class="adapter-inner" stroke="#F7941D" stroke-width="2" stroke-dasharray="4 3" fill="none" />
+                      <path d="M -35 -20 L -35 -35 L -20 -35" stroke="#F7941D" stroke-width="2" fill="none" />
+                      <path d="M 20 -35 L 35 -35 L 35 -20" stroke="#F7941D" stroke-width="2" fill="none" />
+                      <path d="M 35 20 L 35 35 L 20 35" stroke="#F7941D" stroke-width="2" fill="none" />
+                      <path d="M -20 35 L -35 35 L -35 20" stroke="#F7941D" stroke-width="2" fill="none" />
+
+                      <text y="-76" class="diagram-svg-label label-adapter-title" text-anchor="middle">RHSP ADAPTER</text>
+                      <text y="92" class="diagram-svg-sublabel" text-anchor="middle">The engineered interface</text>
+                    </g>
+
+                    <!-- COMPONENT 3: SQUARE PEG (SOLUTION) -->
+                    <g class="diagram-group group-peg" id="svg-group-peg" transform="translate(420, 150)">
+                      <rect x="-35" y="-35" width="70" height="70" rx="4" class="peg-rect" stroke="#EE4B2B" stroke-width="2.5" fill="rgba(238, 75, 43, 0.08)" />
+                      <circle cx="0" cy="0" r="14" stroke="#EE4B2B" stroke-width="1.5" stroke-dasharray="3 2" fill="none" />
+                      <line x1="-8" y1="0" x2="8" y2="0" stroke="#EE4B2B" stroke-width="1.5" />
+                      <line x1="0" y1="-8" x2="0" y2="8" stroke="#EE4B2B" stroke-width="1.5" />
+
+                      <g class="peg-clash-marks">
+                        <circle cx="-35" cy="-35" r="4" fill="#EE4B2B" class="clash-dot" />
+                        <circle cx="35" cy="-35" r="4" fill="#EE4B2B" class="clash-dot" />
+                        <circle cx="35" cy="35" r="4" fill="#EE4B2B" class="clash-dot" />
+                        <circle cx="-35" cy="35" r="4" fill="#EE4B2B" class="clash-dot" />
+                      </g>
+
+                      <text y="-76" class="diagram-svg-label label-peg-title" text-anchor="middle">SQUARE PEG</text>
+                      <text y="92" class="diagram-svg-sublabel" text-anchor="middle">The technology solution</text>
+                    </g>
+
+                    <line x1="60" y1="285" x2="500" y2="285" stroke="var(--color-border)" stroke-width="1" />
+                    <circle cx="140" cy="285" r="3" fill="#1E4B8F" />
+                    <circle cx="260" cy="285" r="3" fill="#F7941D" />
+                    <circle cx="420" cy="285" r="3" fill="#EE4B2B" />
+                    <text x="280" y="305" font-family="var(--font-sans)" font-size="11" font-weight="600" letter-spacing="0.08em" text-transform="uppercase" fill="var(--color-text-muted)" text-anchor="middle">
+                      Technical Architecture Interface · Apollo Principle
+                    </text>
+                  </svg>
+                </div>
+
+                <!-- Narrative Beat Caption Bar -->
+                <div class="diagram-caption-footer">
+                  <span class="caption-tag">Narrative</span>
+                  <p class="caption-text" id="diagram-caption-text">
+                    Beat 3: The square peg glides smoothly through the adapter into the round hole, zero compromise.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -352,7 +318,7 @@ function formatMandateText(text: string) {
       </div>
     </section>
 
-    <!-- 4. Mission · Purpose · Vision -->
+    <!-- 2. MISSION & VISION -->
     <section id="mission" class="about-section mission-section" aria-labelledby="mission-heading">
       <div class="container">
         <div class="section-header reveal-on-scroll">
@@ -384,10 +350,10 @@ function formatMandateText(text: string) {
       </div>
     </section>
 
-    <!-- 5. Leadership Team -->
+    <!-- 3. LEADERSHIP TEAM -->
     <Team />
 
-    <!-- 6. Universal Contact Section -->
+    <!-- 4. UNIVERSAL CONTACT SECTION -->
     <ContactSection />
   </main>
 
@@ -395,54 +361,54 @@ function formatMandateText(text: string) {
 </BaseLayout>
 
 <style>
-  /* -------------------------------------------------------------
-     Sticky Sub-Nav (Desktop >= 900px)
-     ------------------------------------------------------------- */
+  /* Sticky Sub-Nav (Desktop >= 900px) */
   .about-sticky-subnav {
     position: sticky;
-    top: calc(var(--nav-height, 72px) + 8px);
-    z-index: 50;
+    top: 72px;
+    z-index: 40;
     display: flex;
     justify-content: center;
+    padding: 0.75rem 1rem;
     pointer-events: none;
-    margin-bottom: -46px; /* Let hero flow beneath gracefully */
+    margin-bottom: -48px;
   }
 
   .subnav-pill-container {
     display: inline-flex;
     align-items: center;
     gap: 0.65rem;
-    padding: 0.35rem 1rem;
-    border-radius: var(--radius-full);
+    padding: 0.4rem 1rem;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-    backdrop-filter: blur(10px);
     pointer-events: auto;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
 
   :global(.dark) .subnav-pill-container {
-    background: var(--color-surface-raised);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+    background: rgba(22, 28, 40, 0.85);
+    border-color: rgba(255, 255, 255, 0.12);
   }
 
   .subnav-link {
-    font-size: var(--fs-xs);
+    font-size: 12px;
     font-weight: 600;
     color: var(--color-text-secondary);
     text-decoration: none;
     transition: color 0.2s ease;
+    padding: 0.2rem 0.4rem;
   }
 
   .subnav-link:hover,
   .subnav-link.is-active {
-    color: var(--color-text-primary);
-    font-weight: 700;
+    color: #F7941D;
   }
 
   .subnav-sep {
     color: var(--color-border-strong);
-    font-size: var(--fs-xs);
+    font-size: 11px;
   }
 
   @media (max-width: 899px) {
@@ -451,60 +417,81 @@ function formatMandateText(text: string) {
     }
   }
 
-  /* -------------------------------------------------------------
-     Theory Hero Section
-     ------------------------------------------------------------- */
+  /* Section Spacing */
   .about-hero-section {
-    padding-top: calc(72px + var(--section-spacing-desktop, 80px));
-    padding-bottom: var(--section-spacing-desktop, 80px);
+    padding-top: calc(72px + var(--section-spacing-desktop, 60px));
+    padding-bottom: var(--section-spacing-desktop, 60px);
     background-color: var(--color-bg);
-    border-bottom: 1px solid var(--color-border);
-    scroll-margin-top: 100px;
   }
 
   @media (max-width: 767px) {
     .about-hero-section {
-      padding-top: calc(64px + var(--section-spacing-mobile, 48px));
-      padding-bottom: var(--section-spacing-mobile, 48px);
-      scroll-margin-top: 80px;
+      padding-top: calc(64px + var(--section-spacing-mobile, 40px));
+      padding-bottom: var(--section-spacing-mobile, 40px);
     }
   }
 
-  .hero-two-col-grid {
+  /* UNIFIED MASTER CONTAINER */
+  .unified-theory-container {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 24px;
+    padding: clamp(1.75rem, 4vw, 3.5rem);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+  }
+
+  :global(.dark) .unified-theory-container {
+    background: var(--color-surface-raised);
+    border-color: var(--color-border);
+  }
+
+  /* 1. Header row */
+  .theory-header-row {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 2.5rem;
-    align-items: center;
+    gap: 2rem;
+    align-items: start;
+    margin-bottom: clamp(2rem, 3.5vw, 3rem);
   }
 
   @media (min-width: 960px) {
-    .hero-two-col-grid {
-      grid-template-columns: 1.05fr 0.95fr;
+    .theory-header-row {
+      grid-template-columns: 1fr 1.25fr;
       gap: 3.5rem;
     }
   }
 
   .hero-heading {
-    font-size: clamp(2.2rem, 4vw, 3.25rem);
-    font-weight: 700;
+    font-size: clamp(2.2rem, 3.8vw, 3.25rem);
+    font-weight: 800;
     line-height: 1.15;
-    margin: 0.25rem 0 1.25rem 0;
+    margin: 0.35rem 0 1.25rem 0;
     color: var(--color-text-primary);
+    letter-spacing: -0.02em;
   }
 
-  .hero-subline {
-    font-size: clamp(1rem, 1.8vw, 1.15rem);
-    color: var(--color-text-secondary);
+  .theory-header-right {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-top: 0.5rem;
+  }
+
+  .theory-lead-p {
+    font-size: clamp(0.95rem, 1.4vw, 1.05rem);
     line-height: 1.6;
+    color: var(--color-text-secondary);
     margin: 0;
-    max-width: 580px;
   }
 
-  /* -------------------------------------------------------------
-     Expandable Definition Pill (R · H · S · P)
-     ------------------------------------------------------------- */
+  .theory-lead-p strong {
+    color: var(--color-text-primary);
+    font-weight: 700;
+  }
+
+  /* Expandable Definition Pill */
   .definition-chip-wrap {
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.5rem;
   }
 
   .rhsp-expandable-pill {
@@ -513,18 +500,19 @@ function formatMandateText(text: string) {
     gap: 0.5rem;
     padding: 0.45rem 0.95rem;
     border-radius: var(--radius-full);
-    background-color: var(--color-surface);
+    background-color: var(--color-bg);
     border: 1px solid var(--color-border);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     cursor: pointer;
     font-family: var(--font-sans);
     transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
+  :global(.dark) .rhsp-expandable-pill {
+    background-color: var(--color-surface);
+  }
+
   .rhsp-expandable-pill:hover,
-  .rhsp-expandable-pill:focus-visible,
   .rhsp-expandable-pill.is-expanded {
-    background-color: var(--color-surface-raised);
     border-color: var(--color-border-strong);
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
   }
@@ -544,7 +532,6 @@ function formatMandateText(text: string) {
 
   .chunk-letter {
     font-weight: 800;
-    letter-spacing: -0.01em;
   }
 
   .letter-r { color: #1E4B8F; }
@@ -565,11 +552,10 @@ function formatMandateText(text: string) {
     white-space: nowrap;
     color: var(--color-text-secondary);
     font-weight: 600;
-    transition: max-width 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, margin 0.2s ease;
+    transition: max-width 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
   }
 
   .rhsp-expandable-pill:hover .chunk-word,
-  .rhsp-expandable-pill:focus-visible .chunk-word,
   .rhsp-expandable-pill.is-expanded .chunk-word {
     max-width: 60px;
     opacity: 1;
@@ -593,23 +579,216 @@ function formatMandateText(text: string) {
     transform: rotate(90deg);
   }
 
-  /* -------------------------------------------------------------
-     Diagram Surface & Interactive 3-Beat SVG
-     ------------------------------------------------------------- */
+  /* 2. Three cards in a row */
+  .theory-cards-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    margin-bottom: clamp(2.5rem, 4vw, 3.5rem);
+  }
+
+  @media (min-width: 860px) {
+    .theory-cards-row {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+  }
+
+  .theory-row-card {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg, 16px);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  :global(.dark) .theory-row-card {
+    background: var(--color-surface);
+  }
+
+  .theory-row-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  }
+
+  .theory-card-header {
+    margin-bottom: 0.65rem;
+  }
+
+  .theory-card-step {
+    font-family: var(--font-sans);
+    font-size: 11.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    display: inline-block;
+    margin-bottom: 0.4rem;
+  }
+
+  .theory-card-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--color-text-primary);
+    line-height: 1.3;
+  }
+
+  .theory-card-copy {
+    font-size: 0.925rem;
+    color: var(--color-text-secondary);
+    line-height: 1.55;
+    margin: 0 0 1.25rem 0;
+    flex: 1;
+  }
+
+  .theory-card-link-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: var(--font-sans);
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: left;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .theory-card-link-btn:hover {
+    text-decoration: underline;
+  }
+
+  /* 3. Apollo block (Same container) */
+  .apollo-merged-block {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    padding-top: clamp(2rem, 3.5vw, 3rem);
+    border-top: 1px solid var(--color-border);
+  }
+
+  @media (min-width: 960px) {
+    .apollo-merged-block {
+      grid-template-columns: 1fr 1.15fr;
+      gap: 3.5rem;
+      align-items: center;
+    }
+  }
+
+  .apollo-heading {
+    font-size: clamp(1.8rem, 3vw, 2.4rem);
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 0.35rem 0 1.5rem 0;
+    color: var(--color-text-primary);
+  }
+
+  .apollo-timeline {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .apollo-timeline-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    padding: 0.5rem;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .apollo-timeline-item:hover,
+  .apollo-timeline-item.is-selected {
+    background: rgba(30, 75, 143, 0.05);
+  }
+
+  .apollo-step-num {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    color: #FFFFFF;
+    font-size: 11px;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .circle-blue { background-color: #1E4B8F; }
+  .circle-orange { background-color: #F7941D; }
+  .circle-red { background-color: #EE4B2B; }
+
+  .step-text {
+    font-size: 0.925rem;
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  .apollo-chips-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .fact-chip {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-full);
+  }
+
+  :global(.dark) .fact-chip {
+    background: var(--color-surface);
+  }
+
+  .fact-chip-dot {
+    color: var(--color-text-muted);
+  }
+
+  .apollo-quote-box {
+    border-left: 3px solid #F7941D;
+    padding: 0.5rem 0 0.5rem 1.15rem;
+    margin-top: 1rem;
+  }
+
+  .apollo-quote-text {
+    font-size: 0.95rem;
+    font-style: italic;
+    line-height: 1.6;
+    color: var(--color-text-primary);
+    margin: 0;
+  }
+
+  /* Right Column: Animated Diagram */
   .diagram-surface {
     position: relative;
-    background: var(--color-surface);
-    border-radius: var(--radius-card);
+    background: var(--color-bg);
+    border-radius: var(--radius-card, 16px);
     border: 1px solid var(--color-border);
     padding: 1.25rem 1.25rem 1rem 1.25rem;
-    box-shadow: var(--shadow-subtle);
     overflow: hidden;
     display: flex;
     flex-direction: column;
   }
 
   :global(.dark) .diagram-surface {
-    background: var(--color-surface-raised);
+    background: var(--color-surface);
   }
 
   .diagram-top-bar {
@@ -627,15 +806,16 @@ function formatMandateText(text: string) {
   .beat-pill {
     font-size: 11px;
     font-weight: 600;
-    padding: 0.15rem 0.55rem;
+    padding: 0.25rem 0.65rem;
     border-radius: var(--radius-full);
-    background: var(--color-bg);
+    background: var(--color-surface);
     border: 1px solid var(--color-border);
     color: var(--color-text-muted);
+    cursor: pointer;
     transition: all 0.25s ease;
   }
 
-  /* Active Beat Highlights */
+  .beat-pill.is-active,
   .diagram-surface[data-beat="1"] .beat-pill[data-beat-target="1"] {
     background: rgba(30, 75, 143, 0.12);
     color: #1E4B8F;
@@ -664,7 +844,7 @@ function formatMandateText(text: string) {
     gap: 0.35rem;
     font-size: 11px;
     font-weight: 600;
-    padding: 0.2rem 0.6rem;
+    padding: 0.25rem 0.65rem;
     border-radius: var(--radius-full);
     border: 1px solid var(--color-border);
     background: var(--color-surface);
@@ -691,7 +871,7 @@ function formatMandateText(text: string) {
 
   .diagram-svg-label {
     font-family: var(--font-sans);
-    font-size: 13px; /* >= 13px */
+    font-size: 13px;
     font-weight: 700;
     letter-spacing: 0.08em;
   }
@@ -708,16 +888,8 @@ function formatMandateText(text: string) {
     fill: var(--color-text-secondary);
   }
 
-  /* SVG Element Transitions */
   .diagram-group {
     transition: transform 0.65s cubic-bezier(0.34, 1.25, 0.64, 1), opacity 0.4s ease;
-  }
-
-  .adapter-outer,
-  .adapter-inner,
-  .hole-outer-ring,
-  .peg-rect {
-    transition: stroke-width 0.3s ease, filter 0.3s ease;
   }
 
   .clash-dot {
@@ -725,9 +897,9 @@ function formatMandateText(text: string) {
     transition: opacity 0.3s ease;
   }
 
-  /* Beat 1: Clash (Peg bumps into hole) */
+  /* Beat 1: Clash */
   .diagram-surface[data-beat="1"] .group-peg {
-    transform: translate(250px, 150px); /* Bumps against hole boundary */
+    transform: translate(250px, 150px);
   }
 
   .diagram-surface[data-beat="1"] .clash-dot {
@@ -747,408 +919,112 @@ function formatMandateText(text: string) {
 
   /* Beat 2: Adapter slides into place */
   .diagram-surface[data-beat="2"] .group-peg {
-    transform: translate(380px, 150px); /* Backs off */
+    transform: translate(380px, 150px);
   }
 
   .diagram-surface[data-beat="2"] .group-adapter {
     opacity: 1;
-    transform: translate(260px, 150px) scale(1);
+    transform: translate(200px, 150px) scale(1);
   }
 
   .diagram-surface[data-beat="2"] .adapter-ambient-glow {
-    opacity: 0.8;
+    opacity: 1;
   }
 
-  /* Beat 3: Peg glides through adapter into socket & glows */
-  .diagram-surface[data-beat="3"] .group-peg {
-    transform: translate(140px, 150px); /* Glides directly into hole */
-  }
-
+  /* Beat 3: Glides through with zero compromise */
   .diagram-surface[data-beat="3"] .group-adapter {
-    transform: translate(140px, 150px); /* Locks into round socket */
+    opacity: 1;
+    transform: translate(140px, 150px) scale(1);
   }
 
-  .diagram-surface[data-beat="3"] .hole-ambient-glow {
-    animation: activeHoleGlow 1.8s infinite alternate ease-in-out;
-  }
-
-  @keyframes activeHoleGlow {
-    0% { opacity: 0.4; transform: scale(1); }
-    100% { opacity: 0.95; transform: scale(1.15); }
-  }
-
-  /* Hover Card Linked Interaction */
-  .diagram-surface.is-hover-hole .group-hole {
-    filter: drop-shadow(0 0 8px rgba(30, 75, 143, 0.6));
-  }
-
-  .diagram-surface.is-hover-adapter .group-adapter {
-    filter: drop-shadow(0 0 8px rgba(247, 148, 29, 0.6));
-    opacity: 1 !important;
-  }
-
-  .diagram-surface.is-hover-peg .group-peg {
-    filter: drop-shadow(0 0 8px rgba(238, 75, 43, 0.6));
-  }
-
-  /* Reduced Motion Static Fallback */
-  @media (prefers-reduced-motion: reduce) {
-    .diagram-group {
-      transition: none !important;
-    }
-    .clash-dot,
-    .hole-ambient-glow {
-      animation: none !important;
-    }
+  .diagram-surface[data-beat="3"] .group-peg {
+    opacity: 1;
+    transform: translate(140px, 150px) scale(0.98);
   }
 
   .diagram-caption-footer {
     display: flex;
     align-items: center;
     gap: 0.65rem;
-    padding-top: 0.75rem;
-    margin-top: 0.5rem;
-    border-top: 1px solid var(--color-border);
+    padding: 0.6rem 0.85rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    margin-top: 0.75rem;
+  }
+
+  :global(.dark) .diagram-caption-footer {
+    background: rgba(255, 255, 255, 0.03);
   }
 
   .caption-tag {
     font-size: 10px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
+    color: #F7941D;
+    background: rgba(247, 148, 29, 0.12);
     padding: 0.15rem 0.45rem;
     border-radius: var(--radius-sm);
-    background: var(--color-bg);
-    color: var(--color-text-muted);
   }
 
   .caption-text {
-    font-size: var(--fs-xs);
+    font-size: 12px;
     color: var(--color-text-secondary);
-    margin: 0;
     line-height: 1.4;
+    margin: 0;
   }
 
-  /* -------------------------------------------------------------
-     Three Theory Cards Section
-     ------------------------------------------------------------- */
-  .about-section {
+  /* Mission Section */
+  .mission-section {
     padding: var(--section-spacing-desktop, 80px) 0;
     background-color: var(--color-bg);
-    border-bottom: 1px solid var(--color-border);
-    scroll-margin-top: 96px;
+    border-top: 1px solid var(--color-border);
   }
 
-  @media (max-width: 767px) {
-    .about-section {
-      padding: var(--section-spacing-mobile, 48px) 0;
-      scroll-margin-top: 76px;
-    }
-  }
-
-  .three-col-cards-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    align-items: stretch;
-  }
-
-  @media (min-width: 768px) {
-    .three-col-cards-grid {
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
-    }
-  }
-
-  .theory-card {
-    background-color: var(--color-surface);
-    border-radius: var(--radius-card);
-    padding: 2rem 1.75rem;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    box-sizing: border-box;
-    border: 1px solid var(--color-border);
-    cursor: pointer;
-    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-  }
-
-  .theory-card:hover,
-  .theory-card:focus-visible {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
-  }
-
-  :global(.dark) .theory-card {
-    background-color: var(--color-surface-raised);
-  }
-
-  :global(.dark) .theory-card:hover,
-  :global(.dark) .theory-card:focus-visible {
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
-  }
-
-  .theory-card-header {
-    margin-bottom: 0.75rem;
-  }
-
-  .theory-card-step {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    display: inline-block;
-    margin-bottom: 0.35rem;
-  }
-
-  .theory-card-title {
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: var(--color-text-primary);
-    margin: 0;
-    line-height: 1.3;
-  }
-
-  .theory-card-copy {
-    font-size: 0.875rem;
-    line-height: 1.5;
-    color: var(--color-text-secondary);
-    margin: 0 0 1.25rem 0;
-  }
-
-  .theory-card-link-cue {
-    margin-top: auto;
-    font-size: 11px;
-    font-weight: 600;
-    opacity: 0.85;
-    transition: opacity 0.2s ease, transform 0.2s ease;
-  }
-
-  .theory-card:hover .theory-card-link-cue {
-    opacity: 1;
-    transform: translateX(3px);
-  }
-
-  /* -------------------------------------------------------------
-     3. Apollo 13 Story Section (Restored Box)
-     ------------------------------------------------------------- */
-  .about-story-section {
-    padding: var(--section-spacing-desktop, 80px) 0;
-    background-color: var(--color-bg);
-    border-bottom: 1px solid var(--color-border);
-    scroll-margin-top: 96px;
-  }
-
-  .story-box-wrapper {
-    background-color: var(--color-surface);
-    border-radius: var(--radius-card);
-    padding: 3.5rem;
-    box-shadow: var(--shadow-subtle);
-    border: 1px solid var(--color-border);
-  }
-
-  @media (max-width: 640px) {
-    .story-box-wrapper {
-      padding: 2rem 1.5rem;
-    }
-  }
-
-  .story-header {
-    margin-bottom: 2.5rem;
-    max-width: 680px;
-  }
-
-  .story-title {
-    font-size: var(--fs-h1);
-    font-weight: 700;
-    line-height: 1.15;
-    margin: 0.25rem 0 0 0;
-    color: var(--color-text-primary);
-  }
-
-  .story-body-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 3rem;
-    align-items: center;
-  }
-
-  @media (min-width: 960px) {
-    .story-body-grid {
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 3.5rem;
-    }
-  }
-
-  /* Numbered steps with vertical line connecting them */
-  .story-timeline {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 2rem 0;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    position: relative;
-  }
-
-  .story-timeline::before {
-    content: '';
-    position: absolute;
-    top: 20px;
-    bottom: 20px;
-    left: 18px;
-    width: 2px;
-    background: linear-gradient(180deg, #1E4B8F 0%, #F7941D 50%, #EE4B2B 100%);
-    opacity: 0.35;
-    z-index: 1;
-  }
-
-  .story-step-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 1.25rem;
-    padding: 0;
-    margin: 0;
-    position: relative;
-    z-index: 2;
-  }
-
-  .step-bullet {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    background-color: var(--color-surface);
-    border: 2px solid var(--color-border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--color-text-primary);
-    flex-shrink: 0;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    transition: all 0.2s ease;
-  }
-
-  .story-step-item:nth-child(1) .step-bullet { border-color: #1E4B8F; color: #1E4B8F; }
-  .story-step-item:nth-child(2) .step-bullet { border-color: #F7941D; color: #F7941D; }
-  .story-step-item:nth-child(3) .step-bullet { border-color: #EE4B2B; color: #EE4B2B; }
-
-  .step-text {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: var(--color-text-secondary);
-    margin: 0;
-    padding-top: 0.35rem;
-  }
-
-  .story-fact-chips {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0.65rem;
-    margin-bottom: 2rem;
-  }
-
-  .fact-chip {
-    font-size: var(--fs-xs);
-    font-weight: 600;
-    color: var(--color-text-secondary);
-    background-color: var(--color-bg);
-    padding: 0.35rem 0.85rem;
-    border-radius: var(--radius-full);
-    border: 1px solid var(--color-border);
-  }
-
-  .fact-chip-dot {
-    color: var(--color-text-muted);
-  }
-
-  .story-conclusion-card {
-    background-color: var(--color-bg);
-    border-left: 3px solid #F7941D;
-    padding: 1.25rem 1.5rem;
-    border-radius: 0 var(--radius-card) var(--radius-card) 0;
-  }
-
-  .conclusion-statement {
-    font-size: 1rem;
-    line-height: 1.55;
-    color: var(--color-text-primary);
-    font-weight: 500;
-    margin: 0;
-  }
-
-  /* Blueprint Graphic on Right */
-  .story-illustration-col {
-    display: flex;
-    justify-content: center;
-  }
-
-  .blueprint-canvas {
-    width: 100%;
-    max-width: 480px;
-    background: var(--color-bg);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-card);
-    padding: 0.5rem;
-    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.05);
-    overflow: hidden;
-  }
-
-  .apollo-story-image {
-    width: 100%;
-    height: auto;
-    display: block;
-    object-fit: cover;
-    border-radius: calc(var(--radius-card) - 4px);
-  }
-
-  /* -------------------------------------------------------------
-     4. Mission · Purpose · Vision Section
-     ------------------------------------------------------------- */
   .section-header {
-    margin-bottom: 2.5rem;
+    text-align: center;
     max-width: 680px;
+    margin: 0 auto 3rem auto;
   }
 
   .section-title {
-    font-size: var(--fs-h2);
+    font-size: clamp(2rem, 3.5vw, 2.75rem);
     font-weight: 700;
-    line-height: 1.2;
-    margin: 0.25rem 0 0.5rem 0;
+    margin: 0.5rem 0 0.75rem 0;
     color: var(--color-text-primary);
   }
 
   .section-subline {
     font-size: var(--fs-body-lg);
     color: var(--color-text-secondary);
-    line-height: 1.5;
+    line-height: 1.6;
     margin: 0;
   }
 
-  .mandate-card {
-    background-color: var(--color-surface);
-    border-radius: var(--radius-card);
-    padding: 2.25rem 2rem;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    box-sizing: border-box;
-    border: 1px solid var(--color-border);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  .three-col-cards-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 
-  .mandate-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+  @media (min-width: 860px) {
+    .three-col-cards-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .mandate-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
   }
 
   :global(.dark) .mandate-card {
-    background-color: var(--color-surface-raised);
-  }
-
-  :global(.dark) .mandate-card:hover {
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
+    background: var(--color-surface-raised);
   }
 
   .mandate-card-header {
@@ -1158,142 +1034,133 @@ function formatMandateText(text: string) {
   .mandate-card-step {
     font-size: 11px;
     font-weight: 700;
+    text-transform: uppercase;
     letter-spacing: 0.1em;
-    display: inline-block;
-    margin-bottom: 0.25rem;
+    display: block;
+    margin-bottom: 0.35rem;
   }
 
   .mandate-card-title {
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     font-weight: 700;
-    color: var(--color-text-primary);
     margin: 0;
+    color: var(--color-text-primary);
   }
 
   .mandate-card-copy {
-    font-size: 0.9375rem;
-    line-height: 1.6;
+    font-size: 0.95rem;
     color: var(--color-text-secondary);
+    line-height: 1.6;
     margin: 0;
   }
 
-  .mandate-card-copy :global(strong) {
-    color: var(--color-text-primary);
-    font-weight: 700;
+  /* Reduced motion: Jump instead of smooth transition */
+  @media (prefers-reduced-motion: reduce) {
+    .diagram-group,
+    .clash-dot,
+    .theory-row-card {
+      transition: none !important;
+      animation: none !important;
+    }
   }
 </style>
 
 <script>
   function initAboutInteractions() {
-    // 1. Definition Pill Expansion
-    const pillBtn = document.getElementById('rhsp-expandable-pill');
-    if (pillBtn) {
-      pillBtn.addEventListener('click', () => {
-        const isExpanded = pillBtn.getAttribute('aria-expanded') === 'true';
-        pillBtn.setAttribute('aria-expanded', String(!isExpanded));
-        pillBtn.classList.toggle('is-expanded', !isExpanded);
+    // 1. Definition pill toggle
+    const defBtn = document.getElementById('rhsp-expandable-pill');
+    if (defBtn) {
+      defBtn.addEventListener('click', () => {
+        const isExp = defBtn.classList.toggle('is-expanded');
+        defBtn.setAttribute('aria-expanded', isExp ? 'true' : 'false');
       });
     }
 
-    // 2. Interactive SVG 3-Beat Diagram
+    // 2. Interactive SVG Diagram beats
     const diagramWrapper = document.getElementById('theory-diagram-wrapper');
+    const captionText = document.getElementById('diagram-caption-text');
+    const beatPills = Array.from(document.querySelectorAll<HTMLElement>('.diagram-beat-pills .beat-pill'));
     const replayBtn = document.getElementById('diagram-replay-btn');
-    const captionEl = document.getElementById('diagram-caption-text');
-    const beatPills = Array.from(document.querySelectorAll<HTMLElement>('.beat-pill'));
 
-    const captions: Record<number, string> = {
-      1: 'Beat 1: The square peg approaches the round hole — its corners clash with the socket boundary.',
-      2: 'Beat 2: The RHSP adapter ring slides into position between the socket and peg.',
-      3: 'Beat 3: The square peg glides smoothly through the adapter into the round hole — zero compromise.'
-    };
+    const captions = [
+      'Beat 1: The square peg approaches the round hole — its corners clash with the socket boundary.',
+      'Beat 2: The RHSP adapter ring slides into position between the interface boundaries.',
+      'Beat 3: The square peg glides smoothly through the adapter into the round hole, zero compromise.'
+    ];
 
-    let animTimer: number | null = null;
-    let isPausedByHover = false;
-
-    function setBeat(beat: number) {
+    function setBeat(beatNum: number) {
       if (!diagramWrapper) return;
-      diagramWrapper.setAttribute('data-beat', String(beat));
-      if (captionEl && captions[beat]) {
-        captionEl.textContent = captions[beat];
+      diagramWrapper.setAttribute('data-beat', String(beatNum));
+
+      beatPills.forEach((p) => {
+        const pBeat = Number(p.getAttribute('data-beat-target'));
+        const isActive = pBeat === beatNum;
+        p.classList.toggle('is-active', isActive);
+        p.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      });
+
+      if (captionText) {
+        captionText.textContent = captions[beatNum - 1] || captions[2];
       }
-    }
-
-    function runSequence() {
-      if (isPausedByHover) return;
-      setBeat(1);
-      animTimer = window.setTimeout(() => {
-        if (isPausedByHover) return;
-        setBeat(2);
-        animTimer = window.setTimeout(() => {
-          if (isPausedByHover) return;
-          setBeat(3);
-        }, 1800);
-      }, 1600);
-    }
-
-    // IntersectionObserver to auto-play when diagram enters view
-    if (diagramWrapper && 'IntersectionObserver' in window) {
-      const io = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) {
-          runSequence();
-          io.disconnect();
-        }
-      }, { threshold: 0.35 });
-      io.observe(diagramWrapper);
-    } else {
-      runSequence();
     }
 
     // Replay button
     replayBtn?.addEventListener('click', () => {
-      if (animTimer) clearTimeout(animTimer);
-      isPausedByHover = false;
-      runSequence();
+      setBeat(1);
+      setTimeout(() => {
+        setBeat(2);
+        setTimeout(() => {
+          setBeat(3);
+        }, 1200);
+      }, 1200);
     });
 
     // Beat indicator pill clicks
     beatPills.forEach((pill) => {
       pill.addEventListener('click', () => {
         const targetBeat = Number(pill.getAttribute('data-beat-target') || '1');
-        if (animTimer) clearTimeout(animTimer);
         setBeat(targetBeat);
       });
     });
 
-    // 3. Linked Interaction: Hovering Theory Cards
+    // 3. Highlight in architecture links on cards & timeline steps
+    const highlightBtns = Array.from(document.querySelectorAll<HTMLElement>('.theory-card-link-btn'));
+    highlightBtns.forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetBeat = Number(btn.getAttribute('data-beat-target') || '1');
+        setBeat(targetBeat);
+        document.getElementById('apollo-block')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+    });
+
+    const timelineItems = Array.from(document.querySelectorAll<HTMLElement>('.apollo-timeline-item'));
+    timelineItems.forEach((item) => {
+      item.addEventListener('click', () => {
+        const targetBeat = Number(item.getAttribute('data-beat-target') || '1');
+        setBeat(targetBeat);
+        timelineItems.forEach((ti) => ti.classList.toggle('is-selected', ti === item));
+      });
+    });
+
+    // Hover cards highlight diagram beat
     const cards = [
-      { id: 'hole', beat: 1, class: 'is-hover-hole' },
-      { id: 'adapter', beat: 2, class: 'is-hover-adapter' },
-      { id: 'peg', beat: 3, class: 'is-hover-peg' }
+      { id: 'hole', beat: 1 },
+      { id: 'adapter', beat: 2 },
+      { id: 'peg', beat: 3 }
     ];
 
-    cards.forEach(({ id, beat, class: cls }) => {
+    cards.forEach(({ id, beat }) => {
       const cardEl = document.getElementById(`theory-card-${id}`);
-      if (!cardEl || !diagramWrapper) return;
+      if (!cardEl) return;
 
-      const onEnter = () => {
-        isPausedByHover = true;
-        if (animTimer) clearTimeout(animTimer);
-        diagramWrapper.classList.add(cls);
-        setBeat(beat);
-      };
-
-      const onLeave = () => {
-        diagramWrapper.classList.remove(cls);
-        isPausedByHover = false;
-        // Settle smoothly to completed beat 3
-        setBeat(3);
-      };
-
-      cardEl.addEventListener('mouseenter', onEnter);
-      cardEl.addEventListener('mouseleave', onLeave);
-      cardEl.addEventListener('focusin', onEnter);
-      cardEl.addEventListener('focusout', onLeave);
+      cardEl.addEventListener('mouseenter', () => setBeat(beat));
+      cardEl.addEventListener('focusin', () => setBeat(beat));
     });
 
     // 4. Sticky Pill Sub-Nav Scroll-Spy
     const subnavLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('.about-sticky-subnav .subnav-link'));
-    const sectionIds = ['theory-hero', 'story', 'mission', 'team'];
+    const sectionIds = ['theory-hero', 'mission', 'team'];
 
     function updateSubnav() {
       const scrollPos = window.scrollY + 140;

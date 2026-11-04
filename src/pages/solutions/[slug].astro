@@ -3,12 +3,11 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
 import ContactSection from '../../components/ContactSection.astro';
-import LearnMore from '../../components/LearnMore.astro';
 import Icon from '../../components/Icon.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 
 import ProjectHero from '../../components/project/ProjectHero.astro';
-import StageRail from '../../components/project/StageRail.astro';
+import JourneyProgressPill from '../../components/JourneyProgressPill.astro';
 import PhaseProblem from '../../components/project/PhaseProblem.astro';
 import PhaseValue from '../../components/project/PhaseValue.astro';
 import PhaseArchitecture from '../../components/project/PhaseArchitecture.astro';
@@ -33,140 +32,103 @@ interface Props {
 const { product, allProducts } = Astro.props;
 const p = product.data;
 
-// Chronological / ordered navigation
+// Chronological / ordered navigation according to Solutions dropdown order
 const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
 const currentIndex = sortedProducts.findIndex((item) => item.slug === product.slug);
 const prevProduct = currentIndex > 0 ? sortedProducts[currentIndex - 1] : sortedProducts[sortedProducts.length - 1];
 const nextProduct = currentIndex < sortedProducts.length - 1 ? sortedProducts[currentIndex + 1] : sortedProducts[0];
 
-// Related products in the same pillar
-const relatedProducts = allProducts
-  .filter((item) => item.slug !== product.slug && (p.related?.includes(item.slug) || item.data.pillar === p.pillar))
-  .slice(0, 3);
-
-// 6-phase approach phases
+// 6-stage approach phases
 const phases = p.phases;
 
 // Check before/after interactive asset if applicable
 let beforeAfterId: 'clm' | 'dms' | 'whatsapp' | undefined;
-if (product.slug === 'clm') beforeAfterId = 'clm';
-else if (product.slug === 'dms') beforeAfterId = 'dms';
+if (product.slug === 'dms') beforeAfterId = 'dms';
 else if (product.slug === 'whatsapp-journeys') beforeAfterId = 'whatsapp';
 
-// Clean FAQ items (filter placeholders)
-const cleanFaq = (p.faq || []).filter((item) => {
-  const q = item.question?.trim() || '';
-  const a = item.answer?.trim() || '';
-  return q && a && !q.startsWith('[PLACEHOLDER]') && !a.startsWith('[PLACEHOLDER]');
-});
+const pageTitle: string = (p.seoTitle as string | undefined) || `${p.title} | RHSP`;
+const pageDescription: string = (p.seoDescription as string | undefined) || p.oneLiner;
 ---
 
 <BaseLayout
-  title={`${p.title} - RHSP Enterprise Solution`}
-  description={p.seoDescription || p.oneLiner}
+  title={pageTitle}
+  description={pageDescription}
   breadcrumbs={[
     { name: 'Home', item: '/' },
     { name: 'Solutions', item: '/#solutions' },
-    { name: p.title, item: `/solutions/${product.slug}` }
+    { name: p.pillar, item: '/#solutions' },
+    { name: p.shortTitle || p.title, item: `/solutions/${product.slug}` }
   ]}
 >
   <Nav />
 
   <main id="main-content" tabindex="-1">
-    <!-- 1. Hero Section with Media Frame, Outcomes, and Meta Chips -->
+    <!-- Top Adjacent Solutions Navigation directly under header, spanning container -->
+    <div class="solution-nav-wrapper">
+      <nav class="solution-top-nav container" aria-label="Adjacent solutions">
+        <a href={`/solutions/${prevProduct.slug}`} class="solution-nav-btn prev-btn">
+          <Icon name="arrow-left" size={16} class="nav-arrow" />
+          <div class="nav-text-col">
+            <span class="nav-label">Previous solution</span>
+            <span class="nav-sub">{prevProduct.data.shortTitle || prevProduct.data.title}</span>
+          </div>
+        </a>
+
+        <a href={`/solutions/${nextProduct.slug}`} class="solution-nav-btn next-btn">
+          <div class="nav-text-col align-right">
+            <span class="nav-label">Next solution</span>
+            <span class="nav-sub">{nextProduct.data.shortTitle || nextProduct.data.title}</span>
+          </div>
+          <Icon name="arrow-right" size={16} class="nav-arrow" />
+        </a>
+      </nav>
+    </div>
+
+    <!-- 1. Hero Section with Media Frame, Hero Facts, and Flow Strip -->
     <ProjectHero product={product} />
 
-    <!-- 2. Approach Journey Fixed/Sticky Stage Rail (Right on Desktop, Top on Mobile) -->
-    <StageRail />
+    <!-- 2. Reusable Floating Progress Pill (Tracks #stage-01 to #stage-06) -->
+    <JourneyProgressPill targetPrefix="stage-0" />
 
-    <!-- 3. Standardized 6-Phase Approach Journey Chapters -->
+    <!-- 3. Standardized 6-Phase Approach Journey (Full container width) -->
     <div class="project-journey-container container">
       <div class="project-journey-track">
-        <PhaseProblem problemData={phases?.problem} beforeAfterId={beforeAfterId} />
-        <PhaseValue valueData={phases?.value} />
-        <PhaseArchitecture architectureData={phases?.architecture} />
-        <PhasePilot pilotData={phases?.pilot} />
-        <PhaseRollout rolloutData={phases?.rollout} />
-        <PhaseImpact impactData={phases?.impact} />
-
-        <!-- Project Pagination (Previous / Next Case Study) -->
-        <nav class="project-pagination card-mastercard" aria-label="Adjacent Solutions">
-          <a href={`/solutions/${prevProduct.slug}`} class="pagination-link prev-link">
-            <span class="pagination-arrow" aria-hidden="true">&larr;</span>
-            <div class="pagination-meta">
-              <span class="pagination-dir">PREVIOUS SOLUTION</span>
-              <span class="pagination-name">{prevProduct.data.title}</span>
-            </div>
-          </a>
-
-          <div class="pagination-divider" aria-hidden="true"></div>
-
-          <a href={`/solutions/${nextProduct.slug}`} class="pagination-link next-link">
-            <div class="pagination-meta">
-              <span class="pagination-dir">NEXT SOLUTION</span>
-              <span class="pagination-name">{nextProduct.data.title}</span>
-            </div>
-            <span class="pagination-arrow" aria-hidden="true">&rarr;</span>
-          </a>
-        </nav>
+        <PhaseProblem
+          slug={product.slug}
+          stage1={p.stage1}
+          problemData={phases?.problem}
+          beforeAfterId={beforeAfterId}
+        />
+        <PhaseValue
+          slug={product.slug}
+          stage2={p.stage2}
+          valueData={phases?.value}
+        />
+        <PhaseArchitecture
+          slug={product.slug}
+          stage3={p.stage3}
+          architectureData={phases?.architecture}
+        />
+        <PhasePilot
+          slug={product.slug}
+          stage4={p.stage4}
+          pageName={p.shortTitle || p.title}
+          pilotData={phases?.pilot}
+        />
+        <PhaseRollout
+          slug={product.slug}
+          stage5={p.stage5}
+          rolloutData={phases?.rollout}
+        />
+        <PhaseImpact
+          slug={product.slug}
+          stage6={p.stage6}
+          impactData={phases?.impact}
+        />
       </div>
     </div>
 
-    <!-- 3. Accessible FAQ Section -->
-    {cleanFaq.length > 0 && (
-      <section class="project-faq-section" aria-labelledby="project-faq-heading">
-        <div class="container faq-container">
-          <div class="section-lead-block">
-            <span class="eyebrow">ANSWERS</span>
-            <h2 id="project-faq-heading" class="section-headline">Frequently asked questions.</h2>
-          </div>
-
-          <div class="faq-list">
-            {cleanFaq.map((item) => (
-              <details class="faq-accordion-item card-mastercard">
-                <summary class="faq-summary">
-                  <span class="faq-question">{item.question}</span>
-                  <Icon name="chevron-down" size={18} class="faq-chevron" />
-                </summary>
-                <div class="faq-answer-body">
-                  <p>{item.answer}</p>
-                </div>
-              </details>
-            ))}
-          </div>
-        </div>
-      </section>
-    )}
-
-    <!-- 4. Related Solutions Grid -->
-    {relatedProducts.length > 0 && (
-      <section class="related-section" aria-labelledby="related-heading">
-        <div class="container">
-          <div class="section-lead-block">
-            <span class="eyebrow">RELATED SOLUTIONS</span>
-            <h2 id="related-heading" class="section-headline">More in {p.pillar}.</h2>
-          </div>
-
-          <div class="related-grid">
-            {relatedProducts.map((rel) => (
-              <div class="related-card card-mastercard">
-                <div class="related-top-row">
-                  <span class="pillar-pill">{rel.data.pillar}</span>
-                  <span class="stack-pill">{rel.data.badge}</span>
-                </div>
-                <h3 class="related-title">{rel.data.title}</h3>
-                <p class="related-desc">{rel.data.oneLiner.replace(/^\[PLACEHOLDER\]\s*/i, '')}</p>
-                <div class="related-action">
-                  <LearnMore href={`/solutions/${rel.slug}`} text={`Explore ${rel.data.title}`} />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-    )}
-
-    <!-- 5. Universal Contact Section -->
+    <!-- 4. Universal Contact Section -->
     <ContactSection />
   </main>
 
@@ -177,258 +139,138 @@ const cleanFaq = (p.faq || []).filter((item) => {
 </BaseLayout>
 
 <style>
+  /* Solution Top Navigation */
+  .solution-nav-wrapper {
+    width: 100%;
+    border-bottom: 1px solid var(--color-border);
+    background-color: var(--color-bg);
+  }
+
+  :global(.dark) .solution-nav-wrapper {
+    background-color: var(--color-surface);
+  }
+
+  .solution-top-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .solution-nav-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 10px 16px;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+    text-decoration: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    max-width: 48%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .solution-nav-btn:hover {
+    background-color: rgba(30, 75, 143, 0.08);
+    border-color: rgba(30, 75, 143, 0.35);
+    color: #1E4B8F;
+    transform: translateY(-1px);
+  }
+
+  :global(.dark) .solution-nav-btn {
+    background: var(--color-surface-raised);
+  }
+
+  :global(.dark) .solution-nav-btn:hover {
+    background-color: rgba(91, 143, 224, 0.14);
+    border-color: rgba(91, 143, 224, 0.45);
+    color: #5B8FE0;
+  }
+
+  .solution-nav-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #F7941D;
+  }
+
+  .nav-arrow {
+    flex-shrink: 0;
+    color: currentColor;
+  }
+
+  .nav-text-col {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .nav-text-col.align-right {
+    align-items: flex-end;
+    text-align: right;
+  }
+
+  .nav-label {
+    font-size: 11.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .nav-sub {
+    font-size: 11.5px;
+    color: var(--color-text-muted);
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+
+  @media (max-width: 600px) {
+    .solution-top-nav {
+      gap: 0.5rem;
+      padding-top: 0.75rem;
+      padding-bottom: 0.75rem;
+    }
+    .solution-nav-btn {
+      padding: 8px 12px;
+      gap: 0.4rem;
+    }
+    .nav-label {
+      font-size: 10px;
+    }
+    .nav-sub {
+      font-size: 10px;
+      max-width: 110px;
+    }
+  }
+
+  /* 6-Stage Journey Layout: Full container width, 24px gap */
   .project-journey-container {
-    max-width: 980px;
+    max-width: var(--max-w-content);
     margin: 0 auto;
     position: relative;
-    padding-top: clamp(1.5rem, 3vw, 2.5rem);
+    padding-top: clamp(2rem, 4vw, 3rem);
     padding-bottom: clamp(2.5rem, 5vw, 4rem);
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .project-journey-track {
     width: 100%;
+    max-width: 100%;
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: clamp(2rem, 4vw, 3rem);
-  }
-
-  /* Pagination Bar */
-  .project-pagination {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: var(--space-5, 1.25rem) var(--space-6, 1.5rem);
-    margin-top: var(--space-6, 1.5rem);
-    border-radius: 12px;
-  }
-
-  .pagination-link {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3, 0.75rem);
-    text-decoration: none;
-    color: var(--text-primary);
-    transition: transform 0.2s ease, color 0.2s ease;
-    flex: 1;
-  }
-
-  .pagination-link:hover {
-    color: var(--color-primary);
-  }
-
-  .prev-link:hover {
-    transform: translateX(-4px);
-  }
-
-  .next-link {
-    justify-content: flex-end;
-    text-align: right;
-  }
-
-  .next-link:hover {
-    transform: translateX(4px);
-  }
-
-  .pagination-arrow {
-    font-size: 1.25rem;
-    color: var(--color-primary);
-  }
-
-  .pagination-meta {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .pagination-dir {
-    font-family: var(--font-mono, monospace);
-    font-size: 0.65rem;
-    letter-spacing: 0.08em;
-    color: var(--text-muted);
-  }
-
-  .pagination-name {
-    font-size: 0.95rem;
-    font-weight: 700;
-  }
-
-  .pagination-divider {
-    width: 1px;
-    height: 40px;
-    background: var(--border-subtle);
-    margin: 0 var(--space-4, 1rem);
-  }
-
-  /* Section Lead Block */
-  .section-lead-block {
-    text-align: center;
-    margin-bottom: var(--space-8, 2rem);
-  }
-
-  .eyebrow {
-    display: inline-block;
-    font-family: var(--font-mono, monospace);
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--color-primary);
-    margin-bottom: var(--space-2, 0.5rem);
-  }
-
-  .section-headline {
-    font-family: var(--font-heading);
-    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
-    font-weight: 700;
-    color: var(--text-primary);
-    line-height: 1.2;
-    margin: 0;
-  }
-
-  /* FAQ Section */
-  .project-faq-section {
-    padding: var(--space-12, 3rem) 0;
-    background: var(--surface-secondary);
-    border-top: 1px solid var(--border-subtle);
-    border-bottom: 1px solid var(--border-subtle);
-  }
-
-  .faq-container {
-    max-width: 800px;
-  }
-
-  .faq-list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3, 0.75rem);
-  }
-
-  .faq-accordion-item {
-    border-radius: 10px;
-    overflow: hidden;
-    transition: background 0.2s ease, border-color 0.2s ease;
-  }
-
-  .faq-summary {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: var(--space-4, 1rem) var(--space-5, 1.25rem);
-    cursor: pointer;
-    user-select: none;
-    list-style: none;
-  }
-
-  .faq-summary::-webkit-details-marker {
-    display: none;
-  }
-
-  .faq-question {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--text-primary);
-  }
-
-  .faq-chevron {
-    color: var(--color-primary);
-    transition: transform 0.2s ease;
-  }
-
-  .faq-accordion-item[open] .faq-chevron {
-    transform: rotate(180deg);
-  }
-
-  .faq-answer-body {
-    padding: 0 var(--space-5, 1.25rem) var(--space-4, 1rem);
-    color: var(--text-secondary);
-    font-size: 0.95rem;
-    line-height: 1.6;
-  }
-
-  /* Related Solutions */
-  .related-section {
-    padding: var(--space-12, 3rem) 0;
-  }
-
-  .related-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: var(--space-5, 1.25rem);
-  }
-
-  .related-card {
-    padding: var(--space-6, 1.5rem);
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3, 0.75rem);
-  }
-
-  .related-top-row {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .pillar-pill {
-    font-family: var(--font-mono, monospace);
-    font-size: 0.7rem;
-    font-weight: 700;
-    padding: 0.2rem 0.5rem;
-    border-radius: 4px;
-    background: var(--surface-primary);
-    border: 1px solid var(--border-subtle);
-    color: var(--color-primary);
-    text-transform: uppercase;
-  }
-
-  .stack-pill {
-    font-family: var(--font-mono, monospace);
-    font-size: 0.7rem;
-    color: var(--text-muted);
-  }
-
-  .related-title {
-    font-family: var(--font-heading);
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin: 0;
-  }
-
-  .related-desc {
-    font-size: 0.9rem;
-    line-height: 1.5;
-    color: var(--text-secondary);
-    flex-grow: 1;
-    margin: 0;
-  }
-
-  .related-action {
-    margin-top: var(--space-3, 0.75rem);
-  }
-
-  @media (max-width: 1024px) {
-    .project-journey-container {
-      grid-template-columns: 1fr;
-      gap: var(--space-4, 1rem);
-      padding-top: var(--space-2, 0.5rem);
-    }
-
-    .project-pagination {
-      flex-direction: column;
-      gap: 1rem;
-      align-items: stretch;
-    }
-
-    .pagination-divider {
-      width: 100%;
-      height: 1px;
-      margin: 0;
-    }
-
-    .next-link {
-      justify-content: flex-start;
-      text-align: left;
-    }
+    gap: 24px;
   }
 </style>

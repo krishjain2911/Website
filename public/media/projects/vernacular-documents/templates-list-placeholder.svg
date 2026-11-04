@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" width="100%" height="100%">
+  <defs>
+    <linearGradient id="vBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#1e293b" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="750" fill="url(#vBg)" />
+
+  <!-- Navigation -->
+  <rect x="0" y="0" width="1200" height="60" fill="#1e293b" stroke="#334155" stroke-width="1" />
+  <circle cx="36" cy="30" r="14" fill="#F7941D" />
+  <text x="64" y="36" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="16" font-weight="600">Vernacular Document Generation Service · Template Registry</text>
+  <rect x="1010" y="14" width="150" height="32" rx="6" fill="#1E4B8F" />
+  <text x="1035" y="35" fill="#ffffff" font-family="system-ui, sans-serif" font-size="13" font-weight="600">+ Upload Template</text>
+
+  <!-- Filter & Languages Strip -->
+  <rect x="50" y="85" width="1100" height="60" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1" />
+  <text x="75" y="120" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="13" font-weight="600">LANGUAGES (8):</text>
+  <rect x="190" y="100" width="65" height="28" rx="14" fill="#1E4B8F" />
+  <text x="204" y="119" fill="#ffffff" font-family="system-ui, sans-serif" font-size="12" font-weight="600">English</text>
+  <rect x="265" y="100" width="60" height="28" rx="14" fill="#334155" />
+  <text x="281" y="119" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="12">Hindi</text>
+  <rect x="335" y="100" width="65" height="28" rx="14" fill="#334155" />
+  <text x="348" y="119" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="12">Marathi</text>
+  <rect x="410" y="100" width="60" height="28" rx="14" fill="#334155" />
+  <text x="424" y="119" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="12">Tamil</text>
+  <rect x="480" y="100" width="65" height="28" rx="14" fill="#334155" />
+  <text x="493" y="119" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="12">Bengali</text>
+  <rect x="555" y="100" width="65" height="28" rx="14" fill="#334155" />
+  <text x="568" y="119" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="12">Gujarati</text>
+  <rect x="630" y="100" width="70" height="28" rx="14" fill="#334155" />
+  <text x="643" y="119" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="12">Kannada</text>
+  <rect x="710" y="100" width="65" height="28" rx="14" fill="#334155" />
+  <text x="724" y="119" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="12">Telugu</text>
+
+  <!-- Templates Table -->
+  <rect x="50" y="165" width="1100" height="530" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1" />
+  
+  <!-- Table Header -->
+  <rect x="50" y="165" width="1100" height="45" fill="#0f172a" rx="10" />
+  <text x="80" y="193" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="12" font-weight="700">DOCUMENT TEMPLATE</text>
+  <text x="420" y="193" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="12" font-weight="700">LANGUAGE</text>
+  <text x="560" y="193" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="12" font-weight="700">VERSION</text>
+  <text x="700" y="193" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="12" font-weight="700">PLACEHOLDERS</text>
+  <text x="880" y="193" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="12" font-weight="700">STATUS</text>
+  <text x="1030" y="193" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="12" font-weight="700">ACTIONS</text>
+
+  <!-- Row 1 -->
+  <text x="80" y="240" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="14" font-weight="600">Affidavit cum undertaking</text>
+  <text x="80" y="258" fill="#64748b" font-family="system-ui, sans-serif" font-size="12">DOC-TMPL-001 · Primary loan sanction</text>
+  <text x="420" y="248" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="14">English</text>
+  <text x="560" y="248" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="14">v2.1</text>
+  <text x="700" y="248" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="14">14 Text, 1 Img, 1 Tbl</text>
+  <rect x="880" y="232" width="70" height="24" rx="12" fill="#10b981" opacity="0.2" />
+  <text x="896" y="248" fill="#10b981" font-family="system-ui, sans-serif" font-size="11" font-weight="600">Active</text>
+  <text x="1030" y="248" fill="#60a5fa" font-family="system-ui, sans-serif" font-size="13">Preview · Edit</text>
+
+  <!-- Row 2 -->
+  <line x1="50" y1="280" x2="1150" y2="280" stroke="#334155" stroke-width="1" />
+  <text x="80" y="315" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="14" font-weight="600">Affidavit cum undertaking</text>
+  <text x="80" y="333" fill="#64748b" font-family="system-ui, sans-serif" font-size="12">DOC-TMPL-002 · Hindi regional version</text>
+  <text x="420" y="323" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="14">Hindi (हिंदी)</text>
+  <text x="560" y="323" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="14">v1.4</text>
+  <text x="700" y="323" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="14">14 Text, 1 Img, 1 Tbl</text>
+  <rect x="880" y="307" width="70" height="24" rx="12" fill="#10b981" opacity="0.2" />
+  <text x="896" y="323" fill="#10b981" font-family="system-ui, sans-serif" font-size="11" font-weight="600">Active</text>
+  <text x="1030" y="323" fill="#60a5fa" font-family="system-ui, sans-serif" font-size="13">Preview · Edit</text>
+
+  <!-- Row 3 -->
+  <line x1="50" y1="355" x2="1150" y2="355" stroke="#334155" stroke-width="1" />
+  <text x="80" y="390" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="14" font-weight="600">Power of attorney</text>
+  <text x="80" y="408" fill="#64748b" font-family="system-ui, sans-serif" font-size="12">DOC-TMPL-003 · Legal authorization</text>
+  <text x="420" y="398" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="14">Marathi (मराठी)</text>
+  <text x="560" y="398" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="14">v2.0</text>
+  <text x="700" y="398" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="14">9 Text, 1 Img</text>
+  <rect x="880" y="382" width="95" height="24" rx="12" fill="#F7941D" opacity="0.2" />
+  <text x="892" y="398" fill="#F7941D" font-family="system-ui, sans-serif" font-size="11" font-weight="600">Under review</text>
+  <text x="1030" y="398" fill="#60a5fa" font-family="system-ui, sans-serif" font-size="13">Review · Diff</text>
+
+  <!-- Row 4 -->
+  <line x1="50" y1="430" x2="1150" y2="430" stroke="#334155" stroke-width="1" />
+  <text x="80" y="465" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="14" font-weight="600">Key fact statement (KFS)</text>
+  <text x="80" y="483" fill="#64748b" font-family="system-ui, sans-serif" font-size="12">DOC-TMPL-004 · Statutory interest schedule</text>
+  <text x="420" y="473" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="14">Tamil (தமிழ்)</text>
+  <text x="560" y="473" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="14">v1.0</text>
+  <text x="700" y="473" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="14">22 Text, 2 Tbl</text>
+  <rect x="880" y="457" width="70" height="24" rx="12" fill="#10b981" opacity="0.2" />
+  <text x="896" y="473" fill="#10b981" font-family="system-ui, sans-serif" font-size="11" font-weight="600">Active</text>
+  <text x="1030" y="473" fill="#60a5fa" font-family="system-ui, sans-serif" font-size="13">Preview · Edit</text>
+
+  <!-- Row 5 -->
+  <line x1="50" y1="505" x2="1150" y2="505" stroke="#334155" stroke-width="1" />
+  <text x="80" y="540" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="14" font-weight="600">Disbursement request form</text>
+  <text x="80" y="558" fill="#64748b" font-family="system-ui, sans-serif" font-size="12">DOC-TMPL-005 · Tranche transfer confirmation</text>
+  <text x="420" y="548" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="14">Gujarati (ગુજરાતી)</text>
+  <text x="560" y="548" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="14">v1.1</text>
+  <text x="700" y="548" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="14">11 Text, 1 Tbl</text>
+  <rect x="880" y="532" width="60" height="24" rx="12" fill="#64748b" opacity="0.2" />
+  <text x="898" y="548" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="11" font-weight="600">Draft</text>
+  <text x="1030" y="548" fill="#60a5fa" font-family="system-ui, sans-serif" font-size="13">Submit · Edit</text>
+</svg>

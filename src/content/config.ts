@@ -17,7 +17,7 @@ const basePhaseSchema = z.object({
   story: z.string().optional(),
   points: z.array(z.string()).default([]),
   media: z.array(mediaItemSchema).default([])
-});
+}).passthrough();
 
 const problemPhaseSchema = basePhaseSchema.extend({
   process: z.array(z.string()).default([]),
@@ -25,7 +25,7 @@ const problemPhaseSchema = basePhaseSchema.extend({
     title: z.string(),
     detail: z.string()
   })).default([])
-});
+}).passthrough();
 
 const valuePhaseSchema = basePhaseSchema.extend({
   metrics: z.array(z.object({
@@ -35,7 +35,7 @@ const valuePhaseSchema = basePhaseSchema.extend({
     note: z.string().optional()
   })).default([]),
   levers: z.array(z.string()).default([])
-});
+}).passthrough();
 
 const architecturePhaseSchema = basePhaseSchema.extend({
   layers: z.array(z.object({
@@ -48,7 +48,7 @@ const architecturePhaseSchema = basePhaseSchema.extend({
   pattern: z.string().optional(),
   ai: z.array(z.string()).default([]),
   security: z.string().optional()
-});
+}).passthrough();
 
 const pilotPhaseSchema = basePhaseSchema.extend({
   scope: z.object({
@@ -60,7 +60,7 @@ const pilotPhaseSchema = basePhaseSchema.extend({
     heard: z.string(),
     changed: z.string()
   })).default([])
-});
+}).passthrough();
 
 const rolloutPhaseSchema = basePhaseSchema.extend({
   hardening: z.array(z.string()).default([]),
@@ -69,7 +69,7 @@ const rolloutPhaseSchema = basePhaseSchema.extend({
     value: z.string(),
     label: z.string()
   })).default([])
-});
+}).passthrough();
 
 const impactPhaseSchema = basePhaseSchema.extend({
   enablement: z.array(z.string()).default([]),
@@ -80,6 +80,60 @@ const impactPhaseSchema = basePhaseSchema.extend({
     text: z.string(),
     role: z.string()
   }).optional()
+}).passthrough();
+
+const flowStripItemSchema = z.object({
+  station: z.string(),
+  note: z.string()
+});
+
+const stageFeatureSchema = z.object({
+  title: z.string(),
+  description: z.string()
+});
+
+const stage1Schema = z.object({
+  tagline: z.string(),
+  problem: z.string(),
+  painPoints: z.array(z.string())
+});
+
+const stage2Schema = z.object({
+  tagline: z.string(),
+  intro: z.string(),
+  points: z.array(z.string())
+});
+
+const stage3Schema = z.object({
+  tagline: z.string(),
+  features: z.array(stageFeatureSchema),
+  builtWith: z.array(z.string()),
+  screenshot: z.object({
+    file: z.string(),
+    alt: z.string(),
+    caption: z.string()
+  }),
+  loop: z.object({
+    name: z.string(),
+    caption: z.string()
+  }).optional()
+});
+
+const stage4Schema = z.object({
+  tagline: z.string(),
+  intro: z.string(),
+  videoId: z.string().optional()
+});
+
+const stage5Schema = z.object({
+  tagline: z.string(),
+  makeItYours: z.string()
+});
+
+const stage6Schema = z.object({
+  tagline: z.string(),
+  resultsHeadline: z.string(),
+  results: z.array(z.string())
 });
 
 const products = defineCollection({
@@ -94,10 +148,11 @@ const products = defineCollection({
     badges: z.array(z.string()).optional(),
     featured: z.boolean().default(false).optional(),
     image: z.string().optional(),
+    seoTitle: z.string().optional(),
     seoDescription: z.string().optional(),
     oneLiner: z.string(),
-    outcomeHeadline: z.string(),
-    problem: z.string(),
+    outcomeHeadline: z.string().optional(),
+    problem: z.string().optional(),
     builtExamples: z.array(z.object({
       name: z.string(),
       oneLiner: z.string(),
@@ -117,7 +172,7 @@ const products = defineCollection({
       badgeText: z.string().default('Demo video coming soon'),
       caption: z.string(),
       videoUrl: z.string().optional()
-    }),
+    }).optional(),
     features: z.array(z.object({
       title: z.string(),
       description: z.string()
@@ -153,19 +208,28 @@ const products = defineCollection({
     faq: z.array(z.object({
       question: z.string(),
       answer: z.string()
-    })).default([]),
-    related: z.array(z.string()).default([]),
+    })).default([]).optional(),
+    related: z.array(z.string()).default([]).optional(),
     ctaText: z.string().default("Let's talk"),
 
-    // New 6-Phase Journey Fields (all optional for smooth backward-compatibility)
+    // 6-Phase Journey & Flow Strip Fields
     status: z.enum(['Deployed', 'Accelerator']).optional(),
     client: z.string().optional(),
     timeline: z.string().optional(),
+    statusTag: z.string().optional(),
+    buildTag: z.string().optional(),
+    stage1: stage1Schema.optional(),
+    stage2: stage2Schema.optional(),
+    stage3: stage3Schema.optional(),
+    stage4: stage4Schema.optional(),
+    stage5: stage5Schema.optional(),
+    stage6: stage6Schema.optional(),
     outcomes: z.array(z.object({
       value: z.string(),
       label: z.string()
-    })).max(3).default([]),
+    })).default([]),
     hero: mediaItemSchema.optional(),
+    flowStrip: z.array(flowStripItemSchema).optional(),
 
     phases: z.object({
       problem: problemPhaseSchema.optional(),
@@ -175,7 +239,7 @@ const products = defineCollection({
       rollout: rolloutPhaseSchema.optional(),
       impact: impactPhaseSchema.optional()
     }).optional()
-  })
+  }).passthrough()
 });
 
 export const collections = {

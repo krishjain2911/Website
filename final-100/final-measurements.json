@@ -1,0 +1,38 @@
+{
+  "1366x768": {
+    "navLogoWidth": 106.78125,
+    "navTextHeight": 18,
+    "heroHeadlineHeight": 146.03125,
+    "cubeWidth": 200.453125,
+    "projectCardWidth": 219.046875,
+    "containerWidth": 1152,
+    "stagePillHeight": 189.890625
+  },
+  "1440x900": {
+    "navLogoWidth": 106.78125,
+    "navTextHeight": 18,
+    "heroHeadlineHeight": 147.75,
+    "cubeWidth": 200.453125,
+    "projectCardWidth": 219.046875,
+    "containerWidth": 1152,
+    "stagePillHeight": 189.890625
+  },
+  "1536x730": {
+    "navLogoWidth": 106.78125,
+    "navTextHeight": 18,
+    "heroHeadlineHeight": 147.75,
+    "cubeWidth": 200.453125,
+    "projectCardWidth": 219.046875,
+    "containerWidth": 1152,
+    "stagePillHeight": 189.890625
+  },
+  "1920x1080": {
+    "navLogoWidth": 106.78125,
+    "navTextHeight": 18,
+    "heroHeadlineHeight": 147.75,
+    "cubeWidth": 200.453125,
+    "projectCardWidth": 219.046875,
+    "containerWidth": 1152,
+    "stagePillHeight": 189.890625
+  }
+}

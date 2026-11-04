@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#1e293b" />
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1E4B8F" />
+      <stop offset="100%" stop-color="#F7941D" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="750" fill="url(#bgGrad)" />
+
+  <!-- Top Navigation Bar -->
+  <rect x="0" y="0" width="1200" height="60" fill="#1e293b" stroke="#334155" stroke-width="1" />
+  <circle cx="36" cy="30" r="14" fill="#1E4B8F" />
+  <text x="64" y="36" fill="#f8fafc" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="600">Smart Contract Lifecycle Management</text>
+
+  <!-- Status / Pill -->
+  <rect x="1000" y="16" width="160" height="28" rx="14" fill="#334155" />
+  <circle cx="1018" cy="30" r="4" fill="#10b981" />
+  <text x="1032" y="35" fill="#f8fafc" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="500">System Active</text>
+
+  <!-- Left Sidebar -->
+  <rect x="30" y="90" width="260" height="620" rx="12" fill="#1e293b" stroke="#334155" stroke-width="1" />
+  <text x="50" y="130" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="12" font-weight="700" letter-spacing="1">ROLE WORKSPACE</text>
+  <rect x="50" y="150" width="220" height="40" rx="8" fill="#1E4B8F" opacity="0.35" />
+  <text x="66" y="175" fill="#60a5fa" font-family="system-ui, sans-serif" font-size="14" font-weight="600">Documents &amp; Versions</text>
+
+  <text x="66" y="225" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="14">Agreement Details</text>
+  <text x="66" y="275" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="14">Risk Classification</text>
+  <text x="66" y="325" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="14">Deviations &amp; Stamping</text>
+  <text x="66" y="375" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="14">Signer Order</text>
+  <text x="66" y="425" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="14">Audit Trail</text>
+
+  <!-- Main Content Area -->
+  <rect x="320" y="90" width="850" height="620" rx="12" fill="#1e293b" stroke="#334155" stroke-width="1" />
+
+  <!-- Breadcrumb & Header -->
+  <text x="350" y="135" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="13">Contract CTR-2026-081 &gt; Master Services Agreement</text>
+  <text x="350" y="170" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="22" font-weight="700">Documents, Attachments &amp; Revision History</text>
+
+  <!-- Agreement File Card -->
+  <rect x="350" y="205" width="790" height="150" rx="10" fill="#0f172a" stroke="#334155" stroke-width="1" />
+  <rect x="375" y="230" width="50" height="65" rx="6" fill="#1E4B8F" opacity="0.4" stroke="#60a5fa" stroke-width="1.5" />
+  <text x="388" y="270" fill="#60a5fa" font-family="system-ui, sans-serif" font-size="15" font-weight="700">DOC</text>
+
+  <text x="445" y="250" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="16" font-weight="600">Master_Services_Agreement_v3_Final.pdf</text>
+  <text x="445" y="275" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="13">Uploaded by Legal Counsel · 2.4 MB · Current active agreement revision</text>
+  
+  <rect x="445" y="295" width="110" height="28" rx="6" fill="#1E4B8F" />
+  <text x="462" y="314" fill="#ffffff" font-family="system-ui, sans-serif" font-size="12" font-weight="600">Download</text>
+
+  <rect x="565" y="295" width="130" height="28" rx="6" fill="#334155" />
+  <text x="580" y="314" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="12">Revision History</text>
+
+  <!-- Revision History Grid -->
+  <text x="350" y="395" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="16" font-weight="600">Supporting Files &amp; Revision Log</text>
+
+  <rect x="350" y="415" width="790" height="260" rx="8" fill="#0f172a" stroke="#334155" stroke-width="1" />
+
+  <!-- Row 1 -->
+  <rect x="350" y="415" width="790" height="45" fill="#1e293b" />
+  <text x="370" y="443" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="12" font-weight="700">FILE NAME</text>
+  <text x="640" y="443" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="12" font-weight="700">CATEGORY</text>
+  <text x="820" y="443" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="12" font-weight="700">STAGE</text>
+  <text x="1000" y="443" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="12" font-weight="700">ACTION</text>
+
+  <!-- Row 2 -->
+  <text x="370" y="490" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="14">Statement_of_Work_Annexure_A.pdf</text>
+  <text x="640" y="490" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="14">Statement of work</text>
+  <text x="820" y="490" fill="#60a5fa" font-family="system-ui, sans-serif" font-size="14">Draft</text>
+  <text x="1000" y="490" fill="#F7941D" font-family="system-ui, sans-serif" font-size="14" font-weight="500">View file</text>
+
+  <!-- Row 3 -->
+  <line x1="350" y1="515" x2="1140" y2="515" stroke="#334155" stroke-width="1" />
+  <text x="370" y="545" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="14">Vendor_Financial_Audit_2025.xlsx</text>
+  <text x="640" y="545" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="14">Risk assessment</text>
+  <text x="820" y="545" fill="#60a5fa" font-family="system-ui, sans-serif" font-size="14">Risk review</text>
+  <text x="1000" y="545" fill="#F7941D" font-family="system-ui, sans-serif" font-size="14" font-weight="500">View file</text>
+
+  <!-- Row 4 -->
+  <line x1="350" y1="570" x2="1140" y2="570" stroke="#334155" stroke-width="1" />
+  <text x="370" y="600" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="14">Redlined_Clauses_Deviations.docx</text>
+  <text x="640" y="600" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="14">Legal redline</text>
+  <text x="820" y="600" fill="#F7941D" font-family="system-ui, sans-serif" font-size="14">Business review</text>
+  <text x="1000" y="600" fill="#F7941D" font-family="system-ui, sans-serif" font-size="14" font-weight="500">View file</text>
+
+  <!-- Row 5 -->
+  <line x1="350" y1="625" x2="1140" y2="625" stroke="#334155" stroke-width="1" />
+  <text x="370" y="655" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="14">Certificate_of_Incorporation_Vendor.pdf</text>
+  <text x="640" y="655" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="14">Vendor master</text>
+  <text x="820" y="655" fill="#10b981" font-family="system-ui, sans-serif" font-size="14">Verified</text>
+  <text x="1000" y="655" fill="#F7941D" font-family="system-ui, sans-serif" font-size="14" font-weight="500">View file</text>
+</svg>

@@ -1,9 +1,31 @@
 ---
 import MediaSlot from './MediaSlot.astro';
-import Icon from '../Icon.astro';
+import MediaPicture from './MediaPicture.astro';
+import MediaLoop from './MediaLoop.astro';
 import StageComingSoon from './StageComingSoon.astro';
 
+interface SampleTableRow {
+  ref: string;
+  vendor: string;
+  stage: string;
+  days: string;
+}
+
+interface AdminRow {
+  label: string;
+  description: string;
+  buttonLabel: string;
+}
+
+interface Stage6Data {
+  tagline: string;
+  resultsHeadline: string;
+  results: string[];
+}
+
 interface Props {
+  slug?: string;
+  stage6?: Stage6Data;
   impactData?: {
     tagline?: string;
     headline?: string;
@@ -13,21 +35,39 @@ interface Props {
     governance?: string[];
     monitoring?: string[];
     outcome?: string;
-    quote?: {
-      text: string;
-      role?: string;
-    };
     media?: any[];
+    // CLM fields
+    bullets?: string[];
+    sampleTable?: {
+      headers: string[];
+      rows: SampleTableRow[];
+    };
+    // Sonakshi fields
+    adminRows?: AdminRow[];
+    note?: string;
   };
   tagline?: string;
 }
 
-const { impactData } = Astro.props;
-const tagline = Astro.props.tagline || impactData?.tagline;
+const { slug, stage6, impactData } = Astro.props;
+const tagline = stage6?.tagline || Astro.props.tagline || impactData?.tagline;
 const story = impactData?.story;
-const hasContent = !!(impactData && (impactData.story || impactData.outcome || impactData.enablement?.length || impactData.governance?.length || impactData.monitoring?.length || impactData.points?.length));
+const hasContent = Boolean(
+  stage6 ||
+  (impactData &&
+    (impactData.story ||
+      impactData.bullets?.length ||
+      impactData.adminRows?.length ||
+      impactData.sampleTable ||
+      impactData.enablement?.length ||
+      impactData.governance?.length ||
+      impactData.monitoring?.length ||
+      impactData.outcome ||
+      impactData.points?.length))
+);
 
 const primaryMedia = impactData?.media && impactData.media.length > 0 ? impactData.media[0] : undefined;
+const isVernacularStage = tagline === 'Every request, accounted for.';
 ---
 
 <section
@@ -39,121 +79,220 @@ const primaryMedia = impactData?.media && impactData.media.length > 0 ? impactDa
   tabindex="-1"
 >
   <div class="chapter-header">
-    <span class="chapter-eyebrow" style="color: #EE4B2B;">STAGE 06</span>
+    <span class="chapter-eyebrow" style="color: #EE4B2B;">Stage 6 of 6</span>
     <h2 id="heading-stage-06" class="chapter-heading">Enable and monitor</h2>
     {tagline && <p class="chapter-tagline" style="color: #EE4B2B;">{tagline}</p>}
-    {story && <p class="chapter-story">{story}</p>}
+    {!stage6 && story && <p class="chapter-story">{story}</p>}
   </div>
 
-  {!hasContent ? (
+  {stage6 ? (
+    <div class="stage-streamlined-body">
+      <h3 class="results-headline">{stage6.resultsHeadline}</h3>
+      <ul class="blue-bullet-list" aria-label="Results">
+        {stage6.results.map((res) => (
+          <li>{res}</li>
+        ))}
+      </ul>
+    </div>
+  ) : !hasContent ? (
     <StageComingSoon stageNumber="06" stageTitle="Enable and monitor" color="#EE4B2B" />
   ) : (
     <>
-      <!-- Big Outcome Statement -->
-      {impactData?.outcome && (
-        <div class="outcome-highlight-banner card-mastercard">
-          <div class="outcome-accent-bar" aria-hidden="true"></div>
-          <div class="outcome-body">
-            <span class="outcome-label">FINAL STRATEGIC OUTCOME</span>
-            <blockquote class="outcome-quote">{impactData.outcome}</blockquote>
+      <!-- CLM Bullets (Audit history, turnaround reports, vendor dashboard, KPI tiles) -->
+      {impactData?.bullets && impactData.bullets.length > 0 && (
+        <div class="bullets-card card-mastercard">
+          <ul class="impact-bullets-list">
+            {impactData.bullets.map((b) => (
+              <li class="bullet-item" set:html={b}></li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <!-- CLM Optional Sample Table with 6 rows (Reference, Vendor, Stage, Days in stage) -->
+      {impactData?.sampleTable && (
+        <div class="clm-sample-table-widget card-mastercard">
+          <div class="table-widget-header">
+            <span class="table-widget-caption">Sample rows</span>
+            <div class="table-stage-filters" role="group" aria-label="Stage filters">
+              <span class="filter-chip is-active">All</span>
+              <span class="filter-chip">Draft</span>
+              <span class="filter-chip">Legal evaluation</span>
+              <span class="filter-chip">Signing</span>
+            </div>
+          </div>
+
+          <div class="table-responsive-wrapper">
+            <table class="clm-table" aria-label="Contract turnaround sample table">
+              <thead>
+                <tr>
+                  {impactData.sampleTable.headers.map((h) => (
+                    <th>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {impactData.sampleTable.rows.map((row) => (
+                  <tr>
+                    <td class="font-mono">{row.ref}</td>
+                    <td>{row.vendor}</td>
+                    <td>
+                      <span class="table-stage-pill">{row.stage}</span>
+                    </td>
+                    <td>{row.days} days</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       )}
 
-      <!-- Impact Media if Present -->
-      {primaryMedia && (
-        <div class="impact-media-slot-wrap">
-          <MediaSlot item={primaryMedia} />
+      {slug === 'clm' && (
+        <div class="stage-media-grid-2" style="margin-top: 1.5rem;">
+          <MediaPicture
+            slug="clm"
+            file="image114.png"
+            alt="Audit history table for a contract."
+            caption="Audit history for every contract."
+          />
+          <MediaPicture
+            slug="clm"
+            file="image118.png"
+            alt="Turnaround time report with filters and a download button."
+            caption="Turnaround report."
+          />
         </div>
       )}
 
-      <!-- 3-Pillar Operational Foundation: Governance / Enablement / Monitoring -->
-      {(impactData?.governance || impactData?.enablement || impactData?.monitoring) && (
-        <div class="impact-pillars-grid">
-          {impactData.enablement && impactData.enablement.length > 0 && (
-            <div class="pillar-card card-mastercard">
-              <div class="pillar-header">
-                <span class="pillar-icon" aria-hidden="true">
-                  <Icon name="users" size={18} />
-                </span>
-                <h3 class="pillar-title">Enablement &amp; Handover</h3>
-              </div>
-              <ul class="pillar-list">
-                {impactData.enablement.map((item) => (
-                  <li class="pillar-item">
-                    <span class="pillar-bullet" aria-hidden="true">&bull;</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
+      <!-- Vernacular Documents: Interactive Requests Table Component -->
+      {isVernacularStage && (
+        <>
+          <div class="vernacular-requests-widget card-mastercard" id="vernacular-requests-widget">
+            <div class="widget-top-row">
+              <span class="table-widget-caption">Sample requests</span>
+              <span class="live-action-hint">Click actions to test remediation</span>
             </div>
-          )}
 
-          {impactData.governance && impactData.governance.length > 0 && (
-            <div class="pillar-card card-mastercard">
-              <div class="pillar-header">
-                <span class="pillar-icon" aria-hidden="true">
-                  <Icon name="shield" size={18} />
-                </span>
-                <h3 class="pillar-title">Governance &amp; Controls</h3>
-              </div>
-              <ul class="pillar-list">
-                {impactData.governance.map((item) => (
-                  <li class="pillar-item">
-                    <span class="pillar-bullet" aria-hidden="true">&bull;</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
+            <div class="table-responsive-wrapper">
+              <table class="requests-table" aria-label="Document request recovery log">
+                <thead>
+                  <tr>
+                    <th>Request</th>
+                    <th>Template</th>
+                    <th>Word</th>
+                    <th>PDF</th>
+                    <th>Callback</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr id="req-row-1">
+                    <td class="font-mono">REQ-2026-9041</td>
+                    <td>Affidavit cum undertaking · English</td>
+                    <td><span class="status-cell is-done" id="r1-word">Done</span></td>
+                    <td><span class="status-cell is-done" id="r1-pdf">Done</span></td>
+                    <td><span class="status-cell is-done" id="r1-cb">Delivered</span></td>
+                    <td><span class="text-muted">None needed</span></td>
+                  </tr>
+                  <tr id="req-row-2">
+                    <td class="font-mono">REQ-2026-9042</td>
+                    <td>Disbursement request · Hindi</td>
+                    <td><span class="status-cell is-done" id="r2-word">Done</span></td>
+                    <td><span class="status-cell is-done" id="r2-pdf">Done</span></td>
+                    <td><span class="status-cell is-pending" id="r2-cb">Queued</span></td>
+                    <td>
+                      <button type="button" class="btn-table-action" id="btn-retrigger-cb">
+                        Retrigger callback
+                      </button>
+                    </td>
+                  </tr>
+                  <tr id="req-row-3">
+                    <td class="font-mono">REQ-2026-9043</td>
+                    <td>Power of attorney · Marathi</td>
+                    <td><span class="status-cell is-done" id="r3-word">Done</span></td>
+                    <td><span class="status-cell is-failed" id="r3-pdf">Failed</span></td>
+                    <td><span class="status-cell is-pending" id="r3-cb">Pending</span></td>
+                    <td>
+                      <button type="button" class="btn-table-action" id="btn-regen-pdf">
+                        Regenerate PDF
+                      </button>
+                    </td>
+                  </tr>
+                  <tr id="req-row-4">
+                    <td class="font-mono">REQ-2026-9044</td>
+                    <td>Key fact statement · Tamil</td>
+                    <td><span class="status-cell is-failed" id="r4-word">Failed</span></td>
+                    <td><span class="status-cell is-pending" id="r4-pdf">Pending</span></td>
+                    <td><span class="status-cell is-pending" id="r4-cb">Pending</span></td>
+                    <td>
+                      <button type="button" class="btn-table-action" id="btn-regen-word">
+                        Regenerate Word
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-          )}
+          </div>
 
-          {impactData.monitoring && impactData.monitoring.length > 0 && (
-            <div class="pillar-card card-mastercard">
-              <div class="pillar-header">
-                <span class="pillar-icon" aria-hidden="true">
-                  <Icon name="eye" size={18} />
-                </span>
-                <h3 class="pillar-title">Monitoring &amp; Telemetry</h3>
-              </div>
-              <ul class="pillar-list">
-                {impactData.monitoring.map((item) => (
-                  <li class="pillar-item">
-                    <span class="pillar-bullet" aria-hidden="true">&bull;</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
+          <div style="margin-top: 1.5rem;">
+            <MediaPicture
+              slug="vernacular-documents"
+              file="image45v.png"
+              alt="Document request screen with Regenerate callback and Download PDF buttons per row."
+              caption="Every request, with repair actions."
+            />
+          </div>
+        </>
       )}
 
-      <!-- Stakeholder Quote -->
-      {impactData?.quote && impactData.quote.text && (
-        <div class="impact-quote-card card-mastercard">
-          <div class="quote-mark-icon" aria-hidden="true">&ldquo;</div>
-          <p class="quote-body-text">{impactData.quote.text}</p>
-          {impactData.quote.role && (
-            <div class="quote-author-row">
-              <span class="quote-author-role">{impactData.quote.role}</span>
-            </div>
-          )}
-        </div>
-      )}
-
-      <!-- Key Impact Points -->
-      {impactData?.points && impactData.points.length > 0 && (
-        <div class="impact-points-card card-mastercard">
-          <span class="block-mini-title">ENDURING CAPABILITY HIGHLIGHTS</span>
-          <ul class="impact-points-grid">
-            {impactData.points.map((pt) => (
-              <li class="impact-point-item">
-                <span class="pt-star" aria-hidden="true">&#x2714;</span>
-                <span>{pt}</span>
-              </li>
+      <!-- Sonakshi: Three Rows with Labels and Upload Buttons -->
+      {impactData?.adminRows && impactData.adminRows.length > 0 && (
+        <div class="sonakshi-admin-rows card-mastercard">
+          <div class="admin-rows-list">
+            {impactData.adminRows.map((row) => (
+              <div class="admin-upload-row">
+                <div class="admin-row-meta">
+                  <h3 class="admin-row-label">{row.label}</h3>
+                  <p class="admin-row-desc">{row.description}</p>
+                </div>
+                <button type="button" class="btn btn-secondary admin-upload-btn" disabled>
+                  <span>{row.buttonLabel}</span>
+                </button>
+              </div>
             ))}
-          </ul>
+          </div>
+
+          {impactData.note && <div class="admin-note-box">{impactData.note}</div>}
+        </div>
+      )}
+
+      {slug === 'sonakshi' && (
+        <div style="margin-top: 1.5rem;">
+          <MediaLoop
+            slug="sonakshi"
+            name="sonakshi-admin-upload"
+            caption="Upload a price sheet and a catalogue from the admin panel."
+          />
+        </div>
+      )}
+
+      <!-- Primary Stage Media (e.g. for untouched pages) -->
+      {slug !== 'clm' && slug !== 'vernacular-documents' && slug !== 'sonakshi' && primaryMedia && (
+        <div class="stage-media-wrapper">
+          {primaryMedia.type === 'gif' ? (
+            <div class="admin-gif-placeholder card-mastercard">
+              <!-- TODO: Insert confirmed admin GIF / short video file of adding Excel and PDF files -->
+              <div class="gif-frame-inner">
+                <div class="gif-badge">Media asset</div>
+                <span class="gif-caption">{primaryMedia.caption}</span>
+                <span class="gif-todo-note">TODO: Founder recording of admin Excel &amp; PDF ingestion</span>
+              </div>
+            </div>
+          ) : (
+            <MediaSlot item={primaryMedia} />
+          )}
         </div>
       )}
     </>
@@ -162,240 +301,467 @@ const primaryMedia = impactData?.media && impactData.media.length > 0 ? impactDa
 
 <style>
   .project-chapter-section {
-    padding: clamp(2.5rem, 5vh, 3.75rem) 0;
-    border-bottom: 1px solid var(--color-border);
-    scroll-margin-top: calc(var(--nav-height, 72px) + 2rem);
-  }
-
-  .chapter-header {
-    margin-bottom: 2rem;
-  }
-
-  .chapter-eyebrow {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-bottom: 0.4rem;
-  }
-
-  .chapter-heading {
-    font-size: clamp(1.75rem, 3.2vw, 2.25rem);
-    font-weight: 800;
-    color: var(--color-text-primary);
-    margin: 0 0 0.4rem 0;
-    line-height: 1.2;
-    letter-spacing: -0.015em;
-  }
-
-  .chapter-tagline {
-    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
-    font-weight: 700;
-    margin: 0 0 0.75rem 0;
-    letter-spacing: -0.01em;
-    line-height: 1.35;
-  }
-
-  .chapter-story {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: var(--color-text-secondary);
-    max-width: 680px;
-    margin: 0;
-  }
-
-  .block-mini-title {
-    display: block;
-    font-size: 10.5px;
-    font-weight: 800;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--color-text-muted);
-    margin-bottom: 1rem;
-  }
-
-  .outcome-highlight-banner {
     position: relative;
-    padding: 1.5rem;
-    background: var(--color-surface);
+    border-radius: 24px;
     border: 1px solid var(--color-border);
-    border-radius: var(--radius-md, 8px);
-    margin-bottom: 2rem;
+    padding: 40px;
+    background-color: #FFFFFF;
     overflow: hidden;
+    scroll-margin-top: calc(var(--nav-height, 72px) + 24px);
+    outline: none;
+    box-sizing: border-box;
   }
 
-  :global(.dark) .outcome-highlight-banner {
-    background: var(--color-surface-raised);
+  :global(.dark) .project-chapter-section {
+    background-color: var(--color-surface);
   }
 
-  .outcome-accent-bar {
+  .project-chapter-section::before {
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
-    bottom: 0;
-    width: 4px;
-    background: #EE4B2B;
+    right: 0;
+    height: 4px;
+    background-color: #F7941D;
+    z-index: 2;
   }
 
-  .outcome-label {
-    display: block;
-    font-size: 0.7rem;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #EE4B2B;
-    margin-bottom: 0.5rem;
+  @media (max-width: 768px) {
+    .project-chapter-section {
+      padding: 24px;
+      border-radius: 24px;
+    }
   }
 
-  .outcome-quote {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--color-text-primary);
-    line-height: 1.4;
-    margin: 0;
-  }
-
-  .impact-media-slot-wrap {
-    margin-bottom: 2rem;
-  }
-
-  .impact-pillars-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1.25rem;
-    margin-bottom: 2rem;
-  }
-
-  .pillar-card {
-    padding: 1.25rem;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md, 8px);
-  }
-
-  :global(.dark) .pillar-card {
-    background: var(--color-surface-raised);
-  }
-
-  .pillar-header {
-    display: flex;
-    align-items: center;
-    gap: 0.65rem;
-    margin-bottom: 0.85rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .pillar-icon {
-    display: inline-flex;
-    color: #EE4B2B;
-  }
-
-  .pillar-title {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--color-text-primary);
-    margin: 0;
-  }
-
-  .pillar-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+  .chapter-header {
     display: flex;
     flex-direction: column;
-    gap: 0.65rem;
+    gap: 0.35rem;
+    margin-bottom: 1.5rem;
   }
 
-  .pillar-item {
+  .chapter-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .chapter-heading {
+    font-size: clamp(1.75rem, 2.8vw, 2.25rem);
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--color-text-primary);
+    margin: 0;
+    overflow: visible;
+    padding-left: 1px;
+  }
+
+  .results-headline {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0 0 1rem 0;
+    max-width: 62ch;
+  }
+
+  .blue-bullet-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
     display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
-    font-size: 0.85rem;
-    line-height: 1.45;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-width: 62ch;
+  }
+
+  .blue-bullet-list li {
+    position: relative;
+    padding-left: 1.25rem;
+    font-size: 1rem;
+    line-height: 1.6;
     color: var(--color-text-secondary);
   }
 
-  .pillar-bullet {
-    color: #EE4B2B;
-    font-size: 11px;
-    flex-shrink: 0;
-  }
-
-  .impact-quote-card {
-    position: relative;
-    padding: 1.5rem;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md, 8px);
-    margin-bottom: 2rem;
-  }
-
-  :global(.dark) .impact-quote-card {
-    background: var(--color-surface-raised);
-  }
-
-  .quote-mark-icon {
-    font-size: 3rem;
-    line-height: 1;
-    color: #EE4B2B;
-    opacity: 0.3;
+  .blue-bullet-list li::before {
+    content: '';
     position: absolute;
-    top: 0.75rem;
-    left: 1rem;
-    font-family: Georgia, serif;
-    pointer-events: none;
+    left: 0;
+    top: 0.65rem;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #1E4B8F;
   }
 
-  .quote-body-text {
-    position: relative;
-    z-index: 2;
+  .chapter-tagline {
+    font-size: 1.15rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin: 0.2rem 0 0 0;
+  }
+
+  .chapter-story {
     font-size: 1.05rem;
-    font-style: italic;
-    color: var(--color-text-primary);
-    line-height: 1.5;
-    margin: 0 0 0.75rem;
+    line-height: 1.65;
+    color: var(--color-text-secondary);
+    margin: 0.5rem 0 0 0;
+    max-width: 780px;
   }
 
-  .quote-author-row {
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--color-text-muted);
+  /* Bullets Card */
+  .bullets-card {
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-top: 1.25rem;
   }
 
-  .impact-points-card {
-    padding: 1.25rem;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md, 8px);
-  }
-
-  :global(.dark) .impact-points-card {
-    background: var(--color-surface-raised);
-  }
-
-  .impact-points-grid {
-    list-style: none;
-    padding: 0;
+  .impact-bullets-list {
     margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .bullet-item {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    position: relative;
+    padding-left: 1.25rem;
+  }
+
+  .bullet-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 9px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #EE4B2B;
+  }
+
+  .bullet-item :global(strong) {
+    color: var(--color-text-primary);
+    font-weight: 700;
+  }
+
+  .stage-media-grid-2 {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .stage-media-grid-2 {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  /* Table Widgets */
+  .clm-sample-table-widget,
+  .vernacular-requests-widget {
+    margin-top: 1.5rem;
+    padding: 1.25rem 1.5rem;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .table-widget-header,
+  .widget-top-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
     gap: 0.75rem;
   }
 
-  .impact-point-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-    color: var(--color-text-secondary);
-    line-height: 1.45;
+  .table-widget-caption {
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
   }
 
-  .pt-star {
-    color: #EE4B2B;
+  .live-action-hint {
+    font-size: 0.75rem;
+    font-style: italic;
+    color: #1E4B8F;
+  }
+
+  :global(.dark) .live-action-hint {
+    color: #60a5fa;
+  }
+
+  .table-stage-filters {
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  .filter-chip {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: var(--radius-pill, 9999px);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+  }
+
+  .filter-chip.is-active {
+    background-color: #1E4B8F;
+    color: #ffffff;
+    border-color: #1E4B8F;
+  }
+
+  .table-responsive-wrapper {
+    overflow-x: auto;
+  }
+
+  .clm-table,
+  .requests-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    text-align: left;
+  }
+
+  .clm-table th,
+  .requests-table th {
+    padding: 0.65rem 0.75rem;
+    border-bottom: 1px solid var(--color-border);
+    font-weight: 700;
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .clm-table td,
+  .requests-table td {
+    padding: 0.65rem 0.75rem;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+  }
+
+  .font-mono {
+    font-family: monospace;
+    font-size: 0.82rem;
+  }
+
+  .table-stage-pill {
+    padding: 0.2rem 0.55rem;
+    border-radius: var(--radius-pill, 9999px);
+    font-size: 0.75rem;
+    font-weight: 600;
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-primary);
+  }
+
+  .status-cell {
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .status-cell.is-done {
+    background-color: rgba(16, 185, 129, 0.15);
+    color: #10B981;
+  }
+
+  .status-cell.is-pending {
+    background-color: rgba(247, 148, 29, 0.15);
+    color: #F7941D;
+  }
+
+  .status-cell.is-failed {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+  }
+
+  .btn-table-action {
+    background-color: #1E4B8F;
+    color: #ffffff;
+    border: none;
+    padding: 0.25rem 0.65rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  .btn-table-action:hover {
+    opacity: 0.9;
+  }
+
+  /* Sonakshi Admin Rows */
+  .sonakshi-admin-rows {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .admin-rows-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .admin-upload-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .admin-upload-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .admin-row-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .admin-row-label {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0;
+  }
+
+  .admin-row-desc {
+    font-size: 0.88rem;
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  .admin-upload-btn {
+    font-size: 0.82rem;
+    padding: 0.35rem 0.85rem;
+  }
+
+  .admin-note-box {
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    background-color: var(--color-bg);
+    border-left: 3px solid #EE4B2B;
     font-size: 0.85rem;
-    margin-top: 2px;
+    color: var(--color-text-secondary);
+  }
+
+  .stage-media-wrapper {
+    margin-top: 1.5rem;
+  }
+
+  .admin-gif-placeholder {
+    aspect-ratio: 16 / 9;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .gif-frame-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .gif-badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-pill, 9999px);
+    background-color: rgba(247, 148, 29, 0.2);
+    color: #F7941D;
+  }
+
+  .gif-caption {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #f8fafc;
+  }
+
+  .gif-todo-note {
+    font-size: 0.78rem;
+    color: #94a3b8;
   }
 </style>
+
+<script>
+  function initVernacularRequests() {
+    const btnRetrigger = document.getElementById('btn-retrigger-cb');
+    const btnRegenPdf = document.getElementById('btn-regen-pdf');
+    const btnRegenWord = document.getElementById('btn-regen-word');
+
+    btnRetrigger?.addEventListener('click', () => {
+      const cell = document.getElementById('r2-cb');
+      if (cell) {
+        cell.className = 'status-cell is-done';
+        cell.textContent = 'Delivered';
+        btnRetrigger.parentElement!.innerHTML = '<span class="status-cell is-done">Done</span>';
+      }
+    });
+
+    btnRegenPdf?.addEventListener('click', () => {
+      const pdfCell = document.getElementById('r3-pdf');
+      const cbCell = document.getElementById('r3-cb');
+      if (pdfCell) {
+        pdfCell.className = 'status-cell is-done';
+        pdfCell.textContent = 'Done';
+      }
+      if (cbCell) {
+        cbCell.className = 'status-cell is-done';
+        cbCell.textContent = 'Delivered';
+      }
+      btnRegenPdf.parentElement!.innerHTML = '<span class="status-cell is-done">Done</span>';
+    });
+
+    btnRegenWord?.addEventListener('click', () => {
+      const wordCell = document.getElementById('r4-word');
+      const pdfCell = document.getElementById('r4-pdf');
+      const cbCell = document.getElementById('r4-cb');
+      if (wordCell) {
+        wordCell.className = 'status-cell is-done';
+        wordCell.textContent = 'Done';
+      }
+      if (pdfCell) {
+        pdfCell.className = 'status-cell is-done';
+        pdfCell.textContent = 'Done';
+      }
+      if (cbCell) {
+        cbCell.className = 'status-cell is-done';
+        cbCell.textContent = 'Delivered';
+      }
+      btnRegenWord.parentElement!.innerHTML = '<span class="status-cell is-done">Done</span>';
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initVernacularRequests);
+  } else {
+    initVernacularRequests();
+  }
+  document.addEventListener('astro:page-load', initVernacularRequests);
+</script>

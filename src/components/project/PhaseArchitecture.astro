@@ -1,5 +1,7 @@
 ---
 import MediaSlot from './MediaSlot.astro';
+import MediaPicture from './MediaPicture.astro';
+import MediaLoop from './MediaLoop.astro';
 import StageComingSoon from './StageComingSoon.astro';
 
 interface ArchitectureLayer {
@@ -7,7 +9,29 @@ interface ArchitectureLayer {
   items: { name: string; role: string }[];
 }
 
+interface FeatureItem {
+  title: string;
+  description: string;
+}
+
+interface Stage3Data {
+  tagline: string;
+  features: FeatureItem[];
+  builtWith: string[];
+  screenshot: {
+    file: string;
+    alt: string;
+    caption: string;
+  };
+  loop?: {
+    name: string;
+    caption: string;
+  };
+}
+
 interface Props {
+  slug?: string;
+  stage3?: Stage3Data;
   architectureData?: {
     tagline?: string;
     headline?: string;
@@ -18,16 +42,145 @@ interface Props {
     ai?: string[];
     security?: string;
     media?: any[];
+    // CLM fields
+    adminChips?: string[];
+    volumeBullets?: string[];
+    // Vernacular Documents fields
+    guardRails?: string[];
+    // Sonakshi fields
+    builtWithPills?: string[];
   };
   tagline?: string;
 }
 
-const { architectureData } = Astro.props;
-const tagline = Astro.props.tagline || architectureData?.tagline;
+const { slug, stage3, architectureData } = Astro.props;
+const tagline = stage3?.tagline || Astro.props.tagline || architectureData?.tagline;
 const story = architectureData?.story;
-const hasContent = !!(architectureData && (architectureData.story || architectureData.layers?.length || architectureData.pattern || architectureData.points?.length));
+const hasContent = !!(
+  stage3 ||
+  (architectureData &&
+    (architectureData.story ||
+      architectureData.adminChips?.length ||
+      architectureData.guardRails?.length ||
+      architectureData.builtWithPills?.length ||
+      architectureData.layers?.length ||
+      architectureData.pattern ||
+      architectureData.points?.length))
+);
 
 const primaryMedia = architectureData?.media && architectureData.media.length > 0 ? architectureData.media[0] : undefined;
+
+// Vernacular Languages Data for Interactive Sample Preview Component
+// NOTE: Non-Latin translations provided for Devanagari, Tamil, Bengali, Gujarati, Kannada and Telugu.
+// Flagged for native-speaker review as requested.
+const VERNACULAR_SAMPLES = [
+  {
+    code: 'en',
+    label: 'English',
+    salutation: 'Mr.',
+    templateText: 'I, {{ApplicantName}}, aged {{ApplicantAge}} years, residing at {{ApplicantAddress}}, state that I have availed a loan of {{LoanAmount}} and undertake to repay it as agreed.',
+    filledText: 'I, Rahul Sharma, aged 35 years, residing at Flat 204, Pune, state that I have availed a loan of Rs. 10,00,000 and undertake to repay it as agreed.',
+    tokens: {
+      name: 'Rahul Sharma',
+      age: '35',
+      address: 'Flat 204, Pune',
+      amount: 'Rs. 10,00,000'
+    }
+  },
+  {
+    code: 'hi',
+    label: 'Hindi (हिंदी)',
+    salutation: 'श्री',
+    templateText: 'मैं, {{ApplicantName}}, आयु {{ApplicantAge}} वर्ष, निवासी {{ApplicantAddress}}, यह घोषित करता हूँ कि मैंने {{LoanAmount}} का ऋण प्राप्त किया है और सहमति के अनुसार इसे चुकाने का वचन देता हूँ।',
+    filledText: 'मैं, राहुल शर्मा, आयु 35 वर्ष, निवासी फ्लैट 204, पुणे, यह घोषित करता हूँ कि मैंने रु. 10,00,000 का ऋण प्राप्त किया है और सहमति के अनुसार इसे चुकाने का वचन देता हूँ।',
+    tokens: {
+      name: 'राहुल शर्मा',
+      age: '35',
+      address: 'फ्लैट 204, पुणे',
+      amount: 'रु. 10,00,000'
+    }
+  },
+  {
+    code: 'mr',
+    label: 'Marathi (मराठी)',
+    salutation: 'श्री',
+    templateText: 'मी, {{ApplicantName}}, वय {{ApplicantAge}} वर्षे, राहणार {{ApplicantAddress}}, याद्वारे जाहीर करतो की मी {{LoanAmount}} चे कर्ज घेतले आहे आणि मान्य केल्यानुसार त्याची परतफेड करण्याचे वचन देतो.',
+    filledText: 'मी, राहुल शर्मा, वय 35 वर्षे, राहणार फ्लॅट 204, पुणे, याद्वारे जाहीर करतो की मी रु. 10,00,000 चे कर्ज घेतले आहे आणि मान्य केल्यानुसार त्याची परतफेड करण्याचे वचन देतो.',
+    tokens: {
+      name: 'राहुल शर्मा',
+      age: '35',
+      address: 'फ्लॅट 204, पुणे',
+      amount: 'रु. 10,00,000'
+    }
+  },
+  {
+    code: 'ta',
+    label: 'Tamil (தமிழ்)',
+    salutation: 'திரு',
+    templateText: 'நான், {{ApplicantName}}, வயது {{ApplicantAge}} ஆண்டுகள், வசிப்பிடம் {{ApplicantAddress}}, {{LoanAmount}} கடன் பெற்றுள்ளேன் என்பதையும், ஒப்புக்கொண்டபடி அதைத் திருப்பிச் செலுத்த உறுதியளிக்கிறேன் என்பதையும் தெரிவித்துக் கொள்கிறேன்.',
+    filledText: 'நான், ராகுல் சர்மா, வயது 35 ஆண்டுகள், வசிப்பிடம் பிளாட் 204, புனே, ரூ. 10,00,000 கடன் பெற்றுள்ளேன் என்பதையும், ஒப்புக்கொண்டபடி அதைத் திருப்பிச் செலுத்த உறுதியளிக்கிறேன் என்பதையும் தெரிவித்துக் கொள்கிறேன்.',
+    tokens: {
+      name: 'ராகுல் சர்மா',
+      age: '35',
+      address: 'பிளாட் 204, புனே',
+      amount: 'ரூ. 10,00,000'
+    }
+  },
+  {
+    code: 'bn',
+    label: 'Bengali (বাংলা)',
+    salutation: 'জনাব',
+    templateText: 'আমি, {{ApplicantName}}, বয়স {{ApplicantAge}} বছর, ঠিকানা {{ApplicantAddress}}, জানাচ্ছি যে আমি {{LoanAmount}} ঋণ গ্রহণ করেছি এবং সম্মত শর্ত অনুযায়ী তা পরিশোধ করার অঙ্গীকার করছি।',
+    filledText: 'আমি, রাহুল শর্মা, বয়স 35 বছর, ঠিকানা ফ্ল্যাট 204, পুনে, জানাচ্ছি যে আমি ১০,০০,০০০ টাকা ঋণ গ্রহণ করেছি এবং সম্মত শর্ত অনুযায়ী তা পরিশোধ করার অঙ্গীকার করছি।',
+    tokens: {
+      name: 'রাহুল শর্মা',
+      age: '35',
+      address: 'ফ্ল্যাট 204, পুনে',
+      amount: '১০,০০,০০০ টাকা'
+    }
+  },
+  {
+    code: 'gu',
+    label: 'Gujarati (ગુજરાતી)',
+    salutation: 'શ્રી',
+    templateText: 'હું, {{ApplicantName}}, ઉંમર {{ApplicantAge}} વર્ષ, રહેવાસી {{ApplicantAddress}}, જાહેર કરું છું કે મેં {{LoanAmount}} ની લોન લીધી છે અને સંમત થયા મુજબ તેને ચૂકવવાનું વચન આપું છું.',
+    filledText: 'હું, રાહુલ શર્મા, ઉંમર 35 વર્ષ, રહેવાસી ફ્લેટ 204, પુણે, જાહેર કરું છું કે મેં રૂ. 10,00,000 ની લોન લીધી છે અને સંમત થયા મુજબ તેને ચૂકવવાનું વચન આપું છું.',
+    tokens: {
+      name: 'રાહુલ શર્મા',
+      age: '35',
+      address: 'ફ્લેટ 204, પુણે',
+      amount: 'રૂ. 10,00,000'
+    }
+  },
+  {
+    code: 'kn',
+    label: 'Kannada (ಕನ್ನಡ)',
+    salutation: 'ಶ್ರೀ',
+    templateText: 'ನಾನು, {{ApplicantName}}, ವಯಸ್ಸು {{ApplicantAge}} ವರ್ಷಗಳು, ವಾಸಸ್ಥಳ {{ApplicantAddress}}, ನಾನು {{LoanAmount}} ಸಾಲವನ್ನು ಪಡೆದಿದ್ದೇನೆ ಮತ್ತು ಒಪ್ಪಿಕೊಂಡಂತೆ ಮರುಪಾವತಿಸಲು ಬದ್ಧನಾಗಿದ್ದೇನೆ ಎಂದು ಘೋಷಿಸುತ್ತೇನೆ.',
+    filledText: 'ನಾನು, ರಾಹುಲ್ ಶರ್ಮಾ, ವಯಸ್ಸು 35 ವರ್ಷಗಳು, ವಾಸಸ್ಥಳ ಫ್ಲಾಟ್ 204, ಪುಣೆ, ನಾನು ರೂ. 10,00,000 ಸಾಲವನ್ನು ಪಡೆದಿದ್ದೇನೆ ಮತ್ತು ಒಪ್ಪಿಕೊಂಡಂತೆ ಮರುಪಾವತಿಸಲು ಬದ್ಧನಾಗಿದ್ದೇನೆ ಎಂದು ಘೋಷಿಸುತ್ತೇನೆ.',
+    tokens: {
+      name: 'ರಾಹುಲ್ ಶರ್ಮಾ',
+      age: '35',
+      address: 'ಫ್ಲಾಟ್ 204, ಪುಣೆ',
+      amount: 'ರೂ. 10,00,000'
+    }
+  },
+  {
+    code: 'te',
+    label: 'Telugu (తెలుగు)',
+    salutation: 'శ్రీ',
+    templateText: 'నేను, {{ApplicantName}}, వయస్సు {{ApplicantAge}} సంవత్సరాలు, నివాసం {{ApplicantAddress}}, నేను {{LoanAmount}} రుణం పొందానని మరియు అంగీకరించిన విధంగా తిరిగి చెల్లిస్తానని ప్రతిజ్ఞ చేస్తున్నాను.',
+    filledText: 'నేను, రాహుల్ శర్మ, వయస్సు 35 సంవత్సరాలు, నివాసం ఫ్లాట్ 204, పూణే, నేను రూ. 10,00,000 రుణం పొందానని మరియు అంగీకరించిన విధంగా తిరిగి చెల్లిస్తానని ప్రతిజ్ఞ చేస్తున్నాను.',
+    tokens: {
+      name: 'రాహుల్ శర్మ',
+      age: '35',
+      address: 'ఫ్లాట్ 204, పూణే',
+      amount: 'రూ. 10,00,000'
+    }
+  }
+];
+
+const isVernacularPage = !!architectureData?.guardRails?.length;
 ---
 
 <section
@@ -39,361 +192,876 @@ const primaryMedia = architectureData?.media && architectureData.media.length > 
   tabindex="-1"
 >
   <div class="chapter-header">
-    <span class="chapter-eyebrow" style="color: #B86B10;">STAGE 03</span>
+    <span class="chapter-eyebrow" style="color: #0072CE;">Stage 3 of 6</span>
     <h2 id="heading-stage-03" class="chapter-heading">Design adaptive systems</h2>
-    {tagline && <p class="chapter-tagline" style="color: #B86B10;">{tagline}</p>}
-    {story && <p class="chapter-story">{story}</p>}
+    {tagline && <p class="chapter-tagline" style="color: #0072CE;">{tagline}</p>}
+    {!stage3 && story && <p class="chapter-story">{story}</p>}
   </div>
 
-  {!hasContent ? (
-    <StageComingSoon stageNumber="03" stageTitle="Design adaptive systems" color="#B86B10" />
-  ) : (
-    <>
-      <!-- Pattern & Security Header Strip -->
-      {(architectureData?.pattern || architectureData?.security) && (
-        <div class="arch-meta-strip">
-          {architectureData.pattern && (
-            <div class="arch-meta-item card-mastercard">
-              <span class="meta-label">CORE DESIGN PATTERN</span>
-              <span class="meta-value">{architectureData.pattern}</span>
+  {stage3 ? (
+    <div class="stage-streamlined-body">
+      <!-- 6 Feature Cards (2 Columns) -->
+      <div class="feature-cards-grid" aria-label="Product features">
+        {stage3.features.map((feat) => (
+          <article class="feature-card">
+            <div class="feature-card-header">
+              <span class="feature-peg-marker" aria-hidden="true"></span>
+              <h3 class="feature-title">{feat.title}</h3>
             </div>
-          )}
-          {architectureData.security && (
-            <div class="arch-meta-item card-mastercard">
-              <span class="meta-label">SECURITY &amp; COMPLIANCE POSTURE</span>
-              <span class="meta-value">{architectureData.security}</span>
-            </div>
-          )}
+            <p class="feature-desc">{feat.description}</p>
+          </article>
+        ))}
+      </div>
+
+      <!-- Built with Chips -->
+      {stage3.builtWith && stage3.builtWith.length > 0 && (
+        <div class="built-with-strip">
+          <span class="built-with-label">Built with</span>
+          <div class="chips-wrap">
+            {stage3.builtWith.map((chip) => (
+              <span class="meta-chip built-chip">{chip}</span>
+            ))}
+          </div>
         </div>
       )}
 
-      <!-- Two Column Layout: Layers Stack Diagram vs Architecture Media / Points -->
-      <div class="arch-main-grid">
-        <!-- Left Column: Layered Stack Diagram -->
-        {architectureData?.layers && architectureData.layers.length > 0 && (
-          <div class="arch-layers-column card-mastercard">
-            <div class="layers-header">
-              <span class="block-mini-title">MODULAR SYSTEM LAYERS</span>
-              <span class="layers-hint">End-to-End Adapter Topology</span>
-            </div>
-
-            <div class="layers-stack">
-              {architectureData.layers.map((layer, lIdx) => (
-                <div class="layer-band" data-layer-index={lIdx}>
-                  <div class="layer-band-title">
-                    <span class="layer-tier-badge">T{lIdx + 1}</span>
-                    <span class="layer-name">{layer.name}</span>
-                  </div>
-                  <div class="layer-items-grid">
-                    {layer.items.map((item) => (
-                      <div class="layer-component-pill" title={item.role}>
-                        <span class="item-name">{item.name}</span>
-                        <span class="item-role">{item.role}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+      <!-- Media: Screenshot and optional loop clip beside it -->
+      <div class="stage3-media-grid">
+        <div class="stage3-media-item">
+          <MediaPicture
+            slug={slug || ''}
+            file={stage3.screenshot.file}
+            alt={stage3.screenshot.alt}
+            caption={stage3.screenshot.caption}
+          />
+        </div>
+        {stage3.loop && (
+          <div class="stage3-media-item">
+            <MediaLoop
+              slug={slug || ''}
+              name={stage3.loop.name}
+              caption={stage3.loop.caption}
+            />
+          </div>
+        )}
+      </div>
+    </div>
+  ) : !hasContent ? (
+    <StageComingSoon stageNumber="03" stageTitle="Design adaptive systems" color="#B86B10" />
+  ) : (
+    <>
+      <!-- CLM: Set by Admins Chips & Made for Volume Bullets -->
+      {architectureData?.adminChips && (
+        <div class="stage-two-cols-grid">
+          <div class="stage-col-card card-mastercard">
+            <h3 class="col-card-title">Set by admins</h3>
+            <div class="chips-cluster" style="margin-top: 0.5rem;">
+              {architectureData.adminChips.map((chip) => (
+                <span class="meta-chip admin-chip">{chip}</span>
               ))}
             </div>
           </div>
-        )}
 
-        <!-- Right Column: Media / AI Capabilities / Points -->
-        <div class="arch-media-column">
-          {primaryMedia ? (
-            <MediaSlot item={primaryMedia} />
-          ) : null}
+          <div class="stage-col-card card-mastercard">
+            <h3 class="col-card-title">Made for volume</h3>
+            <ul class="volume-bullets-list">
+              {architectureData.volumeBullets?.map((bullet) => (
+                <li>{bullet}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
 
-          <!-- AI Capabilities block -->
-          {architectureData?.ai && architectureData.ai.length > 0 && (
-            <div class="arch-ai-card card-mastercard">
-              <span class="block-mini-title">AI &amp; AGENTIC CAPABILITIES</span>
-              <div class="ai-chips-wrap">
-                {architectureData.ai.map((item) => (
-                  <div class="ai-chip">
-                    <span class="chip-sparkle" aria-hidden="true">&#x2726;</span>
-                    <span class="chip-text">{item}</span>
-                  </div>
+      <!-- Vernacular Documents: Interactive Document Card (Template vs With Sample Data + 8 Languages) -->
+      {isVernacularPage && (
+        <div class="vernacular-interactive-container card-mastercard" id="vernacular-doc-widget">
+          <div class="vernacular-widget-header">
+            <div class="mode-toggle-group" role="radiogroup" aria-label="Document preview mode">
+              <button
+                type="button"
+                class="mode-toggle-btn is-active"
+                id="btn-mode-template"
+                data-mode="template"
+                role="radio"
+                aria-checked="true"
+              >
+                Template
+              </button>
+              <button
+                type="button"
+                class="mode-toggle-btn"
+                id="btn-mode-sample"
+                data-mode="sample"
+                role="radio"
+                aria-checked="false"
+              >
+                With sample data
+              </button>
+            </div>
+
+            <div class="lang-select-wrapper">
+              <label for="vernacular-lang-select" class="lang-label">Language:</label>
+              <select id="vernacular-lang-select" class="vernacular-select">
+                {VERNACULAR_SAMPLES.map((s) => (
+                  <option value={s.code}>{s.label}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <!-- Document Canvas Sheet -->
+          <div class="vernacular-sheet-frame">
+            <div class="sheet-top-meta">
+              <span class="sheet-title-tag">Affidavit cum undertaking</span>
+              <span class="sheet-salutation" id="doc-salutation">Salutation: Mr.</span>
+            </div>
+            <div class="sheet-body-text" id="doc-rendered-body">
+              <!-- Rendered via JavaScript and SSR fallback -->
+              I, <span class="tok-token tok-blue">{`{{ApplicantName}}`}</span>, aged <span class="tok-token tok-blue">{`{{ApplicantAge}}`}</span> years, residing at <span class="tok-token tok-blue">{`{{ApplicantAddress}}`}</span>, state that I have availed a loan of <span class="tok-token tok-blue">{`{{LoanAmount}}`}</span> and undertake to repay it as agreed.
+            </div>
+            <div class="sheet-footer-caption">
+              <span>Sample customer data.</span>
+            </div>
+          </div>
+
+          <!-- Hidden JSON data bank for client script -->
+          <script id="vernacular-data" type="application/json" set:html={JSON.stringify(VERNACULAR_SAMPLES)}></script>
+        </div>
+      )}
+
+      <!-- Vernacular Guard Rails -->
+      {architectureData?.guardRails && (
+        <div class="guard-rails-card card-mastercard">
+          <h3 class="col-card-title">Guard rails</h3>
+          <ul class="guard-rails-list">
+            {architectureData.guardRails.map((rail) => (
+              <li>{rail}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <!-- Sonakshi: 5-Layer Component & Built with Chips -->
+      {architectureData?.layers && architectureData.layers.length > 0 && (
+        <div class="sonakshi-arch-block">
+          <div class="layers-stack-grid">
+            {architectureData.layers.map((layer, idx) => (
+              <div class="layer-band-card card-mastercard">
+                <div class="layer-header">
+                  <span class="layer-step-num">0{idx + 1}</span>
+                  <span class="layer-name">{layer.name}</span>
+                </div>
+                <div class="layer-items-grid">
+                  {layer.items.map((it) => (
+                    <div class="layer-item-pill">
+                      <span class="item-name">{it.name}</span>
+                      <span class="item-role">{it.role}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <!-- Built With Chip Row -->
+          {architectureData?.builtWithPills && architectureData.builtWithPills.length > 0 && (
+            <div class="built-with-wrapper card-mastercard">
+              <span class="built-with-label">Built with</span>
+              <div class="built-with-chips">
+                {architectureData.builtWithPills.map((chip) => (
+                  <span class="tech-chip">{chip}</span>
                 ))}
               </div>
             </div>
           )}
 
-          <!-- Architecture Key Points -->
+          <!-- Bullet Points -->
           {architectureData?.points && architectureData.points.length > 0 && (
-            <div class="arch-points-card card-mastercard">
-              <span class="block-mini-title">TECHNICAL HIGHLIGHTS</span>
-              <ul class="arch-points-list">
-                {architectureData.points.map((pt) => (
-                  <li class="arch-point-item">
-                    <span class="point-bracket" aria-hidden="true">&rsaquo;</span>
-                    <span>{pt}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <ul class="arch-bullets-list">
+              {architectureData.points.map((pt) => (
+                <li>{pt}</li>
+              ))}
+            </ul>
           )}
         </div>
-      </div>
+      )}
+
+      <!-- Stage 3 Media: Side-by-side on desktop, stack on mobile -->
+      {slug === 'clm' ? (
+        <div class="stage-media-grid-2">
+          <MediaPicture
+            slug="clm"
+            file="image154.png"
+            alt="Document nature master list with active and legacy toggles."
+            caption="Document natures, managed by admins."
+          />
+          <MediaPicture
+            slug="clm"
+            file="image173.png"
+            alt="Create document type form with an e-stamp required checkbox."
+            caption="Document types, with e-stamp switched on per type."
+          />
+        </div>
+      ) : slug === 'vernacular-documents' ? (
+        <div class="stage-media-grid-2">
+          <MediaPicture
+            slug="vernacular-documents"
+            file="image7v.png"
+            alt="Template preview showing a Word document with placeholder tokens and buttons to view request, preview and download."
+            caption="A template with its placeholders."
+          />
+          <MediaPicture
+            slug="vernacular-documents"
+            file="image9v.png"
+            alt="Same template filled with sample customer data after Preview is selected."
+            caption="The same template with sample data."
+          />
+        </div>
+      ) : primaryMedia ? (
+        <div class="stage-media-wrapper">
+          <MediaSlot item={primaryMedia} />
+        </div>
+      ) : null}
     </>
   )}
 </section>
 
 <style>
   .project-chapter-section {
-    padding: clamp(2.5rem, 5vh, 3.75rem) 0;
-    border-bottom: 1px solid var(--color-border);
-    scroll-margin-top: calc(var(--nav-height, 72px) + 2rem);
+    position: relative;
+    border-radius: 24px;
+    border: 1px solid var(--color-border);
+    padding: 40px;
+    background-color: var(--color-bg);
+    overflow: hidden;
+    scroll-margin-top: calc(var(--nav-height, 72px) + 24px);
+    outline: none;
+    box-sizing: border-box;
+  }
+
+  :global(.dark) .project-chapter-section {
+    background-color: var(--color-surface-raised);
+  }
+
+  .project-chapter-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background-color: #1E4B8F;
+    z-index: 2;
+  }
+
+  :global(.dark) .project-chapter-section::before {
+    background-color: #5B8FE0;
+  }
+
+  @media (max-width: 768px) {
+    .project-chapter-section {
+      padding: 24px;
+      border-radius: 24px;
+    }
   }
 
   .chapter-header {
-    margin-bottom: 2rem;
-  }
-
-  .chapter-eyebrow {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-bottom: 0.4rem;
-  }
-
-  .chapter-heading {
-    font-size: clamp(1.75rem, 3.2vw, 2.25rem);
-    font-weight: 800;
-    color: var(--color-text-primary);
-    margin: 0 0 0.4rem 0;
-    line-height: 1.2;
-    letter-spacing: -0.015em;
-  }
-
-  .chapter-tagline {
-    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
-    font-weight: 700;
-    margin: 0 0 0.75rem 0;
-    letter-spacing: -0.01em;
-    line-height: 1.35;
-  }
-
-  .chapter-story {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: var(--color-text-secondary);
-    max-width: 680px;
-    margin: 0;
-  }
-
-  .block-mini-title {
-    display: block;
-    font-size: 10.5px;
-    font-weight: 800;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--color-text-muted);
-    margin-bottom: 0.75rem;
-  }
-
-  .arch-meta-strip {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
     margin-bottom: 1.5rem;
   }
 
-  .arch-meta-item {
-    padding: 1rem 1.25rem;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md, 8px);
-  }
-
-  :global(.dark) .arch-meta-item {
-    background: var(--color-surface-raised);
-  }
-
-  .meta-label {
-    display: block;
-    font-size: 0.7rem;
-    font-weight: 800;
+  .chapter-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--color-text-muted);
+  }
+
+  .chapter-heading {
+    font-size: clamp(1.75rem, 2.8vw, 2.25rem);
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--color-text-primary);
+    margin: 0;
+    overflow: visible;
+    padding-left: 1px;
+  }
+
+  .chapter-tagline {
+    font-size: 1.15rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin: 0.2rem 0 0 0;
+  }
+
+  /* Rebuilt Feature Cards Grid */
+  .feature-cards-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    margin-bottom: 1.75rem;
+  }
+
+  @media (min-width: 768px) {
+    .feature-cards-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .feature-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem 1.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    background-color: var(--color-surface);
+    box-shadow: none;
+    transform: none;
+    transition: none;
+  }
+
+  .feature-card:hover {
+    box-shadow: none;
+    transform: none;
+  }
+
+  .feature-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
     margin-bottom: 0.35rem;
   }
 
-  .meta-value {
-    font-size: 0.95rem;
+  .feature-peg-marker {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #1E4B8F;
+    flex-shrink: 0;
+  }
+
+  .feature-title {
+    font-size: 1.05rem;
     font-weight: 600;
+    line-height: 1.35;
     color: var(--color-text-primary);
-    line-height: 1.4;
+    margin: 0;
   }
 
-  .arch-main-grid {
-    display: grid;
-    grid-template-columns: 1.1fr 0.9fr;
-    gap: 1.5rem;
-    align-items: start;
+  .feature-desc {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+    margin: 0;
+    padding-left: 1.15rem;
   }
 
-  .arch-layers-column {
-    padding: 1.25rem;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md, 8px);
-  }
-
-  :global(.dark) .arch-layers-column {
-    background: var(--color-surface-raised);
-  }
-
-  .layers-header {
+  .built-with-strip {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-    border-bottom: 1px solid var(--color-border);
-    padding-bottom: 0.5rem;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
   }
 
-  .layers-hint {
-    font-size: 0.75rem;
+  .built-with-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
     color: var(--color-text-muted);
   }
 
-  .layers-stack {
+  .chips-wrap {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .meta-chip.built-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-pill, 9999px);
+    font-size: 0.8rem;
+    font-weight: 600;
+    line-height: 1;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+  }
+
+  .stage3-media-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: start;
+    margin-top: 1rem;
+    width: 100%;
+    min-width: 0;
+  }
+
+  @media (min-width: 768px) {
+    .stage3-media-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .stage3-media-item {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .stage-media-grid-2 {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  @media (max-width: 768px) {
+    .stage-media-grid-2 {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1.25rem;
+    }
+  }
+
+  .stage-media-wrapper {
+    margin-top: 2.5rem;
+  }
+
+  .chapter-story {
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: var(--color-text-secondary);
+    margin: 0.5rem 0 0 0;
+    max-width: 780px;
+  }
+
+  /* Two Columns */
+  .stage-two-cols-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-top: 1.25rem;
+  }
+
+  @media (min-width: 768px) {
+    .stage-two-cols-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .stage-col-card {
+    padding: 1.5rem;
+    border-radius: 12px;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
   }
 
-  .layer-band {
-    border: 1px solid var(--color-border);
-    border-radius: 6px;
-    padding: 0.75rem;
-    background: var(--color-bg);
-  }
-
-  .layer-band-title {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .layer-tier-badge {
-    font-size: 0.65rem;
-    font-weight: 800;
-    color: #B86B10;
-    background: rgba(184, 107, 16, 0.12);
-    padding: 2px 6px;
-    border-radius: 4px;
-  }
-
-  .layer-name {
-    font-size: 0.85rem;
+  .col-card-title {
+    font-size: 1.1rem;
     font-weight: 700;
     color: var(--color-text-primary);
+    margin: 0;
   }
 
-  .layer-items-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-    gap: 0.5rem;
-  }
-
-  .layer-component-pill {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 4px;
-    padding: 0.4rem 0.6rem;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .item-name {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--color-text-primary);
-  }
-
-  .item-role {
-    font-size: 0.7rem;
-    color: var(--color-text-muted);
-    line-height: 1.3;
-  }
-
-  .arch-media-column {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-  }
-
-  .arch-ai-card, .arch-points-card {
-    padding: 1.25rem;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md, 8px);
-  }
-
-  :global(.dark) .arch-ai-card,
-  :global(.dark) .arch-points-card {
-    background: var(--color-surface-raised);
-  }
-
-  .ai-chips-wrap {
+  .chips-cluster {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
   }
 
-  .ai-chip {
+  .meta-chip {
+    padding: 0.35rem 0.8rem;
+    border-radius: var(--radius-pill, 9999px);
+    font-size: 0.85rem;
+    font-weight: 500;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-primary);
+  }
+
+  .admin-chip {
+    background-color: rgba(184, 107, 16, 0.08);
+    border-color: rgba(184, 107, 16, 0.25);
+    color: #B86B10;
+    font-weight: 600;
+  }
+
+  :global(.dark) .admin-chip {
+    background-color: rgba(247, 148, 29, 0.12);
+    border-color: rgba(247, 148, 29, 0.3);
+    color: #F7941D;
+  }
+
+  .volume-bullets-list,
+  .guard-rails-list,
+  .arch-bullets-list {
+    margin: 0;
+    padding-left: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+
+  /* Vernacular Interactive Document Card */
+  .vernacular-interactive-container {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .vernacular-widget-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .mode-toggle-group {
+    display: inline-flex;
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill, 9999px);
+    padding: 3px;
+  }
+
+  .mode-toggle-btn {
+    border: none;
+    background: transparent;
+    padding: 0.35rem 0.9rem;
+    border-radius: var(--radius-pill, 9999px);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .mode-toggle-btn.is-active {
+    background-color: #1E4B8F;
+    color: #ffffff;
+    box-shadow: 0 2px 6px rgba(30, 75, 143, 0.3);
+  }
+
+  .lang-select-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .lang-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+  }
+
+  .vernacular-select {
+    padding: 0.35rem 0.75rem;
+    border-radius: 6px;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+    color: var(--color-text-primary);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .vernacular-sheet-frame {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .sheet-top-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0.65rem;
+  }
+
+  .sheet-title-tag {
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-primary);
+  }
+
+  .sheet-salutation {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #1E4B8F;
+  }
+
+  :global(.dark) .sheet-salutation {
+    color: #60a5fa;
+  }
+
+  .sheet-body-text {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--color-text-primary);
+    font-family: var(--font-sans), 'Noto Sans Devanagari', 'Noto Sans Tamil', 'Noto Sans Bengali', 'Noto Sans Gujarati', 'Noto Sans Kannada', 'Noto Sans Telugu', sans-serif;
+  }
+
+  :global(.tok-token) {
+    display: inline-block;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.95em;
+  }
+
+  :global(.tok-blue) {
+    background-color: rgba(30, 75, 143, 0.12);
+    color: #1E4B8F;
+    border: 1px solid rgba(30, 75, 143, 0.25);
+  }
+
+  :global(.dark) :global(.tok-blue) {
+    background-color: rgba(96, 165, 250, 0.15);
+    color: #60a5fa;
+    border-color: rgba(96, 165, 250, 0.3);
+  }
+
+  :global(.tok-orange) {
+    background-color: rgba(247, 148, 29, 0.12);
+    color: #F7941D;
+    border: 1px solid rgba(247, 148, 29, 0.35);
+  }
+
+  .sheet-footer-caption {
+    font-size: 0.75rem;
+    font-style: italic;
+    color: var(--color-text-muted);
+  }
+
+  .guard-rails-card {
+    margin-top: 1.25rem;
+    padding: 1.25rem 1.5rem;
+    border-radius: 10px;
+  }
+
+  /* Sonakshi 5-Layer Stack */
+  .sonakshi-arch-block {
+    margin-top: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .layers-stack-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .layer-band-card {
+    padding: 1rem 1.25rem;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .layer-band-card {
+      flex-direction: row;
+      align-items: center;
+      gap: 1.5rem;
+    }
+  }
+
+  .layer-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 140px;
+    flex-shrink: 0;
+  }
+
+  .layer-step-num {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #B86B10;
+  }
+
+  .layer-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+  }
+
+  .layer-items-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    flex: 1;
+  }
+
+  .layer-item-pill {
     display: inline-flex;
     align-items: center;
-    gap: 0.45rem;
-    background: rgba(184, 107, 16, 0.08);
-    border: 1px solid rgba(184, 107, 16, 0.25);
-    padding: 0.4rem 0.75rem;
+    gap: 0.4rem;
+    padding: 0.35rem 0.65rem;
     border-radius: 6px;
-    font-size: 0.85rem;
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    font-size: 0.8rem;
+  }
+
+  .item-name {
     font-weight: 600;
     color: var(--color-text-primary);
   }
 
-  .chip-sparkle {
-    color: #B86B10;
+  .item-role {
+    color: var(--color-text-muted);
+  }
+
+  /* Built With Strip */
+  .built-with-wrapper {
+    padding: 1rem 1.25rem;
+    border-radius: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .built-with-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .built-with-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .tech-chip {
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius-pill, 9999px);
     font-size: 0.8rem;
+    font-weight: 600;
+    background-color: rgba(30, 75, 143, 0.08);
+    border: 1px solid rgba(30, 75, 143, 0.2);
+    color: #1E4B8F;
   }
 
-  .arch-points-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.65rem;
+  :global(.dark) .tech-chip {
+    background-color: rgba(96, 165, 250, 0.12);
+    border-color: rgba(96, 165, 250, 0.3);
+    color: #60a5fa;
   }
 
-  .arch-point-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-    color: var(--color-text-secondary);
-    line-height: 1.5;
-  }
-
-  .point-bracket {
-    color: #B86B10;
-    font-weight: bold;
-    font-size: 1.1rem;
-    line-height: 1;
-  }
-
-  @media (max-width: 900px) {
-    .arch-main-grid {
-      grid-template-columns: 1fr;
-    }
+  .stage-media-wrapper {
+    margin-top: 1.5rem;
   }
 </style>
+
+<script>
+  function initVernacularPreview() {
+    const dataEl = document.getElementById('vernacular-data');
+    if (!dataEl) return;
+
+    let samples: any[] = [];
+    try {
+      samples = JSON.parse(dataEl.textContent || '[]');
+    } catch {
+      return;
+    }
+
+    const selectEl = document.getElementById('vernacular-lang-select') as HTMLSelectElement | null;
+    const btnTemplate = document.getElementById('btn-mode-template');
+    const btnSample = document.getElementById('btn-mode-sample');
+    const bodyEl = document.getElementById('doc-rendered-body');
+    const salutationEl = document.getElementById('doc-salutation');
+
+    if (!selectEl || !btnTemplate || !btnSample || !bodyEl || !salutationEl) return;
+
+    let currentMode: 'template' | 'sample' = 'template';
+    let currentLang = 'en';
+
+    function render() {
+      const sample = samples.find((s) => s.code === currentLang) || samples[0];
+      if (!sample) return;
+
+      salutationEl!.textContent = `Salutation: ${sample.salutation}`;
+
+      if (currentMode === 'template') {
+        // Highlight tokens in blue
+        const html = sample.templateText.replace(
+          /\{\{([^}]+)\}\}/g,
+          '<span class="tok-token tok-blue">{{$1}}</span>'
+        );
+        bodyEl!.innerHTML = html;
+      } else {
+        // Highlight filled values in orange
+        const tokens = sample.tokens;
+        let html = sample.templateText;
+        html = html.replace('{{ApplicantName}}', `<span class="tok-token tok-orange">${tokens.name}</span>`);
+        html = html.replace('{{ApplicantAge}}', `<span class="tok-token tok-orange">${tokens.age}</span>`);
+        html = html.replace('{{ApplicantAddress}}', `<span class="tok-token tok-orange">${tokens.address}</span>`);
+        html = html.replace('{{LoanAmount}}', `<span class="tok-token tok-orange">${tokens.amount}</span>`);
+        bodyEl!.innerHTML = html;
+      }
+    }
+
+    btnTemplate.addEventListener('click', () => {
+      currentMode = 'template';
+      btnTemplate.classList.add('is-active');
+      btnTemplate.setAttribute('aria-checked', 'true');
+      btnSample.classList.remove('is-active');
+      btnSample.setAttribute('aria-checked', 'false');
+      render();
+    });
+
+    btnSample.addEventListener('click', () => {
+      currentMode = 'sample';
+      btnSample.classList.add('is-active');
+      btnSample.setAttribute('aria-checked', 'true');
+      btnTemplate.classList.remove('is-active');
+      btnTemplate.setAttribute('aria-checked', 'false');
+      render();
+    });
+
+    selectEl.addEventListener('change', () => {
+      currentLang = selectEl.value;
+      render();
+    });
+
+    render();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initVernacularPreview);
+  } else {
+    initVernacularPreview();
+  }
+  document.addEventListener('astro:page-load', initVernacularPreview);
+</script>

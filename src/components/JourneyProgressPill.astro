@@ -1,0 +1,291 @@
+---
+import { siteConfig } from '../config/site';
+
+interface Props {
+  targetPrefix?: string; // 'journey-stop' for homepage, 'stage-0' for solutions
+  marker?: 'dot' | 'peg'; // 'dot' on homepage, 'peg' (square logo mark cube) on solutions
+  class?: string;
+}
+
+const { targetPrefix = 'stage-0', marker = 'peg', class: className = '' } = Astro.props;
+const steps = siteConfig.approach.steps;
+---
+
+<nav
+  class={`journey-progress-rail ${marker === 'peg' ? 'marker-peg' : 'marker-dot'} ${className}`}
+  id="journey-progress-rail"
+  aria-label="Journey stages progress"
+  data-marker={marker}
+>
+  <div class="rail-indicator" id="rail-indicator-text">STAGE 1 / 6</div>
+  <div class="rail-dots-track">
+    <div class="rail-connecting-line" aria-hidden="true"></div>
+    {steps.map((step, idx) => {
+      const targetId = targetPrefix === 'stage-0' ? `stage-0${idx + 1}` : `${targetPrefix}-${idx}`;
+      return (
+        <a
+          href={`#${targetId}`}
+          class={`rail-dot ${idx === 0 ? 'is-active is-current' : 'is-upcoming'}`}
+          id={`rail-dot-${idx}`}
+          data-stage={idx}
+          data-target={targetId}
+          title={`Stage 0${step.number}: ${step.title}`}
+          aria-label={`Stage 0${step.number}: ${step.title}`}
+          aria-current={idx === 0 ? 'step' : undefined}
+        >
+          {marker === 'peg' ? (
+            <span class="peg-slot" style={`--dot-color: ${step.color};`}>
+              <span class="dot-inner dot-passed"></span>
+              <img
+                src="/brand/rhsp-logo.png"
+                alt="Active Stage Peg"
+                class="peg-marker-cube"
+                width="22"
+                height="22"
+              />
+            </span>
+          ) : (
+            <span class="dot-inner" style={`--dot-color: ${step.color};`}></span>
+          )}
+        </a>
+      );
+    })}
+  </div>
+</nav>
+
+<style>
+  .journey-progress-rail {
+    position: fixed;
+    right: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.65rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 150ms ease;
+  }
+
+  .journey-progress-rail.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  @media (max-width: 899px) {
+    .journey-progress-rail {
+      display: none !important;
+    }
+  }
+
+  .rail-indicator {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    background-color: var(--color-surface);
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius-pill, 9999px);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    white-space: nowrap;
+  }
+
+  .rail-dots-track {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 0.5rem 0.35rem;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill, 9999px);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  }
+
+  .rail-connecting-line {
+    position: absolute;
+    left: 50%;
+    top: 14px;
+    bottom: 14px;
+    width: 2px;
+    transform: translateX(-50%);
+    background: var(--color-border);
+    z-index: 1;
+    border-radius: 1px;
+  }
+
+  .rail-dot {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    text-decoration: none;
+    outline: none;
+    transition: transform 0.2s ease;
+  }
+
+  .rail-dot:focus-visible {
+    box-shadow: 0 0 0 2px #F7941D;
+  }
+
+  .dot-inner {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--color-text-muted);
+    opacity: 0.4;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .rail-dot:hover {
+    transform: scale(1.15);
+  }
+
+  /* Dot mode (Homepage) */
+  .marker-dot .rail-dot.is-active .dot-inner {
+    width: 12px;
+    height: 12px;
+    background-color: var(--dot-color, #F7941D);
+    opacity: 1;
+    box-shadow: 0 0 8px var(--dot-color, #F7941D);
+  }
+
+  /* Peg mode (Solution pages) */
+  .peg-slot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+  }
+
+  /* Upcoming stages: pale grey dot */
+  .marker-peg .rail-dot.is-upcoming .dot-passed {
+    display: block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #cbd5e1;
+    opacity: 0.7;
+  }
+  :global(.dark) .marker-peg .rail-dot.is-upcoming .dot-passed {
+    background-color: rgba(255, 255, 255, 0.25);
+  }
+  .marker-peg .rail-dot.is-upcoming .peg-marker-cube {
+    display: none;
+  }
+
+  /* Passed stages: filled dot with stage color (blue at top shading to orange lower down) */
+  .marker-peg .rail-dot.is-passed .dot-passed {
+    display: block;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background-color: var(--dot-color, #1E4B8F);
+    box-shadow: 0 0 6px var(--dot-color, #1E4B8F);
+    opacity: 1;
+  }
+  .marker-peg .rail-dot.is-passed .peg-marker-cube {
+    display: none;
+  }
+
+  /* Current stage: 22px RHSP logo mark cube */
+  .marker-peg .rail-dot.is-current .dot-passed {
+    display: none;
+  }
+  .marker-peg .rail-dot.is-current .peg-marker-cube {
+    display: block;
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(247, 148, 29, 0.4));
+  }
+</style>
+
+<script>
+  function initProgressPill() {
+    const rail = document.getElementById('journey-progress-rail');
+    if (!rail) return;
+
+    const railText = document.getElementById('rail-indicator-text');
+    const dots = Array.from(rail.querySelectorAll<HTMLAnchorElement>('.rail-dot'));
+
+    // Check if on Solution page (#stage-01 to #stage-06)
+    const stageSections = [1, 2, 3, 4, 5, 6]
+      .map((num) => document.getElementById(`stage-0${num}`))
+      .filter((el): el is HTMLElement => Boolean(el));
+
+    if (stageSections.length === 6) {
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Click handler
+      dots.forEach((dot, idx) => {
+        dot.addEventListener('click', (e) => {
+          e.preventDefault();
+          const target = stageSections[idx];
+          if (target) {
+            target.scrollIntoView({
+              behavior: prefersReducedMotion ? 'auto' : 'smooth',
+              block: 'start'
+            });
+          }
+        });
+      });
+
+      // Update pill visibility and current stage
+      const updateSolutionPill = () => {
+        const firstRect = stageSections[0].getBoundingClientRect();
+        const lastRect = stageSections[5].getBoundingClientRect();
+
+        // Visible only while within stage panels: hidden above stage 1 and below stage 6
+        const inView = firstRect.top <= window.innerHeight * 0.6 && lastRect.bottom >= window.innerHeight * 0.2;
+        rail.classList.toggle('is-visible', inView && window.innerWidth >= 900);
+
+        if (!inView) return;
+
+        let activeIdx = 0;
+        stageSections.forEach((section, idx) => {
+          const rect = section.getBoundingClientRect();
+          // Header is ~80px, active when upper third
+          if (rect.top <= window.innerHeight * 0.45) {
+            activeIdx = idx;
+          }
+        });
+
+        if (railText) {
+          railText.textContent = `STAGE ${activeIdx + 1} / 6`;
+        }
+
+        dots.forEach((dot, idx) => {
+          dot.classList.remove('is-active', 'is-current', 'is-passed', 'is-upcoming');
+          if (idx < activeIdx) {
+            dot.classList.add('is-passed');
+            dot.removeAttribute('aria-current');
+          } else if (idx === activeIdx) {
+            dot.classList.add('is-active', 'is-current');
+            dot.setAttribute('aria-current', 'step');
+          } else {
+            dot.classList.add('is-upcoming');
+            dot.removeAttribute('aria-current');
+          }
+        });
+      };
+
+      window.addEventListener('scroll', updateSolutionPill, { passive: true });
+      window.addEventListener('resize', updateSolutionPill, { passive: true });
+      updateSolutionPill();
+    }
+  }
+
+  initProgressPill();
+  document.addEventListener('astro:after-swap', initProgressPill);
+</script>
