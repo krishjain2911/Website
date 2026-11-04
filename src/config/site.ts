@@ -131,9 +131,9 @@ export const siteConfig = {
         bullets: [
           'Implementation & digital transformation on OutSystems',
           'Custom development in MERN with full architectural control',
-          'Accelerators: CLM, DMS, and WhatsApp Journeys'
+          'Accelerators: CLM, Vernacular Documents, DMS, and WhatsApp Journeys'
         ],
-        productSlugs: ['clm', 'dms', 'whatsapp-journeys'],
+        productSlugs: ['clm', 'vernacular-documents', 'dms', 'whatsapp-journeys'],
         subTags: ['OutSystems Low-Code', 'High-Code MERN', 'Accelerators'],
         iconType: 'solid'
       },
@@ -180,7 +180,7 @@ export const siteConfig = {
         title: "Identify latent revenue",
         description: "We find the untapped value hiding in your workflows, data and customer journeys.",
         detail: "Enterprise strategy experience helps us size the value in cost, cycle time and revenue before we build.",
-        icon: "sparkles" as const,
+        icon: "dollar" as const,
         color: "#27599D"
       },
       {
@@ -228,7 +228,7 @@ export const siteConfig = {
       imageKey: "feature-voice",
       focus: "center",
       alt: "Retail and showroom customer interacting with voice AI assistant on a tablet",
-      summary: "Multilingual voice assistants connected to live enterprise product catalogues."
+      summary: "Voice assistant that answers shoppers' product questions in their own language."
     },
     {
       id: "story-2",
@@ -248,7 +248,7 @@ export const siteConfig = {
       imageKey: "feature-paper-to-platform",
       focus: "center",
       alt: "Architectural transformation from manual paper ledgers to a modern web application",
-      summary: "Replacing scattered physical approvals and spreadsheets with structured digital workflows."
+      summary: "Contract workflow from request to signature, for business, risk, legal and vendor teams."
     },
     {
       id: "story-4",

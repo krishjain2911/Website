@@ -1,17 +1,20 @@
 ---
+import Icon from '../Icon.astro';
+
 export interface StageItem {
   id: string;
   number: number;
   title: string;
+  icon?: any;
 }
 
 const DEFAULT_STAGES: StageItem[] = [
-  { id: 'stage-01', number: 1, title: 'Understand the business' },
-  { id: 'stage-02', number: 2, title: 'Identify latent revenue' },
-  { id: 'stage-03', number: 3, title: 'Design adaptive systems' },
-  { id: 'stage-04', number: 4, title: 'Pilot with on-ground teams' },
-  { id: 'stage-05', number: 5, title: 'Refine and deploy' },
-  { id: 'stage-06', number: 6, title: 'Enable and monitor' }
+  { id: 'stage-01', number: 1, title: 'Understand the business', icon: 'compass' },
+  { id: 'stage-02', number: 2, title: 'Identify latent revenue', icon: 'dollar' },
+  { id: 'stage-03', number: 3, title: 'Design adaptive systems', icon: 'sliders' },
+  { id: 'stage-04', number: 4, title: 'Pilot with on-ground teams', icon: 'users' },
+  { id: 'stage-05', number: 5, title: 'Refine and deploy', icon: 'code' },
+  { id: 'stage-06', number: 6, title: 'Enable and monitor', icon: 'shield' }
 ];
 
 interface Props {
@@ -66,7 +69,10 @@ const { stages = DEFAULT_STAGES, mobileOnly = false, desktopOnly = false } = Ast
           >
             <span class="node-marker" aria-hidden="true"></span>
             <span class="stage-node-meta">
-              <span class="stage-step-num">Stage {stage.number}</span>
+              <span class="stage-step-num">
+                {stage.icon && <Icon name={stage.icon} size={11} class="rail-stage-glyph" />}
+                Stage {stage.number}
+              </span>
               <span class="stage-step-title">{stage.title}</span>
             </span>
           </a>
@@ -283,9 +289,17 @@ const { stages = DEFAULT_STAGES, mobileOnly = false, desktopOnly = false } = Ast
     }
 
     .stage-step-num {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
       font-size: 0.68rem;
       font-weight: 600;
       color: var(--color-text-muted, #64748b);
+    }
+
+    .rail-stage-glyph {
+      opacity: 0.8;
+      flex-shrink: 0;
     }
 
     .stage-step-title {
