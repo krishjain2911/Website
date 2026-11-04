@@ -4,12 +4,14 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import Team from '../components/Team.astro';
 import ContactSection from '../components/ContactSection.astro';
+import Icon from '../components/Icon.astro';
 import { siteConfig } from '../config/site';
 
 const { about } = siteConfig;
 
 const theoryCards = [
   {
+    id: 'hole',
     step: '01',
     label: 'ROUND HOLE',
     title: 'The round hole — your challenge',
@@ -17,6 +19,7 @@ const theoryCards = [
     color: '#1E4B8F'
   },
   {
+    id: 'adapter',
     step: '02',
     label: 'THE ADAPTER',
     title: 'The adapter — RHSP',
@@ -24,6 +27,7 @@ const theoryCards = [
     color: '#F7941D'
   },
   {
+    id: 'peg',
     step: '03',
     label: 'SQUARE PEG',
     title: 'The square peg — the solution',
@@ -32,26 +36,14 @@ const theoryCards = [
   }
 ];
 
-const apolloSteps = [
-  {
-    num: '01',
-    tag: 'April 1970',
-    title: 'Crisis in orbit',
-    desc: 'In April 1970, Apollo 13 suffered an oxygen tank explosion 200,000 miles from Earth.'
-  },
-  {
-    num: '02',
-    tag: 'The constraint',
-    title: 'Mismatched interfaces',
-    desc: 'NASA engineers had to connect square lithium hydroxide canisters to round sockets using only what was on board.'
-  },
-  {
-    num: '03',
-    tag: 'The outcome',
-    title: 'Engineered adapter',
-    desc: 'They engineered the adapter using only what was on board.'
-  }
-];
+// Helper to bold key phrases in mandate cards without mutating site.ts
+function formatMandateText(text: string) {
+  return text
+    .replace(/\badapts\b/g, '<strong>adapts</strong>')
+    .replace(/\blatent revenue\b/g, '<strong>latent revenue</strong>')
+    .replace(/\bintelligent automation\b/g, '<strong>intelligent automation</strong>')
+    .replace(/\btrusted technology partner\b/g, '<strong>trusted technology partner</strong>');
+}
 ---
 
 <BaseLayout
@@ -64,19 +56,62 @@ const apolloSteps = [
 >
   <Nav />
 
+  <!-- Desktop Sticky Pill Sub-Nav (Hidden below 900px) -->
+  <nav class="about-sticky-subnav" id="about-sticky-subnav" aria-label="About page sections">
+    <div class="subnav-pill-container">
+      <a href="#theory-hero" class="subnav-link is-active" data-section="theory-hero">Theory</a>
+      <span class="subnav-sep" aria-hidden="true">·</span>
+      <a href="#story" class="subnav-link" data-section="story">Origin</a>
+      <span class="subnav-sep" aria-hidden="true">·</span>
+      <a href="#mission" class="subnav-link" data-section="mission">Mission</a>
+      <span class="subnav-sep" aria-hidden="true">·</span>
+      <a href="#team" class="subnav-link" data-section="team">Leadership</a>
+    </div>
+  </nav>
+
   <main id="main-content" tabindex="-1">
-    <!-- 1. Theory Hero (2-Column Grid: Text Left, Diagram Right) -->
+    <!-- 1. Theory Hero (2-Column Grid: Text Left, Animated SVG Diagram Right) -->
     <section id="theory-hero" class="about-hero-section" aria-labelledby="hero-heading">
       <div class="container">
         <div class="hero-two-col-grid">
-          <!-- Left: Headline, Definition chip, Subline -->
+          <!-- Left Column: Eyebrow, H1, Expandable Definition Pill, Subline -->
           <div class="hero-text-col reveal-on-scroll">
             <span class="eyebrow">THE RHSP THEORY</span>
             <h1 id="hero-heading" class="hero-heading">The RHSP theory.</h1>
 
-            <!-- Definition Chip -->
+            <!-- Expandable Definition Pill (R · H · S · P expands on hover/focus) -->
             <div class="definition-chip-wrap">
-              <span class="definition-chip">RHSP stands for Round Hole Square Peg.</span>
+              <button
+                type="button"
+                class="rhsp-expandable-pill"
+                id="rhsp-expandable-pill"
+                aria-expanded="false"
+                aria-label="RHSP stands for Round Hole Square Peg"
+              >
+                <span class="sr-only">RHSP stands for Round Hole Square Peg.</span>
+                <span class="pill-track" aria-hidden="true">
+                  <span class="pill-chunk" data-letter="R">
+                    <span class="chunk-letter letter-r">R</span><span class="chunk-word">ound</span>
+                  </span>
+                  <span class="pill-dot">·</span>
+                  <span class="pill-chunk" data-letter="H">
+                    <span class="chunk-letter letter-h">H</span><span class="chunk-word">ole</span>
+                  </span>
+                  <span class="pill-dot">·</span>
+                  <span class="pill-chunk" data-letter="S">
+                    <span class="chunk-letter letter-s">S</span><span class="chunk-word">quare</span>
+                  </span>
+                  <span class="pill-dot">·</span>
+                  <span class="pill-chunk" data-letter="P">
+                    <span class="chunk-letter letter-p">P</span><span class="chunk-word">eg</span>
+                  </span>
+                </span>
+                <span class="pill-hint" aria-hidden="true">
+                  <Icon name="chevron-right" size={12} class="pill-hint-icon" />
+                </span>
+              </button>
+              <!-- Static text maintained in DOM for search engines and assistive technology -->
+              <span class="definition-fallback-text sr-only">RHSP stands for Round Hole Square Peg.</span>
             </div>
 
             <p class="hero-subline">
@@ -84,58 +119,131 @@ const apolloSteps = [
             </p>
           </div>
 
-          <!-- Right: Clean Responsive SVG Diagram -->
+          <!-- Right Column: Interactive 3-Beat Animated SVG Diagram -->
           <div class="hero-diagram-col reveal-on-scroll" style="transition-delay: 80ms;">
-            <div class="diagram-surface card-mastercard" aria-hidden="true">
-              <svg
-                viewBox="0 0 540 240"
-                fill="none"
-                class="theory-diagram-svg"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <defs>
-                  <marker id="arrowHead" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                    <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="var(--color-text-muted)" />
-                  </marker>
-                </defs>
+            <div class="diagram-surface card-mastercard" id="theory-diagram-wrapper" data-beat="1">
+              <!-- Replay & Beat Indicator Header -->
+              <div class="diagram-top-bar">
+                <div class="diagram-beat-pills" role="status" aria-live="polite">
+                  <span class="beat-pill" data-beat-target="1">1. Challenge</span>
+                  <span class="beat-pill" data-beat-target="2">2. Adapter</span>
+                  <span class="beat-pill" data-beat-target="3">3. Solution</span>
+                </div>
+                <button type="button" class="diagram-replay-btn" id="diagram-replay-btn" aria-label="Replay animation">
+                  <Icon name="rotate-ccw" size={13} />
+                  <span>Replay</span>
+                </button>
+              </div>
 
-                <!-- 1. Round Hole (The challenge) -->
-                <g transform="translate(90, 110)">
-                  <circle cx="0" cy="0" r="46" stroke="#1E4B8F" stroke-width="2.5" fill="rgba(30, 75, 143, 0.05)" />
-                  <circle cx="0" cy="0" r="32" stroke="#1E4B8F" stroke-width="1.25" stroke-dasharray="4 4" fill="none" opacity="0.6" />
-                  <text y="-6" font-family="var(--font-sans)" font-size="10.5" font-weight="700" letter-spacing="0.08em" fill="#1E4B8F" text-anchor="middle">ROUND HOLE</text>
-                  <text y="14" font-family="var(--font-sans)" font-size="9" fill="var(--color-text-secondary)" text-anchor="middle">The challenge</text>
-                </g>
+              <!-- Full-Panel Animated SVG Diagram -->
+              <div class="svg-container">
+                <svg
+                  viewBox="0 0 560 320"
+                  fill="none"
+                  class="theory-interactive-svg"
+                  id="theory-interactive-svg"
+                  xmlns="http://www.w3.org/2000/svg"
+                  role="img"
+                  aria-label="Interactive RHSP animation: A square peg approaches a round hole, bumps its corners, the RHSP adapter ring slides in between, and the peg glides seamlessly through with zero compromise."
+                >
+                  <defs>
+                    <!-- Socket Glow Gradient -->
+                    <radialGradient id="socketGlowGrad" cx="50%" cy="50%" r="50%">
+                      <stop offset="0%" stop-color="#1E4B8F" stop-opacity="0.35" />
+                      <stop offset="70%" stop-color="#1E4B8F" stop-opacity="0.08" />
+                      <stop offset="100%" stop-color="#1E4B8F" stop-opacity="0" />
+                    </radialGradient>
+                    <!-- Adapter Glow Gradient -->
+                    <radialGradient id="adapterGlowGrad" cx="50%" cy="50%" r="50%">
+                      <stop offset="0%" stop-color="#F7941D" stop-opacity="0.3" />
+                      <stop offset="100%" stop-color="#F7941D" stop-opacity="0" />
+                    </radialGradient>
+                    <!-- Grid Pattern -->
+                    <pattern id="diagGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+                      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="var(--color-border)" stroke-width="0.5" stroke-opacity="0.4" />
+                    </pattern>
+                  </defs>
 
-                <!-- Connector Line: Left to Adapter -->
-                <line x1="144" y1="110" x2="208" y2="110" stroke="var(--color-border)" stroke-width="2" stroke-dasharray="5 5" marker-end="url(#arrowHead)" />
+                  <!-- Technical Blueprint Background Grid -->
+                  <rect width="560" height="320" fill="url(#diagGrid)" opacity="0.6" />
 
-                <!-- 2. The Adapter (RHSP) -->
-                <g transform="translate(270, 110)">
-                  <rect x="-56" y="-38" width="112" height="76" rx="12" stroke="#F7941D" stroke-width="2.5" fill="rgba(247, 148, 29, 0.06)" />
-                  <text y="-6" font-family="var(--font-sans)" font-size="12" font-weight="700" letter-spacing="0.1em" fill="#F7941D" text-anchor="middle">RHSP</text>
-                  <text y="14" font-family="var(--font-sans)" font-size="9.5" font-weight="600" fill="var(--color-text-secondary)" text-anchor="middle">The adapter</text>
-                </g>
+                  <!-- Center Guideline Axis -->
+                  <line x1="40" y1="150" x2="520" y2="150" stroke="var(--color-border)" stroke-width="1" stroke-dasharray="4 4" />
 
-                <!-- Connector Line: Adapter to Right -->
-                <line x1="334" y1="110" x2="398" y2="110" stroke="var(--color-border)" stroke-width="2" stroke-dasharray="5 5" marker-end="url(#arrowHead)" />
+                  <!-- COMPONENT 1: ROUND HOLE (SOCKET) -->
+                  <g class="diagram-group group-hole" id="svg-group-hole" transform="translate(140, 150)">
+                    <circle cx="0" cy="0" r="76" class="hole-ambient-glow" fill="url(#socketGlowGrad)" />
+                    <circle cx="0" cy="0" r="56" class="hole-outer-ring" stroke="#1E4B8F" stroke-width="2.5" fill="rgba(30, 75, 143, 0.04)" />
+                    <circle cx="0" cy="0" r="42" class="hole-inner-ring" stroke="#1E4B8F" stroke-width="1.5" stroke-dasharray="5 4" fill="none" />
+                    <!-- Crosshair Ticks -->
+                    <line x1="-62" y1="0" x2="-48" y2="0" stroke="#1E4B8F" stroke-width="2" />
+                    <line x1="48" y1="0" x2="62" y2="0" stroke="#1E4B8F" stroke-width="2" />
+                    <line x1="0" y1="-62" x2="0" y2="-48" stroke="#1E4B8F" stroke-width="2" />
+                    <line x1="0" y1="48" x2="0" y2="62" stroke="#1E4B8F" stroke-width="2" />
 
-                <!-- 3. Square Peg (The solution) -->
-                <g transform="translate(450, 110)">
-                  <rect x="-44" y="-44" width="88" height="88" rx="8" stroke="#EE4B2B" stroke-width="2.5" fill="rgba(238, 75, 43, 0.05)" />
-                  <text y="-6" font-family="var(--font-sans)" font-size="10.5" font-weight="700" letter-spacing="0.08em" fill="#EE4B2B" text-anchor="middle">SQUARE PEG</text>
-                  <text y="14" font-family="var(--font-sans)" font-size="9" fill="var(--color-text-secondary)" text-anchor="middle">The solution</text>
-                </g>
+                    <!-- Labels (>= 13px) -->
+                    <text y="-76" class="diagram-svg-label label-hole-title" text-anchor="middle">ROUND HOLE</text>
+                    <text y="92" class="diagram-svg-sublabel" text-anchor="middle">Your challenge</text>
+                  </g>
 
-                <!-- Bottom Technical Annotation Baseline -->
-                <line x1="40" y1="205" x2="500" y2="205" stroke="var(--color-border)" stroke-width="1" />
-                <circle cx="90" cy="205" r="3.5" fill="#1E4B8F" />
-                <circle cx="270" cy="205" r="3.5" fill="#F7941D" />
-                <circle cx="450" cy="205" r="3.5" fill="#EE4B2B" />
-                <text x="270" y="225" font-family="var(--font-sans)" font-size="9.5" font-weight="600" letter-spacing="0.08em" text-transform="uppercase" fill="var(--color-text-muted)" text-anchor="middle">
-                  From challenge to solution — without compromise
-                </text>
-              </svg>
+                  <!-- COMPONENT 2: THE ADAPTER RING (RHSP) -->
+                  <g class="diagram-group group-adapter" id="svg-group-adapter" transform="translate(260, 150)">
+                    <circle cx="0" cy="0" r="64" class="adapter-ambient-glow" fill="url(#adapterGlowGrad)" opacity="0" />
+                    <!-- Adapter Outer Profile: Round -->
+                    <circle cx="0" cy="0" r="54" class="adapter-outer" stroke="#F7941D" stroke-width="2.5" fill="rgba(247, 148, 29, 0.08)" />
+                    <!-- Adapter Inner Profile: Square Cutout -->
+                    <rect x="-35" y="-35" width="70" height="70" rx="4" class="adapter-inner" stroke="#F7941D" stroke-width="2" stroke-dasharray="4 3" fill="none" />
+                    <!-- Technical Corner Bevels -->
+                    <path d="M -35 -20 L -35 -35 L -20 -35" stroke="#F7941D" stroke-width="2" fill="none" />
+                    <path d="M 20 -35 L 35 -35 L 35 -20" stroke="#F7941D" stroke-width="2" fill="none" />
+                    <path d="M 35 20 L 35 35 L 20 35" stroke="#F7941D" stroke-width="2" fill="none" />
+                    <path d="M -20 35 L -35 35 L -35 20" stroke="#F7941D" stroke-width="2" fill="none" />
+
+                    <!-- Labels (>= 13px) -->
+                    <text y="-76" class="diagram-svg-label label-adapter-title" text-anchor="middle">RHSP ADAPTER</text>
+                    <text y="92" class="diagram-svg-sublabel" text-anchor="middle">The engineered interface</text>
+                  </g>
+
+                  <!-- COMPONENT 3: SQUARE PEG (SOLUTION) -->
+                  <g class="diagram-group group-peg" id="svg-group-peg" transform="translate(420, 150)">
+                    <!-- Square Peg Body -->
+                    <rect x="-35" y="-35" width="70" height="70" rx="4" class="peg-rect" stroke="#EE4B2B" stroke-width="2.5" fill="rgba(238, 75, 43, 0.08)" />
+                    <!-- Center Core -->
+                    <circle cx="0" cy="0" r="14" stroke="#EE4B2B" stroke-width="1.5" stroke-dasharray="3 2" fill="none" />
+                    <line x1="-8" y1="0" x2="8" y2="0" stroke="#EE4B2B" stroke-width="1.5" />
+                    <line x1="0" y1="-8" x2="0" y2="8" stroke="#EE4B2B" stroke-width="1.5" />
+
+                    <!-- Corner Clash Indicators (shown in Beat 1) -->
+                    <g class="peg-clash-marks">
+                      <circle cx="-35" cy="-35" r="4" fill="#EE4B2B" class="clash-dot" />
+                      <circle cx="35" cy="-35" r="4" fill="#EE4B2B" class="clash-dot" />
+                      <circle cx="35" cy="35" r="4" fill="#EE4B2B" class="clash-dot" />
+                      <circle cx="-35" cy="35" r="4" fill="#EE4B2B" class="clash-dot" />
+                    </g>
+
+                    <!-- Labels (>= 13px) -->
+                    <text y="-76" class="diagram-svg-label label-peg-title" text-anchor="middle">SQUARE PEG</text>
+                    <text y="92" class="diagram-svg-sublabel" text-anchor="middle">The technology solution</text>
+                  </g>
+
+                  <!-- Bottom Measurement Baseline with Coordinate Marks -->
+                  <line x1="60" y1="285" x2="500" y2="285" stroke="var(--color-border)" stroke-width="1" />
+                  <circle cx="140" cy="285" r="3" fill="#1E4B8F" />
+                  <circle cx="260" cy="285" r="3" fill="#F7941D" />
+                  <circle cx="420" cy="285" r="3" fill="#EE4B2B" />
+                  <text x="280" y="305" font-family="var(--font-sans)" font-size="11" font-weight="600" letter-spacing="0.08em" text-transform="uppercase" fill="var(--color-text-muted)" text-anchor="middle">
+                    Technical Architecture Interface · Apollo Principle
+                  </text>
+                </svg>
+              </div>
+
+              <!-- Narrative Beat Caption Bar -->
+              <div class="diagram-caption-footer">
+                <span class="caption-tag">Narrative</span>
+                <p class="caption-text" id="diagram-caption-text">
+                  Beat 1: The square peg approaches the round hole — its corners clash with the socket boundary.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -149,6 +257,11 @@ const apolloSteps = [
           {theoryCards.map((card, idx) => (
             <article
               class="theory-card card-mastercard reveal-on-scroll"
+              id={`theory-card-${card.id}`}
+              data-card-id={card.id}
+              tabindex="0"
+              role="region"
+              aria-label={card.title}
               style={`transition-delay: ${idx * 60}ms; border-top: 3px solid ${card.color};`}
             >
               <div class="theory-card-header">
@@ -158,46 +271,146 @@ const apolloSteps = [
                 <h2 class="theory-card-title">{card.title}</h2>
               </div>
               <p class="theory-card-copy">{card.text}</p>
+              <div class="theory-card-link-cue">
+                <span style={`color: ${card.color};`}>Highlight in architecture &rarr;</span>
+              </div>
             </article>
           ))}
         </div>
       </div>
     </section>
 
-    <!-- 3. The Proof: Apollo 13 -->
-    <section id="proof" class="about-section proof-section" aria-labelledby="proof-heading">
+    <!-- 3. Our Origin: The Apollo 13 Imperative (Restored Master Boxed Section) -->
+    <section id="story" class="about-story-section" aria-labelledby="story-heading">
       <div class="container">
-        <div class="section-header reveal-on-scroll">
-          <span class="eyebrow">THE PROOF</span>
-          <h2 id="proof-heading" class="section-title">The proof: Apollo 13.</h2>
-          <p class="section-subline">
-            A real-world imperative that defined our engineering philosophy.
-          </p>
-        </div>
+        <div class="story-box-wrapper card-mastercard reveal-on-scroll">
+          <div class="story-header">
+            <span class="eyebrow">OUR ORIGIN</span>
+            <h2 id="story-heading" class="story-title">
+              The Apollo 13 imperative.
+            </h2>
+          </div>
 
-        <!-- 3-Column Numbered Sequence Row -->
-        <div class="apollo-steps-grid">
-          {apolloSteps.map((step, idx) => (
-            <article
-              class="apollo-step-card card-mastercard reveal-on-scroll"
-              style={`transition-delay: ${idx * 60}ms;`}
-            >
-              <div class="step-badge-row">
-                <span class="step-num-badge">{step.num}</span>
-                <span class="step-tag">{step.tag}</span>
+          <div class="story-body-grid">
+            <!-- Left: 3 Numbered Steps + Fact Chips + Quote Card -->
+            <div class="story-lines-col">
+              <ol class="story-timeline" aria-label="Apollo 13 origin sequence steps">
+                <li class="story-step-item">
+                  <span class="step-bullet" aria-hidden="true">01</span>
+                  <p class="step-text">
+                    In April 1970, Apollo 13 suffered an oxygen tank explosion 200,000 miles from Earth.
+                  </p>
+                </li>
+                <li class="story-step-item">
+                  <span class="step-bullet" aria-hidden="true">02</span>
+                  <p class="step-text">
+                    NASA engineers had to connect square lithium hydroxide canisters to round sockets using only what was on board.
+                  </p>
+                </li>
+                <li class="story-step-item">
+                  <span class="step-bullet" aria-hidden="true">03</span>
+                  <p class="step-text">
+                    They engineered the adapter using only what was on board.
+                  </p>
+                </li>
+              </ol>
+
+              <!-- Fact Chips -->
+              <div class="story-fact-chips">
+                <span class="fact-chip">April 1970</span>
+                <span class="fact-chip-dot" aria-hidden="true">·</span>
+                <span class="fact-chip">200,000 miles from Earth</span>
+                <span class="fact-chip-dot" aria-hidden="true">·</span>
+                <span class="fact-chip">Only materials on board</span>
               </div>
-              <h3 class="step-title">{step.title}</h3>
-              <p class="step-desc">{step.desc}</p>
-            </article>
-          ))}
-        </div>
 
-        <!-- Conclusion Principle Card -->
-        <div class="proof-conclusion-card card-mastercard reveal-on-scroll">
-          <div class="conclusion-bar"></div>
-          <p class="conclusion-text">
-            Round Hole Square Peg is built on the same principle: understand the challenge, then engineer the adapter to the solution.
-          </p>
+              <!-- Quote Card -->
+              <div class="story-conclusion-card">
+                <p class="conclusion-statement">
+                  Round Hole Square Peg is built on the same principle: understand the challenge, then engineer the adapter to the solution.
+                </p>
+              </div>
+            </div>
+
+            <!-- Right: Blueprint-Style Technical SVG Illustration -->
+            <div class="story-illustration-col">
+              <div class="blueprint-canvas">
+                <svg
+                  viewBox="0 0 380 320"
+                  fill="none"
+                  class="blueprint-svg"
+                  id="apollo-blueprint-svg"
+                  role="img"
+                  aria-label="Apollo 13 engineering blueprint: Round socket challenge connected to square canister solution via engineered adapter."
+                >
+                  <defs>
+                    <pattern id="apolloGrid" width="16" height="16" patternUnits="userSpaceOnUse">
+                      <path d="M 16 0 L 0 0 0 16" fill="none" stroke="#1E4B8F" stroke-width="0.5" stroke-opacity="0.15" />
+                    </pattern>
+                  </defs>
+
+                  <!-- Blueprint Background Grid -->
+                  <rect width="380" height="320" fill="url(#apolloGrid)" rx="8" />
+
+                  <!-- Header Specification Text (>= 13px) -->
+                  <text x="24" y="32" font-family="var(--font-sans)" font-size="13" font-weight="700" letter-spacing="0.1em" fill="#1E4B8F">
+                    NASA APOLLO 13 // ADAPTER INTERFACE
+                  </text>
+                  <text x="24" y="48" font-family="var(--font-sans)" font-size="11" font-weight="600" fill="var(--color-text-muted)">
+                    SPEC: CM-TO-LM CO2 SCRUBBER ADAPTER
+                  </text>
+
+                  <!-- Left: Round Socket (The Challenge) -->
+                  <g transform="translate(85, 145)">
+                    <circle cx="0" cy="0" r="48" stroke="#1E4B8F" stroke-width="2" class="bp-draw" />
+                    <circle cx="0" cy="0" r="32" stroke="#1E4B8F" stroke-width="1.25" stroke-dasharray="4 4" class="bp-draw" />
+                    <line x1="-54" y1="0" x2="54" y2="0" stroke="#1E4B8F" stroke-width="1" stroke-dasharray="3 3" />
+                    <line x1="0" y1="-54" x2="0" y2="54" stroke="#1E4B8F" stroke-width="1" stroke-dasharray="3 3" />
+                    <text y="-56" font-family="var(--font-sans)" font-size="13" font-weight="700" fill="#1E4B8F" text-anchor="middle">
+                      ROUND SOCKET
+                    </text>
+                    <text y="70" font-family="var(--font-sans)" font-size="11" fill="var(--color-text-secondary)" text-anchor="middle">
+                      The challenge
+                    </text>
+                  </g>
+
+                  <!-- Center: Engineered Adapter -->
+                  <g transform="translate(190, 145)">
+                    <path d="M -40 -28 C -15 -42 15 -42 40 -28" stroke="#F7941D" stroke-width="2.25" stroke-linecap="round" class="bp-draw" />
+                    <path d="M -40 28 C -15 42 15 42 40 28" stroke="#F7941D" stroke-width="2.25" stroke-linecap="round" class="bp-draw" />
+                    <rect x="-26" y="-22" width="52" height="44" rx="6" fill="var(--color-surface)" stroke="#F7941D" stroke-width="2" class="bp-draw" />
+                    <text y="-2" font-family="var(--font-sans)" font-size="13" font-weight="800" fill="#F7941D" text-anchor="middle">
+                      ADAPTER
+                    </text>
+                    <text y="14" font-family="var(--font-sans)" font-size="9.5" font-weight="600" fill="var(--color-text-secondary)" text-anchor="middle">
+                      RHSP
+                    </text>
+                  </g>
+
+                  <!-- Right: Square LiOH Canister (The Solution) -->
+                  <g transform="translate(295, 145)">
+                    <rect x="-42" y="-42" width="84" height="84" rx="4" stroke="#EE4B2B" stroke-width="2" stroke-dasharray="5 3" class="bp-draw" />
+                    <rect x="-24" y="-24" width="48" height="48" stroke="#EE4B2B" stroke-width="1" fill="none" opacity="0.6" class="bp-draw" />
+                    <text y="-56" font-family="var(--font-sans)" font-size="13" font-weight="700" fill="#EE4B2B" text-anchor="middle">
+                      SQUARE CANISTER
+                    </text>
+                    <text y="70" font-family="var(--font-sans)" font-size="11" fill="var(--color-text-secondary)" text-anchor="middle">
+                      The solution
+                    </text>
+                  </g>
+
+                  <!-- Bottom Measurement Baseline -->
+                  <line x1="30" y1="260" x2="350" y2="260" stroke="var(--color-border)" stroke-width="1.25" />
+                  <circle cx="85" cy="260" r="3" fill="#1E4B8F" />
+                  <circle cx="190" cy="260" r="3" fill="#F7941D" />
+                  <circle cx="295" cy="260" r="3" fill="#EE4B2B" />
+                  <text x="190" y="285" font-family="var(--font-sans)" font-size="11.5" font-weight="600" letter-spacing="0.08em" fill="var(--color-text-secondary)" text-anchor="middle">
+                    From challenge to solution — engineered with available tools
+                  </text>
+                </svg>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -226,7 +439,7 @@ const apolloSteps = [
                   </span>
                   <h3 class="mandate-card-title">{card.title}</h3>
                 </div>
-                <p class="mandate-card-copy">{card.text}</p>
+                <p class="mandate-card-copy" set:html={formatMandateText(card.text)} />
               </article>
             );
           })}
@@ -245,43 +458,577 @@ const apolloSteps = [
 </BaseLayout>
 
 <style>
-  /* Standard Layout & Spacing System */
+  /* -------------------------------------------------------------
+     Sticky Sub-Nav (Desktop >= 900px)
+     ------------------------------------------------------------- */
+  .about-sticky-subnav {
+    position: sticky;
+    top: calc(var(--nav-height, 72px) + 8px);
+    z-index: 50;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+    margin-bottom: -46px; /* Let hero flow beneath gracefully */
+  }
+
+  .subnav-pill-container {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.35rem 1rem;
+    border-radius: var(--radius-full);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(10px);
+    pointer-events: auto;
+  }
+
+  :global(.dark) .subnav-pill-container {
+    background: var(--color-surface-raised);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  }
+
+  .subnav-link {
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .subnav-link:hover,
+  .subnav-link.is-active {
+    color: var(--color-text-primary);
+    font-weight: 700;
+  }
+
+  .subnav-sep {
+    color: var(--color-border-strong);
+    font-size: var(--fs-xs);
+  }
+
+  @media (max-width: 899px) {
+    .about-sticky-subnav {
+      display: none;
+    }
+  }
+
+  /* -------------------------------------------------------------
+     Theory Hero Section
+     ------------------------------------------------------------- */
   .about-hero-section {
     padding-top: calc(72px + var(--section-spacing-desktop, 80px));
     padding-bottom: var(--section-spacing-desktop, 80px);
     background-color: var(--color-bg);
     border-bottom: 1px solid var(--color-border);
-  }
-
-  .about-section {
-    padding-top: var(--section-spacing-desktop, 80px);
-    padding-bottom: var(--section-spacing-desktop, 80px);
-    background-color: var(--color-bg);
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .theory-cards-section {
-    background-color: var(--color-bg-alt);
-  }
-
-  .mission-section {
-    background-color: var(--color-bg-alt);
+    scroll-margin-top: 100px;
   }
 
   @media (max-width: 767px) {
     .about-hero-section {
-      padding-top: calc(60px + var(--section-spacing-mobile, 48px));
+      padding-top: calc(64px + var(--section-spacing-mobile, 48px));
       padding-bottom: var(--section-spacing-mobile, 48px);
-    }
-
-    .about-section {
-      padding-top: var(--section-spacing-mobile, 48px);
-      padding-bottom: var(--section-spacing-mobile, 48px);
+      scroll-margin-top: 80px;
     }
   }
 
-  /* 1. Theory Hero */
   .hero-two-col-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    align-items: center;
+  }
+
+  @media (min-width: 960px) {
+    .hero-two-col-grid {
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 3.5rem;
+    }
+  }
+
+  .hero-heading {
+    font-size: clamp(2.2rem, 4vw, 3.25rem);
+    font-weight: 700;
+    line-height: 1.15;
+    margin: 0.25rem 0 1.25rem 0;
+    color: var(--color-text-primary);
+  }
+
+  .hero-subline {
+    font-size: clamp(1rem, 1.8vw, 1.15rem);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin: 0;
+    max-width: 580px;
+  }
+
+  /* -------------------------------------------------------------
+     Expandable Definition Pill (R · H · S · P)
+     ------------------------------------------------------------- */
+  .definition-chip-wrap {
+    margin-bottom: 1.5rem;
+  }
+
+  .rhsp-expandable-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.95rem;
+    border-radius: var(--radius-full);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    cursor: pointer;
+    font-family: var(--font-sans);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .rhsp-expandable-pill:hover,
+  .rhsp-expandable-pill:focus-visible,
+  .rhsp-expandable-pill.is-expanded {
+    background-color: var(--color-surface-raised);
+    border-color: var(--color-border-strong);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  }
+
+  .pill-track {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .pill-chunk {
+    display: inline-flex;
+    align-items: baseline;
+    font-size: 0.875rem;
+    font-weight: 700;
+  }
+
+  .chunk-letter {
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+
+  .letter-r { color: #1E4B8F; }
+  .letter-h { color: #1E4B8F; }
+  .letter-s { color: #F7941D; }
+  .letter-p { color: #EE4B2B; }
+
+  :global(.dark) .letter-r,
+  :global(.dark) .letter-h {
+    color: #5B8FE0;
+  }
+
+  .chunk-word {
+    display: inline-block;
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    color: var(--color-text-secondary);
+    font-weight: 600;
+    transition: max-width 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, margin 0.2s ease;
+  }
+
+  .rhsp-expandable-pill:hover .chunk-word,
+  .rhsp-expandable-pill:focus-visible .chunk-word,
+  .rhsp-expandable-pill.is-expanded .chunk-word {
+    max-width: 60px;
+    opacity: 1;
+    margin-left: 1px;
+  }
+
+  .pill-dot {
+    color: var(--color-border-strong);
+    font-weight: 700;
+  }
+
+  .pill-hint {
+    display: inline-flex;
+    align-items: center;
+    color: var(--color-text-muted);
+    transition: transform 0.2s ease;
+  }
+
+  .rhsp-expandable-pill:hover .pill-hint,
+  .rhsp-expandable-pill.is-expanded .pill-hint {
+    transform: rotate(90deg);
+  }
+
+  /* -------------------------------------------------------------
+     Diagram Surface & Interactive 3-Beat SVG
+     ------------------------------------------------------------- */
+  .diagram-surface {
+    position: relative;
+    background: var(--color-surface);
+    border-radius: var(--radius-card);
+    border: 1px solid var(--color-border);
+    padding: 1.25rem 1.25rem 1rem 1.25rem;
+    box-shadow: var(--shadow-subtle);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  :global(.dark) .diagram-surface {
+    background: var(--color-surface-raised);
+  }
+
+  .diagram-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+  }
+
+  .diagram-beat-pills {
+    display: flex;
+    gap: 0.35rem;
+  }
+
+  .beat-pill {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 0.15rem 0.55rem;
+    border-radius: var(--radius-full);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    transition: all 0.25s ease;
+  }
+
+  /* Active Beat Highlights */
+  .diagram-surface[data-beat="1"] .beat-pill[data-beat-target="1"] {
+    background: rgba(30, 75, 143, 0.12);
+    color: #1E4B8F;
+    border-color: rgba(30, 75, 143, 0.3);
+  }
+
+  .diagram-surface[data-beat="2"] .beat-pill[data-beat-target="2"] {
+    background: rgba(247, 148, 29, 0.12);
+    color: #B86200;
+    border-color: rgba(247, 148, 29, 0.3);
+  }
+
+  .diagram-surface[data-beat="3"] .beat-pill[data-beat-target="3"] {
+    background: rgba(238, 75, 43, 0.12);
+    color: #B82810;
+    border-color: rgba(238, 75, 43, 0.3);
+  }
+
+  :global(.dark) .diagram-surface[data-beat="1"] .beat-pill[data-beat-target="1"] { color: #5B8FE0; }
+  :global(.dark) .diagram-surface[data-beat="2"] .beat-pill[data-beat-target="2"] { color: #F7941D; }
+  :global(.dark) .diagram-surface[data-beat="3"] .beat-pill[data-beat-target="3"] { color: #EE4B2B; }
+
+  .diagram-replay-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .diagram-replay-btn:hover {
+    background: var(--color-bg);
+    color: var(--color-text-primary);
+  }
+
+  .svg-container {
+    width: 100%;
+    position: relative;
+  }
+
+  .theory-interactive-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .diagram-svg-label {
+    font-family: var(--font-sans);
+    font-size: 13px; /* >= 13px */
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+
+  .label-hole-title { fill: #1E4B8F; }
+  :global(.dark) .label-hole-title { fill: #5B8FE0; }
+  .label-adapter-title { fill: #F7941D; }
+  .label-peg-title { fill: #EE4B2B; }
+
+  .diagram-svg-sublabel {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 500;
+    fill: var(--color-text-secondary);
+  }
+
+  /* SVG Element Transitions */
+  .diagram-group {
+    transition: transform 0.65s cubic-bezier(0.34, 1.25, 0.64, 1), opacity 0.4s ease;
+  }
+
+  .adapter-outer,
+  .adapter-inner,
+  .hole-outer-ring,
+  .peg-rect {
+    transition: stroke-width 0.3s ease, filter 0.3s ease;
+  }
+
+  .clash-dot {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  /* Beat 1: Clash (Peg bumps into hole) */
+  .diagram-surface[data-beat="1"] .group-peg {
+    transform: translate(250px, 150px); /* Bumps against hole boundary */
+  }
+
+  .diagram-surface[data-beat="1"] .clash-dot {
+    opacity: 1;
+    animation: pulseClash 0.8s infinite alternate ease-in-out;
+  }
+
+  .diagram-surface[data-beat="1"] .group-adapter {
+    opacity: 0.25;
+    transform: translate(260px, 90px) scale(0.9);
+  }
+
+  @keyframes pulseClash {
+    0% { transform: scale(1); filter: drop-shadow(0 0 2px #EE4B2B); }
+    100% { transform: scale(1.6); filter: drop-shadow(0 0 6px #EE4B2B); }
+  }
+
+  /* Beat 2: Adapter slides into place */
+  .diagram-surface[data-beat="2"] .group-peg {
+    transform: translate(380px, 150px); /* Backs off */
+  }
+
+  .diagram-surface[data-beat="2"] .group-adapter {
+    opacity: 1;
+    transform: translate(260px, 150px) scale(1);
+  }
+
+  .diagram-surface[data-beat="2"] .adapter-ambient-glow {
+    opacity: 0.8;
+  }
+
+  /* Beat 3: Peg glides through adapter into socket & glows */
+  .diagram-surface[data-beat="3"] .group-peg {
+    transform: translate(140px, 150px); /* Glides directly into hole */
+  }
+
+  .diagram-surface[data-beat="3"] .group-adapter {
+    transform: translate(140px, 150px); /* Locks into round socket */
+  }
+
+  .diagram-surface[data-beat="3"] .hole-ambient-glow {
+    animation: activeHoleGlow 1.8s infinite alternate ease-in-out;
+  }
+
+  @keyframes activeHoleGlow {
+    0% { opacity: 0.4; transform: scale(1); }
+    100% { opacity: 0.95; transform: scale(1.15); }
+  }
+
+  /* Hover Card Linked Interaction */
+  .diagram-surface.is-hover-hole .group-hole {
+    filter: drop-shadow(0 0 8px rgba(30, 75, 143, 0.6));
+  }
+
+  .diagram-surface.is-hover-adapter .group-adapter {
+    filter: drop-shadow(0 0 8px rgba(247, 148, 29, 0.6));
+    opacity: 1 !important;
+  }
+
+  .diagram-surface.is-hover-peg .group-peg {
+    filter: drop-shadow(0 0 8px rgba(238, 75, 43, 0.6));
+  }
+
+  /* Reduced Motion Static Fallback */
+  @media (prefers-reduced-motion: reduce) {
+    .diagram-group {
+      transition: none !important;
+    }
+    .clash-dot,
+    .hole-ambient-glow {
+      animation: none !important;
+    }
+  }
+
+  .diagram-caption-footer {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding-top: 0.75rem;
+    margin-top: 0.5rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .caption-tag {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.15rem 0.45rem;
+    border-radius: var(--radius-sm);
+    background: var(--color-bg);
+    color: var(--color-text-muted);
+  }
+
+  .caption-text {
+    font-size: var(--fs-xs);
+    color: var(--color-text-secondary);
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  /* -------------------------------------------------------------
+     Three Theory Cards Section
+     ------------------------------------------------------------- */
+  .about-section {
+    padding: var(--section-spacing-desktop, 80px) 0;
+    background-color: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+    scroll-margin-top: 96px;
+  }
+
+  @media (max-width: 767px) {
+    .about-section {
+      padding: var(--section-spacing-mobile, 48px) 0;
+      scroll-margin-top: 76px;
+    }
+  }
+
+  .three-col-cards-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    align-items: stretch;
+  }
+
+  @media (min-width: 768px) {
+    .three-col-cards-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+  }
+
+  .theory-card {
+    background-color: var(--color-surface);
+    border-radius: var(--radius-card);
+    padding: 2rem 1.75rem;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-sizing: border-box;
+    border: 1px solid var(--color-border);
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+
+  .theory-card:hover,
+  .theory-card:focus-visible {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+  }
+
+  :global(.dark) .theory-card {
+    background-color: var(--color-surface-raised);
+  }
+
+  :global(.dark) .theory-card:hover,
+  :global(.dark) .theory-card:focus-visible {
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
+  }
+
+  .theory-card-header {
+    margin-bottom: 0.75rem;
+  }
+
+  .theory-card-step {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    display: inline-block;
+    margin-bottom: 0.35rem;
+  }
+
+  .theory-card-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  .theory-card-copy {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+    margin: 0 0 1.25rem 0;
+  }
+
+  .theory-card-link-cue {
+    margin-top: auto;
+    font-size: 11px;
+    font-weight: 600;
+    opacity: 0.85;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .theory-card:hover .theory-card-link-cue {
+    opacity: 1;
+    transform: translateX(3px);
+  }
+
+  /* -------------------------------------------------------------
+     3. Apollo 13 Story Section (Restored Box)
+     ------------------------------------------------------------- */
+  .about-story-section {
+    padding: var(--section-spacing-desktop, 80px) 0;
+    background-color: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+    scroll-margin-top: 96px;
+  }
+
+  .story-box-wrapper {
+    background-color: var(--color-surface);
+    border-radius: var(--radius-card);
+    padding: 3.5rem;
+    box-shadow: var(--shadow-subtle);
+    border: 1px solid var(--color-border);
+  }
+
+  @media (max-width: 640px) {
+    .story-box-wrapper {
+      padding: 2rem 1.5rem;
+    }
+  }
+
+  .story-header {
+    margin-bottom: 2.5rem;
+    max-width: 680px;
+  }
+
+  .story-title {
+    font-size: var(--fs-h1);
+    font-weight: 700;
+    line-height: 1.15;
+    margin: 0.25rem 0 0 0;
+    color: var(--color-text-primary);
+  }
+
+  .story-body-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: 3rem;
@@ -289,307 +1036,350 @@ const apolloSteps = [
   }
 
   @media (min-width: 960px) {
-    .hero-two-col-grid {
-      grid-template-columns: 1.05fr 0.95fr;
-      gap: 4rem;
+    .story-body-grid {
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 3.5rem;
     }
   }
 
-  .hero-text-col {
-    text-align: left;
+  /* Numbered steps with vertical line connecting them */
+  .story-timeline {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    position: relative;
   }
 
-  .hero-heading {
-    font-size: var(--fs-h1);
-    font-weight: 700;
-    line-height: 1.15;
-    letter-spacing: -0.025em;
-    color: var(--color-text-primary);
-    margin: 0.5rem 0 1rem;
+  .story-timeline::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    bottom: 20px;
+    left: 18px;
+    width: 2px;
+    background: linear-gradient(180deg, #1E4B8F 0%, #F7941D 50%, #EE4B2B 100%);
+    opacity: 0.35;
+    z-index: 1;
   }
 
-  .definition-chip-wrap {
-    margin-bottom: 1.25rem;
-  }
-
-  .definition-chip {
-    display: inline-block;
-    font-family: var(--font-sans);
-    font-size: var(--fs-sm);
-    font-weight: 600;
-    color: #1E4B8F;
-    background-color: rgba(30, 75, 143, 0.08);
-    border: 1px solid rgba(30, 75, 143, 0.22);
-    padding: 0.35rem 0.85rem;
-    border-radius: var(--radius-pill);
-    letter-spacing: 0.01em;
-  }
-
-  :global(.dark) .definition-chip {
-    color: #60A5FA;
-    background-color: rgba(96, 165, 250, 0.12);
-    border-color: rgba(96, 165, 250, 0.28);
-  }
-
-  .hero-subline {
-    font-size: var(--fs-body-lg);
-    line-height: 1.6;
-    color: var(--color-text-secondary);
+  .story-step-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+    padding: 0;
     margin: 0;
-    max-width: 580px;
+    position: relative;
+    z-index: 2;
   }
 
-  .diagram-surface {
-    padding: 2.25rem 2rem;
+  .step-bullet {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
     background-color: var(--color-surface);
-    border-radius: var(--radius-card);
-    border: 1px solid var(--color-border);
-    box-shadow: var(--shadow-card);
+    border: 2px solid var(--color-border);
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
   }
 
-  .theory-diagram-svg {
+  .story-step-item:nth-child(1) .step-bullet { border-color: #1E4B8F; color: #1E4B8F; }
+  .story-step-item:nth-child(2) .step-bullet { border-color: #F7941D; color: #F7941D; }
+  .story-step-item:nth-child(3) .step-bullet { border-color: #EE4B2B; color: #EE4B2B; }
+
+  .step-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    margin: 0;
+    padding-top: 0.35rem;
+  }
+
+  .story-fact-chips {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin-bottom: 2rem;
+  }
+
+  .fact-chip {
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    background-color: var(--color-bg);
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--color-border);
+  }
+
+  .fact-chip-dot {
+    color: var(--color-text-muted);
+  }
+
+  .story-conclusion-card {
+    background-color: var(--color-bg);
+    border-left: 3px solid #F7941D;
+    padding: 1.25rem 1.5rem;
+    border-radius: 0 var(--radius-card) var(--radius-card) 0;
+  }
+
+  .conclusion-statement {
+    font-size: 1rem;
+    line-height: 1.55;
+    color: var(--color-text-primary);
+    font-weight: 500;
+    margin: 0;
+  }
+
+  /* Blueprint Graphic on Right */
+  .story-illustration-col {
+    display: flex;
+    justify-content: center;
+  }
+
+  .blueprint-canvas {
+    width: 100%;
+    max-width: 440px;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    padding: 1.25rem;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .blueprint-svg {
     width: 100%;
     height: auto;
-    max-width: 540px;
     display: block;
   }
 
-  /* Universal Section Header Scale */
+  /* Stroke drawing reveal animation */
+  .bp-draw {
+    stroke-dasharray: 200;
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* -------------------------------------------------------------
+     4. Mission · Purpose · Vision Section
+     ------------------------------------------------------------- */
   .section-header {
-    text-align: left;
+    margin-bottom: 2.5rem;
     max-width: 680px;
-    margin-bottom: 3rem;
   }
 
   .section-title {
     font-size: var(--fs-h2);
     font-weight: 700;
     line-height: 1.2;
-    letter-spacing: -0.02em;
+    margin: 0.25rem 0 0.5rem 0;
     color: var(--color-text-primary);
-    margin: 0.4rem 0 0.75rem;
   }
 
   .section-subline {
     font-size: var(--fs-body-lg);
     color: var(--color-text-secondary);
-    line-height: 1.6;
+    line-height: 1.5;
     margin: 0;
   }
 
-  /* 3-Column Equal-Height Grids */
-  .three-col-cards-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.75rem;
-    align-items: stretch;
-  }
-
-  @media (min-width: 768px) {
-    .three-col-cards-grid {
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2rem;
-    }
-  }
-
-  /* 2. Theory Cards */
-  .theory-card {
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-card);
-    padding: 2.25rem 2rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    box-shadow: var(--shadow-subtle);
-    transition: transform 0.25s var(--ease-out-expo), box-shadow 0.25s ease;
-    height: 100%;
-    box-sizing: border-box;
-  }
-
-  .theory-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-card-hover);
-  }
-
-  .theory-card-header {
-    margin-bottom: 0.85rem;
-  }
-
-  .theory-card-step {
-    font-family: var(--font-sans);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    display: block;
-    margin-bottom: 0.65rem;
-  }
-
-  .theory-card-title {
-    font-size: var(--fs-h4);
-    font-weight: 700;
-    line-height: 1.3;
-    letter-spacing: -0.01em;
-    color: var(--color-text-primary);
-    margin: 0;
-  }
-
-  .theory-card-copy {
-    font-size: var(--fs-body);
-    line-height: 1.6;
-    color: var(--color-text-secondary);
-    margin: 0;
-  }
-
-  /* 3. The Proof Section */
-  .apollo-steps-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.75rem;
-    align-items: stretch;
-    margin-bottom: 2rem;
-  }
-
-  @media (min-width: 768px) {
-    .apollo-steps-grid {
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2rem;
-    }
-  }
-
-  .apollo-step-card {
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-card);
-    padding: 2rem 1.75rem;
-    display: flex;
-    flex-direction: column;
-    box-shadow: var(--shadow-subtle);
-    height: 100%;
-    box-sizing: border-box;
-  }
-
-  .step-badge-row {
-    display: flex;
-    align-items: center;
-    gap: 0.65rem;
-    margin-bottom: 1rem;
-  }
-
-  .step-num-badge {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background-color: var(--color-surface-alt);
-    border: 1px solid var(--color-border);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--color-text-primary);
-  }
-
-  .step-tag {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--color-text-muted);
-  }
-
-  .step-title {
-    font-size: var(--fs-h4);
-    font-weight: 700;
-    color: var(--color-text-primary);
-    margin: 0 0 0.5rem;
-    line-height: 1.3;
-  }
-
-  .step-desc {
-    font-size: var(--fs-body);
-    line-height: 1.6;
-    color: var(--color-text-secondary);
-    margin: 0;
-  }
-
-  /* Conclusion Principle Card */
-  .proof-conclusion-card {
-    position: relative;
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-card);
-    padding: 1.75rem 2rem;
-    box-shadow: var(--shadow-subtle);
-    overflow: hidden;
-  }
-
-  .conclusion-bar {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 4px;
-    background-color: #F7941D;
-  }
-
-  .conclusion-text {
-    font-size: var(--fs-body-lg);
-    line-height: 1.6;
-    font-weight: 500;
-    color: var(--color-text-primary);
-    margin: 0;
-  }
-
-  /* 4. Mandate Cards */
   .mandate-card {
     background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
     border-radius: var(--radius-card);
     padding: 2.25rem 2rem;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    box-shadow: var(--shadow-subtle);
-    transition: transform 0.25s var(--ease-out-expo), box-shadow 0.25s ease;
     height: 100%;
     box-sizing: border-box;
+    border: 1px solid var(--color-border);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
   }
 
   .mandate-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-card-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+  }
+
+  :global(.dark) .mandate-card {
+    background-color: var(--color-surface-raised);
+  }
+
+  :global(.dark) .mandate-card:hover {
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
   }
 
   .mandate-card-header {
-    margin-bottom: 0.85rem;
+    margin-bottom: 0.75rem;
   }
 
   .mandate-card-step {
-    font-family: var(--font-sans);
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.1em;
-    text-transform: uppercase;
-    display: block;
-    margin-bottom: 0.65rem;
+    display: inline-block;
+    margin-bottom: 0.25rem;
   }
 
   .mandate-card-title {
-    font-size: var(--fs-h3);
+    font-size: 1.2rem;
     font-weight: 700;
     color: var(--color-text-primary);
     margin: 0;
   }
 
   .mandate-card-copy {
-    font-size: var(--fs-body);
+    font-size: 0.9375rem;
     line-height: 1.6;
     color: var(--color-text-secondary);
     margin: 0;
   }
+
+  .mandate-card-copy :global(strong) {
+    color: var(--color-text-primary);
+    font-weight: 700;
+  }
 </style>
+
+<script>
+  function initAboutInteractions() {
+    // 1. Definition Pill Expansion
+    const pillBtn = document.getElementById('rhsp-expandable-pill');
+    if (pillBtn) {
+      pillBtn.addEventListener('click', () => {
+        const isExpanded = pillBtn.getAttribute('aria-expanded') === 'true';
+        pillBtn.setAttribute('aria-expanded', String(!isExpanded));
+        pillBtn.classList.toggle('is-expanded', !isExpanded);
+      });
+    }
+
+    // 2. Interactive SVG 3-Beat Diagram
+    const diagramWrapper = document.getElementById('theory-diagram-wrapper');
+    const replayBtn = document.getElementById('diagram-replay-btn');
+    const captionEl = document.getElementById('diagram-caption-text');
+    const beatPills = Array.from(document.querySelectorAll<HTMLElement>('.beat-pill'));
+
+    const captions: Record<number, string> = {
+      1: 'Beat 1: The square peg approaches the round hole — its corners clash with the socket boundary.',
+      2: 'Beat 2: The RHSP adapter ring slides into position between the socket and peg.',
+      3: 'Beat 3: The square peg glides smoothly through the adapter into the round hole — zero compromise.'
+    };
+
+    let animTimer: number | null = null;
+    let isPausedByHover = false;
+
+    function setBeat(beat: number) {
+      if (!diagramWrapper) return;
+      diagramWrapper.setAttribute('data-beat', String(beat));
+      if (captionEl && captions[beat]) {
+        captionEl.textContent = captions[beat];
+      }
+    }
+
+    function runSequence() {
+      if (isPausedByHover) return;
+      setBeat(1);
+      animTimer = window.setTimeout(() => {
+        if (isPausedByHover) return;
+        setBeat(2);
+        animTimer = window.setTimeout(() => {
+          if (isPausedByHover) return;
+          setBeat(3);
+        }, 1800);
+      }, 1600);
+    }
+
+    // IntersectionObserver to auto-play when diagram enters view
+    if (diagramWrapper && 'IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          runSequence();
+          io.disconnect();
+        }
+      }, { threshold: 0.35 });
+      io.observe(diagramWrapper);
+    } else {
+      runSequence();
+    }
+
+    // Replay button
+    replayBtn?.addEventListener('click', () => {
+      if (animTimer) clearTimeout(animTimer);
+      isPausedByHover = false;
+      runSequence();
+    });
+
+    // Beat indicator pill clicks
+    beatPills.forEach((pill) => {
+      pill.addEventListener('click', () => {
+        const targetBeat = Number(pill.getAttribute('data-beat-target') || '1');
+        if (animTimer) clearTimeout(animTimer);
+        setBeat(targetBeat);
+      });
+    });
+
+    // 3. Linked Interaction: Hovering Theory Cards
+    const cards = [
+      { id: 'hole', beat: 1, class: 'is-hover-hole' },
+      { id: 'adapter', beat: 2, class: 'is-hover-adapter' },
+      { id: 'peg', beat: 3, class: 'is-hover-peg' }
+    ];
+
+    cards.forEach(({ id, beat, class: cls }) => {
+      const cardEl = document.getElementById(`theory-card-${id}`);
+      if (!cardEl || !diagramWrapper) return;
+
+      const onEnter = () => {
+        isPausedByHover = true;
+        if (animTimer) clearTimeout(animTimer);
+        diagramWrapper.classList.add(cls);
+        setBeat(beat);
+      };
+
+      const onLeave = () => {
+        diagramWrapper.classList.remove(cls);
+        isPausedByHover = false;
+        // Settle smoothly to completed beat 3
+        setBeat(3);
+      };
+
+      cardEl.addEventListener('mouseenter', onEnter);
+      cardEl.addEventListener('mouseleave', onLeave);
+      cardEl.addEventListener('focusin', onEnter);
+      cardEl.addEventListener('focusout', onLeave);
+    });
+
+    // 4. Sticky Pill Sub-Nav Scroll-Spy
+    const subnavLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('.about-sticky-subnav .subnav-link'));
+    const sectionIds = ['theory-hero', 'story', 'mission', 'team'];
+
+    function updateSubnav() {
+      const scrollPos = window.scrollY + 140;
+      for (let i = sectionIds.length - 1; i >= 0; i--) {
+        const sec = document.getElementById(sectionIds[i]);
+        if (sec && sec.offsetTop <= scrollPos) {
+          subnavLinks.forEach((link) => {
+            const match = link.getAttribute('data-section') === sectionIds[i];
+            link.classList.toggle('is-active', match);
+          });
+          break;
+        }
+      }
+    }
+
+    window.addEventListener('scroll', updateSubnav, { passive: true });
+    updateSubnav();
+  }
+
+  initAboutInteractions();
+  document.addEventListener('astro:after-swap', initAboutInteractions);
+</script>
