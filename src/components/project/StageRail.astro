@@ -1,396 +1,376 @@
 ---
 export interface StageItem {
   id: string;
-  number: string;
+  number: number;
   title: string;
-  shortTitle?: string;
-  color: string;
-}
-
-interface Props {
-  stages?: StageItem[];
 }
 
 const DEFAULT_STAGES: StageItem[] = [
-  { id: 'stage-01', number: '01', title: 'Understand the business', shortTitle: 'Understand', color: '#1E4B8F' },
-  { id: 'stage-02', number: '02', title: 'Identify latent revenue', shortTitle: 'Revenue', color: '#163666' },
-  { id: 'stage-03', number: '03', title: 'Design adaptive systems', shortTitle: 'Architecture', color: '#B86B10' },
-  { id: 'stage-04', number: '04', title: 'Pilot with on-ground teams', shortTitle: 'Pilot', color: '#F7941D' },
-  { id: 'stage-05', number: '05', title: 'Refine and deploy', shortTitle: 'Rollout', color: '#F25F22' },
-  { id: 'stage-06', number: '06', title: 'Enable and monitor', shortTitle: 'Enable', color: '#EE4B2B' }
+  { id: 'stage-01', number: 1, title: 'Understand the business' },
+  { id: 'stage-02', number: 2, title: 'Identify latent revenue' },
+  { id: 'stage-03', number: 3, title: 'Design adaptive systems' },
+  { id: 'stage-04', number: 4, title: 'Pilot with on-ground teams' },
+  { id: 'stage-05', number: 5, title: 'Refine and deploy' },
+  { id: 'stage-06', number: 6, title: 'Enable and monitor' }
 ];
 
-const { stages = DEFAULT_STAGES } = Astro.props;
+interface Props {
+  stages?: StageItem[];
+  mobileOnly?: boolean;
+  desktopOnly?: boolean;
+}
+
+const { stages = DEFAULT_STAGES, mobileOnly = false, desktopOnly = false } = Astro.props;
 ---
 
-<!-- Desktop Fixed Right Rail (>= 1100px) -->
-<aside class="stage-rail-desktop" aria-label="Project approach stages navigation">
-  <div class="rail-container">
-    <div class="rail-indicator" id="desktop-rail-indicator" aria-live="polite">STAGE 1 / 6</div>
-
-    <div class="rail-dots-column" id="desktop-dots-column">
-      <!-- Glide Guide Cube Marker -->
-      <div class="rail-guide-cube-marker" id="rail-guide-cube-marker" aria-hidden="true">
-        <img src="/media/raw/square.png" alt="" class="guide-cube-img" />
+<!-- Mobile Slim Sticky Top Bar (< 1060px) -->
+{!desktopOnly && (
+  <nav class="stage-rail-mobile" id="stage-rail-mobile" aria-label="Solution stages mobile tracker">
+    <div class="mobile-rail-inner">
+      <div class="mobile-stage-status" id="mobile-stage-status" aria-live="polite">
+        Stage 1: {stages[0]?.title}
       </div>
-
-      <!-- Connecting Background Track -->
-      <div class="rail-track-line" aria-hidden="true"></div>
-
-      {stages.map((stage, idx) => (
-        <a
-          href={`#${stage.id}`}
-          class:list={['stage-dot-link', { 'is-active': idx === 0 }]}
-          id={`desktop-dot-${idx}`}
-          data-stage-index={idx}
-          data-stage-id={stage.id}
-          data-stage-color={stage.color}
-          style={`--stage-dot-color: ${stage.color};`}
-          aria-label={`Stage ${stage.number}: ${stage.title}`}
-        >
-          <span class="stage-dot-circle">
-            <span class="stage-dot-inner"></span>
-          </span>
-          <span class="stage-dot-tooltip" role="tooltip">
-            <span class="tooltip-num">{stage.number}</span>
-            <span class="tooltip-title">{stage.title}</span>
-          </span>
-        </a>
-      ))}
+      <div class="mobile-nodes-track" role="tablist">
+        {stages.map((stage, idx) => (
+          <a
+            href={`#${stage.id}`}
+            class:list={['mobile-node-link', { 'is-active': idx === 0 }]}
+            id={`mobile-node-${idx}`}
+            data-stage-index={idx}
+            data-stage-id={stage.id}
+            title={`Stage ${stage.number}: ${stage.title}`}
+            aria-label={`Jump to Stage ${stage.number}: ${stage.title}`}
+          >
+            <span class="node-marker"></span>
+          </a>
+        ))}
+      </div>
     </div>
-  </div>
-</aside>
+  </nav>
+)}
 
-<!-- Mobile Sticky Top Bar (< 1100px) -->
-<nav class="stage-rail-mobile" id="stage-rail-mobile" aria-label="Mobile stage navigation">
-  <div class="mobile-bar-inner">
-    <div class="mobile-stage-label" id="mobile-stage-label">
-      <span class="mobile-stage-pill" id="mobile-stage-pill">STAGE 01</span>
-      <span class="mobile-stage-name" id="mobile-stage-name">{stages[0]?.title}</span>
+<!-- Desktop Vertical Sticky Right Rail (>= 1060px) -->
+{!mobileOnly && (
+  <aside class="stage-rail-desktop" id="stage-rail-desktop" aria-label="Solution stages approach navigation">
+    <div class="desktop-rail-card">
+      <div class="rail-header-title">Approach stages</div>
+      <nav class="rail-nodes-list" aria-label="Stages list">
+        {stages.map((stage, idx) => (
+          <a
+            href={`#${stage.id}`}
+            class:list={['stage-node-link', { 'is-active': idx === 0 }]}
+            id={`desktop-node-${idx}`}
+            data-stage-index={idx}
+            data-stage-id={stage.id}
+            aria-label={`Stage ${stage.number}: ${stage.title}`}
+          >
+            <span class="node-marker" aria-hidden="true"></span>
+            <span class="stage-node-meta">
+              <span class="stage-step-num">Stage {stage.number}</span>
+              <span class="stage-step-title">{stage.title}</span>
+            </span>
+          </a>
+        ))}
+      </nav>
     </div>
-    <div class="mobile-dots-track" role="tablist">
-      {stages.map((stage, idx) => (
-        <a
-          href={`#${stage.id}`}
-          class:list={['mobile-dot-link', { 'is-active': idx === 0 }]}
-          id={`mobile-dot-${idx}`}
-          data-stage-index={idx}
-          data-stage-id={stage.id}
-          data-stage-color={stage.color}
-          style={`--stage-dot-color: ${stage.color};`}
-          title={`Stage ${stage.number}: ${stage.title}`}
-          aria-label={`Jump to Stage ${stage.number}: ${stage.title}`}
-        >
-          <span class="mobile-dot-core"></span>
-        </a>
-      ))}
-    </div>
-  </div>
-</nav>
+  </aside>
+)}
 
 <style>
-  /* -----------------------------------------------------------------
-     Desktop Fixed Right Rail (>= 1100px)
-     ----------------------------------------------------------------- */
+  /* -------------------------------------------------------------
+     Marker Nodes: 3 States (Shared across mobile & desktop)
+     1. Unreached: Outlined circle
+     2. Current: Filled brand-blue circle with soft ring
+     3. Passed: Filled orange SQUARE (peg has entered hole)
+     ------------------------------------------------------------- */
+  .node-marker {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    box-sizing: border-box;
+    border-radius: 50%;
+    background-color: transparent;
+    border: 2px solid var(--color-border-hover, #94a3b8);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    flex-shrink: 0;
+  }
+
+  /* Current Active: Filled brand-blue circle with soft ring */
+  .is-active .node-marker {
+    background-color: #1E4B8F;
+    border: 2px solid #1E4B8F;
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px rgba(30, 75, 143, 0.22);
+  }
+
+  :global(.dark) .is-active .node-marker {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
+  }
+
+  /* Passed: Circle turns into a filled orange SQUARE (the peg has entered the hole) */
+  .is-passed .node-marker {
+    background-color: #F7941D;
+    border: 2px solid #F7941D;
+    border-radius: 2px;
+    box-shadow: 0 1px 4px rgba(247, 148, 29, 0.3);
+  }
+
+  /* -------------------------------------------------------------
+     Mobile Sticky Bar (< 1060px)
+     ------------------------------------------------------------- */
+  .stage-rail-mobile {
+    position: sticky;
+    top: var(--nav-height, 72px);
+    z-index: 45;
+    background-color: var(--color-surface, #ffffff);
+    border-bottom: 1px solid var(--color-border, #e2e8f0);
+    padding: 0.6rem 1rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    display: block;
+  }
+
+  :global(.dark) .stage-rail-mobile {
+    background-color: var(--color-surface-raised, #0f172a);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+  }
+
+  .mobile-rail-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    max-width: 980px;
+    margin: 0 auto;
+  }
+
+  .mobile-stage-status {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-text-primary, #0f172a);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .mobile-nodes-track {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .mobile-node-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    text-decoration: none;
+    outline: none;
+  }
+
+  .mobile-node-link:focus-visible {
+    outline: 2px solid #1E4B8F;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  .mobile-node-link .node-marker {
+    width: 12px;
+    height: 12px;
+  }
+
+  @media (min-width: 1060px) {
+    .stage-rail-mobile {
+      display: none;
+    }
+  }
+
+  /* -------------------------------------------------------------
+     Desktop Sticky Right Rail (>= 1060px)
+     ------------------------------------------------------------- */
   .stage-rail-desktop {
     display: none;
   }
 
-  @media (min-width: 1100px) {
+  @media (min-width: 1060px) {
     .stage-rail-desktop {
       display: block;
-      position: fixed;
-      right: clamp(1rem, 2.5vw, 2.5rem);
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 60;
-      pointer-events: none;
-    }
-
-    .rail-container {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 0.75rem;
-      pointer-events: auto;
-    }
-
-    .rail-indicator {
-      font-family: var(--font-sans);
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--color-text-primary);
-      background-color: var(--color-surface);
-      border: 1px solid var(--color-border);
-      padding: 0.25rem 0.65rem;
-      border-radius: var(--radius-pill);
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
-      white-space: nowrap;
-      transition: background-color 0.2s ease, border-color 0.2s ease;
-    }
-
-    :global(.dark) .rail-indicator {
-      background-color: var(--color-surface-raised);
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
-    }
-
-    .rail-dots-column {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.85rem;
-      padding: 0.65rem 0.4rem;
-      background-color: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-pill);
-      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
-    }
-
-    :global(.dark) .rail-dots-column {
-      background-color: var(--color-surface-raised);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-    }
-
-    .rail-track-line {
-      position: absolute;
-      top: 14px;
-      bottom: 14px;
-      left: 50%;
-      width: 2px;
-      transform: translateX(-50%);
-      background: linear-gradient(180deg, #1E4B8F 0%, #F7941D 50%, #EE4B2B 100%);
-      opacity: 0.25;
-      z-index: 1;
-    }
-
-    /* Glide Guide Cube Marker */
-    .rail-guide-cube-marker {
-      position: absolute;
-      left: 50%;
-      top: 10px;
-      width: 22px;
-      height: 22px;
-      transform: translate(-50%, -50%);
-      z-index: 4;
-      pointer-events: none;
-      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-      filter: drop-shadow(0 2px 6px rgba(247, 148, 29, 0.4));
-    }
-
-    .guide-cube-img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-    }
-
-    /* Stage Dot Link */
-    .stage-dot-link {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      text-decoration: none;
-      z-index: 3;
-      outline: none;
-      transition: transform 0.2s ease;
-    }
-
-    .stage-dot-link:focus-visible {
-      outline: 2px solid var(--stage-dot-color, #F7941D);
-      outline-offset: 3px;
-    }
-
-    .stage-dot-circle {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      background: transparent;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .stage-dot-inner {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background-color: var(--color-text-muted);
-      opacity: 0.45;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    /* Passed state */
-    .stage-dot-link.is-passed .stage-dot-inner {
-      background-color: var(--stage-dot-color, #1E4B8F);
-      opacity: 0.85;
-      transform: scale(1.1);
-    }
-
-    /* Active state */
-    .stage-dot-link.is-active .stage-dot-inner {
-      width: 10px;
-      height: 10px;
-      background-color: var(--stage-dot-color, #F7941D);
-      opacity: 1;
-      box-shadow: 0 0 10px var(--stage-dot-color, #F7941D);
-    }
-
-    /* Hover tooltips popping out to the left */
-    .stage-dot-tooltip {
-      position: absolute;
-      right: calc(100% + 14px);
-      top: 50%;
-      transform: translateY(-50%) translateX(6px);
-      padding: 0.35rem 0.65rem;
-      border-radius: var(--radius-sm, 6px);
-      background-color: var(--color-surface);
-      border: 1px solid var(--color-border);
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-      white-space: nowrap;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-      display: flex;
-      align-items: center;
-      gap: 0.45rem;
-      z-index: 10;
-    }
-
-    :global(.dark) .stage-dot-tooltip {
-      background-color: var(--color-surface-raised);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
-    }
-
-    .stage-dot-link:hover .stage-dot-tooltip,
-    .stage-dot-link:focus-visible .stage-dot-tooltip {
-      opacity: 1;
-      transform: translateY(-50%) translateX(0);
-    }
-
-    .tooltip-num {
-      font-size: 10px;
-      font-weight: 800;
-      color: var(--stage-dot-color, #F7941D);
-      letter-spacing: 0.05em;
-    }
-
-    .tooltip-title {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--color-text-primary);
-    }
-  }
-
-  /* -----------------------------------------------------------------
-     Mobile Sticky Top Bar (< 1100px)
-     ----------------------------------------------------------------- */
-  .stage-rail-mobile {
-    display: none;
-  }
-
-  @media (max-width: 1099px) {
-    .stage-rail-mobile {
-      display: block;
       position: sticky;
-      top: var(--nav-height, 68px);
-      z-index: 45;
-      background: var(--color-surface);
-      border-bottom: 1px solid var(--color-border);
-      padding: 0.5rem 1rem;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-    }
-
-    :global(.dark) .stage-rail-mobile {
-      background: rgba(15, 23, 42, 0.85);
-      border-bottom-color: rgba(255, 255, 255, 0.08);
-    }
-
-    .mobile-bar-inner {
-      max-width: var(--container-max-width, 1200px);
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.75rem;
-    }
-
-    .mobile-stage-label {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      min-width: 0;
-      flex: 1;
-    }
-
-    .mobile-stage-pill {
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 0.2rem 0.45rem;
-      border-radius: var(--radius-pill);
-      background-color: color-mix(in srgb, #F7941D 15%, transparent);
-      color: #F7941D;
-      white-space: nowrap;
-    }
-
-    .mobile-stage-name {
-      font-size: 12.5px;
-      font-weight: 600;
-      color: var(--color-text-primary);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .mobile-dots-track {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+      top: calc(var(--nav-height, 72px) + 2rem);
+      width: 240px;
       flex-shrink: 0;
+      align-self: flex-start;
+      z-index: 30;
     }
 
-    .mobile-dot-link {
+    .desktop-rail-card {
+      background-color: var(--color-surface, #ffffff);
+      border: 1px solid var(--color-border, #e2e8f0);
+      border-radius: 12px;
+      padding: 1.15rem 1rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    :global(.dark) .desktop-rail-card {
+      background-color: var(--color-surface-raised, #0f172a);
+      border-color: var(--color-border, #1e293b);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    .rail-header-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-text-muted, #64748b);
+      padding-bottom: 0.75rem;
+      margin-bottom: 0.75rem;
+      border-bottom: 1px solid var(--color-border, #e2e8f0);
+    }
+
+    .rail-nodes-list {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
+      flex-direction: column;
+      gap: 0.75rem;
+      position: relative;
+    }
+
+    /* Track line connecting markers */
+    .rail-nodes-list::before {
+      content: '';
+      position: absolute;
+      left: 6px;
+      top: 10px;
+      bottom: 14px;
+      width: 2px;
+      background-color: var(--color-border, #e2e8f0);
+      z-index: 0;
+    }
+
+    :global(.dark) .rail-nodes-list::before {
+      background-color: var(--color-border, #1e293b);
+    }
+
+    .stage-node-link {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
       text-decoration: none;
+      position: relative;
+      z-index: 1;
+      padding: 0.25rem 0.2rem;
+      border-radius: 6px;
       outline: none;
+      transition: background-color 0.15s ease;
     }
 
-    .mobile-dot-core {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background-color: var(--color-text-muted);
-      opacity: 0.4;
-      transition: all 0.2s ease;
+    .stage-node-link:focus-visible {
+      outline: 2px solid #1E4B8F;
+      outline-offset: 2px;
     }
 
-    .mobile-dot-link.is-passed .mobile-dot-core {
-      background-color: var(--stage-dot-color, #1E4B8F);
-      opacity: 0.8;
+    .stage-node-link .node-marker {
+      margin-top: 3px;
     }
 
-    .mobile-dot-link.is-active .mobile-dot-core {
-      width: 12px;
-      height: 12px;
-      background-color: var(--stage-dot-color, #F7941D);
-      opacity: 1;
-      box-shadow: 0 0 8px var(--stage-dot-color, #F7941D);
+    .stage-node-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .stage-step-num {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--color-text-muted, #64748b);
+    }
+
+    .stage-step-title {
+      font-size: 0.82rem;
+      line-height: 1.3;
+      font-weight: 500;
+      color: var(--color-text-secondary, #475569);
+      transition: color 0.2s ease;
+    }
+
+    :global(.dark) .stage-step-title {
+      color: #94a3b8;
+    }
+
+    .stage-node-link:hover .stage-step-title {
+      color: var(--color-text-primary, #0f172a);
+    }
+
+    :global(.dark) .stage-node-link:hover .stage-step-title {
+      color: #f8fafc;
+    }
+
+    /* Active chapter glow on StageRail (mirrors approach journey) */
+    .stage-node-link.is-active {
+      background-color: rgba(30, 75, 143, 0.05);
+      box-shadow: 0 0 0 1px rgba(30, 75, 143, 0.25), 0 4px 16px rgba(30, 75, 143, 0.15);
+      animation: railActivePulse 3s ease-in-out infinite alternate;
+    }
+
+    :global(.dark) .stage-node-link.is-active {
+      background-color: rgba(59, 130, 246, 0.1);
+      box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.35), 0 6px 20px rgba(59, 130, 246, 0.2);
+      animation: railActivePulseDark 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes railActivePulse {
+      0% {
+        box-shadow: 0 0 0 1px rgba(30, 75, 143, 0.2), 0 3px 12px rgba(30, 75, 143, 0.12);
+      }
+      100% {
+        box-shadow: 0 0 0 1.5px rgba(30, 75, 143, 0.35), 0 6px 22px rgba(30, 75, 143, 0.22);
+      }
+    }
+
+    @keyframes railActivePulseDark {
+      0% {
+        box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.25), 0 4px 16px rgba(59, 130, 246, 0.15);
+      }
+      100% {
+        box-shadow: 0 0 0 1.5px rgba(59, 130, 246, 0.45), 0 8px 24px rgba(59, 130, 246, 0.25);
+      }
+    }
+
+    /* Active styling */
+    .stage-node-link.is-active .stage-step-num {
+      color: #1E4B8F;
+      font-weight: 700;
+    }
+
+    :global(.dark) .stage-node-link.is-active .stage-step-num {
+      color: #60a5fa;
+    }
+
+    .stage-node-link.is-active .stage-step-title {
+      color: var(--color-text-primary, #0f172a);
+      font-weight: 700;
+    }
+
+    :global(.dark) .stage-node-link.is-active .stage-step-title {
+      color: #f8fafc;
+    }
+
+    /* Passed styling */
+    .stage-node-link.is-passed .stage-step-num {
+      color: #F7941D;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .stage-node-link.is-active {
+      animation: none !important;
+    }
+    .node-marker,
+    .stage-step-title {
+      transition: none !important;
     }
   }
 </style>
@@ -404,29 +384,24 @@ const { stages = DEFAULT_STAGES } = Astro.props;
 
     if (sections.length === 0) return;
 
-    const desktopDots = document.querySelectorAll<HTMLAnchorElement>('.stage-dot-link');
-    const mobileDots = document.querySelectorAll<HTMLAnchorElement>('.mobile-dot-link');
-    const desktopIndicator = document.getElementById('desktop-rail-indicator');
-    const cubeMarker = document.getElementById('rail-guide-cube-marker');
-    const mobilePill = document.getElementById('mobile-stage-pill');
-    const mobileName = document.getElementById('mobile-stage-name');
+    const desktopLinks = document.querySelectorAll<HTMLAnchorElement>('.stage-node-link');
+    const mobileLinks = document.querySelectorAll<HTMLAnchorElement>('.mobile-node-link');
+    const mobileStatus = document.getElementById('mobile-stage-status');
 
-    let isScheduled = false;
     let activeIdx = 0;
+    let isScheduled = false;
 
     function updateActiveStage() {
       isScheduled = false;
-      const vCenter = window.innerHeight * 0.5;
+      const vCenter = window.innerHeight * 0.45;
       let closestIdx = 0;
       let minDistance = Infinity;
 
       sections.forEach((sec, idx) => {
         const rect = sec.getBoundingClientRect();
-        // Distance from element's center to viewport center
         const secCenter = rect.top + rect.height * 0.5;
         const dist = Math.abs(secCenter - vCenter);
 
-        // Also if rect.top <= vCenter and rect.bottom >= vCenter, strong preference
         if (rect.top <= vCenter && rect.bottom >= vCenter) {
           closestIdx = idx;
           minDistance = 0;
@@ -443,47 +418,27 @@ const { stages = DEFAULT_STAGES } = Astro.props;
     }
 
     function applyState(idx: number) {
-      const activeStageNumber = `0${idx + 1}`;
       const activeSection = sections[idx];
       const stageTitle = activeSection?.getAttribute('data-stage-title') || `Stage ${idx + 1}`;
-      const stageColor = activeSection?.getAttribute('data-stage-color') || '#F7941D';
 
-      // Desktop Indicator
-      if (desktopIndicator) {
-        desktopIndicator.textContent = `STAGE ${idx + 1} / 6`;
-        desktopIndicator.style.color = stageColor;
-      }
-
-      // Guide Cube Marker position
-      if (cubeMarker && desktopDots[idx]) {
-        const targetDot = desktopDots[idx];
-        const offsetTop = targetDot.offsetTop + targetDot.offsetHeight / 2;
-        cubeMarker.style.transform = `translate(-50%, ${offsetTop - 10}px)`;
-      }
-
-      // Desktop Dots
-      desktopDots.forEach((dot, dIdx) => {
-        dot.classList.toggle('is-active', dIdx === idx);
-        dot.classList.toggle('is-passed', dIdx < idx);
-        dot.setAttribute('aria-current', dIdx === idx ? 'step' : 'false');
+      // Update Desktop Links
+      desktopLinks.forEach((link, dIdx) => {
+        link.classList.toggle('is-active', dIdx === idx);
+        link.classList.toggle('is-passed', dIdx < idx);
+        link.setAttribute('aria-current', dIdx === idx ? 'step' : 'false');
       });
 
-      // Mobile Bar
-      if (mobilePill) {
-        mobilePill.textContent = `STAGE ${activeStageNumber}`;
-        mobilePill.style.color = stageColor;
-        mobilePill.style.backgroundColor = `color-mix(in srgb, ${stageColor} 15%, transparent)`;
-      }
-      if (mobileName) {
-        mobileName.textContent = stageTitle;
-      }
-
-      // Mobile Dots
-      mobileDots.forEach((dot, mIdx) => {
-        dot.classList.toggle('is-active', mIdx === idx);
-        dot.classList.toggle('is-passed', mIdx < idx);
-        dot.setAttribute('aria-current', mIdx === idx ? 'step' : 'false');
+      // Update Mobile Links
+      mobileLinks.forEach((link, mIdx) => {
+        link.classList.toggle('is-active', mIdx === idx);
+        link.classList.toggle('is-passed', mIdx < idx);
+        link.setAttribute('aria-current', mIdx === idx ? 'step' : 'false');
       });
+
+      // Update Mobile Status Text (e.g., "Stage 3: Design adaptive systems")
+      if (mobileStatus) {
+        mobileStatus.textContent = `Stage ${idx + 1}: ${stageTitle}`;
+      }
     }
 
     function onScroll() {
@@ -496,14 +451,13 @@ const { stages = DEFAULT_STAGES } = Astro.props;
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll, { passive: true });
 
-    // Initial positioning
+    // Initial state
     applyState(0);
-    setTimeout(() => {
-      updateActiveStage();
-    }, 100);
+    setTimeout(updateActiveStage, 100);
 
-    // Smooth scroll on click with focus management
-    const allLinks = [...desktopDots, ...mobileDots];
+    // Smooth scroll on click respecting prefers-reduced-motion
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const allLinks = [...desktopLinks, ...mobileLinks];
     allLinks.forEach((link) => {
       link.addEventListener('click', (e) => {
         const targetId = link.getAttribute('href')?.replace('#', '');
@@ -511,14 +465,16 @@ const { stages = DEFAULT_STAGES } = Astro.props;
         const targetEl = document.getElementById(targetId);
         if (targetEl) {
           e.preventDefault();
-          targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          targetEl.scrollIntoView({
+            behavior: prefersReducedMotion ? 'auto' : 'smooth',
+            block: 'start'
+          });
           targetEl.focus({ preventScroll: true });
         }
       });
     });
   }
 
-  // Support View Transitions / Turbo / Initial load
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initStageRail);
   } else {
@@ -526,4 +482,3 @@ const { stages = DEFAULT_STAGES } = Astro.props;
   }
   document.addEventListener('astro:page-load', initStageRail);
 </script>
-

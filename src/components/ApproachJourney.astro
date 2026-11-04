@@ -798,18 +798,65 @@ const headlineWords = approach.headline.split(' ');
     border-top: 1px dashed var(--color-border);
   }
 
-  /* Progressive Journey States */
+  /* Progressive Journey States with Stage-Colored Glowing Cards */
   .journey-stop.is-upcoming {
     opacity: 0.38;
+  }
+
+  .journey-stop.is-upcoming .stop-content-card {
+    box-shadow: var(--shadow-card);
   }
 
   .journey-stop.is-active {
     opacity: 1;
   }
 
+  /* Active card: layered box-shadow in stage accent color with gentle 3s breathing pulse */
   .journey-stop.is-active .stop-content-card {
-    border-color: color-mix(in srgb, var(--step-accent) 55%, var(--color-border));
-    box-shadow: 0 10px 30px -8px rgba(0, 0, 0, 0.12);
+    border-color: color-mix(in srgb, var(--step-accent) 60%, var(--color-border));
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--step-accent) 35%, transparent),
+      0 8px 36px color-mix(in srgb, var(--step-accent) 25%, transparent),
+      var(--shadow-card);
+    animation: activeCardGlowPulse 3s ease-in-out infinite alternate;
+  }
+
+  :global(.dark) .journey-stop.is-active .stop-content-card {
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--step-accent) 45%, transparent),
+      0 12px 48px color-mix(in srgb, var(--step-accent) 20%, transparent),
+      0 4px 20px rgba(0, 0, 0, 0.5);
+    animation: activeCardGlowPulseDark 3s ease-in-out infinite alternate;
+  }
+
+  @keyframes activeCardGlowPulse {
+    0% {
+      box-shadow:
+        0 0 0 1px color-mix(in srgb, var(--step-accent) 30%, transparent),
+        0 8px 28px color-mix(in srgb, var(--step-accent) 20%, transparent),
+        var(--shadow-card);
+    }
+    100% {
+      box-shadow:
+        0 0 0 1.5px color-mix(in srgb, var(--step-accent) 55%, transparent),
+        0 12px 46px color-mix(in srgb, var(--step-accent) 32%, transparent),
+        var(--shadow-card);
+    }
+  }
+
+  @keyframes activeCardGlowPulseDark {
+    0% {
+      box-shadow:
+        0 0 0 1px color-mix(in srgb, var(--step-accent) 40%, transparent),
+        0 10px 38px color-mix(in srgb, var(--step-accent) 16%, transparent),
+        0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+    100% {
+      box-shadow:
+        0 0 0 1.5px color-mix(in srgb, var(--step-accent) 60%, transparent),
+        0 14px 54px color-mix(in srgb, var(--step-accent) 26%, transparent),
+        0 4px 20px rgba(0, 0, 0, 0.5);
+    }
   }
 
   .journey-stop.is-active .pin-inner-badge {
@@ -830,6 +877,22 @@ const headlineWords = approach.headline.split(' ');
 
   .journey-stop.is-passed {
     opacity: 1;
+  }
+
+  /* Passed cards keep ~40% of the glow statically (no pulse) */
+  .journey-stop.is-passed .stop-content-card {
+    border-color: color-mix(in srgb, var(--step-accent) 30%, var(--color-border));
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--step-accent) 14%, transparent),
+      0 4px 18px color-mix(in srgb, var(--step-accent) 10%, transparent),
+      var(--shadow-card);
+  }
+
+  :global(.dark) .journey-stop.is-passed .stop-content-card {
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--step-accent) 18%, transparent),
+      0 6px 24px color-mix(in srgb, var(--step-accent) 10%, transparent),
+      0 4px 16px rgba(0, 0, 0, 0.4);
   }
 
   .journey-stop.is-passed .pin-inner-badge {
@@ -946,6 +1009,9 @@ const headlineWords = approach.headline.split(' ');
     }
     .journey-bg-parallax {
       display: none !important;
+    }
+    .journey-stop.is-active .stop-content-card {
+      animation: none !important;
     }
   }
 </style>
