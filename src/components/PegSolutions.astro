@@ -159,6 +159,7 @@ const genAiProjects = allProducts
           <div
             id="stage-panel-plan"
             class="stage-panel is-active"
+            data-pillar="plan"
             role="tabpanel"
             aria-labelledby="tab-peg-plan"
           >
@@ -236,6 +237,7 @@ const genAiProjects = allProducts
           <div
             id="stage-panel-engineer"
             class="stage-panel"
+            data-pillar="engineer"
             role="tabpanel"
             aria-labelledby="tab-peg-engineer"
           >
@@ -328,6 +330,7 @@ const genAiProjects = allProducts
           <div
             id="stage-panel-genai"
             class="stage-panel"
+            data-pillar="genai"
             role="tabpanel"
             aria-labelledby="tab-peg-genai"
           >
@@ -420,143 +423,6 @@ const genAiProjects = allProducts
     </div>
   </div>
 
-  <!-- Mobile Sticky Header (<900px) -->
-  <div class="mobile-peg-header" id="mobile-peg-header" aria-label="Pillar navigation">
-    <div class="mobile-header-inner">
-      <div class="mobile-logo-mark">
-        <span class="mobile-cube-icon">P·E·G</span>
-      </div>
-      <div class="mobile-pill-tabs" role="tablist">
-        <a href="#mobile-pillar-plan" class="mobile-tab is-active" data-pillar="plan">Plan</a>
-        <a href="#mobile-pillar-engineer" class="mobile-tab" data-pillar="engineer">Engineer</a>
-        <a href="#mobile-pillar-genai" class="mobile-tab" data-pillar="genai">Gen-AI</a>
-      </div>
-    </div>
-  </div>
-
-  <!-- Mobile Stacked Content (<900px) -->
-  <div class="mobile-stacked-content" aria-label="Pillar solutions">
-    <!-- Mobile Plan -->
-    <div id="mobile-pillar-plan" class="mobile-pillar-section" data-pillar="plan">
-      <div class="container">
-        <div class="panel-header">
-          <div class="panel-eyebrow">
-            <span class="pillar-indicator" style="background-color: #1E4B8F;">P</span>
-            <span class="eyebrow-text" style="color: #1E4B8F;">PLAN</span>
-          </div>
-          <h2 class="panel-title"><strong class="highlight-plan">Plan</strong> with foresight.</h2>
-          <p class="panel-desc">Objective platform selection, architecture blueprints, and founder-led advisory before writing code.</p>
-        </div>
-        <div class="mobile-cards-stack">
-          <article class="stage-card card-mastercard">
-            <h3 class="card-heading">Platform Selection</h3>
-            <p class="card-copy">Low-code OutSystems vs. high-code MERN vs. hybrid architecture with objective evaluation.</p>
-          </article>
-          <article class="stage-card card-mastercard">
-            <h3 class="card-heading">Architecture Blueprints</h3>
-            <p class="card-copy">Resilient system design, data boundaries, and phased implementation roadmaps.</p>
-          </article>
-          <article class="stage-card card-mastercard">
-            <h3 class="card-heading">Founder-Led Advisory</h3>
-            <p class="card-copy">Direct senior technical guidance for high-stakes digital investments.</p>
-          </article>
-        </div>
-        <a href="#contact" class="btn btn-primary plan-cta-btn" style="margin-top: 1.25rem;">
-          <span>Talk to our consultants</span>
-          <Icon name="arrow-right" size={16} />
-        </a>
-      </div>
-    </div>
-
-    <!-- Mobile Engineer -->
-    <div id="mobile-pillar-engineer" class="mobile-pillar-section" data-pillar="engineer">
-      <div class="container">
-        <div class="panel-header">
-          <div class="panel-eyebrow">
-            <span class="pillar-indicator" style="background-color: #F7941D;">E</span>
-            <span class="eyebrow-text" style="color: #B86200;">ENGINEER</span>
-          </div>
-          <h2 class="panel-title"><strong class="highlight-engineer">Engineer</strong> with precision.</h2>
-          <p class="panel-desc">OutSystems speed or custom MERN engineering, built around enterprise workflows.</p>
-        </div>
-
-        <!-- Single-line stacks strip on mobile -->
-        <div class="stacks-strip mobile-stacks-strip" aria-label="Development stacks">
-          <span class="stacks-strip-intro">We build on two stacks:</span>
-          <div class="stacks-badges-wrap">
-            <span class="stack-badge badge-outsystems">OutSystems</span>
-            <span class="stack-badge badge-mern">MERN</span>
-          </div>
-        </div>
-
-        <div class="mobile-accelerators-block">
-          <h3 class="mobile-acc-title">Projects &amp; accelerators</h3>
-          <div class="mobile-project-cards">
-            {engineerProjects.map((proj) => {
-              const assetKey = proj.data.image || proj.data.imageKey || `product-${proj.slug}`;
-              return (
-                <a href={`/solutions/${proj.slug}`} class="mobile-project-card card-mastercard">
-                  <div class="mobile-card-media">
-                    <MediaAsset assetKey={assetKey} alt={proj.data.shortTitle || proj.data.title} aspectRatio="16/10" />
-                  </div>
-                  <div class="mobile-card-content">
-                    <span class="mobile-badge">{proj.data.badge}</span>
-                    <h4 class="mobile-card-title">{proj.data.shortTitle || proj.data.title}</h4>
-                    <p class="mobile-card-desc">{proj.data.oneLiner}</p>
-                    <span class="mobile-card-link">View project &rarr;</span>
-                  </div>
-                </a>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Mobile Gen-AI -->
-    <div id="mobile-pillar-genai" class="mobile-pillar-section" data-pillar="genai">
-      <div class="container">
-        <div class="panel-header">
-          <div class="panel-eyebrow">
-            <span class="pillar-indicator" style="background-color: #EE4B2B;">G</span>
-            <span class="eyebrow-text" style="color: #B82810;">GEN-AI</span>
-          </div>
-          <h2 class="panel-title"><strong class="highlight-genai">Gen-AI</strong> the leap.</h2>
-          <p class="panel-desc">Private, catalogue-grounded, production-ready AI operating inside your walls.</p>
-        </div>
-
-        <div class="stacks-strip mobile-stacks-strip" aria-label="Deployment environments">
-          <span class="stacks-strip-intro">We deploy across two architectures:</span>
-          <div class="stacks-badges-wrap">
-            <span class="stack-badge badge-mern">High-code (MERN)</span>
-            <span class="stack-badge badge-outsystems">Low-code (OutSystems)</span>
-          </div>
-        </div>
-
-        <div class="mobile-accelerators-block">
-          <h3 class="mobile-acc-title">Solutions &amp; deployments</h3>
-          <div class="mobile-project-cards">
-            {genAiProjects.map((proj) => {
-              const assetKey = proj.data.image || proj.data.imageKey || `product-${proj.slug}`;
-              return (
-                <a href={`/solutions/${proj.slug}`} class="mobile-project-card card-mastercard">
-                  <div class="mobile-card-media">
-                    <MediaAsset assetKey={assetKey} alt={proj.data.shortTitle || proj.data.title} aspectRatio="16/10" />
-                  </div>
-                  <div class="mobile-card-content">
-                    <span class="mobile-badge">{proj.data.badge}</span>
-                    <h4 class="mobile-card-title">{proj.data.shortTitle || proj.data.title}</h4>
-                    <p class="mobile-card-desc">{proj.data.oneLiner}</p>
-                    <span class="mobile-card-link">View solution &rarr;</span>
-                  </div>
-                </a>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </section>
 
 <style>
@@ -743,6 +609,8 @@ const genAiProjects = allProducts
     cursor: grab;
     user-select: none;
     touch-action: none;
+    opacity: 1;
+    visibility: visible;
   }
 
   .cube-scene-wrapper:active {
@@ -1544,164 +1412,134 @@ const genAiProjects = allProducts
   }
 
   @media (max-width: 899px) {
+    .peg-solutions-section {
+      min-height: auto !important;
+      padding-bottom: 4rem;
+    }
+
     .peg-solutions-track {
-      display: none; /* Interactive scroll track disabled on mobile */
+      height: auto !important;
+      display: block !important;
     }
 
-    /* Mobile Sticky Header */
-    .mobile-peg-header {
-      display: block;
-      position: sticky;
-      top: var(--nav-height, 72px);
-      background: var(--color-surface);
-      border-bottom: 1px solid var(--color-border);
-      z-index: 40;
-      backdrop-filter: blur(12px);
-      padding: 0.5rem 0;
+    .peg-solutions-stage {
+      position: relative !important;
+      top: 0 !important;
+      height: auto !important;
+      min-height: auto !important;
+      overflow: visible !important;
+      display: flex !important;
+      flex-direction: column !important;
+      padding: 1.5rem 0 !important;
     }
 
-    :global(.dark) .mobile-peg-header {
-      background: rgba(18, 22, 28, 0.9);
+    .stage-intro-header {
+      position: relative !important;
+      left: auto !important;
+      top: auto !important;
+      transform: none !important;
+      opacity: 1 !important;
+      margin: 0 auto 1.5rem auto !important;
+      text-align: center !important;
     }
 
-    .mobile-header-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      max-width: var(--max-w-content);
-      margin: 0 auto;
-      padding: 0 var(--space-container);
+    .stage-container {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 1.5rem !important;
+      height: auto !important;
+      padding: 0 var(--gutter, 1rem) !important;
     }
 
-    .mobile-logo-mark {
-      font-weight: 800;
-      font-size: 0.85rem;
-      letter-spacing: 0.1em;
-      color: var(--color-text-primary);
+    .stage-cube-col {
+      transform: none !important;
+      opacity: 1 !important;
+      height: auto !important;
+      min-height: max-content !important;
+      width: 100% !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: flex-start !important;
+      gap: 1rem !important;
+      margin: 0 auto 1.25rem auto !important;
+      position: relative !important;
+      z-index: 10 !important;
+      flex: 0 0 auto !important;
     }
 
-    .mobile-pill-tabs {
-      display: flex;
-      gap: 0.35rem;
-      background: var(--color-bg);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-full);
-      padding: 0.2rem;
+    .cube-zone {
+      container-type: normal !important;
+      height: clamp(170px, 40vw, 200px) !important;
+      min-height: 170px !important;
+      width: 100% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      position: relative !important;
+      flex: 0 0 auto !important;
     }
 
-    .mobile-tab {
-      padding: 0.25rem 0.65rem;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--color-text-secondary);
-      text-decoration: none;
-      border-radius: var(--radius-full);
-      transition: all 0.2s ease;
+    .cube-scene-wrapper {
+      --cube-size: clamp(140px, 34vw, 180px) !important;
+      width: var(--cube-size) !important;
+      height: var(--cube-size) !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      position: relative !important;
+      flex: 0 0 auto !important;
     }
 
-    .mobile-tab.is-active {
-      background: var(--color-surface);
-      color: var(--color-text-primary);
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    .cube-viewport {
+      --face-size: clamp(70px, calc(var(--cube-size) * 0.52), 94px) !important;
+      width: var(--face-size) !important;
+      height: var(--face-size) !important;
     }
 
-    /* Mobile Stacked Content */
-    .mobile-stacked-content {
-      display: block;
-      padding: 2.5rem 0;
+    .cube-assembly {
+      transform: rotateX(-8deg) rotateY(0deg);
     }
 
-    .mobile-pillar-section {
-      padding: 2rem 0;
-      border-bottom: 1px solid var(--color-border);
-      scroll-margin-top: calc(var(--nav-height, 72px) + 50px);
+    .stage-pill-tabs {
+      display: flex !important;
+      position: relative !important;
+      margin: 0 auto !important;
+      justify-content: center !important;
+      z-index: 15 !important;
+      flex: 0 0 auto !important;
     }
 
-    .mobile-cards-stack {
-      display: flex;
-      flex-direction: column;
-      gap: 0.85rem;
-      margin-top: 1.25rem;
+    .stage-content-col {
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto !important;
+      transform: none !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 2.5rem !important;
+      width: 100% !important;
+      padding-top: 0.5rem !important;
     }
 
-    .mobile-stacks-strip {
-      margin-top: 1rem;
-      margin-bottom: 1.25rem;
+    .stage-panel {
+      display: block !important;
+      opacity: 1 !important;
+      transform: none !important;
+      position: relative !important;
+      pointer-events: auto !important;
+      margin-bottom: 2.5rem !important;
     }
 
-    .mobile-accelerators-block {
-      margin-top: 1.5rem;
+    .intro-scroll-cue {
+      display: none !important;
     }
 
-    .mobile-acc-title {
-      font-size: var(--fs-xs);
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--color-text-muted);
-      margin: 0 0 0.85rem 0;
-    }
-
-    .mobile-project-cards {
-      display: flex;
-      flex-direction: column;
-      gap: 0.85rem;
-      margin-top: 1rem;
-    }
-
-    .mobile-project-card {
-      display: flex;
-      flex-direction: column;
-      text-decoration: none;
-      padding: 0;
-      overflow: hidden;
-    }
-
-    .mobile-card-media {
-      width: 100%;
-      aspect-ratio: 16 / 10;
-      background: var(--color-bg);
-      overflow: hidden;
-    }
-
-    .mobile-card-content {
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.35rem;
-    }
-
-    .mobile-badge {
-      font-size: 10px;
-      font-weight: 700;
-      color: var(--color-text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .mobile-card-title {
-      font-size: 0.95rem;
-      font-weight: 700;
-      margin: 0;
-      color: var(--color-text-primary);
-    }
-
-    .mobile-card-desc {
-      font-size: 0.8125rem;
-      color: var(--color-text-secondary);
-      line-height: 1.4;
-      margin: 0;
-    }
-
-    .mobile-card-link {
-      font-size: var(--fs-xs);
-      font-weight: 600;
-      color: #1E4B8F;
-      margin-top: 0.4rem;
-    }
-
-    :global(.dark) .mobile-card-link {
-      color: #5B8FE0;
+    .project-rail-card {
+      width: min(280px, 80vw) !important;
+      flex: 0 0 min(280px, 80vw) !important;
     }
   }
 
@@ -2018,6 +1856,19 @@ const genAiProjects = allProducts
         const pillar = tab.getAttribute('data-pillar');
         if (!pillar) return;
 
+        if (window.innerWidth < 900 || window.innerHeight < 640) {
+          setPanelActive(pillar as any);
+          const ang = pillarAngles[pillar];
+          if (ang && cubeAssembly) {
+            cubeAssembly.style.transform = `rotateX(${ang.x}deg) rotateY(${ang.y}deg)`;
+          }
+          const panel = panels[pillar];
+          if (panel) {
+            panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+          return;
+        }
+
         let targetP = 0.40;
         if (pillar === 'engineer') targetP = 0.65;
         if (pillar === 'genai') targetP = 0.88;
@@ -2026,6 +1877,29 @@ const genAiProjects = allProducts
         window.scrollTo({ top: targetScroll, behavior: 'smooth' });
       });
     });
+
+    // Mobile scroll observer: rotate cube to active panel when scrolling in stacked layout
+    if ('IntersectionObserver' in window) {
+      const mobileObserver = new IntersectionObserver((entries) => {
+        if (window.innerWidth >= 900 && window.innerHeight >= 640) return;
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const pillar = entry.target.getAttribute('data-pillar') as 'plan' | 'engineer' | 'genai';
+            if (pillar && pillarAngles[pillar]) {
+              setPanelActive(pillar);
+              const ang = pillarAngles[pillar];
+              if (cubeAssembly) {
+                cubeAssembly.style.transform = `rotateX(${ang.x}deg) rotateY(${ang.y}deg)`;
+              }
+            }
+          }
+        });
+      }, { rootMargin: '-15% 0px -45% 0px', threshold: 0.1 });
+
+      Object.values(panels).forEach((p) => {
+        if (p) mobileObserver.observe(p);
+      });
+    }
 
     // Interactive Cube Drag
     const sceneWrapper = document.getElementById('cube-scene-wrapper');

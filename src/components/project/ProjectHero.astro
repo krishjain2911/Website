@@ -2,6 +2,7 @@
 import type { CollectionEntry } from 'astro:content';
 import Icon from '../Icon.astro';
 import MediaSlot from './MediaSlot.astro';
+import MediaPicture from './MediaPicture.astro';
 
 interface Props {
   product: CollectionEntry<'products'>;
@@ -9,7 +10,9 @@ interface Props {
 
 const { product } = Astro.props;
 const p = product.data;
-const outcomes = p.outcomes && p.outcomes.length > 0 ? p.outcomes.slice(0, 3) : [];
+const isRebuilt = !!p.stage1;
+const outcomes = !isRebuilt && p.outcomes && p.outcomes.length > 0 ? p.outcomes.slice(0, 3) : [];
+const flowStrip = !isRebuilt && p.flowStrip && p.flowStrip.length > 0 ? p.flowStrip : [];
 ---
 
 <header class="project-hero-section" aria-labelledby="project-hero-title">
@@ -27,37 +30,88 @@ const outcomes = p.outcomes && p.outcomes.length > 0 ? p.outcomes.slice(0, 3) : 
     </nav>
 
     <div class="project-hero-grid">
-      <!-- Left: Title, Metadata Chips, Subline, CTAs, Outcome Strip -->
+      <!-- Left: Title, Metadata Chips, Subline, Hero Facts, Flow Strip, CTAs -->
       <div class="project-hero-left">
         <!-- Status, Client, Stack Badges -->
         <div class="project-chips-row">
-          {p.status && (
-            <span class:list={['status-chip', { 'is-deployed': p.status === 'Deployed' }]}>
-              <span class="status-dot"></span>
-              <span>{p.status}</span>
-            </span>
+          {isRebuilt ? (
+            <>
+              {p.statusTag && (
+                <span class="meta-chip status-tag-chip">
+                  <span class="status-dot" aria-hidden="true"></span>
+                  <span>{p.statusTag}</span>
+                </span>
+              )}
+              {p.buildTag && (
+                <span class="meta-chip build-tag-chip">{p.buildTag}</span>
+              )}
+            </>
+          ) : (
+            <>
+              {p.status && (
+                <span class:list={['status-chip', { 'is-deployed': p.status === 'Deployed' }]}>
+                  <span class="status-dot"></span>
+                  <span>{p.status}</span>
+                </span>
+              )}
+              {p.client && (
+                <span class="meta-chip client-chip">
+                  <Icon name="shield" size={12} />
+                  <span>Deployed for {p.client}</span>
+                </span>
+              )}
+              <span class="meta-chip stack-chip">{p.badge}</span>
+            </>
           )}
-          {p.client && (
-            <span class="meta-chip client-chip">
-              <Icon name="shield" size={12} />
-              <span>Deployed for {p.client}</span>
-            </span>
-          )}
-          <span class="meta-chip stack-chip">{p.badge}</span>
         </div>
 
         <h1 id="project-hero-title" class="project-title">{p.title}</h1>
+        {p.outcomeHeadline && (
+          <p class="project-outcome-headline">{p.outcomeHeadline}</p>
+        )}
         <p class="project-oneliner">{p.oneLiner}</p>
 
-        <!-- Outcome Strip (Up to 3 count-up stats) -->
+        <!-- Hero Facts (Only for legacy pages) -->
         {outcomes.length > 0 && (
-          <div class="project-outcome-strip" aria-label="Key outcomes">
+          <div class="project-outcome-strip" aria-label="Hero facts">
             {outcomes.map((outcome) => (
               <div class="outcome-stat-card card-mastercard">
-                <span class="outcome-val stat-countup" data-target-val={outcome.value}>{outcome.value}</span>
+                <span class="outcome-val">{outcome.value}</span>
                 <span class="outcome-lbl">{outcome.label}</span>
               </div>
             ))}
+          </div>
+        )}
+
+        <!-- Flow Strip Motif (Only for legacy pages) -->
+        {flowStrip.length > 0 && (
+          <div class="flow-strip-wrapper" role="region" aria-label="Product flow stations">
+            <span class="flow-strip-header">Workflow stations</span>
+            <div class="flow-track-container" id="flow-track-container">
+              <div class="flow-peg-marker" id="flow-peg-marker" aria-hidden="true"></div>
+              <div class="flow-stations-row" role="tablist">
+                {flowStrip.map((item, idx) => (
+                  <button
+                    type="button"
+                    class:list={['flow-station-btn', { 'is-active': idx === 0 }]}
+                    data-station-idx={idx}
+                    data-station-name={item.station}
+                    data-station-note={item.note}
+                    role="tab"
+                    aria-selected={idx === 0 ? 'true' : 'false'}
+                    aria-label={`Station ${idx + 1}: ${item.station}`}
+                  >
+                    <span class="hole-socket" aria-hidden="true"></span>
+                    <span class="station-name">{item.station}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+            <!-- Clickable Station Note Display -->
+            <div class="flow-note-banner card-mastercard" id="flow-note-banner" aria-live="polite">
+              <span class="flow-note-tag" id="flow-note-tag">{flowStrip[0].station}</span>
+              <p class="flow-note-text" id="flow-note-text">{flowStrip[0].note}</p>
+            </div>
           </div>
         )}
 
@@ -65,7 +119,6 @@ const outcomes = p.outcomes && p.outcomes.length > 0 ? p.outcomes.slice(0, 3) : 
         <div class="project-actions-row">
           <a href="#contact" class="btn btn-primary hero-cta-btn">
             <span>Talk to us about this</span>
-            <Icon name="arrow-right" size={16} />
           </a>
           <a href="/#solutions" class="btn btn-secondary hero-back-btn">
             <span>All solutions</span>
@@ -73,15 +126,57 @@ const outcomes = p.outcomes && p.outcomes.length > 0 ? p.outcomes.slice(0, 3) : 
         </div>
       </div>
 
-      <!-- Right: Hero Media (Image or looping muted video in device/browser frame) -->
+      <!-- Right: Hero Media -->
       <div class="project-hero-right">
-        <MediaSlot
-          media={p.hero || (p.image ? { type: 'image', src: p.image, alt: p.title, frame: 'browser' } : undefined)}
-          aspectRatio="16/10"
-          priority={true}
-          chapterId="hero"
-          class="hero-media-card"
-        />
+        {isRebuilt ? (
+          <div class="hero-browser-window card-mastercard">
+            <div class="browser-frame-chrome" aria-hidden="true">
+              <div class="browser-dots">
+                <span class="browser-dot dot-red"></span>
+                <span class="browser-dot dot-yellow"></span>
+                <span class="browser-dot dot-green"></span>
+              </div>
+              <div class="browser-address-bar">
+                <span class="browser-address">enterprise.rhsp.io</span>
+              </div>
+            </div>
+            <div class="browser-content-wrap">
+              {product.slug === 'clm' ? (
+                <MediaPicture
+                  slug="clm"
+                  file="hero.png"
+                  alt="Contract dashboard with four summary tiles and a chart of requests over time."
+                  caption="Requestor dashboard. Illustrative screen."
+                  isHero={true}
+                />
+              ) : product.slug === 'vernacular-documents' ? (
+                <MediaPicture
+                  slug="vernacular-documents"
+                  file="hero.png"
+                  alt="Manage templates list with name, language, code, revision and status columns."
+                  caption="Template library. Illustrative screen."
+                  isHero={true}
+                />
+              ) : (
+                <MediaPicture
+                  slug="sonakshi"
+                  file="hero.png"
+                  alt="Tablet screen showing the voice conversation interface in Hindi with product cards on the side."
+                  caption="Sonakshi tablet interface on the shop floor."
+                  isHero={true}
+                />
+              )}
+            </div>
+          </div>
+        ) : (
+          <MediaSlot
+            media={p.hero || (p.image ? { type: 'image', src: p.image, alt: p.title, frame: 'browser' } : undefined)}
+            aspectRatio="16/10"
+            priority={true}
+            chapterId="hero"
+            class="hero-media-card"
+          />
+        )}
       </div>
     </div>
   </div>
@@ -118,32 +213,53 @@ const outcomes = p.outcomes && p.outcomes.length > 0 ? p.outcomes.slice(0, 3) : 
     transform: translateX(-2px);
   }
 
+  .hero-back-link:focus-visible {
+    outline: 2px solid #1E4B8F;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
   .nav-sep {
-    color: var(--color-border-strong);
+    color: var(--color-border-hover);
   }
 
   .nav-pillar {
-    color: var(--color-text-muted);
     font-weight: 600;
+    color: var(--color-text-muted);
   }
 
   .nav-current {
+    font-weight: 600;
     color: var(--color-text-primary);
-    font-weight: 700;
   }
 
   .project-hero-grid {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 2.5rem;
-    align-items: center;
+    align-items: start;
+    width: 100%;
+    min-width: 0;
   }
 
-  @media (min-width: 960px) {
+  @media (min-width: 1024px) {
     .project-hero-grid {
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 3.5rem;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.95fr);
+      gap: 3rem;
     }
+  }
+
+  .project-hero-left {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .project-hero-right {
+    min-width: 0;
+    width: 100%;
   }
 
   .project-chips-row {
@@ -151,168 +267,428 @@ const outcomes = p.outcomes && p.outcomes.length > 0 ? p.outcomes.slice(0, 3) : 
     flex-wrap: wrap;
     align-items: center;
     gap: 0.5rem;
-    margin-bottom: 1rem;
   }
 
-  .status-chip {
+  .status-chip,
+  .meta-chip {
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    padding: 0.2rem 0.65rem;
-    border-radius: var(--radius-full);
-    background: rgba(247, 148, 29, 0.1);
-    color: #B86200;
-    border: 1px solid rgba(247, 148, 29, 0.25);
+    gap: 0.45rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    line-height: 1;
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-pill, 9999px);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
   }
 
-  :global(.dark) .status-chip {
-    color: #F7941D;
+  .status-tag-chip {
+    color: #10B981;
+    border-color: rgba(16, 185, 129, 0.3);
+    background-color: rgba(16, 185, 129, 0.08);
+  }
+
+  .build-tag-chip {
+    color: var(--color-text-primary);
+    background-color: var(--color-surface);
   }
 
   .status-chip.is-deployed {
-    background: rgba(39, 201, 63, 0.12);
-    color: #1F883D;
-    border-color: rgba(39, 201, 63, 0.3);
-  }
-
-  :global(.dark) .status-chip.is-deployed {
-    color: #3FB950;
+    background-color: rgba(16, 185, 129, 0.1);
+    border-color: rgba(16, 185, 129, 0.3);
+    color: #10B981;
   }
 
   .status-dot {
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: currentColor;
+    background-color: currentColor;
   }
 
-  .meta-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 0.2rem 0.65rem;
-    border-radius: var(--radius-full);
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    color: var(--color-text-secondary);
+  .stack-chip {
+    font-weight: 700;
+    background-color: rgba(30, 75, 143, 0.08);
+    border-color: rgba(30, 75, 143, 0.2);
+    color: #1E4B8F;
+  }
+
+  :global(.dark) .stack-chip {
+    background-color: rgba(96, 165, 250, 0.12);
+    border-color: rgba(96, 165, 250, 0.3);
+    color: #60a5fa;
   }
 
   .project-title {
-    font-size: clamp(2.2rem, 4.2vw, 3.25rem);
+    font-size: clamp(2rem, 3.5vw, 2.75rem);
     font-weight: 800;
     line-height: 1.15;
-    margin: 0 0 1rem 0;
+    letter-spacing: -0.02em;
     color: var(--color-text-primary);
+    margin: 0;
+    overflow: visible;
+    padding-left: 1px;
+  }
+
+  .project-outcome-headline {
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    font-weight: 700;
+    line-height: 1.3;
+    color: #F7941D;
+    margin: -0.25rem 0 0 0;
+    max-width: 62ch;
   }
 
   .project-oneliner {
-    font-size: clamp(1rem, 1.8vw, 1.18rem);
+    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    line-height: 1.6;
     color: var(--color-text-secondary);
-    line-height: 1.55;
-    margin: 0 0 1.75rem 0;
-    max-width: 600px;
+    margin: 0;
+    max-width: 62ch;
   }
 
-  /* Outcome Strip */
+  /* Rebuilt Hero Browser Window */
+  .hero-browser-window {
+    border-radius: 16px;
+    border: 1px solid var(--color-border);
+    overflow: hidden;
+    background: var(--color-surface);
+    box-shadow: 0 8px 28px -6px rgba(0, 0, 0, 0.1);
+  }
+
+  .browser-frame-chrome {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.6rem 0.9rem;
+    background-color: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .browser-dots {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .browser-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+  }
+
+  .dot-red { background-color: #ff5f56; }
+  .dot-yellow { background-color: #ffbd2e; }
+  .dot-green { background-color: #27c93f; }
+
+  .browser-address-bar {
+    flex: 1;
+    max-width: 260px;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    padding: 0.15rem 0.65rem;
+    font-size: 0.72rem;
+    color: var(--color-text-muted);
+    font-family: var(--font-mono, monospace);
+  }
+
+  .browser-content-wrap :global(.solution-media-img) {
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  /* Hero facts stats */
   .project-outcome-strip {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-    gap: 0.75rem;
-    margin-bottom: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(95px, 1fr));
+    gap: 0.6rem;
+    margin-top: 0.25rem;
+    width: 100%;
+    min-width: 0;
   }
 
   .outcome-stat-card {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md, 8px);
-    padding: 0.85rem 1rem;
+    padding: 0.75rem 0.85rem;
+    border-radius: 8px;
     display: flex;
     flex-direction: column;
     gap: 0.2rem;
+    min-width: 0;
   }
 
   .outcome-val {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: 800;
-    color: var(--color-text-primary);
-    line-height: 1.1;
+    color: #1E4B8F;
+    letter-spacing: -0.01em;
+    word-break: break-word;
+  }
+
+  :global(.dark) .outcome-val {
+    color: #60a5fa;
   }
 
   .outcome-lbl {
-    font-size: 11px;
-    font-weight: 600;
+    font-size: 0.72rem;
     color: var(--color-text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    line-height: 1.3;
   }
 
-  .project-actions-row {
+  /* -------------------------------------------------------------
+     Hero Motif: Flow Strip with Round Holes & Sliding Square Peg
+     ------------------------------------------------------------- */
+  .flow-strip-wrapper {
+    margin-top: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .flow-strip-header {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .flow-track-container {
+    position: relative;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 0.85rem 0.75rem;
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+
+  :global(.dark) .flow-track-container {
+    background-color: var(--color-surface-raised);
+  }
+
+  /* Orange sliding square peg */
+  .flow-peg-marker {
+    position: absolute;
+    top: 14px;
+    left: 20px;
+    width: 14px;
+    height: 14px;
+    background-color: #F7941D;
+    border-radius: 2px;
+    box-shadow: 0 2px 8px rgba(247, 148, 29, 0.45);
+    z-index: 5;
+    pointer-events: none;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .flow-stations-row {
     display: flex;
     align-items: center;
-    gap: 0.85rem;
+    gap: 1.25rem;
+    min-width: max-content;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Each station button */
+  .flow-station-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.45rem;
+    background: transparent;
+    border: none;
+    padding: 0.2rem 0.4rem;
+    cursor: pointer;
+    outline: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .flow-station-btn:focus-visible {
+    outline: 2px solid #1E4B8F;
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  /* Round Hole socket */
+  .hole-socket {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: var(--color-bg);
+    border: 2px solid var(--color-border-hover, #94a3b8);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+
+  :global(.dark) .hole-socket {
+    background-color: #0b1120;
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.5);
+  }
+
+  .flow-station-btn.is-active .hole-socket {
+    border-color: #F7941D;
+  }
+
+  .station-name {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+    transition: color 0.2s ease;
+  }
+
+  .flow-station-btn:hover .station-name,
+  .flow-station-btn.is-active .station-name {
+    color: var(--color-text-primary);
+    font-weight: 700;
+  }
+
+  /* Note banner */
+  .flow-note-banner {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    padding: 0.65rem 0.9rem;
+    border-radius: 8px;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+  }
+
+  :global(.dark) .flow-note-banner {
+    background-color: var(--color-surface-raised);
+  }
+
+  .flow-note-tag {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #F7941D;
+    white-space: nowrap;
+  }
+
+  .flow-note-text {
+    font-size: 0.85rem;
+    line-height: 1.45;
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  /* CTAs */
+  .project-actions-row {
+    display: flex;
     flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
   }
 
-  .hero-cta-btn {
-    padding: 0.75rem 1.45rem;
-  }
-
+  .hero-cta-btn,
   .hero-back-btn {
-    padding: 0.75rem 1.25rem;
+    text-decoration: none;
+  }
+
+  .hero-media-card {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .flow-peg-marker {
+      transition: none !important;
+    }
   }
 </style>
 
 <script>
-  // Count-up animation for numeric stats (Reduced motion = static)
-  function initCountUps() {
+  function initFlowStrip() {
+    const container = document.getElementById('flow-track-container');
+    const pegMarker = document.getElementById('flow-peg-marker');
+    const noteTag = document.getElementById('flow-note-tag');
+    const noteText = document.getElementById('flow-note-text');
+    const buttons = document.querySelectorAll<HTMLButtonElement>('.flow-station-btn');
+
+    if (!container || !pegMarker || buttons.length === 0) return;
+
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const counters = Array.from(document.querySelectorAll<HTMLElement>('.stat-countup'));
 
-    if (prefersReducedMotion || !counters.length) return;
+    function movePegToButton(btn: HTMLButtonElement) {
+      const socket = btn.querySelector<HTMLElement>('.hole-socket');
+      if (!socket) return;
+      const containerRect = container!.getBoundingClientRect();
+      const socketRect = socket.getBoundingClientRect();
 
-    if ('IntersectionObserver' in window) {
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const el = entry.target as HTMLElement;
-            const text = el.getAttribute('data-target-val') || el.textContent || '';
-            const match = text.match(/^([^0-9]*)([0-9]+(?:\.[0-9]+)?)(.*)$/);
+      // Center the 14x14 square peg over the 20x20 round hole socket
+      const leftOffset = socketRect.left - containerRect.left + container!.scrollLeft + (socketRect.width - 14) / 2;
+      const topOffset = socketRect.top - containerRect.top + (socketRect.height - 14) / 2;
 
-            if (match) {
-              const prefix = match[1];
-              const target = parseFloat(match[2]);
-              const suffix = match[3];
-              const isInt = !match[2].includes('.');
-              const duration = 1200;
-              const startTime = performance.now();
-
-              function step(now: number) {
-                const progress = Math.min((now - startTime) / duration, 1);
-                const current = target * progress;
-                el.textContent = `${prefix}${isInt ? Math.round(current) : current.toFixed(1)}${suffix}`;
-                if (progress < 1) {
-                  requestAnimationFrame(step);
-                } else {
-                  el.textContent = text;
-                }
-              }
-              requestAnimationFrame(step);
-            }
-            io.unobserve(el);
-          }
-        });
-      }, { threshold: 0.4 });
-
-      counters.forEach((c) => io.observe(c));
+      pegMarker!.style.transform = `translate(${leftOffset}px, ${topOffset}px)`;
     }
+
+    function selectStation(btn: HTMLButtonElement) {
+      buttons.forEach((b) => {
+        b.classList.remove('is-active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      btn.classList.add('is-active');
+      btn.setAttribute('aria-selected', 'true');
+
+      const name = btn.getAttribute('data-station-name') || '';
+      const note = btn.getAttribute('data-station-note') || '';
+
+      if (noteTag) noteTag.textContent = name;
+      if (noteText) noteText.textContent = note;
+
+      movePegToButton(btn);
+    }
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        selectStation(btn);
+      });
+    });
+
+    // Initial load animation: slide peg through holes once on load if motion enabled
+    if (!prefersReducedMotion && buttons.length > 1) {
+      movePegToButton(buttons[0]);
+      let step = 0;
+      const stepInterval = setInterval(() => {
+        step++;
+        if (step < buttons.length) {
+          movePegToButton(buttons[step]);
+        } else {
+          clearInterval(stepInterval);
+          // Return to active (first) station
+          setTimeout(() => {
+            selectStation(buttons[0]);
+          }, 350);
+        }
+      }, 250);
+    } else {
+      // Static fallback for reduced motion
+      movePegToButton(buttons[0]);
+    }
+
+    window.addEventListener('resize', () => {
+      const activeBtn = document.querySelector<HTMLButtonElement>('.flow-station-btn.is-active') || buttons[0];
+      movePegToButton(activeBtn);
+    });
   }
 
-  initCountUps();
-  document.addEventListener('astro:after-swap', initCountUps);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFlowStrip);
+  } else {
+    initFlowStrip();
+  }
+  document.addEventListener('astro:page-load', initFlowStrip);
 </script>

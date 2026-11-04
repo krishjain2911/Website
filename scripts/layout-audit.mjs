@@ -116,7 +116,7 @@ async function runAudit() {
         };
       });
 
-      if (pegInfo) {
+      if (pegInfo && vp.width >= 900 && vp.height >= 640) {
         const phases = [
           { name: 'Phase 0 (Intro)', offset: 30 },
           { name: 'Phase 1 (Plan)', offset: pegInfo.height * 0.28 },
@@ -181,6 +181,52 @@ async function runAudit() {
         }
       }
 
+      // Assert PEG cube visibility and elementFromPoint on mobile viewports
+      const mobileViewports = ['360x640', '390x844', '414x896', '844x390'];
+      if (mobileViewports.includes(vp.name)) {
+        checksRun++;
+        const cubeResult = await page.evaluate(() => {
+          const cubeSection = document.getElementById('solutions');
+          const cube = document.getElementById('cube-scene-wrapper');
+          if (!cubeSection || !cube) return { ok: false, error: 'Cube or #solutions element not found' };
+
+          // Scroll cube into view centered
+          cube.scrollIntoView({ block: 'center', behavior: 'instant' });
+          const rect = cube.getBoundingClientRect();
+          const style = window.getComputedStyle(cube);
+          const opacity = parseFloat(style.opacity);
+          const isVisible = style.display !== 'none' && style.visibility !== 'hidden' && opacity > 0;
+
+          if (!isVisible) return { ok: false, error: `Cube is not visible (display: ${style.display}, visibility: ${style.visibility}, opacity: ${opacity})` };
+          if (rect.width < 10 || rect.height < 10) return { ok: false, error: `Cube has zero or tiny size (${rect.width}x${rect.height}px)` };
+
+          // Assert inside viewport when section is in view
+          const inViewport = rect.top >= 0 && rect.bottom <= window.innerHeight && rect.left >= 0 && rect.right <= window.innerWidth;
+          if (!inViewport) return { ok: false, error: `Cube not inside viewport (top: ${Math.round(rect.top)}, bottom: ${Math.round(rect.bottom)}, vh: ${window.innerHeight})` };
+
+          // Assert document.elementFromPoint at its centre returns the cube (or element inside cube)
+          const cx = Math.round(rect.left + rect.width / 2);
+          const cy = Math.round(rect.top + rect.height / 2);
+          const topEl = document.elementFromPoint(cx, cy);
+          if (!topEl || (!cube.contains(topEl) && topEl !== cube)) {
+            return { ok: false, error: `elementFromPoint at center returned <${topEl?.tagName} class="${topEl?.className}"> instead of cube` };
+          }
+
+          return { ok: true };
+        });
+
+        if (!cubeResult.ok) {
+          const shotName = `mobile-cube-fail-${vp.name}.png`;
+          await page.screenshot({ path: path.join(failuresDir, shotName) });
+          failures.push({
+            vp: vp.name,
+            page: '/#solutions',
+            error: cubeResult.error,
+            screenshot: shotName
+          });
+        }
+      }
+
       // 2. Audit About Page (/about)
       await page.goto(`http://localhost:${PORT}/about`, { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(100);
@@ -196,6 +242,7 @@ async function runAudit() {
 
       // 3. Audit Solution Detail (/solutions/sonakshi)
       await page.goto(`http://localhost:${PORT}/solutions/sonakshi`, { waitUntil: 'domcontentloaded' });
+      await page.evaluate(() => window.scrollTo(0, 0));
       await page.waitForTimeout(100);
 
       const sonakshiHScroll = await page.evaluate(() => {
