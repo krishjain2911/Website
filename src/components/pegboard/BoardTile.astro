@@ -1,0 +1,309 @@
+---
+import Icon from '../Icon.astro';
+import type { BoardTileItem } from '../../data/pegBoard';
+
+interface Props {
+  tile: BoardTileItem;
+  index: number;
+}
+
+const { tile } = Astro.props;
+---
+
+<div
+  class="board-tile-wrapper"
+  data-tile-slug={tile.slug}
+  data-zone-id={tile.zoneId}
+>
+  <!-- Square peg on top edge entering drilled hole -->
+  <div class="tile-peg-assembly" aria-hidden="true">
+    <div class="peg-hole-shadow"></div>
+    <div class="tile-square-peg" style={`--peg-color: ${tile.pegColor};`}></div>
+  </div>
+
+  <article class="board-tile-card" style={`view-transition-name: tile-${tile.slug};`}>
+    <a
+      href={tile.href}
+      class="tile-hit-link"
+      data-tile-link={tile.slug}
+      aria-label={`${tile.title}: ${tile.description}`}
+    >
+      <div class="tile-header-row">
+        <div class="tile-icon-badge" style={`--peg-color: ${tile.pegColor};`}>
+          <Icon name={tile.iconName} size={16} />
+        </div>
+      </div>
+
+      <div class="tile-body">
+        <h3 class="tile-title">{tile.title}</h3>
+        <p class="tile-description">{tile.description}</p>
+      </div>
+
+      <div class="tile-footer-row">
+        <span class={`tile-tag ${tile.tag === 'Coming soon' ? 'tile-tag--soon' : ''}`}>
+          {tile.tag}
+        </span>
+      </div>
+    </a>
+
+    <!-- Pin button (separate focusable control) -->
+    <button
+      type="button"
+      class="tile-pin-btn"
+      data-pin-btn={tile.slug}
+      aria-label={`Pin ${tile.title} to my board`}
+      aria-pressed="false"
+    >
+      <Icon name="bookmark" size={13} class="pin-icon" />
+      <span class="pin-dot" style={`--peg-color: ${tile.pegColor};`} aria-hidden="true"></span>
+    </button>
+  </article>
+</div>
+
+<style>
+  .board-tile-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 220px;
+    height: 172px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: pan-y;
+  }
+
+  /* Peg and hole visual alignment */
+  .tile-peg-assembly {
+    position: relative;
+    width: 20px;
+    height: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    margin-bottom: -4px;
+  }
+
+  .peg-hole-shadow {
+    position: absolute;
+    top: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.15) 55%, transparent 75%);
+    pointer-events: none;
+  }
+
+  :global(.dark) .peg-hole-shadow {
+    background: radial-gradient(circle, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.3) 55%, transparent 75%);
+  }
+
+  /* Square peg pushed into hole */
+  .tile-square-peg {
+    position: relative;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    background-color: var(--peg-color, #1E4B8F);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    z-index: 3;
+  }
+
+  /* Hanging tile card */
+  .board-tile-card {
+    position: relative;
+    width: 100%;
+    height: 158px;
+    background-color: #FFFFFF;
+    border: 1px solid var(--color-border);
+    border-radius: 18px;
+    box-shadow: 0 2px 8px rgba(16, 24, 40, 0.05), 0 1px 2px rgba(16, 24, 40, 0.04);
+    transform-origin: 50% 0;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  :global(.dark) .board-tile-card {
+    background-color: var(--color-surface-raised, #1B2028);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Gentle swing keyframes */
+  @keyframes tileSwing {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(-2.5deg); }
+    60% { transform: rotate(2deg); }
+    85% { transform: rotate(-0.8deg); }
+    100% { transform: rotate(0deg); }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .board-tile-wrapper:hover .board-tile-card,
+    .board-tile-wrapper:focus-within .board-tile-card {
+      animation: tileSwing 0.9s ease-out 1;
+      box-shadow: 0 10px 24px rgba(16, 24, 40, 0.09), 0 2px 6px rgba(16, 24, 40, 0.04);
+      border-color: color-mix(in srgb, var(--color-text-primary) 18%, var(--color-border));
+    }
+
+    .board-tile-card.is-lifting {
+      transform: scale(1.03) translateY(-6px);
+      box-shadow: 0 16px 36px rgba(16, 24, 40, 0.15);
+    }
+  }
+
+  /* Link hit region */
+  .tile-hit-link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 1rem 1rem 0.85rem;
+    color: inherit;
+    text-decoration: none;
+    outline: none;
+  }
+
+  .tile-hit-link:focus-visible {
+    outline: 2px solid var(--color-accent, #1E4B8F);
+    outline-offset: -2px;
+    border-radius: 17px;
+  }
+
+  .tile-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }
+
+  .tile-icon-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--peg-color, #1E4B8F) 12%, transparent);
+    color: var(--peg-color, #1E4B8F);
+  }
+
+  .tile-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .tile-title {
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.25;
+    margin: 0;
+    color: var(--color-text-primary);
+    letter-spacing: -0.01em;
+  }
+
+  .tile-description {
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    color: var(--color-text-secondary);
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .tile-footer-row {
+    margin-top: auto;
+    padding-top: 0.4rem;
+  }
+
+  .tile-tag {
+    display: inline-block;
+    font-size: 10.5px;
+    font-weight: 600;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-text-primary) 6%, transparent);
+    color: var(--color-text-secondary);
+    letter-spacing: 0.02em;
+  }
+
+  .tile-tag--soon {
+    background: rgba(247, 148, 29, 0.12);
+    color: #F7941D;
+  }
+
+  :global(.dark) .tile-tag--soon {
+    background: rgba(247, 148, 29, 0.2);
+    color: #FFA534;
+  }
+
+  /* Pin button */
+  .tile-pin-btn {
+    position: absolute;
+    top: 0.65rem;
+    right: 0.65rem;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--color-text-muted, #8C96A5);
+    padding: 0;
+    transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+    z-index: 4;
+  }
+
+  .tile-pin-btn:hover {
+    color: var(--color-text-primary);
+    background-color: var(--color-surface, rgba(0, 0, 0, 0.04));
+    border-color: var(--color-border);
+  }
+
+  .tile-pin-btn:focus-visible {
+    outline: 2px solid var(--color-accent, #1E4B8F);
+    outline-offset: 1px;
+  }
+
+  .pin-dot {
+    display: none;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--peg-color, #1E4B8F);
+    position: absolute;
+    top: 2px;
+    right: 2px;
+  }
+
+  .tile-pin-btn[aria-pressed="true"] {
+    color: var(--color-text-primary);
+  }
+
+  .tile-pin-btn[aria-pressed="true"] .pin-dot {
+    display: block;
+  }
+
+  /* Drag state styling */
+  .board-tile-wrapper.is-dragging {
+    z-index: 100;
+    cursor: grabbing;
+  }
+
+  .board-tile-wrapper.is-dragging .board-tile-card {
+    box-shadow: 0 20px 40px rgba(16, 24, 40, 0.2);
+    border-color: var(--color-accent, #1E4B8F);
+    transform: scale(1.04);
+  }
+</style>

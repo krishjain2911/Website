@@ -1,0 +1,361 @@
+---
+import Icon from '../Icon.astro';
+import type { PickerData } from '../../data/pegBoard';
+
+interface Props {
+  guideSlug: string;
+  picker: PickerData;
+}
+
+const { guideSlug, picker } = Astro.props;
+---
+
+<section class="peg-picker-section" aria-labelledby="picker-heading">
+  <div class="picker-header">
+    <span class="eyebrow">PICK YOUR PRIORITIES</span>
+    <h2 id="picker-heading" class="picker-title">Compare your priorities</h2>
+    <p class="picker-sub">Select the factors that matter to your initiative. The recommendation adapts live.</p>
+  </div>
+
+  <!-- Priority Chips Grid -->
+  <div
+    class="picker-chips-grid"
+    role="group"
+    aria-label="Priorities selection"
+    id="picker-chips-container"
+    data-guide-slug={guideSlug}
+  >
+    {picker.chips.map((chip) => (
+      <button
+        type="button"
+        class="picker-chip"
+        data-chip-id={chip.id}
+        data-chip-weights={JSON.stringify(chip.weights)}
+        aria-pressed="false"
+      >
+        <span class="chip-check" aria-hidden="true">✓</span>
+        <span class="chip-label">{chip.label}</span>
+      </button>
+    ))}
+  </div>
+
+  <!-- Live Dynamic Result Card -->
+  <div
+    class="picker-result-card card-mastercard"
+    id="picker-result-card"
+    aria-live="polite"
+    aria-atomic="true"
+    data-picker-config={JSON.stringify({
+      options: picker.options,
+      blendLabel: picker.blendLabel,
+      blendReason: picker.blendReason
+    })}
+  >
+    <div class="result-badge-row">
+      <span class="result-eyebrow">SUGGESTED PEG</span>
+      <span id="result-peg-label" class="result-peg-name">Choose what matters to you.</span>
+    </div>
+
+    <div class="result-body">
+      <p id="result-reason" class="result-reason-p">
+        Select one or more priorities above to compare approaches against your project goals.
+      </p>
+      <p class="result-disclaimer">
+        A starting point. We finalise the approach together.
+      </p>
+    </div>
+
+    <div class="result-actions-row">
+      <a href="/#contact" class="btn btn-primary result-cta-btn">
+        <span>Talk to us about this</span>
+        <Icon name="arrow-right" size={14} />
+      </a>
+      <button
+        type="button"
+        class="btn btn-secondary result-pin-btn"
+        id="picker-pin-guide-btn"
+        data-guide-slug={guideSlug}
+      >
+        <Icon name="bookmark" size={14} />
+        <span id="picker-pin-btn-text">Pin this guide</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { togglePin, isPinned } from '../../scripts/pegBoardState';
+
+  function initPegPicker() {
+    const container = document.getElementById('picker-chips-container');
+    const resultCard = document.getElementById('picker-result-card');
+    const pegLabel = document.getElementById('result-peg-label');
+    const reasonP = document.getElementById('result-reason');
+    const pinBtn = document.getElementById('picker-pin-guide-btn') as HTMLButtonElement | null;
+    const pinBtnText = document.getElementById('picker-pin-btn-text');
+
+    if (!container || !resultCard || !pegLabel || !reasonP) return;
+
+    const guideSlug = container.getAttribute('data-guide-slug') || '';
+    let config: any = {};
+    try {
+      config = JSON.parse(resultCard.getAttribute('data-picker-config') || '{}');
+    } catch {
+      config = {};
+    }
+
+    const chips = Array.from(container.querySelectorAll<HTMLButtonElement>('.picker-chip'));
+
+    function updateResult() {
+      const activeChips = chips.filter((c) => c.getAttribute('aria-pressed') === 'true');
+
+      if (activeChips.length === 0) {
+        if (pegLabel) pegLabel.textContent = 'Choose what matters to you.';
+        if (reasonP) reasonP.textContent = 'Select one or more priorities above to compare approaches against your project goals.';
+        return;
+      }
+
+      // Calculate scores for each option
+      const scores: Record<string, number> = {};
+      activeChips.forEach((chip) => {
+        try {
+          const w = JSON.parse(chip.getAttribute('data-chip-weights') || '{}');
+          Object.keys(w).forEach((optId) => {
+            scores[optId] = (scores[optId] || 0) + (w[optId] || 0);
+          });
+        } catch {}
+      });
+
+      const options = config.options || [];
+      const scoreEntries = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+
+      if (scoreEntries.length === 0) {
+        if (pegLabel) pegLabel.textContent = 'Choose what matters to you.';
+        if (reasonP) reasonP.textContent = 'Select one or more priorities above to compare approaches against your project goals.';
+        return;
+      }
+
+      const topOptId = scoreEntries[0][0];
+      const topScore = scoreEntries[0][1];
+      const secondScore = scoreEntries[1] ? scoreEntries[1][1] : 0;
+
+      // Special rule for low-code-vs-high-code (3 options): Highest wins; ties go to Hybrid
+      if (guideSlug === 'low-code-vs-high-code') {
+        if (scoreEntries.length > 1 && topScore === secondScore) {
+          const hybridOpt = options.find((o: any) => o.id === 'hybrid');
+          if (pegLabel) pegLabel.textContent = `Suggested peg: ${hybridOpt?.label || 'Hybrid'}`;
+          if (reasonP) reasonP.textContent = hybridOpt?.reason || config.blendReason;
+          return;
+        }
+        const winner = options.find((o: any) => o.id === topOptId);
+        if (pegLabel) pegLabel.textContent = `Suggested peg: ${winner?.label || topOptId}`;
+        if (reasonP) reasonP.textContent = winner?.reason || '';
+        return;
+      }
+
+      // If top two options are within 1 point (or only 1 chip selected), show blendLabel
+      const diff = Math.abs(topScore - secondScore);
+      if (diff <= 1 || activeChips.length <= 1) {
+        if (pegLabel) pegLabel.textContent = `Suggested peg: ${config.blendLabel}`;
+        if (reasonP) reasonP.textContent = config.blendReason;
+      } else {
+        const winner = options.find((o: any) => o.id === topOptId);
+        if (pegLabel) pegLabel.textContent = `Suggested peg: ${winner?.label || topOptId}`;
+        if (reasonP) reasonP.textContent = winner?.reason || '';
+      }
+    }
+
+    // Toggle chip handler
+    chips.forEach((chip) => {
+      chip.addEventListener('click', () => {
+        const pressed = chip.getAttribute('aria-pressed') === 'true';
+        chip.setAttribute('aria-pressed', pressed ? 'false' : 'true');
+        chip.classList.toggle('is-selected', !pressed);
+        updateResult();
+      });
+    });
+
+    // Pin guide button handler
+    function syncPinBtn() {
+      if (!pinBtn || !pinBtnText) return;
+      const pinned = isPinned(guideSlug);
+      pinBtn.classList.toggle('is-pinned', pinned);
+      pinBtnText.textContent = pinned ? 'Pinned to my board' : 'Pin this guide';
+    }
+
+    if (pinBtn) {
+      pinBtn.addEventListener('click', () => {
+        togglePin(guideSlug);
+        syncPinBtn();
+      });
+      syncPinBtn();
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPegPicker);
+  } else {
+    initPegPicker();
+  }
+</script>
+
+<style>
+  .peg-picker-section {
+    margin: 3.5rem 0;
+    padding: 2.25rem;
+    border-radius: 22px;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+  }
+
+  @media (max-width: 639px) {
+    .peg-picker-section {
+      padding: 1.5rem 1.25rem;
+      margin: 2.5rem 0;
+    }
+  }
+
+  .picker-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .picker-title {
+    font-size: clamp(1.4rem, 2vw, 1.8rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0.35rem 0 0.5rem;
+    color: var(--color-text-primary);
+  }
+
+  .picker-sub {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .picker-chips-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .picker-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.5rem 0.95rem;
+    border-radius: 999px;
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.18s ease;
+  }
+
+  .picker-chip:hover {
+    color: var(--color-text-primary);
+    border-color: color-mix(in srgb, var(--color-text-primary) 30%, var(--color-border));
+    background-color: var(--color-surface-raised, rgba(0, 0, 0, 0.02));
+  }
+
+  .chip-check {
+    display: inline-block;
+    font-size: 11px;
+    opacity: 0;
+    transform: scale(0.6);
+    transition: all 0.18s ease;
+  }
+
+  .picker-chip.is-selected {
+    background-color: var(--color-text-primary);
+    color: var(--color-bg);
+    border-color: var(--color-text-primary);
+  }
+
+  .picker-chip.is-selected .chip-check {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .picker-result-card {
+    padding: 1.75rem;
+    border-radius: 18px;
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 4px 16px rgba(16, 24, 40, 0.04);
+  }
+
+  .result-badge-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .result-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #F7941D;
+  }
+
+  .result-peg-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    line-height: 1.3;
+  }
+
+  .result-body {
+    margin-bottom: 1.5rem;
+  }
+
+  .result-reason-p {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--color-text-primary);
+    margin: 0 0 0.5rem;
+  }
+
+  .result-disclaimer {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  .result-actions-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.85rem;
+  }
+
+  .result-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.65rem 1.25rem;
+    font-size: 0.875rem;
+    border-radius: 999px;
+  }
+
+  .result-pin-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.65rem 1.15rem;
+    font-size: 0.875rem;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+
+  .result-pin-btn.is-pinned {
+    background-color: color-mix(in srgb, var(--color-text-primary) 10%, transparent);
+    color: var(--color-text-primary);
+  }
+</style>

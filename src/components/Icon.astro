@@ -38,7 +38,11 @@ interface Props {
     | 'search'
     | 'map-pin'
     | 'dollar'
-    | 'currency-dollar';
+    | 'currency-dollar'
+    | 'bookmark'
+    | 'folder-git-2'
+    | 'cloud'
+    | 'server';
   size?: number | string;
   strokeWidth?: number | string;
   class?: string;
@@ -314,6 +318,32 @@ const {
     <>
       <line x1="12" x2="12" y1="2" y2="22" />
       <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+    </>
+  )}
+
+  {name === 'bookmark' && (
+    <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
+  )}
+
+  {name === 'folder-git-2' && (
+    <>
+      <path d="M9 20H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H20a2 2 0 0 1 2 2v5" />
+      <circle cx="13" cy="12" r="2" />
+      <path d="M18 19c-2.8 0-5-2.2-5-5v8" />
+      <circle cx="20" cy="19" r="2" />
+    </>
+  )}
+
+  {name === 'cloud' && (
+    <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" />
+  )}
+
+  {name === 'server' && (
+    <>
+      <rect width="20" height="8" x="2" y="2" rx="2" ry="2" />
+      <rect width="20" height="8" x="2" y="14" rx="2" ry="2" />
+      <line x1="6" x2="6.01" y1="6" y2="6" />
+      <line x1="6" x2="6.01" y1="18" y2="18" />
     </>
   )}
 

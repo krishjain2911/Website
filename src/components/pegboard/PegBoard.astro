@@ -1,0 +1,944 @@
+---
+import Icon from '../Icon.astro';
+import BoardTile from './BoardTile.astro';
+import MyBoardDrawer from './MyBoardDrawer.astro';
+import { zones, tiles } from '../../data/pegBoard';
+---
+
+<div class="peg-board-component" id="peg-board-root">
+  <!-- Perforated Panel Container -->
+  <section class="peg-board-panel" id="peg-board-panel" aria-label="PEG Board interactive panel">
+    <!-- Holes overlay grid via CSS radial-gradient -->
+    <div class="panel-holes-layer" aria-hidden="true"></div>
+
+    <!-- Board Header Row -->
+    <div class="board-header">
+      <div class="board-header-left">
+        <span class="board-eyebrow">PEG BOARD</span>
+        <h1 class="board-heading">Everything on one board.</h1>
+        <p class="board-subline">
+          Guides, comparisons and our approach. Pin what matters and we'll talk it through.
+        </p>
+      </div>
+
+      <div class="board-header-right">
+        <!-- Explorer progress ring -->
+        <div class="explorer-ring-widget" id="explorer-ring-widget" title="Explore pegs on the board">
+          <svg class="explorer-svg" width="44" height="44" viewBox="0 0 44 44" aria-hidden="true">
+            <circle class="ring-bg" cx="22" cy="22" r="18" fill="none" stroke-width="3"></circle>
+            <circle
+              class="ring-progress"
+              id="explorer-progress-circle"
+              cx="22"
+              cy="22"
+              r="18"
+              fill="none"
+              stroke-width="3"
+              stroke-dasharray="113.097"
+              stroke-dashoffset="113.097"
+              transform="rotate(-90 22 22)"
+            ></circle>
+          </svg>
+          <div class="explorer-stat-box">
+            <span class="explorer-num" id="explorer-count-text">0 of 8</span>
+            <span class="explorer-label">pegs explored</span>
+          </div>
+        </div>
+
+        <!-- 8 of 8 Completed Pill (hidden until full exploration) -->
+        <a
+          href="/#contact"
+          class="explorer-completed-pill"
+          id="explorer-completed-pill"
+          style="display: none;"
+        >
+          <span>You have been through the board. Book a call</span>
+          <Icon name="arrow-right" size={12} />
+        </a>
+
+        <!-- My board button -->
+        <button
+          type="button"
+          class="btn btn-secondary my-board-trigger-btn"
+          id="my-board-open-btn"
+          aria-haspopup="dialog"
+          aria-expanded="false"
+          aria-controls="my-board-drawer"
+        >
+          <Icon name="bookmark" size={14} />
+          <span id="my-board-btn-label">My board (0)</span>
+        </button>
+
+        <!-- Reset board button (desktop drag order reset) -->
+        <button
+          type="button"
+          class="reset-board-btn"
+          id="reset-board-btn"
+          title="Reset board layout"
+        >
+          Reset board
+        </button>
+      </div>
+    </div>
+
+    <!-- Board Zones Container -->
+    <div class="board-zones-container">
+      {zones.map((zone) => {
+        const zoneTiles = tiles.filter((t) => t.zoneId === zone.id);
+        return (
+          <div class="board-zone-band" data-zone-id={zone.id}>
+            <!-- Zone Plaque -->
+            <div class="zone-plaque-row">
+              <span class={`zone-plaque ${zone.accentClass}`} style={`--zone-accent: ${zone.accentColor};`}>
+                <span class="plaque-dot" aria-hidden="true"></span>
+                <span>{zone.label}</span>
+              </span>
+            </div>
+
+            <!-- Tile Slots Track (Snap columns) -->
+            <div class="zone-tiles-track" id={`zone-track-${zone.id}`} data-zone-id={zone.id}>
+              {zoneTiles.map((tile, idx) => (
+                <BoardTile tile={tile} index={idx} />
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+
+    <!-- Optional Easter Egg adapter trigger in bottom-right corner -->
+    <button
+      type="button"
+      class="board-easter-egg-btn"
+      id="board-easter-egg-trigger"
+      title="Try the adapter"
+      aria-label="Try the adapter mini-game"
+    >
+      <span class="egg-peg-icon" aria-hidden="true"></span>
+    </button>
+  </section>
+
+  <!-- My Board Pinned Items Drawer -->
+  <MyBoardDrawer />
+
+  <!-- Mini-game Modal (Easter Egg) -->
+  <div id="adapter-game-modal" class="adapter-game-overlay" aria-hidden="true">
+    <div class="adapter-game-card card-mastercard" role="dialog" aria-modal="true" aria-labelledby="game-title">
+      <div class="game-header">
+        <h3 id="game-title" class="game-heading">RHSP Adapter</h3>
+        <button type="button" class="game-close-btn" id="game-close-btn" aria-label="Close game">
+          <Icon name="x" size={16} />
+        </button>
+      </div>
+      <p class="game-instructions">Guide the square peg through the adapter into the round hole.</p>
+      <div class="game-canvas-area" id="game-canvas">
+        <div class="game-target-hole" id="game-target-hole" aria-hidden="true">
+          <div class="game-adapter-ring"></div>
+        </div>
+        <div class="game-movable-peg" id="game-movable-peg" aria-hidden="true"></div>
+      </div>
+      <div class="game-footer">
+        <span id="game-status-text" class="game-status">Move pointer to guide peg</span>
+        <button type="button" class="btn btn-secondary btn-sm" id="game-replay-btn">Replay</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import {
+    getPinnedSlugs,
+    togglePin,
+    getExploredSlugs,
+    markExplored,
+    getSavedTileOrder,
+    saveTileOrder,
+    resetTileOrder
+  } from '../../scripts/pegBoardState';
+  import { tiles } from '../../data/pegBoard';
+
+  function initPegBoard() {
+    const board = document.getElementById('peg-board-panel');
+    if (!board) return;
+
+    // Helper: calculate zoom factor k
+    function getZoomK(): number {
+      if (!board) return 1;
+      const rect = board.getBoundingClientRect();
+      const offsetW = board.offsetWidth || 1;
+      return rect.width / offsetW || 1;
+    }
+
+    // 1. PIN FUNCTIONALITY & DRAWER
+    const drawerOverlay = document.getElementById('my-board-drawer');
+    // drawer panel
+    const drawerBackdrop = document.getElementById('my-board-backdrop');
+    const drawerCloseBtn = document.getElementById('my-board-close-btn');
+    const drawerOpenBtn = document.getElementById('my-board-open-btn');
+    const myBoardBtnLabel = document.getElementById('my-board-btn-label');
+    const pinnedListEl = document.getElementById('pinned-tiles-list');
+    const emptyStateEl = document.getElementById('pinned-empty-state');
+    const discussBtn = document.getElementById('discuss-board-btn') as HTMLAnchorElement | null;
+    const copyEmailBtn = document.getElementById('copy-contact-email-btn');
+    const copyEmailFeedback = document.getElementById('copy-email-feedback');
+    const selectableEmail = document.getElementById('selectable-contact-email');
+
+    function syncPinsUI() {
+      const pinnedSlugs = getPinnedSlugs();
+
+      // Update tile pin buttons on the board
+      document.querySelectorAll<HTMLButtonElement>('[data-pin-btn]').forEach((btn) => {
+        const slug = btn.getAttribute('data-pin-btn') || '';
+        const isP = pinnedSlugs.includes(slug);
+        btn.setAttribute('aria-pressed', isP ? 'true' : 'false');
+      });
+
+      // Update header button count
+      if (myBoardBtnLabel) {
+        myBoardBtnLabel.textContent = `My board (${pinnedSlugs.length})`;
+      }
+
+      // Render drawer items
+      if (pinnedListEl && emptyStateEl) {
+        if (pinnedSlugs.length === 0) {
+          emptyStateEl.style.display = 'flex';
+          pinnedListEl.innerHTML = '';
+        } else {
+          emptyStateEl.style.display = 'none';
+          pinnedListEl.innerHTML = pinnedSlugs
+            .map((slug) => {
+              const tile = tiles.find((t) => t.slug === slug);
+              if (!tile) return '';
+              return `
+                <li class="pinned-item-row" data-pinned-slug="${tile.slug}">
+                  <div class="pinned-item-info">
+                    <a href="${tile.href}" class="pinned-item-title">${tile.title}</a>
+                    <span class="pinned-item-tag">${tile.tag}</span>
+                  </div>
+                  <button type="button" class="pinned-remove-btn" data-remove-slug="${tile.slug}" aria-label="Remove ${tile.title} from pins">
+                    ✕
+                  </button>
+                </li>
+              `;
+            })
+            .join('');
+
+          // Wire remove buttons inside drawer
+          pinnedListEl.querySelectorAll<HTMLButtonElement>('[data-remove-slug]').forEach((btn) => {
+            btn.addEventListener('click', () => {
+              const slug = btn.getAttribute('data-remove-slug');
+              if (slug) {
+                togglePin(slug);
+                syncPinsUI();
+              }
+            });
+          });
+        }
+      }
+
+      // Update discuss mailto URL
+      if (discussBtn) {
+        const pinnedTitles = pinnedSlugs
+          .map((s) => tiles.find((t) => t.slug === s)?.title)
+          .filter(Boolean);
+        const subject = encodeURIComponent('PEG Board: my pinned topics');
+        const bodyLines = [
+          'Pinned topics from RHSP PEG Board:',
+          ...pinnedTitles.map((t) => `- ${t}`),
+          '',
+          'Tell us a little about your project:'
+        ].join('\n');
+        const body = encodeURIComponent(bodyLines);
+        discussBtn.href = `mailto:letstalk@rhsp.solutions?subject=${subject}&body=${body}`;
+      }
+    }
+
+    // Toggle pin click on tiles
+    board.addEventListener('click', (e) => {
+      const pinBtn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-pin-btn]');
+      if (pinBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        const slug = pinBtn.getAttribute('data-pin-btn');
+        if (slug) {
+          togglePin(slug);
+          syncPinsUI();
+        }
+      }
+    });
+
+    // Drawer open / close
+    function openDrawer() {
+      if (!drawerOverlay) return;
+      drawerOverlay.classList.add('is-open');
+      drawerOverlay.setAttribute('aria-hidden', 'false');
+      drawerOpenBtn?.setAttribute('aria-expanded', 'true');
+      drawerCloseBtn?.focus();
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeDrawer() {
+      if (!drawerOverlay) return;
+      drawerOverlay.classList.remove('is-open');
+      drawerOverlay.setAttribute('aria-hidden', 'true');
+      drawerOpenBtn?.setAttribute('aria-expanded', 'false');
+      drawerOpenBtn?.focus();
+      document.body.style.overflow = '';
+    }
+
+    drawerOpenBtn?.addEventListener('click', openDrawer);
+    drawerCloseBtn?.addEventListener('click', closeDrawer);
+    drawerBackdrop?.addEventListener('click', closeDrawer);
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && drawerOverlay?.classList.contains('is-open')) {
+        closeDrawer();
+      }
+    });
+
+    // Copy email handler
+    copyEmailBtn?.addEventListener('click', async () => {
+      const email = selectableEmail?.textContent || 'letstalk@rhsp.solutions';
+      try {
+        await navigator.clipboard.writeText(email);
+        if (copyEmailFeedback) {
+          copyEmailFeedback.textContent = 'Copied!';
+          setTimeout(() => {
+            copyEmailFeedback.textContent = 'Copy';
+          }, 2000);
+        }
+      } catch {
+        // fallback
+      }
+    });
+
+    // 2. EXPLORER PROGRESS
+    const countText = document.getElementById('explorer-count-text');
+    const progressCircle = document.getElementById('explorer-progress-circle');
+    const completedPill = document.getElementById('explorer-completed-pill');
+    const TOTAL_PEGS = 8;
+    const CIRCUMFERENCE = 2 * Math.PI * 18; // ~113.097
+
+    function syncExploredUI() {
+      const explored = getExploredSlugs();
+      const count = Math.min(explored.length, TOTAL_PEGS);
+      if (countText) {
+        countText.textContent = `${count} of ${TOTAL_PEGS}`;
+      }
+
+      if (progressCircle) {
+        const offset = CIRCUMFERENCE * (1 - count / TOTAL_PEGS);
+        progressCircle.style.strokeDashoffset = `${offset}`;
+        if (count === TOTAL_PEGS) {
+          progressCircle.style.stroke = '#F7941D';
+        } else {
+          progressCircle.style.stroke = 'var(--color-accent, #1E4B8F)';
+        }
+      }
+
+      if (completedPill) {
+        completedPill.style.display = count >= TOTAL_PEGS ? 'inline-flex' : 'none';
+      }
+    }
+
+    // Mark peg explored on tile click or Enter
+    document.querySelectorAll<HTMLAnchorElement>('[data-tile-link]').forEach((link) => {
+      link.addEventListener('click', () => {
+        const slug = link.getAttribute('data-tile-link');
+        if (slug) {
+          markExplored(slug);
+          syncExploredUI();
+
+          // Lift card animation
+          const card = link.closest('.board-tile-card');
+          if (card) {
+            card.classList.add('is-lifting');
+          }
+        }
+      });
+    });
+
+    // 3. DESKTOP DRAGGABLE TILES WITH ZOOM FACTOR K (>= 900px only)
+    const resetOrderBtn = document.getElementById('reset-board-btn');
+
+    function initTileDragging() {
+      if (window.innerWidth < 900) return;
+
+      const tracks = document.querySelectorAll<HTMLElement>('.zone-tiles-track');
+
+      // Restore saved order
+      const savedOrder = getSavedTileOrder();
+      if (savedOrder) {
+        tracks.forEach((track) => {
+          const zoneId = track.getAttribute('data-zone-id');
+          if (zoneId && savedOrder[zoneId]) {
+            const slugs = savedOrder[zoneId];
+            slugs.forEach((slug) => {
+              const el = track.querySelector(`[data-tile-slug="${slug}"]`);
+              if (el) track.appendChild(el);
+            });
+          }
+        });
+      }
+
+      // Pointer event dragging per track
+      tracks.forEach((track) => {
+        const zoneId = track.getAttribute('data-zone-id') || '';
+        let draggingEl: HTMLElement | null = null;
+        let startX = 0;
+        let startY = 0;
+        let hasMovedFar = false;
+
+        track.addEventListener('pointerdown', (e) => {
+          // Ignore clicks on pin buttons or links directly
+          if ((e.target as HTMLElement).closest('.tile-pin-btn')) return;
+
+          const tileWrapper = (e.target as HTMLElement).closest<HTMLElement>('.board-tile-wrapper');
+          if (!tileWrapper) return;
+
+          draggingEl = tileWrapper;
+          startX = e.clientX;
+          startY = e.clientY;
+          hasMovedFar = false;
+
+          const onPointerMove = (moveEv: PointerEvent) => {
+            if (!draggingEl) return;
+            const k = getZoomK();
+            const dx = (moveEv.clientX - startX) / k;
+            const dy = (moveEv.clientY - startY) / k;
+
+            if (!hasMovedFar && (Math.abs(dx) > 6 || Math.abs(dy) > 6)) {
+              hasMovedFar = true;
+              draggingEl.classList.add('is-dragging');
+              draggingEl.setPointerCapture(moveEv.pointerId);
+            }
+
+            if (hasMovedFar) {
+              draggingEl.style.transform = `translate(${dx}px, ${dy}px)`;
+
+              // Live reorder detection with siblings
+              const siblings = Array.from(track.querySelectorAll<HTMLElement>('.board-tile-wrapper'));
+              const dragRect = draggingEl.getBoundingClientRect();
+              const dragCenterX = dragRect.left + dragRect.width / 2;
+
+              for (const sib of siblings) {
+                if (sib === draggingEl) continue;
+                const sibRect = sib.getBoundingClientRect();
+                const sibCenterX = sibRect.left + sibRect.width / 2;
+                if (dragCenterX > sibCenterX && draggingEl.previousElementSibling === sib) {
+                  track.insertBefore(draggingEl, sib);
+                  break;
+                } else if (dragCenterX < sibCenterX && draggingEl.nextElementSibling === sib) {
+                  track.insertBefore(sib, draggingEl);
+                  break;
+                }
+              }
+            }
+          };
+
+          const onPointerUp = (upEv: PointerEvent) => {
+            window.removeEventListener('pointermove', onPointerMove);
+            window.removeEventListener('pointerup', onPointerUp);
+
+            if (draggingEl) {
+              if (hasMovedFar) {
+                try {
+                  draggingEl.releasePointerCapture(upEv.pointerId);
+                } catch {}
+
+                // Soft magnetic snap ease
+                draggingEl.style.transition = 'transform 150ms ease';
+                draggingEl.style.transform = 'translate(0px, 0px)';
+                setTimeout(() => {
+                  if (draggingEl) {
+                    draggingEl.style.transition = '';
+                    draggingEl.style.transform = '';
+                    draggingEl.classList.remove('is-dragging');
+                  }
+                }, 150);
+
+                // Save new zone order
+                const currentOrder = getSavedTileOrder() || {};
+                const currentSlugs = Array.from(track.querySelectorAll('.board-tile-wrapper')).map(
+                  (el) => el.getAttribute('data-tile-slug') || ''
+                );
+                currentOrder[zoneId] = currentSlugs;
+                saveTileOrder(currentOrder);
+              } else {
+                draggingEl.classList.remove('is-dragging');
+              }
+              draggingEl = null;
+            }
+          };
+
+          window.addEventListener('pointermove', onPointerMove);
+          window.addEventListener('pointerup', onPointerUp);
+        });
+      });
+    }
+
+    // Reset board button handler
+    resetOrderBtn?.addEventListener('click', () => {
+      resetTileOrder();
+      window.location.reload();
+    });
+
+    // 4. EASTER EGG MINI-GAME ("Try the adapter")
+    const eggTrigger = document.getElementById('board-easter-egg-trigger');
+    const gameModal = document.getElementById('adapter-game-modal');
+    const gameCloseBtn = document.getElementById('game-close-btn');
+    const gameReplayBtn = document.getElementById('game-replay-btn');
+    const gameCanvas = document.getElementById('game-canvas');
+    const gamePeg = document.getElementById('game-movable-peg');
+    const gameHole = document.getElementById('game-target-hole');
+    const gameStatus = document.getElementById('game-status-text');
+
+    function openGame() {
+      if (!gameModal) return;
+      gameModal.classList.add('is-open');
+      gameModal.setAttribute('aria-hidden', 'false');
+      resetGame();
+    }
+
+    function closeGame() {
+      if (!gameModal) return;
+      gameModal.classList.remove('is-open');
+      gameModal.setAttribute('aria-hidden', 'true');
+    }
+
+    function resetGame() {
+      if (!gamePeg || !gameStatus) return;
+      gamePeg.style.left = '30px';
+      gamePeg.style.top = '60px';
+      gameStatus.textContent = 'Move pointer to guide peg into the adapter';
+      gameStatus.style.color = 'var(--color-text-secondary)';
+    }
+
+    eggTrigger?.addEventListener('click', openGame);
+    gameCloseBtn?.addEventListener('click', closeGame);
+    gameReplayBtn?.addEventListener('click', resetGame);
+
+    gameCanvas?.addEventListener('pointermove', (e) => {
+      if (!gamePeg || !gameHole || !gameStatus || !gameCanvas) return;
+      const rect = gameCanvas.getBoundingClientRect();
+      const k = rect.width / (gameCanvas.offsetWidth || 1);
+      const x = Math.max(10, Math.min(rect.width / k - 40, (e.clientX - rect.left) / k - 15));
+      const y = Math.max(10, Math.min(rect.height / k - 40, (e.clientY - rect.top) / k - 15));
+      gamePeg.style.left = `${x}px`;
+      gamePeg.style.top = `${y}px`;
+
+      // Check collision with hole center
+      const holeRect = gameHole.getBoundingClientRect();
+      const holeCenterX = (holeRect.left + holeRect.width / 2 - rect.left) / k;
+      const holeCenterY = (holeRect.top + holeRect.height / 2 - rect.top) / k;
+      const dist = Math.hypot(x + 15 - holeCenterX, y + 15 - holeCenterY);
+
+      if (dist < 22) {
+        gameStatus.textContent = 'Adapter engaged! Zero compromise.';
+        gameStatus.style.color = '#F7941D';
+      }
+    });
+
+    // Initial sync
+    syncPinsUI();
+    syncExploredUI();
+    initTileDragging();
+
+    // Listen for custom storage events
+    window.addEventListener('rhsp:pegboard:pins-changed', syncPinsUI);
+    window.addEventListener('rhsp:pegboard:explored-changed', syncExploredUI);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPegBoard);
+  } else {
+    initPegBoard();
+  }
+</script>
+
+<style>
+  .peg-board-component {
+    width: 100%;
+    margin-bottom: 5rem;
+  }
+
+  /* Perforated Panel Container */
+  .peg-board-panel {
+    position: relative;
+    width: 100%;
+    background-color: #F8F9FA;
+    border: 1px solid var(--color-border);
+    border-radius: 24px;
+    padding: clamp(1.75rem, 3.5vw, 3rem);
+    box-shadow: inset 0 2px 10px rgba(16, 24, 40, 0.04), 0 8px 28px rgba(16, 24, 40, 0.03);
+    overflow: hidden;
+  }
+
+  :global(.dark) .peg-board-panel {
+    background-color: #161A22;
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow: inset 0 2px 12px rgba(0, 0, 0, 0.5), 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  /* CSS radial-gradient grid holes (drilled look) */
+  .panel-holes-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background-image: radial-gradient(circle at 14px 14px, rgba(140, 150, 165, 0.35) 2.5px, transparent 3px);
+    background-size: 28px 28px;
+    opacity: 0.75;
+    z-index: 0;
+  }
+
+  :global(.dark) .panel-holes-layer {
+    background-image: radial-gradient(circle at 14px 14px, rgba(0, 0, 0, 0.7) 2.5px, transparent 3px);
+    opacity: 0.9;
+  }
+
+  /* Header Row */
+  .board-header {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-border) 60%, transparent);
+    margin-bottom: 2.25rem;
+    z-index: 1;
+  }
+
+  .board-header-left {
+    max-width: 580px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .board-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--color-accent, #1E4B8F);
+  }
+
+  .board-heading {
+    font-size: clamp(1.8rem, 2.8vw, 2.4rem);
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--color-text-primary);
+    margin: 0;
+    letter-spacing: -0.02em;
+  }
+
+  .board-subline {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  .board-header-right {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  /* Explorer Ring Widget */
+  .explorer-ring-widget {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.35rem 0.75rem;
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+  }
+
+  .explorer-svg {
+    transform: rotate(0deg);
+  }
+
+  .ring-bg {
+    stroke: var(--color-border);
+  }
+
+  .ring-progress {
+    stroke: var(--color-accent, #1E4B8F);
+    transition: stroke-dashoffset 0.4s ease, stroke 0.4s ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ring-progress {
+      transition: none;
+    }
+  }
+
+  .explorer-stat-box {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+  }
+
+  .explorer-num {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+  }
+
+  .explorer-label {
+    font-size: 10px;
+    color: var(--color-text-muted);
+  }
+
+  .explorer-completed-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.85rem;
+    border-radius: 999px;
+    background-color: rgba(247, 148, 29, 0.12);
+    border: 1px solid rgba(247, 148, 29, 0.3);
+    color: #F7941D;
+    font-size: 11.5px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+  }
+
+  .explorer-completed-pill:hover {
+    transform: translateY(-1px);
+  }
+
+  .my-board-trigger-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.55rem 1.15rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+
+  .reset-board-btn {
+    background: transparent;
+    border: none;
+    color: var(--color-text-muted);
+    font-size: 11.5px;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .reset-board-btn:hover {
+    color: var(--color-text-primary);
+  }
+
+  /* Board Zones */
+  .board-zones-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 2.75rem;
+    z-index: 1;
+  }
+
+  .board-zone-band {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .zone-plaque-row {
+    display: flex;
+    align-items: center;
+  }
+
+  /* Engraved zone plaque label */
+  .zone-plaque {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    color: var(--zone-accent, currentColor);
+    box-shadow: inset 0 1px 2px rgba(16, 24, 40, 0.05);
+  }
+
+  .plaque-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--zone-accent, currentColor);
+  }
+
+  .zone-orange { --zone-accent: #F7941D; }
+  .zone-red { --zone-accent: #EE4B2B; }
+  .zone-blue { --zone-accent: #1E4B8F; }
+
+  /* Tiles track row / grid */
+  .zone-tiles-track {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    align-items: flex-start;
+  }
+
+  @media (max-width: 639px) {
+    .zone-tiles-track {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+
+  /* Easter Egg Button */
+  .board-easter-egg-btn {
+    position: absolute;
+    bottom: 1.25rem;
+    right: 1.25rem;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: 1px dashed var(--color-border);
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0.45;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 2;
+  }
+
+  .board-easter-egg-btn:hover {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+
+  .egg-peg-icon {
+    width: 8px;
+    height: 8px;
+    background-color: #F7941D;
+    border-radius: 2px;
+  }
+
+  /* Easter Egg Modal */
+  .adapter-game-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100dvh;
+    background-color: rgba(16, 24, 40, 0.5);
+    z-index: 4000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.25s ease;
+  }
+
+  .adapter-game-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .adapter-game-card {
+    width: 90%;
+    max-width: 460px;
+    padding: 1.5rem;
+    border-radius: 20px;
+    background: var(--color-bg);
+  }
+
+  .game-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }
+
+  .game-heading {
+    margin: 0;
+    font-size: 1.2rem;
+  }
+
+  .game-close-btn {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+  }
+
+  .game-instructions {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    margin: 0 0 1rem;
+  }
+
+  .game-canvas-area {
+    position: relative;
+    width: 100%;
+    height: 160px;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    overflow: hidden;
+    touch-action: none;
+  }
+
+  .game-target-hole {
+    position: absolute;
+    right: 40px;
+    top: 50px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid #1E4B8F;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .game-adapter-ring {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1.5px dashed #F7941D;
+  }
+
+  .game-movable-peg {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background-color: #EE4B2B;
+    border-radius: 4px;
+    cursor: grab;
+  }
+
+  .game-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1rem;
+  }
+
+  .game-status {
+    font-size: 0.8125rem;
+    font-weight: 600;
+  }
+</style>
