@@ -7,11 +7,56 @@ import ContactSection from '../components/ContactSection.astro';
 import { siteConfig } from '../config/site';
 
 const { about } = siteConfig;
+
+const theoryCards = [
+  {
+    step: '01',
+    label: 'ROUND HOLE',
+    title: 'The round hole — your challenge',
+    text: 'Defined by your people, processes and data.',
+    color: '#1E4B8F'
+  },
+  {
+    step: '02',
+    label: 'THE ADAPTER',
+    title: 'The adapter — RHSP',
+    text: 'The engineering that lets the two work together, with no compromise on either side.',
+    color: '#F7941D'
+  },
+  {
+    step: '03',
+    label: 'SQUARE PEG',
+    title: 'The square peg — the solution',
+    text: 'Powerful technology, built for the general case.',
+    color: '#EE4B2B'
+  }
+];
+
+const apolloSteps = [
+  {
+    num: '01',
+    tag: 'April 1970',
+    title: 'Crisis in orbit',
+    desc: 'In April 1970, Apollo 13 suffered an oxygen tank explosion 200,000 miles from Earth.'
+  },
+  {
+    num: '02',
+    tag: 'The constraint',
+    title: 'Mismatched interfaces',
+    desc: 'NASA engineers had to connect square lithium hydroxide canisters to round sockets using only what was on board.'
+  },
+  {
+    num: '03',
+    tag: 'The outcome',
+    title: 'Engineered adapter',
+    desc: 'They engineered the adapter using only what was on board.'
+  }
+];
 ---
 
 <BaseLayout
-  title="About RHSP - Tech that adapts to business."
-  description="Round Hole Square Peg is built on the Apollo 13 imperative: understand the challenge, then engineer the adapter to the solution. Technology consulting, implementation, and sovereign enterprise AI."
+  title="The RHSP theory - About RHSP"
+  description="RHSP stands for Round Hole Square Peg. Every business challenge is a round hole. Every powerful technology is a square peg. We engineer the adapter between them."
   breadcrumbs={[
     { name: 'Home', item: '/' },
     { name: 'About', item: '/about' }
@@ -20,119 +65,168 @@ const { about } = siteConfig;
   <Nav />
 
   <main id="main-content" tabindex="-1">
-    <!-- 1. Our Origin: Apollo 13 "Our origin" story (starts the page directly, no hero) -->
-    <section id="story" class="about-story-section" aria-labelledby="story-heading">
+    <!-- 1. Theory Hero (2-Column Grid: Text Left, Diagram Right) -->
+    <section id="theory-hero" class="about-hero-section" aria-labelledby="hero-heading">
       <div class="container">
-        <div class="story-box-wrapper card-mastercard reveal-on-scroll">
-          <div class="story-header">
-            <span class="eyebrow">OUR ORIGIN</span>
-            <h1 id="story-heading" class="story-title">
-              The Apollo 13 imperative.
-            </h1>
-          </div>
+        <div class="hero-two-col-grid">
+          <!-- Left: Headline, Definition chip, Subline -->
+          <div class="hero-text-col reveal-on-scroll">
+            <span class="eyebrow">THE RHSP THEORY</span>
+            <h1 id="hero-heading" class="hero-heading">The RHSP theory.</h1>
 
-          <div class="story-body-grid">
-            <!-- Left: 3 Short Origin Lines -->
-            <div class="story-lines-col">
-              <ol class="story-timeline" aria-label="Apollo 13 origin sequence steps">
-                <li class="story-step-item">
-                  <span class="step-bullet" aria-hidden="true">01</span>
-                  <p class="step-text">In April 1970, Apollo 13 suffered an oxygen tank explosion 200,000 miles from Earth.</p>
-                </li>
-                <li class="story-step-item">
-                  <span class="step-bullet" aria-hidden="true">02</span>
-                  <p class="step-text">NASA engineers had to connect square lithium hydroxide canisters to round sockets using only what was on board.</p>
-                </li>
-                <li class="story-step-item">
-                  <span class="step-bullet" aria-hidden="true">03</span>
-                  <p class="step-text">They engineered the adapter using only what was on board.</p>
-                </li>
-              </ol>
-
-              <!-- Fact Chips -->
-              <div class="story-fact-chips">
-                <span class="fact-chip">April 1970</span>
-                <span class="fact-chip-dot" aria-hidden="true">·</span>
-                <span class="fact-chip">200,000 miles from Earth</span>
-                <span class="fact-chip-dot" aria-hidden="true">·</span>
-                <span class="fact-chip">Only materials on board</span>
-              </div>
-
-              <div class="story-conclusion-card">
-                <p class="conclusion-statement">
-                  Round Hole Square Peg is built on the same principle: understand the challenge, then engineer the adapter to the solution.
-                </p>
-              </div>
+            <!-- Definition Chip -->
+            <div class="definition-chip-wrap">
+              <span class="definition-chip">RHSP stands for Round Hole Square Peg.</span>
             </div>
 
-            <!-- Right: Blueprint Line-Art Illustration -->
-            <div class="story-illustration-col">
-              <div class="blueprint-canvas">
-                <svg
-                  viewBox="0 0 320 280"
-                  fill="none"
-                  class="blueprint-svg"
-                  role="img"
-                  aria-label="Technical diagram: Round hole (The challenge), RHSP adapter (The adapter), and Square peg (The solution). From challenge to solution."
-                >
-                  <!-- Left: Round Hole / Socket (The challenge) -->
-                  <ellipse cx="75" cy="115" rx="42" ry="42" stroke="#1E4B8F" stroke-width="1.75" />
-                  <ellipse cx="75" cy="115" rx="28" ry="28" stroke="#1E4B8F" stroke-dasharray="4 4" stroke-width="1" />
-                  <text x="75" y="111" font-family="var(--font-sans, sans-serif)" font-weight="600" font-size="8.5" fill="#1E4B8F" text-anchor="middle">ROUND HOLE</text>
-                  <text x="75" y="125" font-family="var(--font-sans, sans-serif)" font-size="8" fill="var(--color-text-secondary, #5B5B5B)" text-anchor="middle">The challenge</text>
+            <p class="hero-subline">
+              Every business challenge is a round hole. Every powerful technology is a square peg. We engineer the adapter between them.
+            </p>
+          </div>
 
-                  <!-- Center: The Engineered Adapter -->
-                  <path d="M120,90 C140,80 160,80 180,90" stroke="#F7941D" stroke-width="2" stroke-linecap="round" />
-                  <path d="M120,140 C140,150 160,150 180,140" stroke="#F7941D" stroke-width="2" stroke-linecap="round" />
-                  <rect x="135" y="97" width="46" height="36" rx="8" fill="var(--color-surface-alt, #FFFFFF)" stroke="#F7941D" stroke-width="1.5" />
-                  <text x="158" y="115" font-family="var(--font-sans, sans-serif)" font-weight="600" font-size="8" fill="#F7941D" text-anchor="middle">RHSP</text>
-                  <text x="158" y="126" font-family="var(--font-sans, sans-serif)" font-size="6.5" fill="var(--color-text-secondary, #5B5B5B)" text-anchor="middle">The adapter</text>
+          <!-- Right: Clean Responsive SVG Diagram -->
+          <div class="hero-diagram-col reveal-on-scroll" style="transition-delay: 80ms;">
+            <div class="diagram-surface card-mastercard" aria-hidden="true">
+              <svg
+                viewBox="0 0 540 240"
+                fill="none"
+                class="theory-diagram-svg"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <defs>
+                  <marker id="arrowHead" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="var(--color-text-muted)" />
+                  </marker>
+                </defs>
 
-                  <!-- Right: Square Peg (The solution) -->
-                  <rect x="205" y="60" width="70" height="110" rx="4" stroke="#EE4B2B" stroke-width="1.75" stroke-dasharray="3 3" />
-                  <text x="240" y="111" font-family="var(--font-sans, sans-serif)" font-weight="600" font-size="8.5" fill="#EE4B2B" text-anchor="middle">SQUARE PEG</text>
-                  <text x="240" y="125" font-family="var(--font-sans, sans-serif)" font-size="8" fill="var(--color-text-secondary, #5B5B5B)" text-anchor="middle">The solution</text>
+                <!-- 1. Round Hole (The challenge) -->
+                <g transform="translate(90, 110)">
+                  <circle cx="0" cy="0" r="46" stroke="#1E4B8F" stroke-width="2.5" fill="rgba(30, 75, 143, 0.05)" />
+                  <circle cx="0" cy="0" r="32" stroke="#1E4B8F" stroke-width="1.25" stroke-dasharray="4 4" fill="none" opacity="0.6" />
+                  <text y="-6" font-family="var(--font-sans)" font-size="10.5" font-weight="700" letter-spacing="0.08em" fill="#1E4B8F" text-anchor="middle">ROUND HOLE</text>
+                  <text y="14" font-family="var(--font-sans)" font-size="9" fill="var(--color-text-secondary)" text-anchor="middle">The challenge</text>
+                </g>
 
-                  <!-- Bottom Measurement Baseline -->
-                  <line x1="35" y1="200" x2="285" y2="200" stroke="var(--color-border, #E6E6E3)" stroke-width="1" />
-                  <circle cx="35" cy="200" r="3" fill="#1E4B8F" />
-                  <circle cx="285" cy="200" r="3" fill="#EE4B2B" />
+                <!-- Connector Line: Left to Adapter -->
+                <line x1="144" y1="110" x2="208" y2="110" stroke="var(--color-border)" stroke-width="2" stroke-dasharray="5 5" marker-end="url(#arrowHead)" />
 
-                  <!-- Caption: From challenge to solution -->
-                  <text x="160" y="235" font-family="var(--font-sans, sans-serif)" font-size="9.5" font-weight="600" letter-spacing="0.08em" fill="var(--color-text-secondary, #5B5B5B)" text-anchor="middle">From challenge to solution</text>
-                </svg>
-              </div>
+                <!-- 2. The Adapter (RHSP) -->
+                <g transform="translate(270, 110)">
+                  <rect x="-56" y="-38" width="112" height="76" rx="12" stroke="#F7941D" stroke-width="2.5" fill="rgba(247, 148, 29, 0.06)" />
+                  <text y="-6" font-family="var(--font-sans)" font-size="12" font-weight="700" letter-spacing="0.1em" fill="#F7941D" text-anchor="middle">RHSP</text>
+                  <text y="14" font-family="var(--font-sans)" font-size="9.5" font-weight="600" fill="var(--color-text-secondary)" text-anchor="middle">The adapter</text>
+                </g>
+
+                <!-- Connector Line: Adapter to Right -->
+                <line x1="334" y1="110" x2="398" y2="110" stroke="var(--color-border)" stroke-width="2" stroke-dasharray="5 5" marker-end="url(#arrowHead)" />
+
+                <!-- 3. Square Peg (The solution) -->
+                <g transform="translate(450, 110)">
+                  <rect x="-44" y="-44" width="88" height="88" rx="8" stroke="#EE4B2B" stroke-width="2.5" fill="rgba(238, 75, 43, 0.05)" />
+                  <text y="-6" font-family="var(--font-sans)" font-size="10.5" font-weight="700" letter-spacing="0.08em" fill="#EE4B2B" text-anchor="middle">SQUARE PEG</text>
+                  <text y="14" font-family="var(--font-sans)" font-size="9" fill="var(--color-text-secondary)" text-anchor="middle">The solution</text>
+                </g>
+
+                <!-- Bottom Technical Annotation Baseline -->
+                <line x1="40" y1="205" x2="500" y2="205" stroke="var(--color-border)" stroke-width="1" />
+                <circle cx="90" cy="205" r="3.5" fill="#1E4B8F" />
+                <circle cx="270" cy="205" r="3.5" fill="#F7941D" />
+                <circle cx="450" cy="205" r="3.5" fill="#EE4B2B" />
+                <text x="270" y="225" font-family="var(--font-sans)" font-size="9.5" font-weight="600" letter-spacing="0.08em" text-transform="uppercase" fill="var(--color-text-muted)" text-anchor="middle">
+                  From challenge to solution — without compromise
+                </text>
+              </svg>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 2. Mission · Purpose · Vision -->
-    <section id="mission" class="about-mission-section" aria-labelledby="mission-heading">
+    <!-- 2. Three Theory Cards in Equal-Height Row -->
+    <section id="theory-cards" class="about-section theory-cards-section" aria-label="Theory Pillars">
       <div class="container">
-        <div class="section-intro text-center reveal-on-scroll">
+        <div class="three-col-cards-grid">
+          {theoryCards.map((card, idx) => (
+            <article
+              class="theory-card card-mastercard reveal-on-scroll"
+              style={`transition-delay: ${idx * 60}ms; border-top: 3px solid ${card.color};`}
+            >
+              <div class="theory-card-header">
+                <span class="theory-card-step" style={`color: ${card.color};`}>
+                  {card.step} / {card.label}
+                </span>
+                <h2 class="theory-card-title">{card.title}</h2>
+              </div>
+              <p class="theory-card-copy">{card.text}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. The Proof: Apollo 13 -->
+    <section id="proof" class="about-section proof-section" aria-labelledby="proof-heading">
+      <div class="container">
+        <div class="section-header reveal-on-scroll">
+          <span class="eyebrow">THE PROOF</span>
+          <h2 id="proof-heading" class="section-title">The proof: Apollo 13.</h2>
+          <p class="section-subline">
+            A real-world imperative that defined our engineering philosophy.
+          </p>
+        </div>
+
+        <!-- 3-Column Numbered Sequence Row -->
+        <div class="apollo-steps-grid">
+          {apolloSteps.map((step, idx) => (
+            <article
+              class="apollo-step-card card-mastercard reveal-on-scroll"
+              style={`transition-delay: ${idx * 60}ms;`}
+            >
+              <div class="step-badge-row">
+                <span class="step-num-badge">{step.num}</span>
+                <span class="step-tag">{step.tag}</span>
+              </div>
+              <h3 class="step-title">{step.title}</h3>
+              <p class="step-desc">{step.desc}</p>
+            </article>
+          ))}
+        </div>
+
+        <!-- Conclusion Principle Card -->
+        <div class="proof-conclusion-card card-mastercard reveal-on-scroll">
+          <div class="conclusion-bar"></div>
+          <p class="conclusion-text">
+            Round Hole Square Peg is built on the same principle: understand the challenge, then engineer the adapter to the solution.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Mission · Purpose · Vision -->
+    <section id="mission" class="about-section mission-section" aria-labelledby="mission-heading">
+      <div class="container">
+        <div class="section-header reveal-on-scroll">
           <span class="eyebrow">{about.mandate.badge}</span>
           <h2 id="mission-heading" class="section-title">{about.mandate.headline}</h2>
           <p class="section-subline">{about.mandate.subline}</p>
         </div>
 
-        <div class="mission-cards-grid">
+        <div class="three-col-cards-grid">
           {about.mandate.cards.map((card, index) => {
             const colors = ['#1E4B8F', '#F7941D', '#EE4B2B'];
             const color = colors[index % colors.length];
             return (
               <article
-                class="mission-card card-mastercard reveal-on-scroll"
-                style={`transition-delay: ${index * 80}ms; border-top: 3px solid ${color};`}
+                class="mandate-card card-mastercard reveal-on-scroll"
+                style={`transition-delay: ${index * 60}ms; border-top: 3px solid ${color};`}
               >
-                <div class="mission-card-content">
-                  <span class="mission-eyebrow-label" style={`color: ${color};`}>
+                <div class="mandate-card-header">
+                  <span class="mandate-card-step" style={`color: ${color};`}>
                     0{index + 1} / {card.title.toUpperCase()}
                   </span>
-                  <h3 class="mission-card-title">{card.title}</h3>
-                  <p class="mission-card-body">{card.text}</p>
+                  <h3 class="mandate-card-title">{card.title}</h3>
                 </div>
+                <p class="mandate-card-copy">{card.text}</p>
               </article>
             );
           })}
@@ -140,10 +234,10 @@ const { about } = siteConfig;
       </div>
     </section>
 
-    <!-- 3. Leadership Team -->
+    <!-- 5. Leadership Team -->
     <Team />
 
-    <!-- 4. Universal Contact Section -->
+    <!-- 6. Universal Contact Section -->
     <ContactSection />
   </main>
 
@@ -151,262 +245,348 @@ const { about } = siteConfig;
 </BaseLayout>
 
 <style>
-  /* 1. Origin Story Section: Starts the page directly, padded for fixed nav */
-  .about-story-section {
-    padding-top: calc(72px + var(--section-spacing-desktop));
-    padding-bottom: var(--section-spacing-desktop);
+  /* Standard Layout & Spacing System */
+  .about-hero-section {
+    padding-top: calc(72px + var(--section-spacing-desktop, 80px));
+    padding-bottom: var(--section-spacing-desktop, 80px);
     background-color: var(--color-bg);
     border-bottom: 1px solid var(--color-border);
-    scroll-margin-top: 96px;
+  }
+
+  .about-section {
+    padding-top: var(--section-spacing-desktop, 80px);
+    padding-bottom: var(--section-spacing-desktop, 80px);
+    background-color: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .theory-cards-section {
+    background-color: var(--color-bg-alt);
+  }
+
+  .mission-section {
+    background-color: var(--color-bg-alt);
   }
 
   @media (max-width: 767px) {
-    .about-story-section {
-      padding-top: calc(60px + var(--section-spacing-mobile));
-      padding-bottom: var(--section-spacing-mobile);
-      scroll-margin-top: 76px;
+    .about-hero-section {
+      padding-top: calc(60px + var(--section-spacing-mobile, 48px));
+      padding-bottom: var(--section-spacing-mobile, 48px);
+    }
+
+    .about-section {
+      padding-top: var(--section-spacing-mobile, 48px);
+      padding-bottom: var(--section-spacing-mobile, 48px);
     }
   }
 
-  .story-box-wrapper {
-    background-color: var(--color-surface);
-    border-radius: var(--radius-card);
-    padding: 3.5rem;
-    box-shadow: var(--shadow-subtle);
-    border: 1px solid var(--color-border);
-  }
-
-  @media (max-width: 640px) {
-    .story-box-wrapper {
-      padding: 2rem 1.5rem;
-    }
-  }
-
-  .story-header {
-    margin-bottom: 2.5rem;
-    max-width: 680px;
-  }
-
-  .story-title {
-    font-size: var(--fs-h1);
-    font-weight: 500;
-    line-height: 1.15;
-    margin-top: -0.25rem;
-    color: var(--color-text-primary);
-  }
-
-  .story-body-grid {
+  /* 1. Theory Hero */
+  .hero-two-col-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: 3rem;
     align-items: center;
   }
 
-  @media (max-width: 959px) {
-    .story-illustration-col {
-      order: -1;
-      margin-bottom: 0.5rem;
-    }
-  }
-
   @media (min-width: 960px) {
-    .story-body-grid {
-      grid-template-columns: 1.15fr 0.85fr;
+    .hero-two-col-grid {
+      grid-template-columns: 1.05fr 0.95fr;
       gap: 4rem;
     }
   }
 
-  .story-timeline {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 2rem 0;
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-  }
-
-  .story-step-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 1.25rem;
-    padding: 0;
-    margin: 0;
+  .hero-text-col {
     text-align: left;
   }
 
-  .step-bullet {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    background-color: var(--color-surface-alt);
-    border: 1.5px solid var(--color-border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.85rem;
-    font-weight: 600;
+  .hero-heading {
+    font-size: var(--fs-h1);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.025em;
     color: var(--color-text-primary);
-    flex-shrink: 0;
+    margin: 0.5rem 0 1rem;
   }
 
-  :global([data-theme="dark"]) .step-bullet {
-    background-color: #1A1A1A;
-    border-color: var(--color-border);
-    color: var(--color-text-primary);
+  .definition-chip-wrap {
+    margin-bottom: 1.25rem;
   }
 
-  .step-text {
-    font-size: var(--fs-body);
-    line-height: 1.6;
-    color: var(--color-text-secondary);
-    margin: 0;
-    padding-top: 0.25rem;
-  }
-
-  .story-fact-chips {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    flex-wrap: wrap;
-    margin-bottom: 2rem;
-  }
-
-  .fact-chip {
-    font-size: 0.75rem;
+  .definition-chip {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: var(--fs-sm);
     font-weight: 600;
-    letter-spacing: 0.04em;
-    color: var(--color-text-secondary);
-    background-color: var(--color-surface-alt);
-    border: 1px solid var(--color-border);
-    padding: 0.25rem 0.65rem;
+    color: #1E4B8F;
+    background-color: rgba(30, 75, 143, 0.08);
+    border: 1px solid rgba(30, 75, 143, 0.22);
+    padding: 0.35rem 0.85rem;
     border-radius: var(--radius-pill);
+    letter-spacing: 0.01em;
   }
 
-  .fact-chip-dot {
-    color: var(--color-text-muted);
-    font-weight: bold;
-    user-select: none;
+  :global(.dark) .definition-chip {
+    color: #60A5FA;
+    background-color: rgba(96, 165, 250, 0.12);
+    border-color: rgba(96, 165, 250, 0.28);
   }
 
-  .story-conclusion-card {
-    background-color: var(--color-surface-alt);
-    border-radius: var(--radius-inner);
-    padding: 1.5rem 1.75rem;
-    border-left: 3px solid #F7941D;
-  }
-
-  .conclusion-statement {
-    font-size: var(--fs-body);
+  .hero-subline {
+    font-size: var(--fs-body-lg);
     line-height: 1.6;
-    color: var(--color-text-primary);
-    font-weight: 500;
+    color: var(--color-text-secondary);
     margin: 0;
+    max-width: 580px;
   }
 
-  /* Blueprint Graphic Stage */
-  .blueprint-canvas {
-    background-color: var(--color-surface-alt);
-    border-radius: var(--radius-inner);
+  .diagram-surface {
+    padding: 2.25rem 2rem;
+    background-color: var(--color-surface);
+    border-radius: var(--radius-card);
     border: 1px solid var(--color-border);
-    padding: 2.25rem 1.75rem;
+    box-shadow: var(--shadow-card);
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.02);
   }
 
-  .blueprint-svg {
+  .theory-diagram-svg {
     width: 100%;
-    max-width: 320px;
     height: auto;
+    max-width: 540px;
+    display: block;
   }
 
-  /* 2. Mission, Purpose, Vision Section */
-  .about-mission-section {
-    padding: var(--section-spacing-desktop) 0;
-    background-color: var(--color-bg-alt);
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  @media (max-width: 768px) {
-    .about-mission-section {
-      padding: var(--section-spacing-mobile) 0;
-    }
-  }
-
-  .section-intro {
+  /* Universal Section Header Scale */
+  .section-header {
+    text-align: left;
     max-width: 680px;
-    margin: 0 auto 3.5rem auto;
+    margin-bottom: 3rem;
   }
 
   .section-title {
     font-size: var(--fs-h2);
-    font-weight: 500;
+    font-weight: 700;
     line-height: 1.2;
-    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
     color: var(--color-text-primary);
+    margin: 0.4rem 0 0.75rem;
   }
 
   .section-subline {
     font-size: var(--fs-body-lg);
     color: var(--color-text-secondary);
     line-height: 1.6;
-    margin: 0 auto;
+    margin: 0;
   }
 
-  .mission-cards-grid {
+  /* 3-Column Equal-Height Grids */
+  .three-col-cards-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 1.75rem;
+    align-items: stretch;
   }
 
   @media (min-width: 768px) {
-    .mission-cards-grid {
+    .three-col-cards-grid {
       grid-template-columns: repeat(3, 1fr);
       gap: 2rem;
     }
   }
 
-  .mission-card {
+  /* 2. Theory Cards */
+  .theory-card {
     background-color: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-card);
-    padding: 2.5rem 2rem;
+    padding: 2.25rem 2rem;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     box-shadow: var(--shadow-subtle);
     transition: transform 0.25s var(--ease-out-expo), box-shadow 0.25s ease;
+    height: 100%;
+    box-sizing: border-box;
   }
 
-  .mission-card:hover {
+  .theory-card:hover {
     transform: translateY(-4px);
     box-shadow: var(--shadow-card-hover);
   }
 
-  .mission-card-content {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+  .theory-card-header {
+    margin-bottom: 0.85rem;
   }
 
-  .mission-eyebrow-label {
+  .theory-card-step {
+    font-family: var(--font-sans);
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    margin-bottom: 1.25rem;
-    display: inline-block;
+    display: block;
+    margin-bottom: 0.65rem;
   }
 
-  .mission-card-title {
-    font-size: var(--fs-h3);
-    font-weight: 600;
+  .theory-card-title {
+    font-size: var(--fs-h4);
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: var(--color-text-primary);
+    margin: 0;
+  }
+
+  .theory-card-copy {
+    font-size: var(--fs-body);
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  /* 3. The Proof Section */
+  .apollo-steps-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+    align-items: stretch;
+    margin-bottom: 2rem;
+  }
+
+  @media (min-width: 768px) {
+    .apollo-steps-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+  }
+
+  .apollo-step-card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    padding: 2rem 1.75rem;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-subtle);
+    height: 100%;
+    box-sizing: border-box;
+  }
+
+  .step-badge-row {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
     margin-bottom: 1rem;
+  }
+
+  .step-num-badge {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--color-surface-alt);
+    border: 1px solid var(--color-border);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
     color: var(--color-text-primary);
   }
 
-  .mission-card-body {
+  .step-tag {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .step-title {
+    font-size: var(--fs-h4);
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0 0 0.5rem;
+    line-height: 1.3;
+  }
+
+  .step-desc {
+    font-size: var(--fs-body);
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  /* Conclusion Principle Card */
+  .proof-conclusion-card {
+    position: relative;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    padding: 1.75rem 2rem;
+    box-shadow: var(--shadow-subtle);
+    overflow: hidden;
+  }
+
+  .conclusion-bar {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 4px;
+    background-color: #F7941D;
+  }
+
+  .conclusion-text {
+    font-size: var(--fs-body-lg);
+    line-height: 1.6;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    margin: 0;
+  }
+
+  /* 4. Mandate Cards */
+  .mandate-card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    padding: 2.25rem 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    box-shadow: var(--shadow-subtle);
+    transition: transform 0.25s var(--ease-out-expo), box-shadow 0.25s ease;
+    height: 100%;
+    box-sizing: border-box;
+  }
+
+  .mandate-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  .mandate-card-header {
+    margin-bottom: 0.85rem;
+  }
+
+  .mandate-card-step {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 0.65rem;
+  }
+
+  .mandate-card-title {
+    font-size: var(--fs-h3);
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0;
+  }
+
+  .mandate-card-copy {
     font-size: var(--fs-body);
     line-height: 1.6;
     color: var(--color-text-secondary);
