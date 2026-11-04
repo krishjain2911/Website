@@ -194,39 +194,6 @@ async function runAudit() {
         await page.screenshot({ path: path.join(failuresDir, `hscroll-about-${vp.name}.png`) });
       }
 
-      // Assert section heights on /about at >= 1024px and >= 650px (including 1440x900, 1366x768, 1280x720, 1280x650)
-      if (vp.width >= 1024 && vp.height >= 650 && !vp.dpr) {
-        const sectionChecks = await page.evaluate(() => {
-          const sections = Array.from(document.querySelectorAll('[data-layout="about-section"]'));
-          const issues = [];
-          const vh = window.innerHeight;
-
-          sections.forEach((sec) => {
-            const rect = sec.getBoundingClientRect();
-            // Each section should fit within viewport height minus nav height
-            if (rect.height > vh + 2) {
-              issues.push(`Section #${sec.id} height (${Math.round(rect.height)}px) exceeds viewport height (${vh}px)`);
-            }
-            // Check that inner container doesn't overflow its clientHeight
-            const container = sec.querySelector('.fullscreen-container');
-            if (container && container.scrollHeight > container.clientHeight + 6) {
-              issues.push(`Section #${sec.id} inner content (${container.scrollHeight}px) overflows container (${container.clientHeight}px)`);
-            }
-          });
-
-          return issues;
-        });
-
-        checksRun++;
-        if (sectionChecks.length > 0) {
-          failures.push({
-            vp: vp.name,
-            page: '/about',
-            error: sectionChecks.join('; ')
-          });
-        }
-      }
-
       // 3. Audit Solution Detail (/solutions/sonakshi)
       await page.goto(`http://localhost:${PORT}/solutions/sonakshi`, { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(100);

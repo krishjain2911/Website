@@ -59,7 +59,7 @@ function formatMandateText(text: string) {
   <!-- Desktop Sticky Pill Sub-Nav (Hidden below 900px) -->
   <nav class="about-sticky-subnav" id="about-sticky-subnav" aria-label="About page sections">
     <div class="subnav-pill-container">
-      <a href="#theory" class="subnav-link is-active" data-section="theory">Theory</a>
+      <a href="#theory-hero" class="subnav-link is-active" data-section="theory-hero">Theory</a>
       <span class="subnav-sep" aria-hidden="true">·</span>
       <a href="#story" class="subnav-link" data-section="story">Origin</a>
       <span class="subnav-sep" aria-hidden="true">·</span>
@@ -69,10 +69,10 @@ function formatMandateText(text: string) {
     </div>
   </nav>
 
-  <main id="main-content" class="about-page-main" tabindex="-1">
-    <!-- 1. Theory Hero + 3 Theory Cards (Single Fit-to-Screen Section) -->
-    <section id="theory" class="about-fullscreen-section theory-section" aria-labelledby="hero-heading" data-layout="about-section">
-      <div class="container fullscreen-container">
+  <main id="main-content" tabindex="-1">
+    <!-- 1. Theory Hero (2-Column Grid: Text Left, Animated SVG Diagram Right) -->
+    <section id="theory-hero" class="about-hero-section" aria-labelledby="hero-heading">
+      <div class="container">
         <div class="hero-two-col-grid">
           <!-- Left Column: Eyebrow, H1, Expandable Definition Pill, Subline -->
           <div class="hero-text-col reveal-on-scroll">
@@ -247,9 +247,13 @@ function formatMandateText(text: string) {
             </div>
           </div>
         </div>
+      </div>
+    </section>
 
-        <!-- Three Theory Cards in Equal-Height Row -->
-        <div class="three-col-cards-grid theory-cards-row">
+    <!-- 2. Three Theory Cards in Equal-Height Row -->
+    <section id="theory-cards" class="about-section theory-cards-section" aria-label="Theory Pillars">
+      <div class="container">
+        <div class="three-col-cards-grid">
           {theoryCards.map((card, idx) => (
             <article
               class="theory-card card-mastercard reveal-on-scroll"
@@ -276,9 +280,9 @@ function formatMandateText(text: string) {
       </div>
     </section>
 
-    <!-- 2. Our Origin: The Apollo 13 Imperative (Restored Master Boxed Section) -->
-    <section id="story" class="about-fullscreen-section story-section" aria-labelledby="story-heading" data-layout="about-section">
-      <div class="container fullscreen-container">
+    <!-- 3. Our Origin: The Apollo 13 Imperative (Restored Master Boxed Section) -->
+    <section id="story" class="about-story-section" aria-labelledby="story-heading">
+      <div class="container">
         <div class="story-box-wrapper card-mastercard reveal-on-scroll">
           <div class="story-header">
             <span class="eyebrow">OUR ORIGIN</span>
@@ -348,9 +352,9 @@ function formatMandateText(text: string) {
       </div>
     </section>
 
-    <!-- 3. Mission · Purpose · Vision -->
-    <section id="mission" class="about-fullscreen-section mission-section" aria-labelledby="mission-heading" data-layout="about-section">
-      <div class="container fullscreen-container">
+    <!-- 4. Mission · Purpose · Vision -->
+    <section id="mission" class="about-section mission-section" aria-labelledby="mission-heading">
+      <div class="container">
         <div class="section-header reveal-on-scroll">
           <span class="eyebrow">{about.mandate.badge}</span>
           <h2 id="mission-heading" class="section-title">{about.mandate.headline}</h2>
@@ -1177,230 +1181,6 @@ function formatMandateText(text: string) {
     color: var(--color-text-primary);
     font-weight: 700;
   }
-
-  /* -------------------------------------------------------------
-     Fit-To-Screen Desktop Rules (>= 1024px and min-height: 650px)
-     ------------------------------------------------------------- */
-  @media (min-width: 1024px) and (min-height: 650px) {
-    .about-page-main {
-      scroll-snap-type: y proximity;
-    }
-
-    .about-fullscreen-section {
-      height: calc(100svh - var(--nav-height, 72px));
-      max-height: calc(100svh - var(--nav-height, 72px));
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      scroll-snap-align: start;
-      scroll-margin-top: var(--nav-height, 72px);
-      padding: 0 !important;
-      overflow: hidden;
-      border-bottom: 1px solid var(--color-border);
-    }
-
-    .fullscreen-container {
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      max-height: 100%;
-      padding-top: clamp(0.5rem, 1.5vh, 1.5rem);
-      padding-bottom: clamp(0.5rem, 1.5vh, 1.5rem);
-      box-sizing: border-box;
-    }
-
-    /* Section 1: Theory Hero & Cards */
-    .theory-section .hero-two-col-grid {
-      grid-template-columns: 1.05fr 0.95fr;
-      gap: clamp(1rem, 2vw, 2.5rem);
-      margin-bottom: clamp(0.4rem, 1.2vh, 1rem);
-      align-items: center;
-    }
-
-    .theory-section .hero-heading {
-      font-size: clamp(1.6rem, 3.2vh, 2.4rem);
-      margin: 0.1rem 0 0.4rem 0;
-      line-height: 1.15;
-    }
-
-    .theory-section .definition-chip-wrap {
-      margin-bottom: clamp(0.35rem, 0.8vh, 0.65rem);
-    }
-
-    .theory-section .rhsp-expandable-pill {
-      padding: 0.3rem 0.75rem;
-    }
-
-    .theory-section .hero-subline {
-      font-size: clamp(0.82rem, 1.4vh, 0.95rem);
-      line-height: 1.45;
-      max-width: 520px;
-    }
-
-    .theory-section .diagram-surface {
-      padding: clamp(0.4rem, 1vh, 0.85rem);
-    }
-
-    .theory-section .diagram-top-bar {
-      margin-bottom: clamp(0.2rem, 0.5vh, 0.4rem);
-    }
-
-    .theory-section .theory-interactive-svg {
-      max-height: clamp(115px, 17vh, 170px);
-      width: auto;
-      max-width: 100%;
-      margin: 0 auto;
-      display: block;
-    }
-
-    .theory-section .diagram-caption-footer {
-      padding-top: 0.3rem;
-      margin-top: 0.2rem;
-    }
-
-    .theory-section .caption-text {
-      font-size: 11px;
-      line-height: 1.35;
-    }
-
-    .theory-cards-row {
-      gap: clamp(0.75rem, 1.5vw, 1.25rem);
-    }
-
-    .theory-cards-row .theory-card {
-      padding: clamp(0.6rem, 1.2vh, 1rem) clamp(0.75rem, 1.5vw, 1.25rem);
-    }
-
-    .theory-cards-row .theory-card-header {
-      margin-bottom: 0.25rem;
-    }
-
-    .theory-cards-row .theory-card-step {
-      font-size: 10px;
-      margin-bottom: 0.15rem;
-    }
-
-    .theory-cards-row .theory-card-title {
-      font-size: clamp(0.85rem, 1.5vh, 0.98rem);
-    }
-
-    .theory-cards-row .theory-card-copy {
-      font-size: clamp(0.75rem, 1.3vh, 0.85rem);
-      line-height: 1.4;
-      margin: 0 0 0.35rem 0;
-    }
-
-    /* Section 2: Story (Apollo 13 Box) */
-    .story-section .story-box-wrapper {
-      padding: clamp(1rem, 2.2vh, 2rem) clamp(1.25rem, 2.5vw, 2.5rem);
-    }
-
-    .story-section .story-header {
-      margin-bottom: clamp(0.5rem, 1.2vh, 1rem);
-    }
-
-    .story-section .story-title {
-      font-size: clamp(1.4rem, 2.8vh, 2rem);
-      margin: 0;
-    }
-
-    .story-section .story-body-grid {
-      grid-template-columns: 1.2fr 0.8fr;
-      gap: clamp(1.25rem, 2.5vw, 2.5rem);
-      align-items: center;
-    }
-
-    .story-section .story-timeline {
-      gap: clamp(0.35rem, 0.9vh, 0.75rem);
-      margin: 0 0 clamp(0.4rem, 0.9vh, 0.75rem) 0;
-    }
-
-    .story-section .step-bullet {
-      width: clamp(26px, 3.8vh, 32px);
-      height: clamp(26px, 3.8vh, 32px);
-      font-size: 0.75rem;
-    }
-
-    .story-section .step-text {
-      font-size: clamp(0.82rem, 1.4vh, 0.92rem);
-      line-height: 1.4;
-      padding-top: 2px;
-    }
-
-    .story-section .story-fact-chips {
-      margin-bottom: clamp(0.4rem, 0.9vh, 0.75rem);
-      gap: 0.35rem;
-    }
-
-    .story-section .fact-chip {
-      font-size: 10.5px;
-      padding: 0.15rem 0.5rem;
-    }
-
-    .story-section .story-conclusion-card {
-      padding: clamp(0.5rem, 1vh, 0.85rem) clamp(0.75rem, 1.5vw, 1.25rem);
-    }
-
-    .story-section .conclusion-statement {
-      font-size: clamp(0.82rem, 1.4vh, 0.92rem);
-      line-height: 1.4;
-    }
-
-    .story-section .blueprint-canvas {
-      padding: 0.35rem;
-    }
-
-    .story-section .apollo-story-image {
-      max-height: clamp(160px, 28vh, 260px);
-      width: auto;
-      object-fit: contain;
-    }
-
-    /* Section 3: Mission */
-    .mission-section .section-header {
-      margin-bottom: clamp(0.75rem, 2vh, 1.5rem);
-    }
-
-    .mission-section .section-title {
-      font-size: clamp(1.5rem, 3vh, 2.25rem);
-      margin: 0.15rem 0 0.35rem;
-    }
-
-    .mission-section .section-subline {
-      font-size: clamp(0.85rem, 1.6vh, 0.95rem);
-      margin: 0;
-    }
-
-    .mission-section .three-col-cards-grid {
-      gap: clamp(0.85rem, 1.8vw, 1.5rem);
-    }
-
-    .mission-section .mandate-card {
-      padding: clamp(1rem, 2.2vh, 1.75rem);
-    }
-
-    .mission-section .mandate-card-header {
-      margin-bottom: 0.4rem;
-    }
-
-    .mission-section .mandate-card-step {
-      font-size: 10px;
-      margin-bottom: 0.15rem;
-    }
-
-    .mission-section .mandate-card-title {
-      font-size: clamp(1rem, 1.8vh, 1.2rem);
-      margin: 0;
-    }
-
-    .mission-section .mandate-card-copy {
-      font-size: clamp(0.82rem, 1.4vh, 0.9rem);
-      line-height: 1.45;
-      margin: 0;
-    }
-  }
 </style>
 
 <script>
@@ -1513,7 +1293,7 @@ function formatMandateText(text: string) {
 
     // 4. Sticky Pill Sub-Nav Scroll-Spy
     const subnavLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('.about-sticky-subnav .subnav-link'));
-    const sectionIds = ['theory', 'story', 'mission', 'team'];
+    const sectionIds = ['theory-hero', 'story', 'mission', 'team'];
 
     function updateSubnav() {
       const scrollPos = window.scrollY + 140;
