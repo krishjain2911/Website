@@ -259,9 +259,9 @@ const { beforeAfter } = siteConfig;
               <div class="stat-chip-card">
                 <span class="stat-chip-label mono-label">{stat.label}</span>
                 <div class="stat-values-row">
-                  <span class="stat-val-before">{stat.before}</span>
+                  <span class="stat-val-before">{stat.before.replace(/^\[PLACEHOLDER\]\s*/i, '')}</span>
                   <span class="stat-arrow" aria-hidden="true">→</span>
-                  <span class="stat-val-after">{stat.after}</span>
+                  <span class="stat-val-after">{stat.after.replace(/^\[PLACEHOLDER\]\s*/i, '')}</span>
                 </div>
               </div>
             ))}
