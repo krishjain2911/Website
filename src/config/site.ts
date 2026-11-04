@@ -74,7 +74,7 @@ export const siteConfig = {
   nav: {
     links: [
       { label: "About Us", href: "/about" },
-      { label: "PEG Board", href: "#", comingSoon: true },
+      { label: "PEG Board", href: "/peg-board" },
       { label: "Contact", href: "/#contact" }
     ],
     cta: {

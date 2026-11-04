@@ -9,6 +9,7 @@ import { getCollection } from 'astro:content';
 const { nav } = siteConfig;
 const currentPath = Astro.url.pathname;
 const isAboutActive = currentPath === '/about' || currentPath.startsWith('/about/');
+const isPegBoardActive = currentPath === '/peg-board' || currentPath.startsWith('/peg-board/');
 const isSolutionsActive = currentPath.startsWith('/solutions');
 
 const allProducts = await getCollection('products');
@@ -87,17 +88,15 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
           </a>
         </li>
 
-        <!-- 3. PEG Board (Coming Soon) -->
+        <!-- 3. PEG Board -->
         <li>
-          <span
-            class="nav-link nav-link--pegboard"
-            role="link"
-            aria-disabled="true"
-            title="PEG Board — coming soon"
+          <a
+            href="/peg-board"
+            class={`nav-link ${isPegBoardActive ? 'is-active' : ''}`}
+            aria-current={isPegBoardActive ? 'page' : undefined}
           >
-            <span>PEG Board</span>
-            <span class="nav-coming-soon-pill">Coming soon</span>
-          </span>
+            PEG Board
+          </a>
         </li>
 
         <!-- 4. Contact -->
@@ -180,17 +179,14 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
           </div>
         </div>
 
-        <!-- 2. PEG Board (Coming Soon) -->
+        <!-- 2. PEG Board -->
         <div class="mobile-section">
           <span class="eyebrow">PEG BOARD</span>
           <div class="mobile-links-grid">
-            <div class="mobile-nav-link mobile-nav-link--disabled" title="PEG Board — coming soon">
-              <div class="mobile-pegboard-title-row">
-                <strong>PEG Board</strong>
-                <span class="nav-coming-soon-pill">Coming soon</span>
-              </div>
-              <span>Proprietary enterprise board and frameworks</span>
-            </div>
+            <a href="/peg-board" class="mobile-nav-link">
+              <strong>PEG Board</strong>
+              <span>Guides, comparisons and our approach on one board</span>
+            </a>
           </div>
         </div>
 
@@ -469,24 +465,6 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
     overflow: hidden;
   }
 
-  /* PEG Board link */
-  .nav-link--pegboard {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-
-  .nav-coming-soon-pill {
-    font-size: 9px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    padding: 0.15rem 0.45rem;
-    border-radius: var(--radius-full);
-    background-color: var(--color-surface);
-    color: var(--color-text-muted);
-    border: 1px solid var(--color-border);
-  }
-
   /* Right Header Actions */
   .header-actions {
     display: flex;
@@ -706,12 +684,6 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
   .mobile-nav-link--disabled {
     opacity: 0.6;
     cursor: not-allowed;
-  }
-
-  .mobile-pegboard-title-row {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
   }
 
   .mobile-drawer-footer {
