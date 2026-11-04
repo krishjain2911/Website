@@ -26,6 +26,7 @@ hero:
   frame: "browser"
 phases:
   problem:
+    tagline: "Where agreements stall."
     headline: "Disjointed drafting and stalled email approvals"
     story: "Disjointed contract drafting, uncoordinated email approvals, and manual milestone tracking introduce operational delays and audit blind spots."
     points:
@@ -45,6 +46,7 @@ phases:
       - title: "Template Inconsistency"
         detail: "Outdated clause copies complicate corporate compliance audits."
   value:
+    tagline: "Turnaround counted in minutes."
     headline: "Accelerated agreement cycles and audit trails"
     story: "Centralizes contract repository access and streamlines departmental review cycles with automated milestone tracking."
     points:
@@ -65,6 +67,7 @@ phases:
       - "Automated multi-tier approval routing"
       - "Integrated digital signature workflows"
   architecture:
+    tagline: "Guardrails without red tape."
     headline: "OutSystems enterprise workflow foundation"
     story: "Built on OutSystems low-code architecture with centralized clause management, configurable approval matrices, and e-signature connectors."
     points:
@@ -98,7 +101,10 @@ phases:
             role: "Signed agreements with execution audit logs"
     pattern: "Tiered Governance and Approval Routing"
     security: "Enterprise role-based permissions, multi-subsidiary partitioning, and immutable execution logs."
+  pilot:
+    tagline: "Field-tested with legal counsel."
   rollout:
+    tagline: "Hardened for enterprise governance."
     headline: "Enterprise hardening and import tooling"
     story: "Bulk historical PDF ingestion followed by department-by-department approval matrix deployment."
     points:
@@ -114,6 +120,7 @@ phases:
       - "Department approval matrix setup"
       - "User orientation and template training"
   impact:
+    tagline: "Auditable across every subsidiary."
     headline: "Clear audit trails from draft to signature"
     story: "End-to-end contract drafting, multi-stakeholder approval routing, and proactive renewal tracking built on OutSystems."
     points:

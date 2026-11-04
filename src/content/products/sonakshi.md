@@ -30,6 +30,7 @@ hero:
   frame: "phone"
 phases:
   problem:
+    tagline: "Where walk-ins wait."
     headline: "Walk-in delays and fragmented product data"
     story: "In a busy multi-brand appliance showroom, customers wait for a free salesperson, and staff cannot recall specs and prices for thousands of models across dozens of brands. Product knowledge sits scattered across Excel price lists and brand PDF brochures, so answers are slow and inconsistent."
     points:
@@ -54,6 +55,7 @@ phases:
         alt: "Sonakshi catalogue comparison view showing multiple appliance options"
         frame: "browser"
   value:
+    tagline: "Every walk-in, captured."
     headline: "Zero wait times and verified catalogue grounding"
     story: "Turns static Excel price sheets and brand brochures into an interactive, multilingual sales expert on the showroom floor, capturing every walk-in opportunity."
     points:
@@ -74,6 +76,7 @@ phases:
       - "Automated Excel and PDF catalogue ingestion"
       - "Assisted cart pre-loading for cashier checkout"
   architecture:
+    tagline: "Grounded, never guessing."
     headline: "High-code MERN and private vector retrieval"
     story: "Full-stack engineering combining React tablet interface, Node.js ingestion backend, vector indexing, and speech recognition without hallucination."
     points:
@@ -123,6 +126,7 @@ phases:
         alt: "Sonakshi recommendation card showing product photo, specifications, and Add to Cart button"
         frame: "phone"
   pilot:
+    tagline: "Proven on the showroom floor."
     headline: "Showroom deployment for a retail store"
     story: "Piloted on tablet devices on the retail showroom floor, assisting live shoppers with home appliance discovery and comparison."
     points:
@@ -138,6 +142,7 @@ phases:
       - heard: "Customers requested instant visual verification of technical specifications"
         changed: "Added side-by-side spec comparison card displayed upon model mention"
   rollout:
+    tagline: "From pilot to production."
     headline: "Hardened kiosk mode and automated ingestion"
     story: "Kiosk hardening with auto-reset between sessions and background catalogue synchronisation from admin uploads."
     points:
@@ -159,6 +164,7 @@ phases:
       - value: "4"
         label: "Supported regional languages"
   impact:
+    tagline: "Always on. Always improving."
     headline: "Every walk-in gets an expert salesperson instantly"
     story: "Showroom customers receive immediate guidance in their chosen language, with selected appliances pre-loaded into cart for store staff completion."
     points:

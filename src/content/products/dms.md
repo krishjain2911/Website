@@ -26,6 +26,7 @@ hero:
   frame: "browser"
 phases:
   problem:
+    tagline: "Lost in the archive."
     headline: "Disorganized file storage and untracked retention"
     story: "Disorganized digital file storage, unversioned copies, and lack of audit trails make document retrieval difficult and increase statutory compliance risk."
     points:
@@ -45,6 +46,7 @@ phases:
       - title: "Compliance Exposure"
         detail: "Statutory document retention timelines are managed manually."
   value:
+    tagline: "Seconds to source truth."
     headline: "Unified custody and statutory retention compliance"
     story: "Ensures long-term regulatory compliance while making company documents instantly searchable through automated classification and metadata indexing."
     points:
@@ -65,6 +67,7 @@ phases:
       - "Check-in and check-out version controls"
       - "Policy-driven retention and purge schedules"
   architecture:
+    tagline: "Structured metadata, zero silos."
     headline: "OutSystems document custody architecture"
     story: "Enterprise document repository built on OutSystems low-code, featuring automated multi-source ingestion, optical classification, and granular access controls."
     points:
@@ -98,7 +101,10 @@ phases:
             role: "Full-text semantic and metadata catalog"
     pattern: "Centralized Document Custody with Automated Retention"
     security: "Encrypted storage at rest, strict download authentication, and full access audit trails."
+  pilot:
+    tagline: "Tested against real records."
   rollout:
+    tagline: "Scale to millions securely."
     headline: "Historical ingestion and taxonomy alignment"
     story: "Bulk ingestion of existing network share archives followed by department folder structure and ACL rollouts."
     points:
@@ -114,6 +120,7 @@ phases:
       - "Department user role setup"
       - "Staff training on intake and versioning"
   impact:
+    tagline: "Continuous compliance on autopilot."
     headline: "Structured enterprise document custody with instant retrieval"
     story: "Organizes corporate memory into a secure, searchable archive with strict role-based access controls and compliance retention."
     points:

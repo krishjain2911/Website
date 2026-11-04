@@ -4,6 +4,7 @@ import Icon from '../Icon.astro';
 
 interface Props {
   media?: MediaItem;
+  item?: MediaItem;
   aspectRatio?: string;
   class?: string;
   priority?: boolean;
@@ -14,7 +15,8 @@ interface Props {
 }
 
 const {
-  media,
+  media: propMedia,
+  item: propItem,
   aspectRatio = '16/10',
   class: className = '',
   priority = false,
@@ -23,6 +25,8 @@ const {
   fallbackTitle = 'Media coming soon',
   fallbackDescription
 } = Astro.props;
+
+const media = propMedia || propItem;
 
 // Validation rule: empty string or starting with [PLACEHOLDER] is missing
 const isMissing = !media || !media.src || media.src.trim() === '' || media.src.trim().startsWith('[PLACEHOLDER]');

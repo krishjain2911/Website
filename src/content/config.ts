@@ -12,6 +12,7 @@ export const mediaItemSchema = z.object({
 export type MediaItem = z.infer<typeof mediaItemSchema>;
 
 const basePhaseSchema = z.object({
+  tagline: z.string().optional(),
   headline: z.string().optional(),
   story: z.string().optional(),
   points: z.array(z.string()).default([]),

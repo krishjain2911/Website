@@ -1,9 +1,11 @@
 ---
 import MediaSlot from './MediaSlot.astro';
 import Icon from '../Icon.astro';
+import StageComingSoon from './StageComingSoon.astro';
 
 interface Props {
   impactData?: {
+    tagline?: string;
     headline?: string;
     story?: string;
     points?: string[];
@@ -17,280 +19,283 @@ interface Props {
     };
     media?: any[];
   };
+  tagline?: string;
 }
 
 const { impactData } = Astro.props;
-if (!impactData) return null;
+const tagline = Astro.props.tagline || impactData?.tagline;
+const story = impactData?.story;
+const hasContent = !!(impactData && (impactData.story || impactData.outcome || impactData.enablement?.length || impactData.governance?.length || impactData.monitoring?.length || impactData.points?.length));
 
-const primaryMedia = impactData.media && impactData.media.length > 0 ? impactData.media[0] : undefined;
+const primaryMedia = impactData?.media && impactData.media.length > 0 ? impactData.media[0] : undefined;
 ---
 
-<section id="chapter-impact" class="project-chapter-section" aria-labelledby="heading-impact">
+<section
+  id="stage-06"
+  class="project-chapter-section"
+  aria-labelledby="heading-stage-06"
+  data-stage-title="Enable and monitor"
+  data-stage-color="#EE4B2B"
+  tabindex="-1"
+>
   <div class="chapter-header">
-    <div class="chapter-badge-wrap">
-      <span class="chapter-num-badge">06</span>
-      <span class="chapter-phase-tag">LONG-TERM IMPACT</span>
-    </div>
-    <h2 id="heading-impact" class="chapter-heading">{impactData.headline || 'Lasting Operational Transformation'}</h2>
-    {impactData.story && <p class="chapter-story">{impactData.story}</p>}
+    <span class="chapter-eyebrow" style="color: #EE4B2B;">STAGE 06</span>
+    <h2 id="heading-stage-06" class="chapter-heading">Enable and monitor</h2>
+    {tagline && <p class="chapter-tagline" style="color: #EE4B2B;">{tagline}</p>}
+    {story && <p class="chapter-story">{story}</p>}
   </div>
 
-  <!-- Big Hero Outcome Statement -->
-  {impactData.outcome && (
-    <div class="outcome-highlight-banner card-mastercard">
-      <div class="outcome-accent-bar" aria-hidden="true"></div>
-      <div class="outcome-body">
-        <span class="outcome-label">FINAL STRATEGIC OUTCOME</span>
-        <blockquote class="outcome-quote">{impactData.outcome}</blockquote>
-      </div>
-    </div>
-  )}
-
-  <!-- Impact Media if Present -->
-  {primaryMedia && (
-    <div class="impact-media-slot-wrap">
-      <MediaSlot
-        media={primaryMedia}
-        fallbackTitle="Telemetry & Impact Analytics"
-        fallbackDescription="Long-term telemetry dashboard showing persistent adoption and throughput gains."
-      />
-    </div>
-  )}
-
-  <!-- 3-Pillar Operational Foundation: Governance / Enablement / Monitoring -->
-  {(impactData.governance || impactData.enablement || impactData.monitoring) && (
-    <div class="impact-pillars-grid">
-      {impactData.enablement && impactData.enablement.length > 0 && (
-        <div class="pillar-card card-mastercard">
-          <div class="pillar-header">
-            <span class="pillar-icon" aria-hidden="true">
-              <Icon name="users" size={18} />
-            </span>
-            <h3 class="pillar-title">Enablement &amp; Handover</h3>
+  {!hasContent ? (
+    <StageComingSoon stageNumber="06" stageTitle="Enable and monitor" color="#EE4B2B" />
+  ) : (
+    <>
+      <!-- Big Outcome Statement -->
+      {impactData?.outcome && (
+        <div class="outcome-highlight-banner card-mastercard">
+          <div class="outcome-accent-bar" aria-hidden="true"></div>
+          <div class="outcome-body">
+            <span class="outcome-label">FINAL STRATEGIC OUTCOME</span>
+            <blockquote class="outcome-quote">{impactData.outcome}</blockquote>
           </div>
-          <ul class="pillar-list">
-            {impactData.enablement.map((item) => (
-              <li class="pillar-item">
-                <span class="pillar-bullet" aria-hidden="true">&bull;</span>
-                <span>{item}</span>
+        </div>
+      )}
+
+      <!-- Impact Media if Present -->
+      {primaryMedia && (
+        <div class="impact-media-slot-wrap">
+          <MediaSlot item={primaryMedia} />
+        </div>
+      )}
+
+      <!-- 3-Pillar Operational Foundation: Governance / Enablement / Monitoring -->
+      {(impactData?.governance || impactData?.enablement || impactData?.monitoring) && (
+        <div class="impact-pillars-grid">
+          {impactData.enablement && impactData.enablement.length > 0 && (
+            <div class="pillar-card card-mastercard">
+              <div class="pillar-header">
+                <span class="pillar-icon" aria-hidden="true">
+                  <Icon name="users" size={18} />
+                </span>
+                <h3 class="pillar-title">Enablement &amp; Handover</h3>
+              </div>
+              <ul class="pillar-list">
+                {impactData.enablement.map((item) => (
+                  <li class="pillar-item">
+                    <span class="pillar-bullet" aria-hidden="true">&bull;</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {impactData.governance && impactData.governance.length > 0 && (
+            <div class="pillar-card card-mastercard">
+              <div class="pillar-header">
+                <span class="pillar-icon" aria-hidden="true">
+                  <Icon name="shield" size={18} />
+                </span>
+                <h3 class="pillar-title">Governance &amp; Controls</h3>
+              </div>
+              <ul class="pillar-list">
+                {impactData.governance.map((item) => (
+                  <li class="pillar-item">
+                    <span class="pillar-bullet" aria-hidden="true">&bull;</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {impactData.monitoring && impactData.monitoring.length > 0 && (
+            <div class="pillar-card card-mastercard">
+              <div class="pillar-header">
+                <span class="pillar-icon" aria-hidden="true">
+                  <Icon name="eye" size={18} />
+                </span>
+                <h3 class="pillar-title">Monitoring &amp; Telemetry</h3>
+              </div>
+              <ul class="pillar-list">
+                {impactData.monitoring.map((item) => (
+                  <li class="pillar-item">
+                    <span class="pillar-bullet" aria-hidden="true">&bull;</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
+
+      <!-- Stakeholder Quote -->
+      {impactData?.quote && impactData.quote.text && (
+        <div class="impact-quote-card card-mastercard">
+          <div class="quote-mark-icon" aria-hidden="true">&ldquo;</div>
+          <p class="quote-body-text">{impactData.quote.text}</p>
+          {impactData.quote.role && (
+            <div class="quote-author-row">
+              <span class="quote-author-role">{impactData.quote.role}</span>
+            </div>
+          )}
+        </div>
+      )}
+
+      <!-- Key Impact Points -->
+      {impactData?.points && impactData.points.length > 0 && (
+        <div class="impact-points-card card-mastercard">
+          <span class="block-mini-title">ENDURING CAPABILITY HIGHLIGHTS</span>
+          <ul class="impact-points-grid">
+            {impactData.points.map((pt) => (
+              <li class="impact-point-item">
+                <span class="pt-star" aria-hidden="true">&#x2714;</span>
+                <span>{pt}</span>
               </li>
             ))}
           </ul>
         </div>
       )}
-
-      {impactData.governance && impactData.governance.length > 0 && (
-        <div class="pillar-card card-mastercard">
-          <div class="pillar-header">
-            <span class="pillar-icon" aria-hidden="true">
-              <Icon name="shield" size={18} />
-            </span>
-            <h3 class="pillar-title">Governance &amp; Controls</h3>
-          </div>
-          <ul class="pillar-list">
-            {impactData.governance.map((item) => (
-              <li class="pillar-item">
-                <span class="pillar-bullet" aria-hidden="true">&bull;</span>
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {impactData.monitoring && impactData.monitoring.length > 0 && (
-        <div class="pillar-card card-mastercard">
-          <div class="pillar-header">
-            <span class="pillar-icon" aria-hidden="true">
-              <Icon name="eye" size={18} />
-            </span>
-            <h3 class="pillar-title">Monitoring &amp; Telemetry</h3>
-          </div>
-          <ul class="pillar-list">
-            {impactData.monitoring.map((item) => (
-              <li class="pillar-item">
-                <span class="pillar-bullet" aria-hidden="true">&bull;</span>
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </div>
-  )}
-
-  <!-- Client / Stakeholder Quote -->
-  {impactData.quote && impactData.quote.text && (
-    <div class="impact-quote-card card-mastercard">
-      <div class="quote-mark-icon" aria-hidden="true">&ldquo;</div>
-      <p class="quote-body-text">{impactData.quote.text}</p>
-      {impactData.quote.role && (
-        <div class="quote-author-row">
-          <span class="quote-author-role">{impactData.quote.role}</span>
-        </div>
-      )}
-    </div>
-  )}
-
-  <!-- Key Impact Points -->
-  {impactData.points && impactData.points.length > 0 && (
-    <div class="impact-points-card card-mastercard">
-      <span class="block-mini-title">ENDURING CAPABILITY HIGHLIGHTS</span>
-      <ul class="impact-points-grid">
-        {impactData.points.map((pt) => (
-          <li class="impact-point-item">
-            <span class="pt-star" aria-hidden="true">&#x2714;</span>
-            <span>{pt}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
+    </>
   )}
 </section>
 
 <style>
   .project-chapter-section {
-    padding: var(--space-8, 2rem) 0 var(--space-12, 3rem);
-    border-bottom: 1px solid var(--border-subtle);
-    scroll-margin-top: calc(var(--header-height, 64px) + 2rem);
+    padding: clamp(2.5rem, 5vh, 3.75rem) 0;
+    border-bottom: 1px solid var(--color-border);
+    scroll-margin-top: calc(var(--nav-height, 72px) + 2rem);
   }
 
   .chapter-header {
-    margin-bottom: var(--space-6, 1.5rem);
+    margin-bottom: 2rem;
   }
 
-  .chapter-badge-wrap {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2, 0.5rem);
-    margin-bottom: var(--space-3, 0.75rem);
-  }
-
-  .chapter-num-badge {
-    font-family: var(--font-mono, monospace);
-    font-size: 0.75rem;
-    font-weight: 700;
-    padding: 0.2rem 0.5rem;
-    border-radius: 4px;
-    background: var(--surface-secondary, rgba(0,0,0,0.05));
-    color: var(--text-muted);
-    border: 1px solid var(--border-subtle);
-  }
-
-  .chapter-phase-tag {
-    font-family: var(--font-mono, monospace);
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
+  .chapter-eyebrow {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--color-primary);
+    margin-bottom: 0.4rem;
   }
 
   .chapter-heading {
-    font-family: var(--font-heading);
-    font-size: clamp(1.6rem, 3vw, 2.25rem);
-    font-weight: 700;
-    color: var(--text-primary);
+    font-size: clamp(1.75rem, 3.2vw, 2.25rem);
+    font-weight: 800;
+    color: var(--color-text-primary);
+    margin: 0 0 0.4rem 0;
     line-height: 1.2;
-    margin-bottom: var(--space-3, 0.75rem);
+    letter-spacing: -0.015em;
+  }
+
+  .chapter-tagline {
+    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+    font-weight: 700;
+    margin: 0 0 0.75rem 0;
+    letter-spacing: -0.01em;
+    line-height: 1.35;
   }
 
   .chapter-story {
-    font-size: 1.05rem;
+    font-size: 1rem;
     line-height: 1.6;
-    color: var(--text-secondary);
-    max-width: 780px;
+    color: var(--color-text-secondary);
+    max-width: 680px;
     margin: 0;
   }
 
   .block-mini-title {
     display: block;
-    font-family: var(--font-mono, monospace);
-    font-size: 0.7rem;
-    font-weight: 700;
+    font-size: 10.5px;
+    font-weight: 800;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: var(--space-3, 0.75rem);
+    color: var(--color-text-muted);
+    margin-bottom: 1rem;
   }
 
   .outcome-highlight-banner {
-    display: flex;
-    overflow: hidden;
-    margin-bottom: var(--space-6, 1.5rem);
-    padding: var(--space-6, 1.5rem);
     position: relative;
-    background: linear-gradient(135deg, var(--surface-primary) 0%, var(--surface-secondary) 100%);
+    padding: 1.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md, 8px);
+    margin-bottom: 2rem;
+    overflow: hidden;
+  }
+
+  :global(.dark) .outcome-highlight-banner {
+    background: var(--color-surface-raised);
   }
 
   .outcome-accent-bar {
     position: absolute;
-    left: 0;
     top: 0;
+    left: 0;
     bottom: 0;
-    width: 6px;
-    background: var(--color-primary);
-  }
-
-  .outcome-body {
-    padding-left: var(--space-2, 0.5rem);
+    width: 4px;
+    background: #EE4B2B;
   }
 
   .outcome-label {
     display: block;
-    font-family: var(--font-mono, monospace);
     font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    color: var(--color-primary);
-    margin-bottom: var(--space-2, 0.5rem);
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #EE4B2B;
+    margin-bottom: 0.5rem;
   }
 
   .outcome-quote {
-    font-family: var(--font-heading);
-    font-size: clamp(1.15rem, 2vw, 1.4rem);
-    font-weight: 600;
-    line-height: 1.45;
-    color: var(--text-primary);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    line-height: 1.4;
     margin: 0;
   }
 
   .impact-media-slot-wrap {
-    margin-bottom: var(--space-6, 1.5rem);
+    margin-bottom: 2rem;
   }
 
   .impact-pillars-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: var(--space-4, 1rem);
-    margin-bottom: var(--space-6, 1.5rem);
+    gap: 1.25rem;
+    margin-bottom: 2rem;
   }
 
   .pillar-card {
-    padding: var(--space-5, 1.25rem);
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3, 0.75rem);
+    padding: 1.25rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md, 8px);
+  }
+
+  :global(.dark) .pillar-card {
+    background: var(--color-surface-raised);
   }
 
   .pillar-header {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    border-bottom: 1px solid var(--border-subtle);
+    gap: 0.65rem;
+    margin-bottom: 0.85rem;
     padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--color-border);
   }
 
   .pillar-icon {
-    color: var(--color-primary);
     display: inline-flex;
+    color: #EE4B2B;
   }
 
   .pillar-title {
-    font-family: var(--font-heading);
     font-size: 0.95rem;
     font-weight: 700;
-    color: var(--text-primary);
+    color: var(--color-text-primary);
     margin: 0;
   }
 
@@ -300,7 +305,7 @@ const primaryMedia = impactData.media && impactData.media.length > 0 ? impactDat
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.65rem;
   }
 
   .pillar-item {
@@ -308,54 +313,66 @@ const primaryMedia = impactData.media && impactData.media.length > 0 ? impactDat
     align-items: flex-start;
     gap: 0.5rem;
     font-size: 0.85rem;
-    color: var(--text-secondary);
-    line-height: 1.4;
+    line-height: 1.45;
+    color: var(--color-text-secondary);
   }
 
   .pillar-bullet {
-    color: var(--color-primary);
-    font-size: 1rem;
-    line-height: 1;
+    color: #EE4B2B;
+    font-size: 11px;
+    flex-shrink: 0;
   }
 
   .impact-quote-card {
-    padding: var(--space-6, 1.5rem);
-    margin-bottom: var(--space-6, 1.5rem);
     position: relative;
-    background: var(--surface-secondary);
+    padding: 1.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md, 8px);
+    margin-bottom: 2rem;
+  }
+
+  :global(.dark) .impact-quote-card {
+    background: var(--color-surface-raised);
   }
 
   .quote-mark-icon {
-    font-family: Georgia, serif;
     font-size: 3rem;
     line-height: 1;
-    color: var(--color-primary);
+    color: #EE4B2B;
     opacity: 0.3;
-    margin-bottom: -1rem;
+    position: absolute;
+    top: 0.75rem;
+    left: 1rem;
+    font-family: Georgia, serif;
+    pointer-events: none;
   }
 
   .quote-body-text {
-    font-size: 1.1rem;
+    position: relative;
+    z-index: 2;
+    font-size: 1.05rem;
     font-style: italic;
-    line-height: 1.6;
-    color: var(--text-primary);
-    margin: 0 0 var(--space-3, 0.75rem) 0;
+    color: var(--color-text-primary);
+    line-height: 1.5;
+    margin: 0 0 0.75rem;
   }
 
   .quote-author-row {
-    display: flex;
-    justify-content: flex-end;
-  }
-
-  .quote-author-role {
-    font-family: var(--font-mono, monospace);
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--color-primary);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--color-text-muted);
   }
 
   .impact-points-card {
-    padding: var(--space-5, 1.25rem);
+    padding: 1.25rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md, 8px);
+  }
+
+  :global(.dark) .impact-points-card {
+    background: var(--color-surface-raised);
   }
 
   .impact-points-grid {
@@ -363,8 +380,8 @@ const primaryMedia = impactData.media && impactData.media.length > 0 ? impactDat
     padding: 0;
     margin: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: var(--space-3, 0.75rem);
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 0.75rem;
   }
 
   .impact-point-item {
@@ -372,12 +389,12 @@ const primaryMedia = impactData.media && impactData.media.length > 0 ? impactDat
     align-items: flex-start;
     gap: 0.5rem;
     font-size: 0.9rem;
-    line-height: 1.4;
-    color: var(--text-secondary);
+    color: var(--color-text-secondary);
+    line-height: 1.45;
   }
 
   .pt-star {
-    color: var(--color-primary);
+    color: #EE4B2B;
     font-size: 0.85rem;
     margin-top: 2px;
   }

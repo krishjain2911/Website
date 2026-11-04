@@ -1,9 +1,11 @@
 ---
 import MediaSlot from './MediaSlot.astro';
 import BeforeAfterSlider from '../BeforeAfterSlider.astro';
+import StageComingSoon from './StageComingSoon.astro';
 
 interface Props {
   problemData?: {
+    tagline?: string;
     headline?: string;
     story?: string;
     points?: string[];
@@ -12,139 +14,144 @@ interface Props {
     media?: any[];
   };
   beforeAfterId?: 'clm' | 'dms' | 'whatsapp';
+  tagline?: string;
 }
 
 const { problemData, beforeAfterId } = Astro.props;
-if (!problemData) return null;
+const tagline = Astro.props.tagline || problemData?.tagline;
+const story = problemData?.story;
+const hasContent = !!(problemData && (problemData.story || problemData.process?.length || problemData.friction?.length || problemData.points?.length));
 
-const primaryMedia = problemData.media && problemData.media.length > 0 ? problemData.media[0] : undefined;
+const primaryMedia = problemData?.media && problemData.media.length > 0 ? problemData.media[0] : undefined;
 ---
 
-<section id="chapter-problem" class="project-chapter-section" aria-labelledby="heading-problem">
+<section
+  id="stage-01"
+  class="project-chapter-section"
+  aria-labelledby="heading-stage-01"
+  data-stage-title="Understand the business"
+  data-stage-color="#1E4B8F"
+  tabindex="-1"
+>
   <div class="chapter-header">
-    <div class="chapter-badge-wrap">
-      <span class="chapter-num-badge">01</span>
-      <span class="chapter-phase-tag">THE PROBLEM</span>
-    </div>
-    <h2 id="heading-problem" class="chapter-heading">{problemData.headline || 'The Operational Challenge'}</h2>
-    {problemData.story && <p class="chapter-story">{problemData.story}</p>}
+    <span class="chapter-eyebrow" style="color: #1E4B8F;">STAGE 01</span>
+    <h2 id="heading-stage-01" class="chapter-heading">Understand the business</h2>
+    {tagline && <p class="chapter-tagline" style="color: #1E4B8F;">{tagline}</p>}
+    {story && <p class="chapter-story">{story}</p>}
   </div>
 
-  <!-- Numbered Old-Process Strip -->
-  {problemData.process && problemData.process.length > 0 && (
-    <div class="problem-process-block">
-      <span class="block-mini-title">BASELINE OPERATIONAL FLOW</span>
-      <ol class="process-steps-track" aria-label="Original operational steps">
-        {problemData.process.map((step, idx) => (
-          <li class="process-step-item">
-            <span class="process-step-num">0{idx + 1}</span>
-            <span class="process-step-text">{step}</span>
-            {idx < problemData.process!.length - 1 && (
-              <span class="process-step-arrow" aria-hidden="true">&rarr;</span>
-            )}
-          </li>
-        ))}
-      </ol>
-    </div>
-  )}
-
-  <!-- Split View: Friction Hotspots & Media -->
-  <div class="problem-split-grid">
-    <!-- Left: Friction Map Cards -->
-    {problemData.friction && problemData.friction.length > 0 && (
-      <div class="friction-cards-column">
-        <span class="block-mini-title">SYSTEM FRICTION POINTS</span>
-        <div class="friction-cards-list">
-          {problemData.friction.map((item, idx) => (
-            <div
-              class="friction-card card-mastercard"
-              data-friction-index={idx}
-              id={`friction-card-${idx}`}
-              tabindex="0"
-              role="region"
-              aria-label={item.title}
-            >
-              <div class="friction-card-top">
-                <span class="friction-dot-num">{idx + 1}</span>
-                <h3 class="friction-title">{item.title}</h3>
-              </div>
-              <p class="friction-detail">{item.detail}</p>
-            </div>
-          ))}
+  {!hasContent ? (
+    <StageComingSoon stageNumber="01" stageTitle="Understand the business" color="#1E4B8F" />
+  ) : (
+    <>
+      <!-- Numbered Old-Process Strip -->
+      {problemData?.process && problemData.process.length > 0 && (
+        <div class="problem-process-block">
+          <span class="block-mini-title">BASELINE OPERATIONAL FLOW</span>
+          <ol class="process-steps-track" aria-label="Original operational steps">
+            {problemData.process.map((step, idx) => (
+              <li class="process-step-item">
+                <span class="process-step-num">0{idx + 1}</span>
+                <span class="process-step-text">{step}</span>
+                {idx < problemData.process!.length - 1 && (
+                  <span class="process-step-arrow" aria-hidden="true">&rarr;</span>
+                )}
+              </li>
+            ))}
+          </ol>
         </div>
-      </div>
-    )}
+      )}
 
-    <!-- Right: Friction Media Slot with Interactive Hotspots -->
-    <div class="friction-media-column">
-      <div class="friction-interactive-wrapper">
-        <MediaSlot
-          media={primaryMedia}
-          aspectRatio="16/10"
-          frame="browser"
-          chapterId="problem"
-          class="friction-media-frame"
-        />
-
-        {problemData.friction && problemData.friction.length > 0 && (
-          <div class="friction-hotspots-layer" aria-hidden="true">
-            {problemData.friction.map((item, idx) => {
-              // Placed across the image as representative hotspots
-              const positions = [
-                { top: '30%', left: '25%' },
-                { top: '55%', left: '60%' },
-                { top: '75%', left: '35%' },
-                { top: '40%', left: '75%' }
-              ];
-              const pos = positions[idx % positions.length];
-              return (
+      <!-- Split View: Friction Hotspots & Media -->
+      <div class="problem-split-grid">
+        <!-- Left: Friction Map Cards -->
+        {problemData?.friction && problemData.friction.length > 0 && (
+          <div class="friction-cards-column">
+            <span class="block-mini-title">SYSTEM FRICTION POINTS</span>
+            <div class="friction-cards-list">
+              {problemData.friction.map((item, idx) => (
                 <div
-                  class="friction-hotspot-pin"
-                  style={`top: ${pos.top}; left: ${pos.left};`}
-                  data-target-card={idx}
+                  class="friction-card card-mastercard"
+                  data-friction-index={idx}
+                  id={`friction-card-${idx}`}
+                  tabindex="0"
+                  role="region"
+                  aria-label={item.title}
                 >
-                  <span class="hotspot-pulse"></span>
-                  <span class="hotspot-core">{idx + 1}</span>
-                  <div class="hotspot-tooltip">
-                    <strong>{item.title}</strong>
-                    <span>{item.detail}</span>
+                  <div class="friction-card-top">
+                    <span class="friction-dot-num">{idx + 1}</span>
+                    <h3 class="friction-title">{item.title}</h3>
                   </div>
+                  <p class="friction-detail">{item.detail}</p>
                 </div>
-              );
-            })}
+              ))}
+            </div>
           </div>
         )}
-      </div>
-    </div>
-  </div>
 
-  <!-- Key Observation Points -->
-  {problemData.points && problemData.points.length > 0 && (
-    <div class="chapter-points-row">
-      {problemData.points.map((pt) => (
-        <div class="point-chip card-mastercard">
-          <span class="point-bullet" aria-hidden="true">■</span>
-          <span class="point-text">{pt}</span>
+        <!-- Right: Friction Media Slot with Interactive Hotspots -->
+        <div class="friction-media-column">
+          <div class="friction-interactive-wrapper">
+            {primaryMedia ? (
+              <MediaSlot item={primaryMedia} />
+            ) : (
+              <div class="friction-placeholder-frame card-mastercard">
+                <div class="frame-content">
+                  <span class="placeholder-tag">OBSERVATION TELEMETRY</span>
+                  <p class="placeholder-note">Showroom floor walk-in tracking &amp; friction heat map</p>
+                </div>
+              </div>
+            )}
+
+            <!-- Interactive Hotspot Pins overlaying the frame -->
+            {problemData?.friction && problemData.friction.map((_, idx) => (
+              <button
+                type="button"
+                class="friction-hotspot-pin"
+                data-target-card={idx}
+                aria-label={`View friction spot 0${idx + 1}`}
+                style={`--pin-top: ${30 + idx * 24}%; --pin-left: ${45 + (idx % 2 === 0 ? 15 : -15)}%;`}
+              >
+                <span class="hotspot-pulse"></span>
+                <span class="hotspot-core">{idx + 1}</span>
+              </button>
+            ))}
+          </div>
         </div>
-      ))}
-    </div>
-  )}
-
-  <!-- Optional Before/After Comparison Slider -->
-  {beforeAfterId && (
-    <div class="problem-beforeafter-wrapper">
-      <div class="beforeafter-header">
-        <span class="block-mini-title">TRANSFORMATION COMPARISON</span>
-        <h3 class="beforeafter-title">The Operational Shift</h3>
       </div>
-      <BeforeAfterSlider hideTabs={true} initialTab={beforeAfterId} />
-    </div>
+
+      <!-- Key Observation Points Strip -->
+      {problemData?.points && problemData.points.length > 0 && (
+        <div class="points-summary-strip card-mastercard">
+          <span class="block-mini-title">GROUND OBSERVATIONS</span>
+          <ul class="points-list">
+            {problemData.points.map((pt) => (
+              <li class="point-item">
+                <span class="point-bullet" aria-hidden="true">&bull;</span>
+                <span>{pt}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <!-- Before/After Slider if interactive comparison exists for this product -->
+      {beforeAfterId && (
+        <div class="problem-beforeafter-wrapper">
+          <div class="beforeafter-header">
+            <span class="block-mini-title">INTERACTIVE COMPARISON</span>
+            <h3 class="beforeafter-title">Operational Friction vs Engineered Solution</h3>
+          </div>
+          <BeforeAfterSlider hideTabs={true} initialTab={beforeAfterId} />
+        </div>
+      )}
+    </>
   )}
 </section>
 
 <style>
   .project-chapter-section {
-    padding: 3.5rem 0;
+    padding: clamp(2.5rem, 5vh, 3.75rem) 0;
     border-bottom: 1px solid var(--color-border);
     scroll-margin-top: calc(var(--nav-height, 72px) + 2rem);
   }
@@ -153,47 +160,34 @@ const primaryMedia = problemData.media && problemData.media.length > 0 ? problem
     margin-bottom: 2rem;
   }
 
-  .chapter-badge-wrap {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .chapter-num-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 22px;
-    height: 22px;
-    border-radius: 4px;
+  .chapter-eyebrow {
+    display: inline-block;
     font-size: 11px;
     font-weight: 800;
-    background: #1E4B8F;
-    color: #FFFFFF;
-  }
-
-  .chapter-phase-tag {
-    font-size: var(--fs-xs);
-    font-weight: 800;
     letter-spacing: 0.1em;
-    color: #1E4B8F;
-  }
-
-  :global(.dark) .chapter-phase-tag {
-    color: #5B8FE0;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
   }
 
   .chapter-heading {
-    font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+    font-size: clamp(1.75rem, 3.2vw, 2.25rem);
     font-weight: 800;
     color: var(--color-text-primary);
-    margin: 0 0 0.75rem 0;
+    margin: 0 0 0.4rem 0;
     line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+
+  .chapter-tagline {
+    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+    font-weight: 700;
+    margin: 0 0 0.75rem 0;
+    letter-spacing: -0.01em;
+    line-height: 1.35;
   }
 
   .chapter-story {
-    font-size: 1.05rem;
+    font-size: 1rem;
     line-height: 1.6;
     color: var(--color-text-secondary);
     max-width: 680px;
@@ -212,11 +206,11 @@ const primaryMedia = problemData.media && problemData.media.length > 0 ? problem
 
   /* Numbered Process Strip */
   .problem-process-block {
-    margin-bottom: 2.5rem;
+    margin-bottom: 2.25rem;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md, 8px);
-    padding: 1.25rem 1.5rem;
+    padding: 1.15rem 1.35rem;
   }
 
   :global(.dark) .problem-process-block {
@@ -343,13 +337,6 @@ const primaryMedia = problemData.media && problemData.media.length > 0 ? problem
     width: 100%;
   }
 
-  .friction-hotspots-layer {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 5;
-  }
-
   .friction-hotspot-pin {
     position: absolute;
     width: 26px;
@@ -360,6 +347,11 @@ const primaryMedia = problemData.media && problemData.media.length > 0 ? problem
     display: flex;
     align-items: center;
     justify-content: center;
+    background: none;
+    border: none;
+    padding: 0;
+    top: var(--pin-top, 50%);
+    left: var(--pin-left, 50%);
   }
 
   .hotspot-core {
@@ -392,80 +384,88 @@ const primaryMedia = problemData.media && problemData.media.length > 0 ? problem
     100% { transform: scale(1.6); opacity: 0; }
   }
 
-  .friction-hotspot-pin:hover .hotspot-core {
-    transform: scale(1.2);
+  .friction-hotspot-pin:hover .hotspot-core,
+  .hotspot-core.is-active {
+    transform: scale(1.25);
   }
 
-  .hotspot-tooltip {
-    position: absolute;
-    bottom: calc(100% + 8px);
-    left: 50%;
-    transform: translateX(-50%);
-    width: 190px;
-    padding: 0.5rem 0.75rem;
-    background: #111827;
-    color: #FFFFFF;
-    border-radius: var(--radius-sm, 4px);
-    font-size: 11px;
-    line-height: 1.35;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.2s ease, transform 0.2s ease;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
-    z-index: 10;
-  }
-
-  .hotspot-tooltip strong {
-    display: block;
-    color: #FF5B3B;
-    margin-bottom: 2px;
-  }
-
-  .friction-hotspot-pin:hover .hotspot-tooltip {
-    opacity: 1;
-    transform: translateX(-50%) translateY(-2px);
-  }
-
-  /* Points Row */
-  .chapter-points-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 0.85rem;
-    margin-top: 1.5rem;
-  }
-
-  .point-chip {
+  .friction-placeholder-frame {
+    height: 260px;
+    background: var(--color-surface);
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-md, 8px);
     display: flex;
-    align-items: baseline;
-    gap: 0.5rem;
-    padding: 0.85rem 1rem;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 1.5rem;
+  }
+
+  .placeholder-tag {
+    display: block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: #EE4B2B;
+    margin-bottom: 0.4rem;
+  }
+
+  .placeholder-note {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  /* Points Summary Strip */
+  .points-summary-strip {
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md, 8px);
-    font-size: 0.85rem;
+    padding: 1.25rem 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  :global(.dark) .points-summary-strip {
+    background: var(--color-surface-raised);
+  }
+
+  .points-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
+  .point-item {
+    display: flex;
+    align-items: baseline;
+    gap: 0.65rem;
+    font-size: 0.9rem;
     color: var(--color-text-secondary);
-    line-height: 1.4;
+    line-height: 1.5;
   }
 
   .point-bullet {
     color: #1E4B8F;
-    font-size: 8px;
+    font-size: 12px;
     flex-shrink: 0;
   }
 
   /* Before After Slider Wrapper */
   .problem-beforeafter-wrapper {
-    margin-top: 3rem;
+    margin-top: 2.5rem;
     padding-top: 2rem;
     border-top: 1px dashed var(--color-border);
   }
 
   .beforeafter-header {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.25rem;
   }
 
   .beforeafter-title {
-    font-size: 1.4rem;
+    font-size: 1.35rem;
     font-weight: 800;
     color: var(--color-text-primary);
     margin: 0;
@@ -507,4 +507,3 @@ const primaryMedia = problemData.media && problemData.media.length > 0 ? problem
   initFrictionInteractions();
   document.addEventListener('astro:after-swap', initFrictionInteractions);
 </script>
-

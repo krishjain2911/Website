@@ -1,5 +1,6 @@
 ---
 import MediaSlot from './MediaSlot.astro';
+import StageComingSoon from './StageComingSoon.astro';
 
 interface ArchitectureLayer {
   name: string;
@@ -8,6 +9,7 @@ interface ArchitectureLayer {
 
 interface Props {
   architectureData?: {
+    tagline?: string;
     headline?: string;
     story?: string;
     points?: string[];
@@ -17,252 +19,259 @@ interface Props {
     security?: string;
     media?: any[];
   };
+  tagline?: string;
 }
 
 const { architectureData } = Astro.props;
-if (!architectureData) return null;
+const tagline = Astro.props.tagline || architectureData?.tagline;
+const story = architectureData?.story;
+const hasContent = !!(architectureData && (architectureData.story || architectureData.layers?.length || architectureData.pattern || architectureData.points?.length));
 
-const primaryMedia = architectureData.media && architectureData.media.length > 0 ? architectureData.media[0] : undefined;
+const primaryMedia = architectureData?.media && architectureData.media.length > 0 ? architectureData.media[0] : undefined;
 ---
 
-<section id="chapter-architecture" class="project-chapter-section" aria-labelledby="heading-architecture">
+<section
+  id="stage-03"
+  class="project-chapter-section"
+  aria-labelledby="heading-stage-03"
+  data-stage-title="Design adaptive systems"
+  data-stage-color="#B86B10"
+  tabindex="-1"
+>
   <div class="chapter-header">
-    <div class="chapter-badge-wrap">
-      <span class="chapter-num-badge">03</span>
-      <span class="chapter-phase-tag">SYSTEM ARCHITECTURE</span>
-    </div>
-    <h2 id="heading-architecture" class="chapter-heading">{architectureData.headline || 'Production Architecture & Infrastructure'}</h2>
-    {architectureData.story && <p class="chapter-story">{architectureData.story}</p>}
+    <span class="chapter-eyebrow" style="color: #B86B10;">STAGE 03</span>
+    <h2 id="heading-stage-03" class="chapter-heading">Design adaptive systems</h2>
+    {tagline && <p class="chapter-tagline" style="color: #B86B10;">{tagline}</p>}
+    {story && <p class="chapter-story">{story}</p>}
   </div>
 
-  <!-- Pattern & Security Header Strip -->
-  {(architectureData.pattern || architectureData.security) && (
-    <div class="arch-meta-strip">
-      {architectureData.pattern && (
-        <div class="arch-meta-item card-mastercard">
-          <span class="meta-label">CORE DESIGN PATTERN</span>
-          <span class="meta-value">{architectureData.pattern}</span>
+  {!hasContent ? (
+    <StageComingSoon stageNumber="03" stageTitle="Design adaptive systems" color="#B86B10" />
+  ) : (
+    <>
+      <!-- Pattern & Security Header Strip -->
+      {(architectureData?.pattern || architectureData?.security) && (
+        <div class="arch-meta-strip">
+          {architectureData.pattern && (
+            <div class="arch-meta-item card-mastercard">
+              <span class="meta-label">CORE DESIGN PATTERN</span>
+              <span class="meta-value">{architectureData.pattern}</span>
+            </div>
+          )}
+          {architectureData.security && (
+            <div class="arch-meta-item card-mastercard">
+              <span class="meta-label">SECURITY &amp; COMPLIANCE POSTURE</span>
+              <span class="meta-value">{architectureData.security}</span>
+            </div>
+          )}
         </div>
       )}
-      {architectureData.security && (
-        <div class="arch-meta-item card-mastercard">
-          <span class="meta-label">SECURITY &amp; COMPLIANCE POSTURE</span>
-          <span class="meta-value">{architectureData.security}</span>
-        </div>
-      )}
-    </div>
-  )}
 
-  <!-- Two Column Layout: Layers Stack Diagram vs Architecture Diagram / Points -->
-  <div class="arch-main-grid">
-    <!-- Left Column: Layered Stack Diagram -->
-    {architectureData.layers && architectureData.layers.length > 0 && (
-      <div class="arch-layers-column card-mastercard">
-        <div class="layers-header">
-          <span class="block-mini-title">MODULAR SYSTEM LAYERS</span>
-          <span class="layers-hint">End-to-End Adapter Topology</span>
-        </div>
+      <!-- Two Column Layout: Layers Stack Diagram vs Architecture Media / Points -->
+      <div class="arch-main-grid">
+        <!-- Left Column: Layered Stack Diagram -->
+        {architectureData?.layers && architectureData.layers.length > 0 && (
+          <div class="arch-layers-column card-mastercard">
+            <div class="layers-header">
+              <span class="block-mini-title">MODULAR SYSTEM LAYERS</span>
+              <span class="layers-hint">End-to-End Adapter Topology</span>
+            </div>
 
-        <div class="layers-stack">
-          {architectureData.layers.map((layer, lIdx) => (
-            <div class="layer-band" data-layer-index={lIdx}>
-              <div class="layer-band-title">
-                <span class="layer-tier-badge">T{lIdx + 1}</span>
-                <span class="layer-name">{layer.name}</span>
-              </div>
-              <div class="layer-items-grid">
-                {layer.items.map((item) => (
-                  <div class="layer-component-pill" title={item.role}>
-                    <span class="item-name">{item.name}</span>
-                    <span class="item-role">{item.role}</span>
+            <div class="layers-stack">
+              {architectureData.layers.map((layer, lIdx) => (
+                <div class="layer-band" data-layer-index={lIdx}>
+                  <div class="layer-band-title">
+                    <span class="layer-tier-badge">T{lIdx + 1}</span>
+                    <span class="layer-name">{layer.name}</span>
+                  </div>
+                  <div class="layer-items-grid">
+                    {layer.items.map((item) => (
+                      <div class="layer-component-pill" title={item.role}>
+                        <span class="item-name">{item.name}</span>
+                        <span class="item-role">{item.role}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <!-- Right Column: Media / AI Capabilities / Points -->
+        <div class="arch-media-column">
+          {primaryMedia ? (
+            <MediaSlot item={primaryMedia} />
+          ) : null}
+
+          <!-- AI Capabilities block -->
+          {architectureData?.ai && architectureData.ai.length > 0 && (
+            <div class="arch-ai-card card-mastercard">
+              <span class="block-mini-title">AI &amp; AGENTIC CAPABILITIES</span>
+              <div class="ai-chips-wrap">
+                {architectureData.ai.map((item) => (
+                  <div class="ai-chip">
+                    <span class="chip-sparkle" aria-hidden="true">&#x2726;</span>
+                    <span class="chip-text">{item}</span>
                   </div>
                 ))}
               </div>
             </div>
-          ))}
+          )}
+
+          <!-- Architecture Key Points -->
+          {architectureData?.points && architectureData.points.length > 0 && (
+            <div class="arch-points-card card-mastercard">
+              <span class="block-mini-title">TECHNICAL HIGHLIGHTS</span>
+              <ul class="arch-points-list">
+                {architectureData.points.map((pt) => (
+                  <li class="arch-point-item">
+                    <span class="point-bracket" aria-hidden="true">&rsaquo;</span>
+                    <span>{pt}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
-    )}
-
-    <!-- Right Column: Media / AI Capabilities / Points -->
-    <div class="arch-media-column">
-      {primaryMedia ? (
-        <MediaSlot
-          media={primaryMedia}
-          fallbackTitle="Architectural Blueprint"
-          fallbackDescription="Component communication graphs, data flows, and adapter boundaries."
-        />
-      ) : null}
-
-      <!-- AI Capabilities block -->
-      {architectureData.ai && architectureData.ai.length > 0 && (
-        <div class="arch-ai-card card-mastercard">
-          <span class="block-mini-title">AI &amp; AGENTIC CAPABILITIES</span>
-          <div class="ai-chips-wrap">
-            {architectureData.ai.map((item) => (
-              <div class="ai-chip">
-                <span class="chip-sparkle" aria-hidden="true">&#x2726;</span>
-                <span class="chip-text">{item}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <!-- Architecture Key Points -->
-      {architectureData.points && architectureData.points.length > 0 && (
-        <div class="arch-points-card card-mastercard">
-          <span class="block-mini-title">TECHNICAL HIGHLIGHTS</span>
-          <ul class="arch-points-list">
-            {architectureData.points.map((pt) => (
-              <li class="arch-point-item">
-                <span class="point-bracket" aria-hidden="true">&rsaquo;</span>
-                <span>{pt}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </div>
-  </div>
+    </>
+  )}
 </section>
 
 <style>
   .project-chapter-section {
-    padding: var(--space-8, 2rem) 0 var(--space-12, 3rem);
-    border-bottom: 1px solid var(--border-subtle);
-    scroll-margin-top: calc(var(--header-height, 64px) + 2rem);
+    padding: clamp(2.5rem, 5vh, 3.75rem) 0;
+    border-bottom: 1px solid var(--color-border);
+    scroll-margin-top: calc(var(--nav-height, 72px) + 2rem);
   }
 
   .chapter-header {
-    margin-bottom: var(--space-6, 1.5rem);
+    margin-bottom: 2rem;
   }
 
-  .chapter-badge-wrap {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2, 0.5rem);
-    margin-bottom: var(--space-3, 0.75rem);
-  }
-
-  .chapter-num-badge {
-    font-family: var(--font-mono, monospace);
-    font-size: 0.75rem;
-    font-weight: 700;
-    padding: 0.2rem 0.5rem;
-    border-radius: 4px;
-    background: var(--surface-secondary, rgba(0,0,0,0.05));
-    color: var(--text-muted);
-    border: 1px solid var(--border-subtle);
-  }
-
-  .chapter-phase-tag {
-    font-family: var(--font-mono, monospace);
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
+  .chapter-eyebrow {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--color-primary);
+    margin-bottom: 0.4rem;
   }
 
   .chapter-heading {
-    font-family: var(--font-heading);
-    font-size: clamp(1.6rem, 3vw, 2.25rem);
-    font-weight: 700;
-    color: var(--text-primary);
+    font-size: clamp(1.75rem, 3.2vw, 2.25rem);
+    font-weight: 800;
+    color: var(--color-text-primary);
+    margin: 0 0 0.4rem 0;
     line-height: 1.2;
-    margin-bottom: var(--space-3, 0.75rem);
+    letter-spacing: -0.015em;
+  }
+
+  .chapter-tagline {
+    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+    font-weight: 700;
+    margin: 0 0 0.75rem 0;
+    letter-spacing: -0.01em;
+    line-height: 1.35;
   }
 
   .chapter-story {
-    font-size: 1.05rem;
+    font-size: 1rem;
     line-height: 1.6;
-    color: var(--text-secondary);
-    max-width: 780px;
+    color: var(--color-text-secondary);
+    max-width: 680px;
     margin: 0;
   }
 
   .block-mini-title {
     display: block;
-    font-family: var(--font-mono, monospace);
-    font-size: 0.7rem;
-    font-weight: 700;
+    font-size: 10.5px;
+    font-weight: 800;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: var(--space-3, 0.75rem);
+    color: var(--color-text-muted);
+    margin-bottom: 0.75rem;
   }
 
   .arch-meta-strip {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: var(--space-4, 1rem);
-    margin-bottom: var(--space-6, 1.5rem);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
   }
 
   .arch-meta-item {
-    padding: var(--space-4, 1rem) var(--space-5, 1.25rem);
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
+    padding: 1rem 1.25rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md, 8px);
+  }
+
+  :global(.dark) .arch-meta-item {
+    background: var(--color-surface-raised);
   }
 
   .meta-label {
-    font-family: var(--font-mono, monospace);
-    font-size: 0.65rem;
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 800;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--text-muted);
+    color: var(--color-text-muted);
+    margin-bottom: 0.35rem;
   }
 
   .meta-value {
     font-size: 0.95rem;
     font-weight: 600;
-    color: var(--text-primary);
+    color: var(--color-text-primary);
+    line-height: 1.4;
   }
 
   .arch-main-grid {
     display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: var(--space-6, 1.5rem);
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 1.5rem;
     align-items: start;
   }
 
   .arch-layers-column {
-    padding: var(--space-5, 1.25rem);
+    padding: 1.25rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md, 8px);
+  }
+
+  :global(.dark) .arch-layers-column {
+    background: var(--color-surface-raised);
   }
 
   .layers-header {
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    align-items: baseline;
-    border-bottom: 1px solid var(--border-subtle);
-    padding-bottom: var(--space-3, 0.75rem);
-    margin-bottom: var(--space-4, 1rem);
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0.5rem;
   }
 
   .layers-hint {
-    font-family: var(--font-mono, monospace);
-    font-size: 0.7rem;
-    color: var(--text-muted);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
   }
 
   .layers-stack {
     display: flex;
     flex-direction: column;
-    gap: var(--space-3, 0.75rem);
+    gap: 0.75rem;
   }
 
   .layer-band {
-    background: var(--surface-secondary);
-    border: 1px solid var(--border-subtle);
-    border-radius: 8px;
-    padding: var(--space-3, 0.75rem) var(--space-4, 1rem);
-    transition: transform 0.2s ease, border-color 0.2s ease;
-  }
-
-  .layer-band:hover {
-    border-color: var(--color-primary);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: 0.75rem;
+    background: var(--color-bg);
   }
 
   .layer-band-title {
@@ -273,88 +282,88 @@ const primaryMedia = architectureData.media && architectureData.media.length > 0
   }
 
   .layer-tier-badge {
-    font-family: var(--font-mono, monospace);
     font-size: 0.65rem;
-    font-weight: 700;
-    background: var(--color-primary);
-    color: white;
-    padding: 1px 5px;
-    border-radius: 3px;
+    font-weight: 800;
+    color: #B86B10;
+    background: rgba(184, 107, 16, 0.12);
+    padding: 2px 6px;
+    border-radius: 4px;
   }
 
   .layer-name {
     font-size: 0.85rem;
     font-weight: 700;
-    letter-spacing: 0.02em;
-    color: var(--text-primary);
-    text-transform: uppercase;
+    color: var(--color-text-primary);
   }
 
   .layer-items-grid {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
     gap: 0.5rem;
   }
 
   .layer-component-pill {
-    display: inline-flex;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    padding: 0.4rem 0.6rem;
+    display: flex;
     flex-direction: column;
-    padding: 0.35rem 0.65rem;
-    background: var(--surface-primary);
-    border: 1px solid var(--border-subtle);
-    border-radius: 6px;
-    cursor: default;
-    transition: background 0.15s ease, border-color 0.15s ease;
-  }
-
-  .layer-component-pill:hover {
-    background: var(--surface-secondary);
-    border-color: var(--color-primary);
+    gap: 2px;
   }
 
   .item-name {
-    font-family: var(--font-mono, monospace);
     font-size: 0.8rem;
     font-weight: 600;
-    color: var(--text-primary);
+    color: var(--color-text-primary);
   }
 
   .item-role {
     font-size: 0.7rem;
-    color: var(--text-muted);
+    color: var(--color-text-muted);
+    line-height: 1.3;
   }
 
   .arch-media-column {
     display: flex;
     flex-direction: column;
-    gap: var(--space-4, 1rem);
+    gap: 1.25rem;
   }
 
   .arch-ai-card, .arch-points-card {
-    padding: var(--space-5, 1.25rem);
+    padding: 1.25rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md, 8px);
+  }
+
+  :global(.dark) .arch-ai-card,
+  :global(.dark) .arch-points-card {
+    background: var(--color-surface-raised);
   }
 
   .ai-chips-wrap {
     display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
   }
 
   .ai-chip {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.45rem 0.7rem;
-    background: var(--surface-secondary);
-    border: 1px solid var(--border-subtle);
+    gap: 0.45rem;
+    background: rgba(184, 107, 16, 0.08);
+    border: 1px solid rgba(184, 107, 16, 0.25);
+    padding: 0.4rem 0.75rem;
     border-radius: 6px;
     font-size: 0.85rem;
-    color: var(--text-primary);
+    font-weight: 600;
+    color: var(--color-text-primary);
   }
 
   .chip-sparkle {
-    color: var(--color-primary);
-    font-size: 0.75rem;
+    color: #B86B10;
+    font-size: 0.8rem;
   }
 
   .arch-points-list {
@@ -363,7 +372,7 @@ const primaryMedia = architectureData.media && architectureData.media.length > 0
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.65rem;
   }
 
   .arch-point-item {
@@ -371,12 +380,12 @@ const primaryMedia = architectureData.media && architectureData.media.length > 0
     align-items: flex-start;
     gap: 0.5rem;
     font-size: 0.9rem;
-    line-height: 1.45;
-    color: var(--text-secondary);
+    color: var(--color-text-secondary);
+    line-height: 1.5;
   }
 
   .point-bracket {
-    color: var(--color-primary);
+    color: #B86B10;
     font-weight: bold;
     font-size: 1.1rem;
     line-height: 1;

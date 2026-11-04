@@ -26,6 +26,7 @@ hero:
   frame: "browser"
 phases:
   problem:
+    tagline: "Questions without quick answers."
     headline: "Fragmented documents and slow resolution times"
     story: "Enterprise documents and knowledge reside across fragmented folders, wikis, and databases, slowing employee resolution times and causing operational inconsistencies."
     points:
@@ -45,6 +46,7 @@ phases:
       - title: "Link Overload"
         detail: "Keyword searches return pages of document links rather than direct, verifiable answers."
   value:
+    tagline: "Decisions accelerated by data."
     headline: "Instant grounded answers with direct document citations"
     story: "Reduces repetitive internal search inquiries while maintaining clear attribution to verified documents, eliminating guess-work for frontline teams."
     points:
@@ -65,6 +67,7 @@ phases:
       - "Automated document and database connectors"
       - "Internal expert feedback and verification loops"
   architecture:
+    tagline: "Grounded in private telemetry."
     headline: "Semantic retrieval and OutSystems application portal"
     story: "An enterprise semantic search and knowledge retrieval engine indexing fragmented documents and relational databases into a single verified question-answering workspace."
     points:
@@ -104,7 +107,10 @@ phases:
             role: "Query resolution telemetry and citation logs"
     pattern: "Grounded Retrieval-Augmented Generation with Source Citation"
     security: "Role-based document filtering ensuring unauthorized personnel cannot view restricted content."
+  pilot:
+    tagline: "Trained on leadership queries."
   rollout:
+    tagline: "Enterprise-wide rollout, zero drift."
     headline: "Repository indexing and access permission testing"
     story: "Connecting authorized storage drives, indexing approved manuals, and validating role-based permission boundaries."
     points:
@@ -120,6 +126,7 @@ phases:
       - "Department pilot group query evaluation"
       - "Full enterprise rollout with SSO authentication"
   impact:
+    tagline: "Continuous intelligence on demand."
     headline: "Instant answers for staff drawn directly from verified enterprise repositories"
     story: "Empowers employees with immediate, verifiable answers from approved corporate documents, reducing support escalations and operational errors."
     points:

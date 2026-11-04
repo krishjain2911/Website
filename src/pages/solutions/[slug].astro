@@ -8,7 +8,7 @@ import Icon from '../../components/Icon.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 
 import ProjectHero from '../../components/project/ProjectHero.astro';
-import JourneyRail from '../../components/project/JourneyRail.astro';
+import StageRail from '../../components/project/StageRail.astro';
 import PhaseProblem from '../../components/project/PhaseProblem.astro';
 import PhaseValue from '../../components/project/PhaseValue.astro';
 import PhaseArchitecture from '../../components/project/PhaseArchitecture.astro';
@@ -44,55 +44,8 @@ const relatedProducts = allProducts
   .filter((item) => item.slug !== product.slug && (p.related?.includes(item.slug) || item.data.pillar === p.pillar))
   .slice(0, 3);
 
-// Dynamic 6-phase detection
+// 6-phase approach phases
 const phases = p.phases;
-const rawStops = [
-  {
-    id: 'problem',
-    title: 'The Problem',
-    badge: 'PROBLEM',
-    exists: !!(phases?.problem && (phases.problem.headline || phases.problem.story || phases.problem.process?.length || phases.problem.friction?.length))
-  },
-  {
-    id: 'value',
-    title: 'Latent Revenue',
-    badge: 'VALUE',
-    exists: !!(phases?.value && (phases.value.headline || phases.value.story || phases.value.metrics?.length || phases.value.levers?.length))
-  },
-  {
-    id: 'architecture',
-    title: 'Architecture',
-    badge: 'ARCH',
-    exists: !!(phases?.architecture && (phases.architecture.headline || phases.architecture.story || phases.architecture.layers?.length || phases.architecture.pattern))
-  },
-  {
-    id: 'pilot',
-    title: 'The Pilot',
-    badge: 'PILOT',
-    exists: !!(phases?.pilot && (phases.pilot.headline || phases.pilot.story || phases.pilot.feedback?.length || phases.pilot.scope))
-  },
-  {
-    id: 'rollout',
-    title: 'Rollout',
-    badge: 'ROLLOUT',
-    exists: !!(phases?.rollout && (phases.rollout.headline || phases.rollout.story || phases.rollout.hardening?.length || phases.rollout.steps?.length))
-  },
-  {
-    id: 'impact',
-    title: 'Long-term Impact',
-    badge: 'IMPACT',
-    exists: !!(phases?.impact && (phases.impact.headline || phases.impact.story || phases.impact.outcome || phases.impact.governance?.length))
-  }
-];
-
-const stops = rawStops
-  .filter((s) => s.exists)
-  .map((s, idx) => ({
-    id: s.id,
-    number: `0${idx + 1}`,
-    title: s.title,
-    badge: s.badge
-  }));
 
 // Check before/after interactive asset if applicable
 let beforeAfterId: 'clm' | 'dms' | 'whatsapp' | undefined;
@@ -123,36 +76,18 @@ const cleanFaq = (p.faq || []).filter((item) => {
     <!-- 1. Hero Section with Media Frame, Outcomes, and Meta Chips -->
     <ProjectHero product={product} />
 
-    <!-- 2. Sticky 6-Phase Approach Journey Layout -->
+    <!-- 2. Approach Journey Fixed/Sticky Stage Rail (Right on Desktop, Top on Mobile) -->
+    <StageRail />
+
+    <!-- 3. Standardized 6-Phase Approach Journey Chapters -->
     <div class="project-journey-container container">
-      <!-- Left Rail (Sticky Navigation with Guide Cube Scroll-Spy) -->
-      <JourneyRail stops={stops} />
-
-      <!-- Main Column: Active Phase Chapters -->
       <div class="project-journey-track">
-        {phases?.problem && (
-          <PhaseProblem problemData={phases.problem} beforeAfterId={beforeAfterId} />
-        )}
-
-        {phases?.value && (
-          <PhaseValue valueData={phases.value} />
-        )}
-
-        {phases?.architecture && (
-          <PhaseArchitecture architectureData={phases.architecture} />
-        )}
-
-        {phases?.pilot && (
-          <PhasePilot pilotData={phases.pilot} />
-        )}
-
-        {phases?.rollout && (
-          <PhaseRollout rolloutData={phases.rollout} />
-        )}
-
-        {phases?.impact && (
-          <PhaseImpact impactData={phases.impact} />
-        )}
+        <PhaseProblem problemData={phases?.problem} beforeAfterId={beforeAfterId} />
+        <PhaseValue valueData={phases?.value} />
+        <PhaseArchitecture architectureData={phases?.architecture} />
+        <PhasePilot pilotData={phases?.pilot} />
+        <PhaseRollout rolloutData={phases?.rollout} />
+        <PhaseImpact impactData={phases?.impact} />
 
         <!-- Project Pagination (Previous / Next Case Study) -->
         <nav class="project-pagination card-mastercard" aria-label="Adjacent Solutions">
@@ -243,20 +178,19 @@ const cleanFaq = (p.faq || []).filter((item) => {
 
 <style>
   .project-journey-container {
-    display: grid;
-    grid-template-columns: 240px 1fr;
-    gap: var(--space-8, 2.5rem);
+    max-width: 980px;
+    margin: 0 auto;
     position: relative;
-    padding-top: var(--space-8, 2rem);
-    padding-bottom: var(--space-12, 3rem);
-    align-items: start;
+    padding-top: clamp(1.5rem, 3vw, 2.5rem);
+    padding-bottom: clamp(2.5rem, 5vw, 4rem);
   }
 
   .project-journey-track {
+    width: 100%;
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--space-8, 2.5rem);
+    gap: clamp(2rem, 4vw, 3rem);
   }
 
   /* Pagination Bar */

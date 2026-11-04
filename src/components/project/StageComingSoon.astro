@@ -1,0 +1,131 @@
+---
+import Icon from '../Icon.astro';
+
+interface Props {
+  stageNumber: string;
+  stageTitle: string;
+  color: string;
+}
+
+const { stageNumber, stageTitle, color } = Astro.props;
+---
+
+<div class="coming-soon-card card-mastercard" style={`--stage-accent: ${color};`}>
+  <div class="coming-soon-header">
+    <span class="coming-soon-badge">STAGE DOCUMENTATION IN PROGRESS</span>
+    <span class="coming-soon-code">STAGE {stageNumber}</span>
+  </div>
+
+  <div class="coming-soon-body">
+    <h3 class="coming-soon-title">Detailed execution records arriving soon</h3>
+    <p class="coming-soon-desc">
+      Our team is compiling production telemetry, architectural validation records, and on-ground operational logs for {stageTitle}.
+    </p>
+
+    <!-- Interactive Media Placeholder Wireframe -->
+    <div class="coming-soon-media-placeholder" aria-hidden="true">
+      <div class="placeholder-grid-backdrop"></div>
+      <div class="placeholder-icon-wrap">
+        <Icon name="layers" size={28} />
+      </div>
+      <span class="placeholder-caption">Field telemetry &amp; verification data pending release</span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .coming-soon-card {
+    position: relative;
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    border-radius: var(--radius-lg, 12px);
+    border: 1px dashed color-mix(in srgb, var(--stage-accent, #F7941D) 35%, var(--color-border));
+    background: var(--color-surface);
+    overflow: hidden;
+    margin-top: 1.5rem;
+  }
+
+  .coming-soon-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .coming-soon-badge {
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--stage-accent, #F7941D);
+  }
+
+  .coming-soon-code {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--color-text-muted);
+  }
+
+  .coming-soon-title {
+    font-size: clamp(1.1rem, 2vw, 1.35rem);
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0 0 0.5rem;
+    letter-spacing: -0.01em;
+  }
+
+  .coming-soon-desc {
+    font-size: var(--fs-body, 0.95rem);
+    color: var(--color-text-secondary);
+    line-height: 1.55;
+    margin: 0 0 1.5rem;
+    max-width: 650px;
+  }
+
+  .coming-soon-media-placeholder {
+    position: relative;
+    height: 180px;
+    border-radius: var(--radius-md, 8px);
+    background: color-mix(in srgb, var(--stage-accent, #F7941D) 4%, var(--color-surface-alt, #f8fafc));
+    border: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    overflow: hidden;
+  }
+
+  :global(.dark) .coming-soon-media-placeholder {
+    background: rgba(15, 23, 42, 0.6);
+  }
+
+  .placeholder-grid-backdrop {
+    position: absolute;
+    inset: 0;
+    background-image: 
+      linear-gradient(to right, color-mix(in srgb, var(--stage-accent, #F7941D) 8%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in srgb, var(--stage-accent, #F7941D) 8%, transparent) 1px, transparent 1px);
+    background-size: 24px 24px;
+    opacity: 0.7;
+  }
+
+  .placeholder-icon-wrap {
+    position: relative;
+    z-index: 2;
+    color: var(--stage-accent, #F7941D);
+    opacity: 0.8;
+  }
+
+  .placeholder-caption {
+    position: relative;
+    z-index: 2;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+  }
+</style>

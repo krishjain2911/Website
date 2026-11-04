@@ -1,0 +1,528 @@
+---
+export interface StageItem {
+  id: string;
+  number: string;
+  title: string;
+  shortTitle?: string;
+  color: string;
+}
+
+interface Props {
+  stages?: StageItem[];
+}
+
+const DEFAULT_STAGES: StageItem[] = [
+  { id: 'stage-01', number: '01', title: 'Understand the business', shortTitle: 'Understand', color: '#1E4B8F' },
+  { id: 'stage-02', number: '02', title: 'Identify latent revenue', shortTitle: 'Revenue', color: '#163666' },
+  { id: 'stage-03', number: '03', title: 'Design adaptive systems', shortTitle: 'Architecture', color: '#B86B10' },
+  { id: 'stage-04', number: '04', title: 'Pilot with on-ground teams', shortTitle: 'Pilot', color: '#F7941D' },
+  { id: 'stage-05', number: '05', title: 'Refine and deploy', shortTitle: 'Rollout', color: '#F25F22' },
+  { id: 'stage-06', number: '06', title: 'Enable and monitor', shortTitle: 'Enable', color: '#EE4B2B' }
+];
+
+const { stages = DEFAULT_STAGES } = Astro.props;
+---
+
+<!-- Desktop Fixed Right Rail (>= 1100px) -->
+<aside class="stage-rail-desktop" aria-label="Project approach stages navigation">
+  <div class="rail-container">
+    <div class="rail-indicator" id="desktop-rail-indicator" aria-live="polite">STAGE 1 / 6</div>
+
+    <div class="rail-dots-column" id="desktop-dots-column">
+      <!-- Glide Guide Cube Marker -->
+      <div class="rail-guide-cube-marker" id="rail-guide-cube-marker" aria-hidden="true">
+        <img src="/media/raw/square.png" alt="" class="guide-cube-img" />
+      </div>
+
+      <!-- Connecting Background Track -->
+      <div class="rail-track-line" aria-hidden="true"></div>
+
+      {stages.map((stage, idx) => (
+        <a
+          href={`#${stage.id}`}
+          class:list={['stage-dot-link', { 'is-active': idx === 0 }]}
+          id={`desktop-dot-${idx}`}
+          data-stage-index={idx}
+          data-stage-id={stage.id}
+          data-stage-color={stage.color}
+          style={`--stage-dot-color: ${stage.color};`}
+          aria-label={`Stage ${stage.number}: ${stage.title}`}
+        >
+          <span class="stage-dot-circle">
+            <span class="stage-dot-inner"></span>
+          </span>
+          <span class="stage-dot-tooltip" role="tooltip">
+            <span class="tooltip-num">{stage.number}</span>
+            <span class="tooltip-title">{stage.title}</span>
+          </span>
+        </a>
+      ))}
+    </div>
+  </div>
+</aside>
+
+<!-- Mobile Sticky Top Bar (< 1100px) -->
+<nav class="stage-rail-mobile" id="stage-rail-mobile" aria-label="Mobile stage navigation">
+  <div class="mobile-bar-inner">
+    <div class="mobile-stage-label" id="mobile-stage-label">
+      <span class="mobile-stage-pill" id="mobile-stage-pill">STAGE 01</span>
+      <span class="mobile-stage-name" id="mobile-stage-name">{stages[0]?.title}</span>
+    </div>
+    <div class="mobile-dots-track" role="tablist">
+      {stages.map((stage, idx) => (
+        <a
+          href={`#${stage.id}`}
+          class:list={['mobile-dot-link', { 'is-active': idx === 0 }]}
+          id={`mobile-dot-${idx}`}
+          data-stage-index={idx}
+          data-stage-id={stage.id}
+          data-stage-color={stage.color}
+          style={`--stage-dot-color: ${stage.color};`}
+          title={`Stage ${stage.number}: ${stage.title}`}
+          aria-label={`Jump to Stage ${stage.number}: ${stage.title}`}
+        >
+          <span class="mobile-dot-core"></span>
+        </a>
+      ))}
+    </div>
+  </div>
+</nav>
+
+<style>
+  /* -----------------------------------------------------------------
+     Desktop Fixed Right Rail (>= 1100px)
+     ----------------------------------------------------------------- */
+  .stage-rail-desktop {
+    display: none;
+  }
+
+  @media (min-width: 1100px) {
+    .stage-rail-desktop {
+      display: block;
+      position: fixed;
+      right: clamp(1rem, 2.5vw, 2.5rem);
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 60;
+      pointer-events: none;
+    }
+
+    .rail-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.75rem;
+      pointer-events: auto;
+    }
+
+    .rail-indicator {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-text-primary);
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      padding: 0.25rem 0.65rem;
+      border-radius: var(--radius-pill);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+      white-space: nowrap;
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+    :global(.dark) .rail-indicator {
+      background-color: var(--color-surface-raised);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+    }
+
+    .rail-dots-column {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.65rem 0.4rem;
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-pill);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+    }
+
+    :global(.dark) .rail-dots-column {
+      background-color: var(--color-surface-raised);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .rail-track-line {
+      position: absolute;
+      top: 14px;
+      bottom: 14px;
+      left: 50%;
+      width: 2px;
+      transform: translateX(-50%);
+      background: linear-gradient(180deg, #1E4B8F 0%, #F7941D 50%, #EE4B2B 100%);
+      opacity: 0.25;
+      z-index: 1;
+    }
+
+    /* Glide Guide Cube Marker */
+    .rail-guide-cube-marker {
+      position: absolute;
+      left: 50%;
+      top: 10px;
+      width: 22px;
+      height: 22px;
+      transform: translate(-50%, -50%);
+      z-index: 4;
+      pointer-events: none;
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      filter: drop-shadow(0 2px 6px rgba(247, 148, 29, 0.4));
+    }
+
+    .guide-cube-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* Stage Dot Link */
+    .stage-dot-link {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      text-decoration: none;
+      z-index: 3;
+      outline: none;
+      transition: transform 0.2s ease;
+    }
+
+    .stage-dot-link:focus-visible {
+      outline: 2px solid var(--stage-dot-color, #F7941D);
+      outline-offset: 3px;
+    }
+
+    .stage-dot-circle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: transparent;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .stage-dot-inner {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--color-text-muted);
+      opacity: 0.45;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Passed state */
+    .stage-dot-link.is-passed .stage-dot-inner {
+      background-color: var(--stage-dot-color, #1E4B8F);
+      opacity: 0.85;
+      transform: scale(1.1);
+    }
+
+    /* Active state */
+    .stage-dot-link.is-active .stage-dot-inner {
+      width: 10px;
+      height: 10px;
+      background-color: var(--stage-dot-color, #F7941D);
+      opacity: 1;
+      box-shadow: 0 0 10px var(--stage-dot-color, #F7941D);
+    }
+
+    /* Hover tooltips popping out to the left */
+    .stage-dot-tooltip {
+      position: absolute;
+      right: calc(100% + 14px);
+      top: 50%;
+      transform: translateY(-50%) translateX(6px);
+      padding: 0.35rem 0.65rem;
+      border-radius: var(--radius-sm, 6px);
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      z-index: 10;
+    }
+
+    :global(.dark) .stage-dot-tooltip {
+      background-color: var(--color-surface-raised);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+    }
+
+    .stage-dot-link:hover .stage-dot-tooltip,
+    .stage-dot-link:focus-visible .stage-dot-tooltip {
+      opacity: 1;
+      transform: translateY(-50%) translateX(0);
+    }
+
+    .tooltip-num {
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--stage-dot-color, #F7941D);
+      letter-spacing: 0.05em;
+    }
+
+    .tooltip-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+  }
+
+  /* -----------------------------------------------------------------
+     Mobile Sticky Top Bar (< 1100px)
+     ----------------------------------------------------------------- */
+  .stage-rail-mobile {
+    display: none;
+  }
+
+  @media (max-width: 1099px) {
+    .stage-rail-mobile {
+      display: block;
+      position: sticky;
+      top: var(--nav-height, 68px);
+      z-index: 45;
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      padding: 0.5rem 1rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    :global(.dark) .stage-rail-mobile {
+      background: rgba(15, 23, 42, 0.85);
+      border-bottom-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .mobile-bar-inner {
+      max-width: var(--container-max-width, 1200px);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .mobile-stage-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .mobile-stage-pill {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.45rem;
+      border-radius: var(--radius-pill);
+      background-color: color-mix(in srgb, #F7941D 15%, transparent);
+      color: #F7941D;
+      white-space: nowrap;
+    }
+
+    .mobile-stage-name {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .mobile-dots-track {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-shrink: 0;
+    }
+
+    .mobile-dot-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      text-decoration: none;
+      outline: none;
+    }
+
+    .mobile-dot-core {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--color-text-muted);
+      opacity: 0.4;
+      transition: all 0.2s ease;
+    }
+
+    .mobile-dot-link.is-passed .mobile-dot-core {
+      background-color: var(--stage-dot-color, #1E4B8F);
+      opacity: 0.8;
+    }
+
+    .mobile-dot-link.is-active .mobile-dot-core {
+      width: 12px;
+      height: 12px;
+      background-color: var(--stage-dot-color, #F7941D);
+      opacity: 1;
+      box-shadow: 0 0 8px var(--stage-dot-color, #F7941D);
+    }
+  }
+</style>
+
+<script>
+  function initStageRail() {
+    const stageIds = ['stage-01', 'stage-02', 'stage-03', 'stage-04', 'stage-05', 'stage-06'];
+    const sections = stageIds
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+
+    if (sections.length === 0) return;
+
+    const desktopDots = document.querySelectorAll<HTMLAnchorElement>('.stage-dot-link');
+    const mobileDots = document.querySelectorAll<HTMLAnchorElement>('.mobile-dot-link');
+    const desktopIndicator = document.getElementById('desktop-rail-indicator');
+    const cubeMarker = document.getElementById('rail-guide-cube-marker');
+    const mobilePill = document.getElementById('mobile-stage-pill');
+    const mobileName = document.getElementById('mobile-stage-name');
+
+    let isScheduled = false;
+    let activeIdx = 0;
+
+    function updateActiveStage() {
+      isScheduled = false;
+      const vCenter = window.innerHeight * 0.5;
+      let closestIdx = 0;
+      let minDistance = Infinity;
+
+      sections.forEach((sec, idx) => {
+        const rect = sec.getBoundingClientRect();
+        // Distance from element's center to viewport center
+        const secCenter = rect.top + rect.height * 0.5;
+        const dist = Math.abs(secCenter - vCenter);
+
+        // Also if rect.top <= vCenter and rect.bottom >= vCenter, strong preference
+        if (rect.top <= vCenter && rect.bottom >= vCenter) {
+          closestIdx = idx;
+          minDistance = 0;
+        } else if (dist < minDistance) {
+          minDistance = dist;
+          closestIdx = idx;
+        }
+      });
+
+      if (closestIdx !== activeIdx) {
+        activeIdx = closestIdx;
+        applyState(activeIdx);
+      }
+    }
+
+    function applyState(idx: number) {
+      const activeStageNumber = `0${idx + 1}`;
+      const activeSection = sections[idx];
+      const stageTitle = activeSection?.getAttribute('data-stage-title') || `Stage ${idx + 1}`;
+      const stageColor = activeSection?.getAttribute('data-stage-color') || '#F7941D';
+
+      // Desktop Indicator
+      if (desktopIndicator) {
+        desktopIndicator.textContent = `STAGE ${idx + 1} / 6`;
+        desktopIndicator.style.color = stageColor;
+      }
+
+      // Guide Cube Marker position
+      if (cubeMarker && desktopDots[idx]) {
+        const targetDot = desktopDots[idx];
+        const offsetTop = targetDot.offsetTop + targetDot.offsetHeight / 2;
+        cubeMarker.style.transform = `translate(-50%, ${offsetTop - 10}px)`;
+      }
+
+      // Desktop Dots
+      desktopDots.forEach((dot, dIdx) => {
+        dot.classList.toggle('is-active', dIdx === idx);
+        dot.classList.toggle('is-passed', dIdx < idx);
+        dot.setAttribute('aria-current', dIdx === idx ? 'step' : 'false');
+      });
+
+      // Mobile Bar
+      if (mobilePill) {
+        mobilePill.textContent = `STAGE ${activeStageNumber}`;
+        mobilePill.style.color = stageColor;
+        mobilePill.style.backgroundColor = `color-mix(in srgb, ${stageColor} 15%, transparent)`;
+      }
+      if (mobileName) {
+        mobileName.textContent = stageTitle;
+      }
+
+      // Mobile Dots
+      mobileDots.forEach((dot, mIdx) => {
+        dot.classList.toggle('is-active', mIdx === idx);
+        dot.classList.toggle('is-passed', mIdx < idx);
+        dot.setAttribute('aria-current', mIdx === idx ? 'step' : 'false');
+      });
+    }
+
+    function onScroll() {
+      if (!isScheduled) {
+        isScheduled = true;
+        requestAnimationFrame(updateActiveStage);
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+
+    // Initial positioning
+    applyState(0);
+    setTimeout(() => {
+      updateActiveStage();
+    }, 100);
+
+    // Smooth scroll on click with focus management
+    const allLinks = [...desktopDots, ...mobileDots];
+    allLinks.forEach((link) => {
+      link.addEventListener('click', (e) => {
+        const targetId = link.getAttribute('href')?.replace('#', '');
+        if (!targetId) return;
+        const targetEl = document.getElementById(targetId);
+        if (targetEl) {
+          e.preventDefault();
+          targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          targetEl.focus({ preventScroll: true });
+        }
+      });
+    });
+  }
+
+  // Support View Transitions / Turbo / Initial load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initStageRail);
+  } else {
+    initStageRail();
+  }
+  document.addEventListener('astro:page-load', initStageRail);
+</script>

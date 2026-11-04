@@ -26,6 +26,7 @@ hero:
   frame: "browser"
 phases:
   problem:
+    tagline: "Data hostage to clouds."
     headline: "Public cloud compliance and data residency risks"
     story: "Public multi-tenant AI services present compliance, data sovereignty, and security concerns for regulated enterprise data, exposing intellectual property to third-party retention."
     points:
@@ -45,6 +46,7 @@ phases:
       - title: "Entitlement Mismatch"
         detail: "Standard cloud models lack awareness of internal corporate access entitlements."
   value:
+    tagline: "Sovereign power, zero leakage."
     headline: "Full institutional custody of prompts, training and outputs"
     story: "Delivers modern AI capabilities with full institutional custody of training assets, prompts, and outputs, operating strictly behind your security perimeter."
     points:
@@ -65,6 +67,7 @@ phases:
       - "Model-neutral inference decoupling"
       - "OutSystems role-based enterprise administration"
   architecture:
+    tagline: "Air-gapped and enterprise-ready."
     headline: "Isolated infrastructure and audited application interface"
     story: "A fully private, perimeter-contained deployment architecture keeping corporate documents and localized foundation models strictly within company-controlled compute."
     points:
@@ -104,7 +107,10 @@ phases:
             role: "Immutable query logs and security timestamps"
     pattern: "Isolated Perimeter Inference with Decoupled Model Adapter"
     security: "Zero external network egress, internal VPC security groups, and granular access enforcement."
+  pilot:
+    tagline: "Validated against compliance tests."
   rollout:
+    tagline: "Deployed inside your perimeter."
     headline: "Hardware sizing, network isolation and model tuning"
     story: "Workload evaluation and compute sizing followed by localized model deployment and enterprise directory integration."
     points:
@@ -120,6 +126,7 @@ phases:
       - "Corporate SSO and role-based entitlement integration"
       - "Security penetration testing and audit verification"
   impact:
+    tagline: "Full governance, zero lock-in."
     headline: "Enterprise AI utility without exposing corporate intellectual property"
     story: "High-performance AI utility deployed strictly inside your walls, ensuring total compliance with enterprise regulatory mandates."
     points:

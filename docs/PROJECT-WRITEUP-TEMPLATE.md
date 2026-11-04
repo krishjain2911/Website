@@ -1,4 +1,4 @@
-# RHSP Project Writeup Template & Asset Guidelines
+# RHSP Project Writeup Template & Guidelines
 
 This document provides the canonical schema, authoring rules, asset standards, and frontmatter template for writing and publishing project case studies in Round Hole Square Peg (RHSP).
 
@@ -8,7 +8,7 @@ This document provides the canonical schema, authoring rules, asset standards, a
 
 1. **Concrete & Engineering-Led**: Describe the mechanics of the solution, the technical boundaries, and the operational friction. Zero corporate fluff or marketing jargon.
 2. **Strictly Forbidden Words**:
-   Never use any variation of the following words anywhere in titles, descriptions, stories, or points:
+   Never use any variation of the following words anywhere in titles, taglines, descriptions, stories, or points:
    - `fit`
    - `shape` / `shaped`
    - `wrong`
@@ -22,258 +22,148 @@ This document provides the canonical schema, authoring rules, asset standards, a
    - *Good*: "a national luxury jewellery retailer", "a tier-1 infrastructure lender", "an omnichannel retail chain".
    - *Bad*: "Acme Corp", "Client X", or inventing fictitious brand names.
 5. **Length Constraints**:
+   - **Taglines**: $\le$ 7 words. Snappy wordplay bridging challenge and adapter.
    - **Headlines**: $\le$ 8 words. Direct, active voice.
    - **Story paragraphs**: $\le$ 45 words. Punchy context and rationale.
    - **Bullet points**: $\le$ 14 words per bullet. Actionable, specific facts.
 6. **Placeholder Rendering Rule**:
-   Any string starting with `"[PLACEHOLDER]"` or left empty is automatically filtered out by the template engine and will **never** be rendered on the website. If a whole phase lacks data, its section and corresponding navigation stop on the journey rail will be skipped cleanly.
+   Any string starting with `"[PLACEHOLDER]"` or left empty is automatically filtered out by the template engine and will **never** be rendered on the website.
+7. **Always 6 Approach Chapters**:
+   Every project page renders all 6 standardized stages matching the RHSP Approach Journey:
+   - `01`: Understand the business (`#1E4B8F`)
+   - `02`: Identify latent revenue (`#163666`)
+   - `03`: Design adaptive systems (`#B86B10`)
+   - `04`: Pilot with on-ground teams (`#F7941D`)
+   - `05`: Refine and deploy (`#F25F22`)
+   - `06`: Enable and monitor (`#EE4B2B`)
+   If detailed data for a stage is not yet compiled, the page renders the stage header, wordplay tagline, and a compact "Details coming soon" card with a media placeholder. Never drop a stage.
 
 ---
 
-## 2. Media & Asset Guidelines
-
-All assets for a project case study live in:
-`public/media/projects/<slug>/`
-
-### Canonical File Naming
-Store media using these standard names:
-- `hero.webp` — Primary hero mock/visual (16:10 aspect ratio)
-- `friction.svg` or `friction.webp` — Friction map or workflow bottleneck visual
-- `value-chart.svg` or `value-chart.webp` — KPI shift / trajectory infographic
-- `architecture.svg` — System topology / adapter layer diagram (vector preferred)
-- `pilot-photo.webp` or `pilot-screencast.mp4` — Field trial observation or prototype recording
-- `rollout-timeline.svg` or `rollout.webp` — Progressive deployment schedule visual
-- `impact-dashboard.webp` — Final production telemetry dashboard
-
-### Formats & Aspect Ratios
-- **Vector Diagrams**: Clean SVG (`stroke-width="1.5"` or `2`, no external fonts).
-- **Screenshots / Stills**: WebP format, optimized $\le$ 150KB.
-- **Short Screen Recordings**: WebM or MP4 (H.264), muted, loopable, $\le$ 2MB.
-- **Aspect Ratios**:
-  - Desktop / standard slot: `16/10` (default)
-  - Mobile phone mock: `9/16` (`frame: "phone"`)
-  - Browser mock: `16/10` (`frame: "browser"`)
-  - Square diagram / badge: `1/1` (`frame: "none"`)
-
----
-
-## 3. Required vs Optional Fields Checklist
-
-| Field / Section | Requirement | Description |
-| :--- | :--- | :--- |
-| `title` | **Required** | Full project title (e.g., "Autonomous In-Store Assistant") |
-| `shortTitle` | **Required** | Short name for navigation breadcrumbs (e.g., "Sonakshi") |
-| `order` | **Required** | Numerical sorting sequence across solution catalog |
-| `pillar` | **Required** | One of: `"Products"`, `"Engineering"`, `"Gen-AI"` |
-| `badge` | **Required** | Primary architectural stack tag (e.g., "VISION + AGENTIC") |
-| `status` | Optional | `"Deployed"` or `"Accelerator"` |
-| `client` | Optional | Anonymised client identifier (e.g., "National Luxury Jeweller") |
-| `timeline` | Optional | Timeline string (e.g., "6 weeks to production") |
-| `oneLiner` | **Required** | One crisp summary sentence ($\le$ 25 words) |
-| `outcomes` | Optional | Up to 3 high-level metrics `{ value: "...", label: "..." }` |
-| `hero` | Optional | Hero media object `{ type, src, alt, caption, frame }` |
-| `phases.problem` | Optional | Phase 01: process steps, friction cards, headline, story, media |
-| `phases.value` | Optional | Phase 02: before/after metrics, value levers, drivers |
-| `phases.architecture` | Optional | Phase 03: modular layers, core pattern, security, AI chips |
-| `phases.pilot` | Optional | Phase 04: trial scope, "we heard $\to$ we engineered" cards |
-| `phases.rollout` | Optional | Phase 05: production hardening list, rollout steps, scale stats |
-| `phases.impact` | Optional | Phase 06: outcome statement, governance/enablement/monitoring, quote |
-
----
-
-## 4. Copy-and-Paste Frontmatter Skeleton
+## 2. Copy-and-Paste Frontmatter Skeleton
 
 Create a new file under `src/content/products/<slug>.md` and copy the skeleton below:
 
 ```yaml
 ---
-title: "Project Name Headline"
-shortTitle: "ShortName"
-order: 1
-pillar: "Gen-AI" # "Products" | "Engineering" | "Gen-AI"
-badge: "AGENTIC WORKFLOWS"
+title: "Project Name – Primary Capability"
+shortTitle: "ProjectName"
+code: "07 / SYSTEM"
+order: 7
+pillar: "Gen-AI" # "Engineer" | "Gen-AI" | "Build" | "Intelligence"
+badge: "High-code (MERN)"
+badges:
+  - "Gen-AI"
+  - "High-code (MERN)"
+seoDescription: "Search engine summary (120-155 characters) describing the solution."
+oneLiner: "A single sentence describing the business problem and the technical adapter."
+outcomeHeadline: "The single biggest verified operational shift"
 status: "Deployed" # "Deployed" | "Accelerator"
-client: "a tier-1 financial enterprise"
-timeline: "8 weeks to enterprise launch"
-outcomeHeadline: "Headline summarizing the verified ROI or operational achievement"
-oneLiner: "A concise summary of the deployed system and how it bridges legacy constraints."
-ctaText: "Let's talk"
-
-# Up to 3 summary metrics shown in the hero strip
+client: "a multi-brand retail chain"
+timeline: "4 weeks to showroom pilot"
 outcomes:
-  - value: "94%"
-    label: "Automation rate"
-  - value: "4.2x"
-    label: "Throughput acceleration"
-  - value: "0"
-    label: "Data residency breaches"
-
-# Hero Media item
+  - value: "100%"
+    label: "Catalogue grounding"
+  - value: "Zero"
+    label: "Pricing hallucination"
+  - value: "<1.2s"
+    label: "Query latency"
 hero:
-  type: "image" # "image" | "video" | "gif" | "embed"
+  type: "image"
   src: "/media/projects/<slug>/hero.webp"
-  alt: "Interface blueprint and production architecture overview"
-  caption: "Production telemetry and operational agent console"
-  frame: "browser" # "browser" | "phone" | "none"
-
-# -------------------------------------------------------------
-# 6-PHASE APPROACH JOURNEY
-# -------------------------------------------------------------
+  alt: "Representative interface overview"
+  frame: "browser"
 phases:
-  # PHASE 01: THE PROBLEM
   problem:
-    headline: "The Operational Bottleneck" # <= 8 words
-    story: "Context on why existing infrastructure failed to meet customer demand." # <= 45 words
+    tagline: "Where walk-ins wait." # <= 7 words
+    headline: "Walk-in delays and fragmented product data"
+    story: "In a busy multi-brand appliance showroom, customers wait for an available salesperson while specs sit scattered across Excel sheets."
+    points:
+      - "Customers exit when salespeople are busy"
+      - "Staff cannot recall specs across thousands of models"
     process:
-      - "Manual ticket intake via distributed branches"
-      - "Ad-hoc validation across siloed core mainframes"
-      - "Human triage taking up to 48 hours per item"
+      - "Customer enters showroom"
+      - "Waits for free sales rep"
+      - "Consults disconnected paper binders"
     friction:
-      - title: "Siloed Record Fragmentation"
-        detail: "Disparate legacy databases prevent unified customer context retrieval."
-      - title: "Manual Verification Overhead"
-        detail: "Operational teams spend 70% of intake time re-keying identical records."
-    points:
-      - "Legacy backends lack modern API endpoints for real-time validation"
-      - "Manual validation led to high error rates and customer churn"
-    media:
-      - type: "image"
-        src: "/media/projects/<slug>/friction.svg"
-        alt: "Operational friction workflow"
-        caption: "Legacy intake bottlenecks vs operational load"
-        frame: "none"
-
-  # PHASE 02: LATENT REVENUE & VALUE
+      - title: "Queue Abandonment"
+        detail: "Walk-ins delay or exit during peak showroom hours."
   value:
-    headline: "Quantified Value Realisation" # <= 8 words
-    story: "Unlocking trapped operational capacity and accelerating contract velocity." # <= 45 words
+    tagline: "Every walk-in, captured." # <= 7 words
+    headline: "Zero wait times and verified catalogue grounding"
+    story: "Transforms static spreadsheets into an interactive on-floor advisor, capturing every consultation opportunity."
+    points:
+      - "Immediate engagement for every walk-in customer"
+      - "Verified pricing drawn directly from live store inventory"
     metrics:
-      - label: "Validation Turnaround"
-        before: "48 hours"
-        after: "12 minutes"
-        note: "End-to-end automated pipeline"
-      - label: "Processing Cost / Unit"
-        before: "$14.50"
-        after: "$1.20"
-        note: "91% operational savings"
+      - label: "Showroom floor coverage"
+        before: "Headcount bound"
+        after: "Instant per walk-in"
+        note: "Tablet kiosk at showroom entry"
     levers:
-      - "Direct database adapter eliminating repetitive manual entry"
-      - "Real-time anomaly screening against compliance registries"
-      - "Automated document OCR and structured metadata extraction"
-    points:
-      - "Reclaimed 12,000 annual human hours for high-touch customer consultations"
-      - "Zero penalty fees incurred during post-launch regulatory reviews"
-
-  # PHASE 03: SYSTEM ARCHITECTURE
+      - "Walk-in queue elimination"
+      - "Automated spreadsheet ingestion"
   architecture:
-    headline: "Production Topology & Adapter Design" # <= 8 words
-    story: "Zero-data-retention adapter layer connecting legacy ERPs to agent pipelines." # <= 45 words
-    pattern: "Event-Driven Microservices + Sandboxed LLM Agents"
-    security: "SOC2 Type II compliant, zero data retention at LLM layer, AES-256 at rest"
+    tagline: "Grounded, never guessing." # <= 7 words
+    headline: "High-code MERN and private vector retrieval"
+    story: "Full-stack engineering combining React tablet interface, Node.js ingestion backend, vector indexing, and speech recognition."
+    points:
+      - "React tablet interface with live audio waveform display"
+      - "Private vector search with database pricing lock"
     layers:
-      - name: "Channel & Ingestion"
+      - name: "Channels"
         items:
-          - name: "API Gateway"
-            role: "Rate-limited JWT authentication"
-          - name: "Webhook Ingestion"
-            role: "Real-time event subscriber"
-      - name: "Agentic Intelligence"
+          - name: "In-store Tablet"
+            role: "Touch and conversational speech input"
+      - name: "Intelligence"
         items:
-          - name: "Orchestration Engine"
-            role: "Multi-agent task decomposition"
-          - name: "Schema Validator"
-            role: "Deterministic JSON validation"
-      - name: "Legacy Adapters"
-        items:
-          - name: "ERP Connector"
-            role: "Bi-directional transactional queue"
+          - name: "Vector Engine"
+            role: "Semantic search and boundary grounding"
+    pattern: "Catalogue-Grounded Retrieval with Human Review Loop"
     ai:
-      - "Deterministic schema enforcement preventing hallucinations"
-      - "Retrieval-augmented grounding over proprietary policy manuals"
-      - "Self-correcting query retries on schema mismatches"
-    points:
-      - "Sub-second adapter latency across internal service boundaries"
-      - "Local model execution support for sensitive compliance workloads"
-    media:
-      - type: "image"
-        src: "/media/projects/<slug>/architecture.svg"
-        alt: "System architecture and data flow diagram"
-        caption: "Component topology and boundary isolation"
-        frame: "none"
-
-  # PHASE 04: THE PILOT TRIAL
+      - "Multilingual STT / TTS"
+      - "Semantic catalogue embedding search"
+    security: "Private boundary architecture; customer voice audio is never retained."
   pilot:
-    headline: "Controlled Field Sandbox Verification" # <= 8 words
-    story: "Staged deployment with senior operators before full departmental release." # <= 45 words
+    tagline: "Proven on the showroom floor." # <= 7 words
+    headline: "Showroom deployment for a retail store"
+    story: "Piloted on tablet devices on the retail showroom floor, assisting live shoppers with home appliance discovery."
+    points:
+      - "Field validation in active multi-brand appliance retail store"
     scope:
-      who: "15 senior loan underwriters"
-      where: "Regional flagship branch"
-      duration: "3-week sprint"
+      who: "Showroom customers and floor sales assistants"
+      where: "Multi-brand retail showroom"
+      duration: "4-week on-floor pilot"
     feedback:
-      - heard: "Field operators required rapid manual overrides during exception triage."
-        changed: "Engineered single-click human-in-the-loop review drawer directly in UI."
-      - heard: "Default confidence scores were too ambiguous for edge case policies."
-        changed: "Added clear citation references linking directly to clause text."
-    points:
-      - "Zero system outages during live production trading hours"
-      - "100% adoption rate among initial pilot cohort by week 2"
-
-  # PHASE 05: ENTERPRISE ROLLOUT
+      - heard: "Customers naturally switch languages mid-sentence"
+        changed: "Added fluid Hinglish code-switching recognition"
   rollout:
-    headline: "Hardened Global Deployment" # <= 8 words
-    story: "Multi-region scaling with strict monitoring and circuit breaker controls." # <= 45 words
-    scale:
-      - value: "10,000+"
-        label: "Daily active transactions"
-      - value: "99.98%"
-        label: "Production uptime"
+    tagline: "From pilot to production." # <= 7 words
+    headline: "Hardened kiosk mode and automated ingestion"
+    story: "Kiosk hardening with auto-reset between sessions and background catalogue synchronisation."
+    points:
+      - "Kiosk isolation preventing OS escapes"
     hardening:
-      - "Automated Chaos Monkey resiliency testing in pre-prod"
-      - "Circuit breakers on all external third-party API dependencies"
-      - "Granular Prometheus and Grafana alerts on P99 latency"
-      - "Role-based access controls with hardware token enforcement"
+      - "Kiosk sandbox preventing tablet OS access"
+      - "Session auto-reset upon customer departure"
     steps:
-      - "Day 01: Pilot cohort expanded to 20% regional traffic"
-      - "Day 14: Automated canary validation across secondary branches"
-      - "Day 30: Full departmental cutover and legacy decommission"
-    points:
-      - "Continuous integration pipeline with automated regression checks"
-      - "Seamless failover between primary and secondary cloud clusters"
-
-  # PHASE 06: LONG-TERM IMPACT
+      - "Initial Excel catalogue ingestion and schema validation"
+      - "Store sales staff walkthrough and assisted handoff training"
+    scale:
+      - value: "1000s"
+        label: "Catalogue SKU capacity"
   impact:
-    headline: "Enduring Operational Capability" # <= 8 words
-    story: "Autonomous execution with permanent internal governance and metrics tracking." # <= 45 words
-    outcome: "Transformed a brittle 48-hour manual review pipeline into an autonomous, 12-minute enterprise workflow handling millions in weekly transactions."
-    enablement:
-      - "Complete technical handover and internal engineering documentation"
-      - "Operator training playbooks for custom agent prompt tuning"
-    governance:
-      - "Monthly automated audit logs submitted to compliance leadership"
-      - "Granular policy change control requiring dual-signature approvals"
-    monitoring:
-      - "Continuous evaluation framework tracking LLM accuracy drift"
-      - "Automated incident escalation with 15-minute SLA paging"
-    quote:
-      text: "The RHSP team engineered an adapter that unlocked our core systems without requiring an expensive multi-year rewrite."
-      role: "Chief Operating Officer, Commercial Banking Group"
+    tagline: "Always on. Always improving." # <= 7 words
+    headline: "Every walk-in gets an expert salesperson instantly"
+    story: "Showroom customers receive immediate guidance in their chosen language, with selected items pre-loaded for cashier checkout."
     points:
-      - "Full operational autonomy transferred to internal team within 60 days"
-      - "Sustained 99%+ processing accuracy over 6 consecutive months"
-
-# -------------------------------------------------------------
-# SUPPLEMENTARY / LEGACY COMPATIBILITY FIELDS
-# -------------------------------------------------------------
-faq:
-  - question: "How does the adapter handle legacy database schemas?"
-    answer: "The adapter encapsulates schema translation behind strongly typed interfaces, ensuring downstream agents only consume validated, clean data contracts."
-  - question: "Can this solution be hosted on-premises or within a private VPC?"
-    answer: "Yes. All adapter components and model inferences can deploy within sovereign cloud boundaries or air-gapped VPCs."
-
-related:
-  - "clm"
-  - "dms"
----
-
-Optional long-form markdown body here.
+      - "Zero wait times for walk-in shoppers"
+      - "Zero price hallucination with live database lock"
+    enablement:
+      - "Sales staff orientation on assisted tablet handoffs"
+    governance:
+      - "Strict database grounding preventing generated pricing"
+    monitoring:
+      - "Daily voice interaction session counts"
+    outcome: "Every walk-in gets an expert salesperson instantly, with prices locked from the live database."
 ```

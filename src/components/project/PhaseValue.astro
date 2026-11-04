@@ -1,6 +1,7 @@
 ---
 import MediaSlot from './MediaSlot.astro';
 import Icon from '../Icon.astro';
+import StageComingSoon from './StageComingSoon.astro';
 
 interface MetricItem {
   label: string;
@@ -11,6 +12,7 @@ interface MetricItem {
 
 interface Props {
   valueData?: {
+    tagline?: string;
     headline?: string;
     story?: string;
     points?: string[];
@@ -18,198 +20,204 @@ interface Props {
     levers?: string[];
     media?: any[];
   };
+  tagline?: string;
 }
 
 const { valueData } = Astro.props;
-if (!valueData) return null;
+const tagline = Astro.props.tagline || valueData?.tagline;
+const story = valueData?.story;
+const hasContent = !!(valueData && (valueData.story || valueData.metrics?.length || valueData.levers?.length || valueData.points?.length));
 
-const primaryMedia = valueData.media && valueData.media.length > 0 ? valueData.media[0] : undefined;
+const primaryMedia = valueData?.media && valueData.media.length > 0 ? valueData.media[0] : undefined;
 ---
 
-<section id="chapter-value" class="project-chapter-section" aria-labelledby="heading-value">
+<section
+  id="stage-02"
+  class="project-chapter-section"
+  aria-labelledby="heading-stage-02"
+  data-stage-title="Identify latent revenue"
+  data-stage-color="#163666"
+  tabindex="-1"
+>
   <div class="chapter-header">
-    <div class="chapter-badge-wrap">
-      <span class="chapter-num-badge">02</span>
-      <span class="chapter-phase-tag">LATENT REVENUE &amp; VALUE</span>
-    </div>
-    <h2 id="heading-value" class="chapter-heading">{valueData.headline || 'Quantified Value Realisation'}</h2>
-    {valueData.story && <p class="chapter-story">{valueData.story}</p>}
+    <span class="chapter-eyebrow" style="color: #163666;">STAGE 02</span>
+    <h2 id="heading-stage-02" class="chapter-heading">Identify latent revenue</h2>
+    {tagline && <p class="chapter-tagline" style="color: #163666;">{tagline}</p>}
+    {story && <p class="chapter-story">{story}</p>}
   </div>
 
-  <!-- Metric Comparison Cards -->
-  {valueData.metrics && valueData.metrics.length > 0 && (
-    <div class="value-metrics-block">
-      <span class="block-mini-title">MEASURED PERFORMANCE SHIFTS</span>
-      <div class="metrics-grid">
-        {valueData.metrics.map((m, idx) => (
-          <div class="metric-card card-mastercard" data-metric-card>
-            <div class="metric-card-header">
-              <span class="metric-badge">KPI 0{idx + 1}</span>
-              <span class="metric-label">{m.label}</span>
-            </div>
-            <div class="metric-delta-row">
-              <div class="metric-before-box">
-                <span class="delta-label">BEFORE</span>
-                <span class="delta-value before-val">{m.before}</span>
+  {!hasContent ? (
+    <StageComingSoon stageNumber="02" stageTitle="Identify latent revenue" color="#163666" />
+  ) : (
+    <>
+      <!-- Metric Comparison Cards -->
+      {valueData?.metrics && valueData.metrics.length > 0 && (
+        <div class="value-metrics-block">
+          <span class="block-mini-title">MEASURED PERFORMANCE SHIFTS</span>
+          <div class="metrics-grid">
+            {valueData.metrics.map((m, idx) => (
+              <div class="metric-card card-mastercard" data-metric-card>
+                <div class="metric-card-header">
+                  <span class="metric-badge">KPI 0{idx + 1}</span>
+                  <span class="metric-label">{m.label}</span>
+                </div>
+                <div class="metric-delta-row">
+                  <div class="metric-before-box">
+                    <span class="delta-label">BEFORE</span>
+                    <span class="delta-value before-val">{m.before}</span>
+                  </div>
+                  <div class="metric-arrow" aria-hidden="true">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                  <div class="metric-after-box">
+                    <span class="delta-label">AFTER</span>
+                    <span class="delta-value after-val">{m.after}</span>
+                  </div>
+                </div>
+                {m.note && <div class="metric-note">{m.note}</div>}
               </div>
-              <div class="metric-arrow" aria-hidden="true">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-              </div>
-              <div class="metric-after-box">
-                <span class="delta-label">AFTER</span>
-                <span class="delta-value after-val">{m.after}</span>
-              </div>
-            </div>
-            {m.note && <div class="metric-note">{m.note}</div>}
+            ))}
           </div>
-        ))}
-      </div>
-    </div>
-  )}
+        </div>
+      )}
 
-  <!-- Two-Column Levers & Media/Key Points -->
-  <div class="value-details-grid">
-    <!-- Value Levers Column -->
-    {valueData.levers && valueData.levers.length > 0 && (
-      <div class="levers-column card-mastercard">
-        <span class="block-mini-title">VALUE-CREATION LEVERS</span>
-        <div class="levers-chip-list">
-          {valueData.levers.map((lever) => (
-            <div class="lever-chip">
-              <span class="lever-icon" aria-hidden="true">
-                <Icon name="check" size={16} />
-              </span>
-              <span class="lever-text">{lever}</span>
+      <!-- Two-Column Levers & Media/Key Points -->
+      <div class="value-details-grid">
+        <!-- Value Levers Column -->
+        {valueData?.levers && valueData.levers.length > 0 && (
+          <div class="levers-column card-mastercard">
+            <span class="block-mini-title">VALUE-CREATION LEVERS</span>
+            <div class="levers-chip-list">
+              {valueData.levers.map((lever) => (
+                <div class="lever-chip">
+                  <span class="lever-icon" aria-hidden="true">
+                    <Icon name="check" size={16} />
+                  </span>
+                  <span class="lever-text">{lever}</span>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
+        )}
+
+        <!-- Media or Key Points Column -->
+        <div class="value-media-column">
+          {primaryMedia ? (
+            <MediaSlot item={primaryMedia} />
+          ) : valueData?.points && valueData.points.length > 0 ? (
+            <div class="value-points-card card-mastercard">
+              <span class="block-mini-title">KEY VALUE DRIVERS</span>
+              <ul class="value-points-list">
+                {valueData.points.map((pt) => (
+                  <li class="value-point-item">
+                    <span class="pt-bullet" aria-hidden="true">&bull;</span>
+                    <span>{pt}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
         </div>
       </div>
-    )}
 
-    <!-- Media or Key Points Column -->
-    <div class="value-media-column">
-      {primaryMedia ? (
-        <MediaSlot
-          media={primaryMedia}
-          fallbackTitle="Value Realisation Visualisation"
-          fallbackDescription="Quantitative ROI trajectory and telemetry models."
-        />
-      ) : valueData.points && valueData.points.length > 0 ? (
-        <div class="value-points-card card-mastercard">
+      <!-- Remaining points if media consumed the right column -->
+      {primaryMedia && valueData?.points && valueData.points.length > 0 && (
+        <div class="value-extra-points card-mastercard">
           <span class="block-mini-title">KEY VALUE DRIVERS</span>
-          <ul class="value-points-list">
+          <ul class="points-horizontal-grid">
             {valueData.points.map((pt) => (
-              <li class="value-point-item">
-                <span class="pt-bullet" aria-hidden="true">&bull;</span>
+              <li class="point-bubble">
+                <span class="point-tick" aria-hidden="true">&#x2713;</span>
                 <span>{pt}</span>
               </li>
             ))}
           </ul>
         </div>
-      ) : null}
-    </div>
-  </div>
-
-  <!-- Remaining points if media consumed the right column -->
-  {primaryMedia && valueData.points && valueData.points.length > 0 && (
-    <div class="value-extra-points card-mastercard">
-      <span class="block-mini-title">KEY VALUE DRIVERS</span>
-      <ul class="points-horizontal-grid">
-        {valueData.points.map((pt) => (
-          <li class="point-bubble">
-            <span class="point-tick" aria-hidden="true">&#x2713;</span>
-            <span>{pt}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
+      )}
+    </>
   )}
 </section>
 
 <style>
   .project-chapter-section {
-    padding: var(--space-8, 2rem) 0 var(--space-12, 3rem);
-    border-bottom: 1px solid var(--border-subtle);
-    scroll-margin-top: calc(var(--header-height, 64px) + 2rem);
+    padding: clamp(2.5rem, 5vh, 3.75rem) 0;
+    border-bottom: 1px solid var(--color-border);
+    scroll-margin-top: calc(var(--nav-height, 72px) + 2rem);
   }
 
   .chapter-header {
-    margin-bottom: var(--space-6, 1.5rem);
+    margin-bottom: 2rem;
   }
 
-  .chapter-badge-wrap {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2, 0.5rem);
-    margin-bottom: var(--space-3, 0.75rem);
-  }
-
-  .chapter-num-badge {
-    font-family: var(--font-mono, monospace);
-    font-size: 0.75rem;
-    font-weight: 700;
-    padding: 0.2rem 0.5rem;
-    border-radius: 4px;
-    background: var(--surface-secondary, rgba(0,0,0,0.05));
-    color: var(--text-muted);
-    border: 1px solid var(--border-subtle);
-  }
-
-  .chapter-phase-tag {
-    font-family: var(--font-mono, monospace);
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
+  .chapter-eyebrow {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--color-primary);
+    margin-bottom: 0.4rem;
   }
 
   .chapter-heading {
-    font-family: var(--font-heading);
-    font-size: clamp(1.6rem, 3vw, 2.25rem);
-    font-weight: 700;
-    color: var(--text-primary);
+    font-size: clamp(1.75rem, 3.2vw, 2.25rem);
+    font-weight: 800;
+    color: var(--color-text-primary);
+    margin: 0 0 0.4rem 0;
     line-height: 1.2;
-    margin-bottom: var(--space-3, 0.75rem);
+    letter-spacing: -0.015em;
+  }
+
+  .chapter-tagline {
+    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+    font-weight: 700;
+    margin: 0 0 0.75rem 0;
+    letter-spacing: -0.01em;
+    line-height: 1.35;
   }
 
   .chapter-story {
-    font-size: 1.05rem;
+    font-size: 1rem;
     line-height: 1.6;
-    color: var(--text-secondary);
-    max-width: 780px;
+    color: var(--color-text-secondary);
+    max-width: 680px;
     margin: 0;
   }
 
   .block-mini-title {
     display: block;
-    font-family: var(--font-mono, monospace);
-    font-size: 0.7rem;
-    font-weight: 700;
+    font-size: 10.5px;
+    font-weight: 800;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: var(--space-4, 1rem);
+    color: var(--color-text-muted);
+    margin-bottom: 1rem;
   }
 
   .value-metrics-block {
-    margin-bottom: var(--space-8, 2rem);
+    margin-bottom: 2rem;
   }
 
   .metrics-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: var(--space-4, 1rem);
+    gap: 1rem;
   }
 
   .metric-card {
-    padding: var(--space-5, 1.25rem);
+    padding: 1.25rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: var(--space-3, 0.75rem);
+    gap: 0.75rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md, 8px);
+  }
+
+  :global(.dark) .metric-card {
+    background: var(--color-surface-raised);
   }
 
   .metric-card-header {
@@ -220,11 +228,11 @@ const primaryMedia = valueData.media && valueData.media.length > 0 ? valueData.m
   }
 
   .metric-badge {
-    font-family: var(--font-mono, monospace);
     font-size: 0.7rem;
-    font-weight: 600;
-    color: var(--text-muted);
-    background: var(--surface-secondary);
+    font-weight: 700;
+    color: var(--color-text-muted);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
     padding: 2px 6px;
     border-radius: 4px;
   }
@@ -232,7 +240,7 @@ const primaryMedia = valueData.media && valueData.media.length > 0 ? valueData.m
   .metric-label {
     font-size: 0.85rem;
     font-weight: 600;
-    color: var(--text-secondary);
+    color: var(--color-text-secondary);
     text-align: right;
   }
 
@@ -241,67 +249,81 @@ const primaryMedia = valueData.media && valueData.media.length > 0 ? valueData.m
     align-items: center;
     justify-content: space-between;
     gap: 0.75rem;
-    padding: var(--space-3, 0.75rem) 0;
-    border-top: 1px dashed var(--border-subtle);
-    border-bottom: 1px dashed var(--border-subtle);
+    padding: 0.75rem 0;
+    border-top: 1px dashed var(--color-border);
+    border-bottom: 1px dashed var(--color-border);
   }
 
   .delta-label {
     display: block;
-    font-family: var(--font-mono, monospace);
     font-size: 0.65rem;
     letter-spacing: 0.05em;
-    color: var(--text-muted);
+    color: var(--color-text-muted);
     margin-bottom: 2px;
   }
 
   .delta-value {
-    font-family: var(--font-heading);
     font-size: 1.25rem;
     font-weight: 700;
     line-height: 1.1;
   }
 
   .before-val {
-    color: var(--text-muted);
+    color: var(--color-text-muted);
     text-decoration: line-through;
     opacity: 0.85;
   }
 
   .after-val {
-    color: var(--color-primary);
+    color: #163666;
+  }
+
+  :global(.dark) .after-val {
+    color: #5B8FE0;
   }
 
   .metric-arrow {
-    color: var(--color-primary);
+    color: #163666;
     display: flex;
     align-items: center;
     justify-content: center;
     opacity: 0.8;
   }
 
+  :global(.dark) .metric-arrow {
+    color: #5B8FE0;
+  }
+
   .metric-note {
     font-size: 0.8rem;
-    color: var(--text-muted);
+    color: var(--color-text-muted);
     line-height: 1.4;
   }
 
   .value-details-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: var(--space-6, 1.5rem);
+    gap: 1.5rem;
     align-items: start;
-    margin-bottom: var(--space-6, 1.5rem);
+    margin-bottom: 1.5rem;
   }
 
   .levers-column, .value-points-card {
-    padding: var(--space-5, 1.25rem);
+    padding: 1.25rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md, 8px);
+  }
+
+  :global(.dark) .levers-column,
+  :global(.dark) .value-points-card {
+    background: var(--color-surface-raised);
   }
 
   .levers-chip-list {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2, 0.5rem);
+    gap: 0.5rem;
   }
 
   .lever-chip {
@@ -309,17 +331,21 @@ const primaryMedia = valueData.media && valueData.media.length > 0 ? valueData.m
     align-items: center;
     gap: 0.6rem;
     padding: 0.6rem 0.8rem;
-    background: var(--surface-secondary);
-    border: 1px solid var(--border-subtle);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
     border-radius: 8px;
     font-size: 0.9rem;
-    color: var(--text-primary);
+    color: var(--color-text-primary);
   }
 
   .lever-icon {
     display: inline-flex;
-    color: var(--color-primary);
+    color: #163666;
     flex-shrink: 0;
+  }
+
+  :global(.dark) .lever-icon {
+    color: #5B8FE0;
   }
 
   .value-points-list {
@@ -328,7 +354,7 @@ const primaryMedia = valueData.media && valueData.media.length > 0 ? valueData.m
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--space-3, 0.75rem);
+    gap: 0.75rem;
   }
 
   .value-point-item {
@@ -337,19 +363,30 @@ const primaryMedia = valueData.media && valueData.media.length > 0 ? valueData.m
     gap: 0.5rem;
     font-size: 0.95rem;
     line-height: 1.5;
-    color: var(--text-secondary);
+    color: var(--color-text-secondary);
   }
 
   .pt-bullet {
-    color: var(--color-primary);
+    color: #163666;
     font-weight: bold;
     font-size: 1.1rem;
     line-height: 1;
   }
 
+  :global(.dark) .pt-bullet {
+    color: #5B8FE0;
+  }
+
   .value-extra-points {
-    padding: var(--space-5, 1.25rem);
-    margin-top: var(--space-4, 1rem);
+    padding: 1.25rem;
+    margin-top: 1rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md, 8px);
+  }
+
+  :global(.dark) .value-extra-points {
+    background: var(--color-surface-raised);
   }
 
   .points-horizontal-grid {
@@ -358,7 +395,7 @@ const primaryMedia = valueData.media && valueData.media.length > 0 ? valueData.m
     margin: 0;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: var(--space-3, 0.75rem);
+    gap: 0.75rem;
   }
 
   .point-bubble {
@@ -366,13 +403,17 @@ const primaryMedia = valueData.media && valueData.media.length > 0 ? valueData.m
     align-items: flex-start;
     gap: 0.5rem;
     font-size: 0.9rem;
-    color: var(--text-secondary);
+    color: var(--color-text-secondary);
     line-height: 1.4;
   }
 
   .point-tick {
-    color: var(--color-primary);
+    color: #163666;
     font-weight: 700;
+  }
+
+  :global(.dark) .point-tick {
+    color: #5B8FE0;
   }
 
   @media (max-width: 900px) {

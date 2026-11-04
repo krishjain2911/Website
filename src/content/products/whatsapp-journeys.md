@@ -26,6 +26,7 @@ hero:
   frame: "phone"
 phases:
   problem:
+    tagline: "Drop-offs at every step."
     headline: "Low email open rates and portal login hurdles"
     story: "Low consumer email open rates and portal login hurdles slow down time-sensitive communications, causing customer service queues to overflow with routine status verification requests."
     points:
@@ -45,6 +46,7 @@ phases:
       - title: "Service Desk Load"
         detail: "Routine status queries overwhelm human agents with repetitive lookup tasks."
   value:
+    tagline: "Customer conversations that convert."
     headline: "High-engagement customer touchpoints without app downloads"
     story: "Engage customers directly on the messaging channel they check daily, without requiring separate apps or portal accounts."
     points:
@@ -65,6 +67,7 @@ phases:
       - "Automated OutSystems conversational logic"
       - "Unified agent desk handoffs"
   architecture:
+    tagline: "Session state on WhatsApp."
     headline: "OutSystems and Meta Cloud API integration"
     story: "Enterprise messaging automation connecting official Meta WhatsApp Cloud APIs with transactional backend systems, enabling automated customer journeys and live agent handoffs."
     points:
@@ -98,7 +101,10 @@ phases:
             role: "Audit trails and delivery receipt telemetry"
     pattern: "Event-Driven Messaging Gateway with State Machine Logic"
     security: "End-to-end transport encryption, official Meta business verification, and strict retention policies."
+  pilot:
+    tagline: "Refined with live customers."
   rollout:
+    tagline: "High-volume delivery without latency."
     headline: "Template registration and gateway deployment"
     story: "Meta business account verification, message template registration, and CRM webhook configuration."
     points:
@@ -114,6 +120,7 @@ phases:
       - "CRM event trigger integration"
       - "Customer service team escalation orientation"
   impact:
+    tagline: "Self-service that never sleeps."
     headline: "Meet customers on their preferred channel with automated enterprise workflows"
     story: "Streamlined two-way communication delivering instant status updates, service booking, and automated notifications."
     points:
