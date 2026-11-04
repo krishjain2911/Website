@@ -117,18 +117,7 @@ const headlineWords = approach.headline.split(' ');
             <circle cx="0" cy="0" r="8" class="finish-ring-center" />
           </g>
 
-          <!-- Guide Cube (Desktop SVG Element, uses WebP logo cube) -->
-          <g id="guide-cube-desktop" class="journey-guide-cube" transform="translate(500, 60)" filter="url(#cubeSoftShadowDesktop)">
-            <image
-              href="/media/guide-cube-128.webp"
-              x="-22"
-              y="-22"
-              width="44"
-              height="44"
-              preserveAspectRatio="xMidYMid meet"
-              class="guide-cube-image"
-            />
-          </g>
+
         </svg>
       </div>
 
@@ -136,8 +125,8 @@ const headlineWords = approach.headline.split(' ');
       <div class="journey-mobile-view" aria-hidden="true">
         <svg
           class="journey-mobile-svg"
-          viewBox="0 0 380 2300"
-          preserveAspectRatio="xMidYMid meet"
+          viewBox="0 0 80 2300"
+          preserveAspectRatio="xMinYMin meet"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
@@ -149,62 +138,48 @@ const headlineWords = approach.headline.split(' ');
             </linearGradient>
           </defs>
 
-          <!-- Mobile Start Socket -->
-          <g class="journey-start-socket" transform="translate(42, 50)">
-            <ellipse cx="0" cy="0" rx="36" ry="13" class="socket-outer-rim" />
-            <ellipse cx="0" cy="0" rx="30" ry="9" class="socket-inner-hole" />
-            <ellipse cx="0" cy="1" rx="24" ry="7" class="socket-depth-vignette" />
+          <!-- Mobile Start Socket: centered at x=28 inside 56px gutter -->
+          <g class="journey-start-socket" transform="translate(28, 50)">
+            <ellipse cx="0" cy="0" rx="25" ry="10" class="socket-outer-rim" />
+            <ellipse cx="0" cy="0" rx="20" ry="7" class="socket-inner-hole" />
+            <ellipse cx="0" cy="1" rx="16" ry="5" class="socket-depth-vignette" />
             <!-- Pop-out ripple ring -->
-            <ellipse cx="0" cy="0" rx="30" ry="9" class="socket-pop-ripple" id="socket-pop-ripple-mobile" />
+            <ellipse cx="0" cy="0" rx="20" ry="7" class="socket-pop-ripple" id="socket-pop-ripple-mobile" />
           </g>
 
-          <!-- Mobile Road Track -->
+          <!-- Mobile Road Track: centered at x=28 inside 56px gutter -->
           <path
             class="road-bg-track"
-            d="M 42,50 C 42,110 38,150 38,200 C 38,360 46,420 46,560 C 46,720 38,780 38,920 C 38,1080 46,1140 46,1280 C 46,1440 38,1500 38,1640 C 38,1800 42,1860 42,2000 L 42,2160"
+            d="M 28,50 C 28,110 28,150 28,200 C 28,360 28,420 28,560 C 28,720 28,780 28,920 C 28,1080 28,1140 28,1280 C 28,1440 28,1500 28,1640 C 28,1800 28,1860 28,2000 L 28,2160"
           />
           <path
             id="journey-mobile-path"
             class="road-active-track"
-            d="M 42,50 C 42,110 38,150 38,200 C 38,360 46,420 46,560 C 46,720 38,780 38,920 C 38,1080 46,1140 46,1280 C 46,1440 38,1500 38,1640 C 38,1800 42,1860 42,2000 L 42,2160"
+            d="M 28,50 C 28,110 28,150 28,200 C 28,360 28,420 28,560 C 28,720 28,780 28,920 C 28,1080 28,1140 28,1280 C 28,1440 28,1500 28,1640 C 28,1800 28,1860 28,2000 L 28,2160"
             stroke="url(#journeyRoadGradMobile)"
           />
           <path
             class="road-center-line"
-            d="M 42,50 C 42,110 38,150 38,200 C 38,360 46,420 46,560 C 46,720 38,780 38,920 C 38,1080 46,1140 46,1280 C 46,1440 38,1500 38,1640 C 38,1800 42,1860 42,2000 L 42,2160"
+            d="M 28,50 C 28,110 28,150 28,200 C 28,360 28,420 28,560 C 28,720 28,780 28,920 C 28,1080 28,1140 28,1280 C 28,1440 28,1500 28,1640 C 28,1800 28,1860 28,2000 L 28,2160"
           />
 
-          <!-- Mobile Connector Lines to Cards -->
-          <line x1="38" y1="200" x2="80" y2="200" class="connector-line" id="mobile-conn-0" />
-          <line x1="46" y1="560" x2="80" y2="560" class="connector-line" id="mobile-conn-1" />
-          <line x1="38" y1="920" x2="80" y2="920" class="connector-line" id="mobile-conn-2" />
-          <line x1="46" y1="1280" x2="80" y2="1280" class="connector-line" id="mobile-conn-3" />
-          <line x1="38" y1="1640" x2="80" y2="1640" class="connector-line" id="mobile-conn-4" />
-          <line x1="42" y1="2000" x2="80" y2="2000" class="connector-line" id="mobile-conn-5" />
+          <!-- Mobile Connector Lines to Cards (from road at x=28 to cards column at x=68) -->
+          <line x1="28" y1="200" x2="68" y2="200" class="connector-line" id="mobile-conn-0" />
+          <line x1="28" y1="560" x2="68" y2="560" class="connector-line" id="mobile-conn-1" />
+          <line x1="28" y1="920" x2="68" y2="920" class="connector-line" id="mobile-conn-2" />
+          <line x1="28" y1="1280" x2="68" y2="1280" class="connector-line" id="mobile-conn-3" />
+          <line x1="28" y1="1640" x2="68" y2="1640" class="connector-line" id="mobile-conn-4" />
+          <line x1="28" y1="2000" x2="68" y2="2000" class="connector-line" id="mobile-conn-5" />
 
-          <!-- Mobile Finish Marker -->
-          <g class="journey-finish-marker" transform="translate(42, 2160)">
-            <circle cx="0" cy="0" r="18" class="finish-ring-outer" />
-            <circle cx="0" cy="0" r="12" class="finish-ring-mid" />
-            <circle cx="0" cy="0" r="6" class="finish-ring-center" />
-          </g>
-
-          <!-- Guide Cube (Mobile SVG Element: 36px) -->
-          <g id="guide-cube-mobile" class="journey-guide-cube" transform="translate(42, 50)">
-            <image
-              href="/media/guide-cube-128.webp"
-              x="-18"
-              y="-18"
-              width="36"
-              height="36"
-              preserveAspectRatio="xMidYMid meet"
-              class="guide-cube-image"
-            />
+          <!-- Mobile Finish Marker: centered at x=28 -->
+          <g class="journey-finish-marker" transform="translate(28, 2160)">
+            <circle cx="0" cy="0" r="16" class="finish-ring-outer" />
+            <circle cx="0" cy="0" r="10" class="finish-ring-mid" />
+            <circle cx="0" cy="0" r="5" class="finish-ring-center" />
           </g>
         </svg>
       </div>
 
-      <!-- Semantic Accessible Stops List (<ol>) -->
       <ol class="journey-stops-list" id="journey-stops-list">
         {steps.map((step, idx) => {
           const isLeft = idx % 2 === 0;
@@ -242,6 +217,58 @@ const headlineWords = approach.headline.split(' ');
           );
         })}
       </ol>
+
+      <!-- Guide Cube Floating Overlay Layer (Stacking Order: road < cards < pins < cube) -->
+      <div class="journey-guide-cube-layer" aria-hidden="true">
+        <div class="journey-desktop-cube-view">
+          <svg
+            class="journey-desktop-svg"
+            viewBox="0 0 1000 2680"
+            preserveAspectRatio="xMidYMid meet"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <filter id="cubeSoftShadowDesktopOverlay" x="-30%" y="-30%" width="160%" height="160%">
+                <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#000000" flood-opacity="0.25" />
+              </filter>
+            </defs>
+            <g id="guide-cube-desktop" class="journey-guide-cube" transform="translate(500, 60)" filter="url(#cubeSoftShadowDesktopOverlay)">
+              <image
+                href="/media/guide-cube-128.webp"
+                x="-22"
+                y="-22"
+                width="44"
+                height="44"
+                preserveAspectRatio="xMidYMid meet"
+                class="guide-cube-image"
+              />
+            </g>
+          </svg>
+        </div>
+
+        <div class="journey-mobile-cube-view">
+          <svg
+            class="journey-mobile-svg"
+            viewBox="0 0 80 2300"
+            preserveAspectRatio="xMinYMin meet"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g id="guide-cube-mobile" class="journey-guide-cube" transform="translate(28, 50)">
+              <image
+                href="/media/guide-cube-128.webp"
+                x="-18"
+                y="-18"
+                width="36"
+                height="36"
+                preserveAspectRatio="xMidYMid meet"
+                class="guide-cube-image"
+              />
+            </g>
+          </svg>
+        </div>
+      </div>
     </div>
 
     <!-- Closing Callout under the road -->
@@ -468,7 +495,7 @@ const headlineWords = approach.headline.split(' ');
       width: 1000px;
       height: 2680px;
       pointer-events: none;
-      z-index: 2;
+      z-index: 1;
     }
 
     .journey-desktop-svg {
@@ -482,7 +509,7 @@ const headlineWords = approach.headline.split(' ');
       margin: 0;
       padding: 0;
       position: relative;
-      z-index: 3;
+      z-index: 10;
       width: 1000px;
       min-height: 2680px;
     }
@@ -616,8 +643,9 @@ const headlineWords = approach.headline.split(' ');
     fill: #EE4B2B;
   }
 
-  /* Guide Cube */
+  /* Guide Cube: pointer-events auto enables hit detection via elementFromPoint */
   .journey-guide-cube {
+    pointer-events: auto;
     will-change: transform, opacity;
     filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.3));
   }
@@ -626,13 +654,52 @@ const headlineWords = approach.headline.split(' ');
   }
 
   /* Road Pin Marker */
+  /* Stacking Hierarchy: road (z:1) < cards (z:10) < pins (z:20) < cube (z:30) */
+  .journey-guide-cube-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 30;
+  }
+
+  .journey-desktop-cube-view {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1000px;
+    height: 2680px;
+    pointer-events: none;
+  }
+
+  .journey-mobile-cube-view {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 80px;
+    height: 2300px;
+    pointer-events: none;
+  }
+
+  @media (min-width: 900px) {
+    .journey-mobile-cube-view {
+      display: none !important;
+    }
+  }
+
+  @media (max-width: 899px) {
+    .journey-desktop-cube-view {
+      display: none !important;
+    }
+  }
+
   .road-pin-marker {
     width: 48px;
     height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 5;
+    z-index: 20;
     pointer-events: none;
   }
 
@@ -673,9 +740,10 @@ const headlineWords = approach.headline.split(' ');
     pointer-events: none;
   }
 
-  /* Stop Card */
+  /* Stop Card: z-index 10 (above road at 1, below pins at 20 and cube at 30) */
   .stop-content-card {
     position: relative;
+    z-index: 10;
     padding: 1.5rem 1.75rem;
     background-color: var(--color-surface);
     border-radius: var(--radius-lg);
@@ -808,14 +876,14 @@ const headlineWords = approach.headline.split(' ');
       position: absolute;
       top: 0;
       left: 0;
-      width: 100%;
+      width: 80px;
       height: 2300px;
       pointer-events: none;
-      z-index: 2;
+      z-index: 1;
     }
 
     .journey-mobile-svg {
-      width: 100%;
+      width: 80px;
       height: 2300px;
       overflow: visible;
     }
@@ -825,15 +893,16 @@ const headlineWords = approach.headline.split(' ');
       margin: 0;
       padding: 0;
       position: relative;
-      z-index: 3;
+      z-index: 10;
       width: 100%;
       min-height: 2300px;
     }
 
+    /* Mobile Cards: isolated column beside 56px road gutter (left: 68px >= 56px) */
     .journey-stop {
       position: absolute;
-      left: 76px;
-      right: 12px;
+      left: 68px;
+      right: 14px;
       width: auto;
       transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
@@ -845,11 +914,13 @@ const headlineWords = approach.headline.split(' ');
     #journey-stop-4 { top: 1570px; }
     #journey-stop-5 { top: 1930px; }
 
+    /* Mobile Pin: centered at x=28px inside the 56px gutter (68px - 40px = 28px) */
     .road-pin-marker {
       position: absolute;
-      left: -44px;
+      left: -40px;
       top: 70px;
       transform: translate(-50%, -50%);
+      z-index: 20;
     }
 
     .stop-content-card {
@@ -991,7 +1062,7 @@ const headlineWords = approach.headline.split(' ');
     let headingRevealed = false;
     let currentDistance = 0;
 
-    const startX = isDesktop ? 500 : 42;
+    const startX = isDesktop ? 500 : 28;
     const startY = isDesktop ? 60 : 50;
     const finishY = isDesktop ? 2520 : 2160;
 
@@ -1120,6 +1191,8 @@ const headlineWords = approach.headline.split(' ');
           currentDistance = lerp(currentDistance, targetDistance, 0.12);
           if (Math.abs(currentDistance - targetDistance) < 0.4) {
             currentDistance = targetDistance;
+          } else {
+            requestAnimationFrame(() => story.requestTick());
           }
 
           // 1. Road draw (travelled part) ends exactly at the cube

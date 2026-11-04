@@ -1470,8 +1470,8 @@ const genAiProjects = allProducts
 
     .cube-zone {
       container-type: normal !important;
-      height: clamp(170px, 40vw, 200px) !important;
-      min-height: 170px !important;
+      height: clamp(160px, 38vw, 200px) !important;
+      min-height: 160px !important;
       width: 100% !important;
       display: flex !important;
       align-items: center !important;
@@ -1676,6 +1676,15 @@ const genAiProjects = allProducts
         if (!face) return;
         face.classList.toggle('is-active-face', key === pillar);
       });
+    }
+
+    // Initial state on first paint for mobile / stacked layout
+    if (window.innerWidth < 900 || window.innerHeight < 640) {
+      setPanelActive('plan');
+      const initAng = pillarAngles.plan;
+      if (initAng && cubeAssembly) {
+        cubeAssembly.style.transform = `rotateX(${initAng.x}deg) rotateY(${initAng.y}deg)`;
+      }
     }
 
     // Subscribe to shared scrollStory controller

@@ -181,6 +181,83 @@ async function runAudit() {
         }
       }
 
+      // Assert Approach Journey: Guide cube stacking (elementFromPoint) and mobile road gutter
+      const approachResult = await page.evaluate(async () => {
+        const stage = document.getElementById('approach-journey-stage');
+        if (!stage) return { ok: true, skipped: true };
+
+        const isDesktop = window.innerWidth >= 900;
+        const cubeId = isDesktop ? 'guide-cube-desktop' : 'guide-cube-mobile';
+        const cube = document.getElementById(cubeId);
+        if (!cube) return { ok: false, error: `Guide cube #${cubeId} not found` };
+
+        const stops = Array.from(document.querySelectorAll('.journey-stop'));
+        if (stops.length === 0) return { ok: false, error: 'No journey stops found' };
+
+        // Test each stop
+        for (let i = 0; i < stops.length; i++) {
+          const stop = stops[i];
+          const pin = stop.querySelector('.road-pin-marker');
+          if (pin) {
+            pin.scrollIntoView({ block: 'center', behavior: 'instant' });
+          } else {
+            stop.scrollIntoView({ block: 'center', behavior: 'instant' });
+          }
+
+          // Allow scrollStory & lerp animation to smoothly converge cube onto pin
+          for (let f = 0; f < 35; f++) {
+            window.dispatchEvent(new Event('scroll'));
+            await new Promise((r) => requestAnimationFrame(r));
+          }
+
+          const rect = cube.getBoundingClientRect();
+          if (rect.width < 5 || rect.height < 5) {
+            return { ok: false, error: `Stop ${i}: Guide cube has invalid size (${rect.width}x${rect.height}px)` };
+          }
+
+          const cx = Math.round(rect.left + rect.width / 2);
+          const cy = Math.round(rect.top + rect.height / 2);
+          const topEl = document.elementFromPoint(cx, cy);
+
+          if (!topEl || (!cube.contains(topEl) && topEl !== cube)) {
+            return {
+              ok: false,
+              error: `Stop ${i}: elementFromPoint at cube center returned <${topEl?.tagName} class="${topEl?.className}"> instead of cube`
+            };
+          }
+
+          // On mobile, assert cards do not intersect the 56px road gutter
+          if (!isDesktop) {
+            const stageRect = stage.getBoundingClientRect();
+            const gutterRight = stageRect.left + 56;
+            const cards = Array.from(document.querySelectorAll('.stop-content-card'));
+            for (const card of cards) {
+              const cRect = card.getBoundingClientRect();
+              if (cRect.left < gutterRight - 1) {
+                return {
+                  ok: false,
+                  error: `Stop ${i}: Card #${card.id} intersects 56px road gutter (card.left=${Math.round(cRect.left)}px < gutterRight=${Math.round(gutterRight)}px)`
+                };
+              }
+            }
+          }
+        }
+
+        return { ok: true };
+      });
+
+      checksRun++;
+      if (!approachResult.ok && !approachResult.skipped) {
+        const shotName = `approach-audit-fail-${vp.name}.png`;
+        await page.screenshot({ path: path.join(failuresDir, shotName) });
+        failures.push({
+          vp: vp.name,
+          page: '/#approach',
+          error: approachResult.error,
+          screenshot: shotName
+        });
+      }
+
       // Assert PEG cube visibility and elementFromPoint on mobile viewports
       const mobileViewports = ['360x640', '390x844', '414x896', '844x390'];
       if (mobileViewports.includes(vp.name)) {
