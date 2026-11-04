@@ -904,6 +904,93 @@ const headlineWords = approach.headline.split(' ');
     border-color: var(--step-accent);
   }
 
+  /* ==========================================================
+     Journey redesign: calmer cards, one detail at a time
+     ========================================================== */
+  .stop-content-card {
+    padding: 1.6rem 1.75rem 1.5rem;
+    border-radius: 22px;
+    border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 14px 34px rgba(16, 24, 40, 0.06);
+  }
+
+  /* The coloured top bar becomes a small stage chip */
+  .card-accent-bar { display: none; }
+
+  .card-meta-row { margin-bottom: 0.85rem; }
+
+  .card-stage-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.28rem 0.7rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, currentColor 11%, transparent);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+  }
+
+  .card-heading {
+    font-size: clamp(1.3rem, 1.6vw, 1.5rem);
+    line-height: 1.2;
+    margin: 0 0 0.6rem;
+  }
+
+  .card-copy {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+  }
+
+  /* Detail: quiet note with an accent rule instead of a dashed divider */
+  .card-detail {
+    border-top: 0;
+    padding: 0 0 0 0.9rem;
+    border-left: 2px solid color-mix(in srgb, var(--step-accent) 55%, transparent);
+    font-size: 0.875rem;
+    line-height: 1.55;
+    margin-top: 1rem;
+  }
+
+  @media (min-width: 900px) {
+    /* Only the active card shows its detail line; the others stay clean */
+    .card-detail {
+      max-height: 0;
+      margin-top: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height 0.45s ease, opacity 0.35s ease, margin-top 0.35s ease;
+    }
+    .journey-stop.is-active .card-detail,
+    .journey-stop:hover .card-detail {
+      max-height: 9rem;
+      margin-top: 1rem;
+      opacity: 1;
+    }
+  }
+
+  .journey-stop.is-upcoming { opacity: 0.5; }
+
+  /* Pins: solid stage colour when reached, white ring to lift them off the road */
+  .pin-inner-badge {
+    box-shadow: 0 0 0 5px var(--color-bg, #fff), 0 6px 16px rgba(16, 24, 40, 0.14);
+  }
+  .journey-stop.is-active .pin-inner-badge,
+  .journey-stop.is-passed .pin-inner-badge {
+    background-color: var(--step-accent);
+    border-color: var(--step-accent);
+  }
+  .journey-stop.is-active .pin-num,
+  .journey-stop.is-active .pin-glyph,
+  .journey-stop.is-passed .pin-num,
+  .journey-stop.is-passed .pin-glyph {
+    color: #fff;
+  }
+
+  /* Road: softer base and a quieter centre line */
+  .road-bg-track { stroke: rgba(140, 150, 165, 0.14); }
+  .road-center-line { opacity: 0.55; }
+  .connector-line { stroke-dasharray: none; stroke: rgba(140, 150, 165, 0.3); }
+
   /* Closing Callout */
   .approach-closing {
     margin-top: 4rem;
@@ -1128,6 +1215,7 @@ const headlineWords = approach.headline.split(' ');
     let sectionTop = 0;
     let sectionHeight = 0;
     let stageTop = 0;
+    let unit = 1; // screen px per SVG unit (html zoom 0.9 makes this 0.9)
     let pinYList: number[] = [];
     let headingRevealed = false;
     let currentDistance = 0;
@@ -1149,10 +1237,16 @@ const headlineWords = approach.headline.split(' ');
         const stRect = stage.getBoundingClientRect();
         stageTop = stRect.top + vp.scrollY;
 
+        // Screen px per SVG user unit: the road, pins and cube live in SVG units
+        const svgEl = document.querySelector<SVGSVGElement>('.journey-desktop-svg');
+        unit = isDesktop && svgEl && svgEl.getBoundingClientRect().height > 0
+          ? svgEl.getBoundingClientRect().height / 2680
+          : 1;
+
         // Measure live pin center Y in container coordinates from the DOM
         pinYList = pins.map((pin) => {
           const pRect = pin.getBoundingClientRect();
-          return (pRect.top + vp.scrollY + pRect.height * 0.5) - stageTop;
+          return ((pRect.top + vp.scrollY + pRect.height * 0.5) - stageTop) / unit;
         });
       },
       update: (vp) => {
@@ -1174,7 +1268,7 @@ const headlineWords = approach.headline.split(' ');
 
         // Rail visibility handled cleanly by IntersectionObserver below
         // Viewport center line in container coordinates
-        const viewportCenterY = (vp.scrollY + vp.viewportHeight * 0.5) - stageTop;
+        const viewportCenterY = ((vp.scrollY + vp.viewportHeight * 0.5) - stageTop) / unit;
 
         // Sequence: Pop-out when viewport center approaches start socket, then travel
         if (viewportCenterY < startY) {
@@ -1338,7 +1432,7 @@ const headlineWords = approach.headline.split(' ');
         e.preventDefault();
         const pinY = pinYList[idx];
         if (pinY === undefined) return;
-        const top = stageTop + pinY - window.innerHeight * 0.5;
+        const top = stageTop + pinY * unit - window.innerHeight * 0.5;
         window.scrollTo({ top: Math.max(0, Math.round(top)), behavior: 'smooth' });
       });
     });

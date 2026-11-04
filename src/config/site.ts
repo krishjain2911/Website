@@ -602,7 +602,7 @@ export const siteConfig = {
       {
         name: "Subramaniam (Subu) Iyer",
         role: "Founder",
-        bio: "18+ years bringing together operational technology and IT, from robotics and ASRS in steel, tyre and semiconductor industries to paperless loan origination systems in BFSI; specialises in OutSystems and Enterprise AI.",
+        bio: `Subu Iyer transforms operational friction into scalable technology. His expertise is defined by a rare convergence of Operational Technology (OT) and Information Technology (IT), bringing industrial rigor to digital transformation.\n\nWith 18+ years of experience, Subu has navigated from high-precision Robotics and ASRS in industries like Steel, Tire, and Semiconductors to architecting paperless Loan Origination Systems in BFSI.\n\nSpecializing in OutSystems and Enterprise AI, Subu helps C-suite leaders solve unique "square peg" challenges, ensuring that businesses can innovate rapidly without sacrificing data sovereignty or architectural integrity.`,
         linkedin: "https://linkedin.com/in/thesubuiyer",
         initials: "SI",
         imageKey: "founder-subu"
@@ -610,7 +610,7 @@ export const siteConfig = {
       {
         name: "Abhishek Bagwe",
         role: "Co-founder",
-        bio: "An 18-year corporate career leading strategic initiatives at Tata Power and Tata Motors; drives RHSP's growth, scalability and client acquisition.",
+        bio: `As Co-Founder, Abhishek brings the executive weight of an 18-year corporate career to our startup’s foundation. Having led strategic initiatives for Tata Power and Tata Motors, and currently steering global expansion for FIRETECH, he is responsible for engineering our company’s growth engine.\n\nAbhishek moves beyond the typical startup mindset; he applies proven management frameworks to our AI consulting operations, focusing on rapid scalability, operational efficiency, and high-value client acquisition. He ensures our delivery models are robust enough to serve the very global conglomerates he used to manage.`,
         linkedin: "https://linkedin.com/in/abhishek-bagwe-90ba8710",
         initials: "AB",
         imageKey: "founder-abhishek"

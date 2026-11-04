@@ -162,7 +162,7 @@ function formatMandateText(text: string) {
           <div class="apollo-merged-block" id="apollo-block">
             <!-- Left Column: Apollo story & timeline -->
             <div class="apollo-left-col">
-              <span class="eyebrow">The Inspiration</span>
+              <span class="eyebrow">Our Inspiration</span>
               <h2 class="apollo-heading">The Apollo 13 imperative.</h2>
 
               <ol class="apollo-timeline" aria-label="Apollo 13 timeline sequence">
@@ -175,30 +175,22 @@ function formatMandateText(text: string) {
                 <li class="apollo-timeline-item" data-beat-target="2" role="button" tabindex="0">
                   <span class="apollo-step-num circle-orange" aria-hidden="true">02</span>
                   <p class="step-text">
-                    NASA engineers had to connect square lithium hydroxide canisters to round sockets using only what was on board.
+                    NASA ground crew had to fit square lithium hydroxide canisters into round sockets using only materials on board.
                   </p>
                 </li>
                 <li class="apollo-timeline-item" data-beat-target="3" role="button" tabindex="0">
                   <span class="apollo-step-num circle-red" aria-hidden="true">03</span>
                   <p class="step-text">
-                    They engineered the adapter using only what was on board.
+                    They didn't force the socket. They engineered the adapter.
                   </p>
                 </li>
               </ol>
 
-              <!-- 3 Fact Chips -->
-              <div class="apollo-chips-row">
-                <span class="fact-chip">April 1970</span>
-                <span class="fact-chip-dot" aria-hidden="true">·</span>
-                <span class="fact-chip">200,000 miles from Earth</span>
-                <span class="fact-chip-dot" aria-hidden="true">·</span>
-                <span class="fact-chip">Only materials on board</span>
-              </div>
 
               <!-- Quote with orange left rule -->
               <div class="apollo-quote-box">
                 <p class="apollo-quote-text">
-                  Round Hole Square Peg is built on the same principle: understand the challenge, then engineer the adapter to the solution.
+                  Round Hole Square Peg was founded on the exact same imperative: we don't force your enterprise to conform to rigid software - we engineer the adapter around your operational reality.
                 </p>
               </div>
             </div>
@@ -222,93 +214,71 @@ function formatMandateText(text: string) {
                 <!-- Full-Panel Animated SVG Diagram -->
                 <div class="svg-container">
                   <svg
-                    viewBox="0 0 560 320"
+                    viewBox="0 0 560 300"
                     fill="none"
                     class="theory-interactive-svg"
                     id="theory-interactive-svg"
                     xmlns="http://www.w3.org/2000/svg"
                     role="img"
-                    aria-label="Interactive RHSP animation: A square peg approaches a round hole, bumps its corners, the RHSP adapter ring slides in between, and the peg glides seamlessly through with zero compromise."
+                    aria-label="RHSP animation: a square peg and a round hole. Six lines run from the edges of the square and map onto the circle, then the peg settles into the hole."
                   >
                     <defs>
-                      <radialGradient id="socketGlowGrad" cx="50%" cy="50%" r="50%">
-                        <stop offset="0%" stop-color="#1E4B8F" stop-opacity="0.35" />
-                        <stop offset="70%" stop-color="#1E4B8F" stop-opacity="0.08" />
+                      <radialGradient id="holeGlow" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="#1E4B8F" stop-opacity="0.22" />
                         <stop offset="100%" stop-color="#1E4B8F" stop-opacity="0" />
                       </radialGradient>
-                      <radialGradient id="adapterGlowGrad" cx="50%" cy="50%" r="50%">
-                        <stop offset="0%" stop-color="#F7941D" stop-opacity="0.3" />
-                        <stop offset="100%" stop-color="#F7941D" stop-opacity="0" />
-                      </radialGradient>
-                      <pattern id="diagGrid" width="20" height="20" patternUnits="userSpaceOnUse">
-                        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="var(--color-border)" stroke-width="0.5" stroke-opacity="0.4" />
-                      </pattern>
+                      <linearGradient id="mapLineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#EE4B2B" />
+                        <stop offset="100%" stop-color="#F7941D" />
+                      </linearGradient>
                     </defs>
 
-                    <rect width="560" height="320" fill="url(#diagGrid)" opacity="0.6" />
-                    <line x1="40" y1="150" x2="520" y2="150" stroke="var(--color-border)" stroke-width="1" stroke-dasharray="4 4" />
-
-                    <!-- COMPONENT 1: ROUND HOLE (SOCKET) -->
-                    <g class="diagram-group group-hole" id="svg-group-hole" transform="translate(140, 150)">
-                      <circle cx="0" cy="0" r="76" class="hole-ambient-glow" fill="url(#socketGlowGrad)" />
-                      <circle cx="0" cy="0" r="56" class="hole-outer-ring" stroke="#1E4B8F" stroke-width="2.5" fill="rgba(30, 75, 143, 0.04)" />
-                      <circle cx="0" cy="0" r="42" class="hole-inner-ring" stroke="#1E4B8F" stroke-width="1.5" stroke-dasharray="5 4" fill="none" />
-                      <line x1="-62" y1="0" x2="-48" y2="0" stroke="#1E4B8F" stroke-width="2" />
-                      <line x1="48" y1="0" x2="62" y2="0" stroke="#1E4B8F" stroke-width="2" />
-                      <line x1="0" y1="-62" x2="0" y2="-48" stroke="#1E4B8F" stroke-width="2" />
-                      <line x1="0" y1="48" x2="0" y2="62" stroke="#1E4B8F" stroke-width="2" />
-
-                      <text y="-76" class="diagram-svg-label label-hole-title" text-anchor="middle">ROUND HOLE</text>
-                      <text y="92" class="diagram-svg-sublabel" text-anchor="middle">Your challenge</text>
-                    </g>
-
-                    <!-- COMPONENT 2: THE ADAPTER RING (RHSP) -->
-                    <g class="diagram-group group-adapter" id="svg-group-adapter" transform="translate(260, 150)">
-                      <circle cx="0" cy="0" r="64" class="adapter-ambient-glow" fill="url(#adapterGlowGrad)" opacity="0" />
-                      <circle cx="0" cy="0" r="54" class="adapter-outer" stroke="#F7941D" stroke-width="2.5" fill="rgba(247, 148, 29, 0.08)" />
-                      <rect x="-35" y="-35" width="70" height="70" rx="4" class="adapter-inner" stroke="#F7941D" stroke-width="2" stroke-dasharray="4 3" fill="none" />
-                      <path d="M -35 -20 L -35 -35 L -20 -35" stroke="#F7941D" stroke-width="2" fill="none" />
-                      <path d="M 20 -35 L 35 -35 L 35 -20" stroke="#F7941D" stroke-width="2" fill="none" />
-                      <path d="M 35 20 L 35 35 L 20 35" stroke="#F7941D" stroke-width="2" fill="none" />
-                      <path d="M -20 35 L -35 35 L -35 20" stroke="#F7941D" stroke-width="2" fill="none" />
-
-                      <text y="-76" class="diagram-svg-label label-adapter-title" text-anchor="middle">RHSP ADAPTER</text>
-                      <text y="92" class="diagram-svg-sublabel" text-anchor="middle">The engineered interface</text>
-                    </g>
-
-                    <!-- COMPONENT 3: SQUARE PEG (SOLUTION) -->
-                    <g class="diagram-group group-peg" id="svg-group-peg" transform="translate(420, 150)">
-                      <rect x="-35" y="-35" width="70" height="70" rx="4" class="peg-rect" stroke="#EE4B2B" stroke-width="2.5" fill="rgba(238, 75, 43, 0.08)" />
-                      <circle cx="0" cy="0" r="14" stroke="#EE4B2B" stroke-width="1.5" stroke-dasharray="3 2" fill="none" />
-                      <line x1="-8" y1="0" x2="8" y2="0" stroke="#EE4B2B" stroke-width="1.5" />
-                      <line x1="0" y1="-8" x2="0" y2="8" stroke="#EE4B2B" stroke-width="1.5" />
-
-                      <g class="peg-clash-marks">
-                        <circle cx="-35" cy="-35" r="4" fill="#EE4B2B" class="clash-dot" />
-                        <circle cx="35" cy="-35" r="4" fill="#EE4B2B" class="clash-dot" />
-                        <circle cx="35" cy="35" r="4" fill="#EE4B2B" class="clash-dot" />
-                        <circle cx="-35" cy="35" r="4" fill="#EE4B2B" class="clash-dot" />
+                    <!-- ROUND HOLE -->
+                    <g class="d-hole" id="d-hole" transform="translate(420, 140)">
+                      <circle r="92" fill="url(#holeGlow)" class="d-hole-glow" />
+                      <text y="-94" class="d-label d-label-hole" text-anchor="middle">ROUND HOLE</text>
+                      <text y="92" class="d-sub" text-anchor="middle">Your business reality</text>
+                      <circle r="62" class="d-hole-ring" />
+                      <circle r="46" class="d-hole-inner" />
+                      <!-- ghost of the peg: shows the corner clash in the first beat -->
+                      <g class="d-ghost">
+                        <rect x="-38" y="-38" width="76" height="76" rx="3" class="d-ghost-rect" />
+                        <circle cx="-38" cy="-38" r="4" class="d-clash" />
+                        <circle cx="38" cy="-38" r="4" class="d-clash" />
+                        <circle cx="38" cy="38" r="4" class="d-clash" />
+                        <circle cx="-38" cy="38" r="4" class="d-clash" />
                       </g>
-
-                      <text y="-76" class="diagram-svg-label label-peg-title" text-anchor="middle">SQUARE PEG</text>
-                      <text y="92" class="diagram-svg-sublabel" text-anchor="middle">The technology solution</text>
                     </g>
 
-                    <line x1="60" y1="285" x2="500" y2="285" stroke="var(--color-border)" stroke-width="1" />
-                    <circle cx="140" cy="285" r="3" fill="#1E4B8F" />
-                    <circle cx="260" cy="285" r="3" fill="#F7941D" />
-                    <circle cx="420" cy="285" r="3" fill="#EE4B2B" />
-                    <text x="280" y="305" font-family="var(--font-sans)" font-size="11" font-weight="600" letter-spacing="0.08em" text-transform="uppercase" fill="var(--color-text-muted)" text-anchor="middle">
-                      Technical Architecture Interface · Apollo Principle
-                    </text>
+                    <!-- SIX MAPPING LINES (square edges to circle), drawn by script -->
+                    <g class="d-lines">
+                      <path class="d-line" /><path class="d-line" /><path class="d-line" />
+                      <path class="d-line" /><path class="d-line" /><path class="d-line" />
+                    </g>
+                    <g class="d-nodes">
+                      <circle class="d-node" r="3.5" /><circle class="d-node" r="3.5" /><circle class="d-node" r="3.5" />
+                      <circle class="d-node" r="3.5" /><circle class="d-node" r="3.5" /><circle class="d-node" r="3.5" />
+                    </g>
+
+                    <!-- SQUARE PEG -->
+                    <g class="d-peg" id="d-peg" transform="translate(120, 140)">
+                      <rect x="-38" y="-38" width="76" height="76" rx="3" class="d-peg-rect" />
+                      <rect x="-14" y="-14" width="28" height="28" rx="2" class="d-peg-core" />
+                    </g>
+
+                    <!-- Labels -->
+                    <text x="120" y="46" class="d-label d-label-peg" text-anchor="middle">SQUARE PEG</text>
+                    <text x="120" y="232" class="d-sub d-sub-peg" text-anchor="middle">Your technology</text>
+                    <text x="270" y="262" class="d-label d-label-adapter" text-anchor="middle">RHSP ADAPTER</text>
+                    <text x="280" y="270" class="d-sub d-sub-fit" text-anchor="middle">Zero compromise on either side</text>
                   </svg>
                 </div>
 
                 <!-- Narrative Beat Caption Bar -->
                 <div class="diagram-caption-footer">
-                  <span class="caption-tag">Narrative</span>
+                  <span class="caption-tag">Story</span>
                   <p class="caption-text" id="diagram-caption-text">
-                    Beat 3: The square peg glides smoothly through the adapter into the round hole, zero compromise.
+                    The square peg meets the round hole. Its corners clash with the socket.
                   </p>
                 </div>
               </div>
@@ -419,8 +389,8 @@ function formatMandateText(text: string) {
 
   /* Section Spacing */
   .about-hero-section {
-    padding-top: calc(72px + var(--section-spacing-desktop, 60px));
-    padding-bottom: var(--section-spacing-desktop, 60px);
+    padding-top: calc(72px + 2.75rem);
+    padding-bottom: 2.5rem;
     background-color: var(--color-bg);
   }
 
@@ -449,9 +419,9 @@ function formatMandateText(text: string) {
   .theory-header-row {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 1.25rem;
     align-items: start;
-    margin-bottom: clamp(2rem, 3.5vw, 3rem);
+    margin-bottom: clamp(1.1rem, 2vw, 1.6rem);
   }
 
   @media (min-width: 960px) {
@@ -462,10 +432,10 @@ function formatMandateText(text: string) {
   }
 
   .hero-heading {
-    font-size: clamp(2.2rem, 3.8vw, 3.25rem);
+    font-size: clamp(1.9rem, 3vw, 2.6rem);
     font-weight: 800;
-    line-height: 1.15;
-    margin: 0.35rem 0 1.25rem 0;
+    line-height: 1.12;
+    margin: 0.25rem 0 0.85rem 0;
     color: var(--color-text-primary);
     letter-spacing: -0.02em;
   }
@@ -478,8 +448,8 @@ function formatMandateText(text: string) {
   }
 
   .theory-lead-p {
-    font-size: clamp(0.95rem, 1.4vw, 1.05rem);
-    line-height: 1.6;
+    font-size: clamp(0.9rem, 1.2vw, 0.975rem);
+    line-height: 1.5;
     color: var(--color-text-secondary);
     margin: 0;
   }
@@ -666,7 +636,7 @@ function formatMandateText(text: string) {
     display: grid;
     grid-template-columns: 1fr;
     gap: 2.5rem;
-    padding-top: clamp(2rem, 3.5vw, 3rem);
+    padding-top: clamp(1.5rem, 2.5vw, 2rem);
     border-top: 1px solid var(--color-border);
   }
 
@@ -888,59 +858,37 @@ function formatMandateText(text: string) {
     fill: var(--color-text-secondary);
   }
 
-  .diagram-group {
-    transition: transform 0.65s cubic-bezier(0.34, 1.25, 0.64, 1), opacity 0.4s ease;
-  }
+  /* New diagram: peg, hole and six mapping lines (lines are drawn by script) */
+  .d-hole-ring { stroke: #1E4B8F; stroke-width: 2.5; fill: rgba(30, 75, 143, 0.05); }
+  .d-hole-inner { stroke: #1E4B8F; stroke-width: 1.5; stroke-dasharray: 5 4; fill: none; opacity: 0.7; }
+  :global(.dark) .d-hole-ring, :global(.dark) .d-hole-inner { stroke: #5B8FE0; }
+  .d-ghost { opacity: 0; transition: opacity 0.4s ease; }
+  .d-ghost-rect { stroke: #EE4B2B; stroke-width: 1.5; stroke-dasharray: 4 4; fill: none; }
+  .d-clash { fill: #EE4B2B; animation: dClash 0.9s infinite alternate ease-in-out; transform-box: fill-box; transform-origin: center; }
+  @keyframes dClash { from { transform: scale(1); opacity: 0.7; } to { transform: scale(1.7); opacity: 1; } }
 
-  .clash-dot {
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
+  .d-line { fill: none; stroke: url(#mapLineGrad); stroke-width: 2; stroke-linecap: round; }
+  .d-node { fill: #F7941D; opacity: 0; }
+  .d-peg-rect { stroke: #EE4B2B; stroke-width: 2.5; fill: rgba(238, 75, 43, 0.1); }
+  .d-peg-core { stroke: #EE4B2B; stroke-width: 1.5; fill: none; opacity: 0.55; }
 
-  /* Beat 1: Clash */
-  .diagram-surface[data-beat="1"] .group-peg {
-    transform: translate(250px, 150px);
-  }
+  .d-label { font-family: var(--font-sans); font-size: 12px; font-weight: 700; letter-spacing: 0.1em; }
+  .d-label-hole { fill: #1E4B8F; }
+  :global(.dark) .d-label-hole { fill: #5B8FE0; }
+  .d-label-peg { fill: #EE4B2B; }
+  .d-label-adapter { fill: #F7941D; opacity: 0; transition: opacity 0.4s ease; }
+  .d-sub { font-family: var(--font-sans); font-size: 11px; font-weight: 500; fill: var(--color-text-secondary); }
+  .d-sub-fit { opacity: 0; transition: opacity 0.4s ease; }
 
-  .diagram-surface[data-beat="1"] .clash-dot {
-    opacity: 1;
-    animation: pulseClash 0.8s infinite alternate ease-in-out;
-  }
-
-  .diagram-surface[data-beat="1"] .group-adapter {
-    opacity: 0.25;
-    transform: translate(260px, 90px) scale(0.9);
-  }
-
-  @keyframes pulseClash {
-    0% { transform: scale(1); filter: drop-shadow(0 0 2px #EE4B2B); }
-    100% { transform: scale(1.6); filter: drop-shadow(0 0 6px #EE4B2B); }
-  }
-
-  /* Beat 2: Adapter slides into place */
-  .diagram-surface[data-beat="2"] .group-peg {
-    transform: translate(380px, 150px);
-  }
-
-  .diagram-surface[data-beat="2"] .group-adapter {
-    opacity: 1;
-    transform: translate(200px, 150px) scale(1);
-  }
-
-  .diagram-surface[data-beat="2"] .adapter-ambient-glow {
-    opacity: 1;
-  }
-
-  /* Beat 3: Glides through with zero compromise */
-  .diagram-surface[data-beat="3"] .group-adapter {
-    opacity: 1;
-    transform: translate(140px, 150px) scale(1);
-  }
-
-  .diagram-surface[data-beat="3"] .group-peg {
-    opacity: 1;
-    transform: translate(140px, 150px) scale(0.98);
-  }
+  .diagram-surface[data-beat="1"] .d-ghost { opacity: 1; }
+  .diagram-surface[data-beat="2"] .d-label-adapter { opacity: 1; }
+  .diagram-surface[data-beat="3"] .d-label-adapter { opacity: 0; }
+  .diagram-surface[data-beat="3"] .d-sub-fit { opacity: 1; }
+  .diagram-surface[data-beat="3"] .d-sub-peg,
+  .diagram-surface[data-beat="3"] .d-label-peg { opacity: 0; }
+  .d-label-peg, .d-sub-peg { transition: opacity 0.3s ease; }
+  .diagram-surface[data-beat="3"] .d-hole-glow { animation: dFit 1.6s ease-in-out infinite alternate; }
+  @keyframes dFit { from { opacity: 0.6; } to { opacity: 1; } }
 
   .diagram-caption-footer {
     display: flex;
@@ -1083,10 +1031,88 @@ function formatMandateText(text: string) {
     const replayBtn = document.getElementById('diagram-replay-btn');
 
     const captions = [
-      'Beat 1: The square peg approaches the round hole — its corners clash with the socket boundary.',
-      'Beat 2: The RHSP adapter ring slides into position between the interface boundaries.',
-      'Beat 3: The square peg glides smoothly through the adapter into the round hole, zero compromise.'
+      'The square peg meets the round hole. Its corners clash with the socket.',
+      'The RHSP adapter maps every edge of the peg onto the circle.',
+      'The peg sits inside the hole through the adapter. No compromise on either side.'
     ];
+
+    // ---- Diagram animation: peg slides, six lines map square edges to the circle ----
+    const dSvg = document.getElementById('theory-interactive-svg');
+    const dPeg = document.getElementById('d-peg');
+    const dLines = Array.from(document.querySelectorAll<SVGPathElement>('.d-line'));
+    const dNodes = Array.from(document.querySelectorAll<SVGCircleElement>('.d-node'));
+    const HOLE = { x: 420, y: 140 };
+    const dHole = document.getElementById('d-hole');
+    const RADIUS = 62;
+    const PEG_START = 120;
+    // anchor on the square (x, y, outward normal x, y), then target angle on the circle (left arc, then radial)
+    const ANCHORS = [[-14, -38, 0, -1], [14, -38, 0, -1], [38, -14, 1, 0], [38, 14, 1, 0], [14, 38, 0, 1], [-14, 38, 0, 1]];
+    const ANG_ARC = [240, 216, 192, 168, 144, 120];
+    const ANG_RADIAL = [250, 290, 340, 380, 430, 470];
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const dState = { pegX: PEG_START, holeX: HOLE.x, draw: 0, merge: 0 };
+    const dTargets = [
+      { pegX: PEG_START, holeX: HOLE.x, draw: 0, merge: 0 },
+      { pegX: PEG_START, holeX: HOLE.x, draw: 1, merge: 0 },
+      { pegX: 280, holeX: 280, draw: 1, merge: 1 }
+    ];
+    const ease = (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+    const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
+    let dRaf = 0;
+
+    function renderDiagram() {
+      if (!dPeg) return;
+      dPeg.setAttribute('transform', `translate(${dState.pegX.toFixed(1)}, ${HOLE.y})`);
+      dHole?.setAttribute('transform', `translate(${dState.holeX.toFixed(1)}, ${HOLE.y})`);
+      const m = ease(dState.merge);
+      dLines.forEach((ln, i) => {
+        const [ax, ay, nx, ny] = ANCHORS[i];
+        const sx = dState.pegX + ax;
+        const sy = HOLE.y + ay;
+        const th = ((ANG_ARC[i] + (ANG_RADIAL[i] - ANG_ARC[i]) * m) * Math.PI) / 180;
+        const ex = dState.holeX + RADIUS * Math.cos(th);
+        const ey = HOLE.y + RADIUS * Math.sin(th);
+        const k = Math.min(Math.hypot(ex - sx, ey - sy) * 0.45, 90);
+        ln.setAttribute(
+          'd',
+          `M${sx.toFixed(1)},${sy.toFixed(1)} C${(sx + nx * k).toFixed(1)},${(sy + ny * k).toFixed(1)} ${(ex + (sx - ex) * 0.35).toFixed(1)},${(ey + (sy - ey) * 0.35).toFixed(1)} ${ex.toFixed(1)},${ey.toFixed(1)}`
+        );
+        const len = ln.getTotalLength();
+        const p = clamp01(dState.draw * 1.6 - i * 0.12);
+        ln.style.strokeDasharray = `${len}`;
+        ln.style.strokeDashoffset = `${len * (1 - p)}`;
+        const node = dNodes[i];
+        if (node) {
+          node.setAttribute('cx', ex.toFixed(1));
+          node.setAttribute('cy', ey.toFixed(1));
+          node.style.opacity = `${clamp01((p - 0.85) / 0.15)}`;
+        }
+      });
+    }
+
+    function animateDiagram(beatNum: number) {
+      const to = dTargets[beatNum - 1] || dTargets[2];
+      cancelAnimationFrame(dRaf);
+      if (reduceMotion) {
+        Object.assign(dState, to);
+        renderDiagram();
+        return;
+      }
+      const from = { ...dState };
+      const t0 = performance.now();
+      const dur = 1100;
+      const step = (now: number) => {
+        const t = clamp01((now - t0) / dur);
+        const e = ease(t);
+        dState.pegX = from.pegX + (to.pegX - from.pegX) * e;
+        dState.holeX = from.holeX + (to.holeX - from.holeX) * e;
+        dState.draw = from.draw + (to.draw - from.draw) * t;
+        dState.merge = from.merge + (to.merge - from.merge) * t;
+        renderDiagram();
+        if (t < 1) dRaf = requestAnimationFrame(step);
+      };
+      dRaf = requestAnimationFrame(step);
+    }
 
     function setBeat(beatNum: number) {
       if (!diagramWrapper) return;
@@ -1102,17 +1128,31 @@ function formatMandateText(text: string) {
       if (captionText) {
         captionText.textContent = captions[beatNum - 1] || captions[2];
       }
+      animateDiagram(beatNum);
     }
 
-    // Replay button
+    renderDiagram();
+    // Play 1 -> 2 -> 3 once when the diagram scrolls into view
+    if (dSvg && 'IntersectionObserver' in window) {
+      let played = false;
+      new IntersectionObserver((entries, obs) => {
+        if (played || !entries[0]?.isIntersecting) return;
+        played = true;
+        obs.disconnect();
+        setTimeout(() => setBeat(2), 900);
+        setTimeout(() => setBeat(3), 2600);
+      }, { threshold: 0.5 }).observe(dSvg);
+    }
+
+    // Auto-advance / Replay flow
     replayBtn?.addEventListener('click', () => {
       setBeat(1);
       setTimeout(() => {
         setBeat(2);
         setTimeout(() => {
           setBeat(3);
-        }, 1200);
-      }, 1200);
+        }, 1700);
+      }, 1500);
     });
 
     // Beat indicator pill clicks
