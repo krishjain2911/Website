@@ -1776,6 +1776,8 @@ const genAiProjects = allProducts
         const introDist = clamp(180, Math.round(vp.viewportHeight * 0.25), 260); // 20 to 30vh
         const stopDist = clamp(220, Math.round(vp.viewportHeight * 0.28), 300); // clamp(220px, 28vh, 300px)
         const currentScroll = vp.scrollY - trackTop;
+        // Intro only: push the centred cube down so it clears the 3-line intro header
+        const introLiftY = clamp(44, Math.round(vp.viewportHeight * 0.08), 72);
 
         // Intro headline staggered word reveal
         if (!introRevealed && introHeader) {
@@ -1812,7 +1814,7 @@ const genAiProjects = allProducts
             cubeAlpha = smoothstep(0, 1, clamp((vp.scrollY - hStart) / Math.max(1, hEnd - hStart), 0, 1));
           }
           cubeCol.style.opacity = `${cubeAlpha}`;
-          cubeCol.style.transform = `translateX(${centerOffset}px) scale(1.08)`;
+          cubeCol.style.transform = `translateX(${centerOffset}px) translateY(${introLiftY}px) scale(1.08)`;
 
           // Content column completely hidden - ZERO OVERLAP
           contentCol.style.opacity = '0';
@@ -1847,7 +1849,8 @@ const genAiProjects = allProducts
           cubeCol.style.opacity = '1';
           const currentX = lerp(centerOffset, 0, ease1);
           const currentScale = lerp(1.08, 1.0, ease1);
-          cubeCol.style.transform = `translateX(${currentX}px) scale(${currentScale})`;
+          const currentY = lerp(introLiftY, 0, ease1);
+          cubeCol.style.transform = `translateX(${currentX}px) translateY(${currentY}px) scale(${currentScale})`;
 
           // Cube interpolates angle: intro -> plan
           const ang = {

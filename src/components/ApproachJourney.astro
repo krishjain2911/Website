@@ -85,21 +85,21 @@ const headlineWords = approach.headline.split(' ');
           <!-- Inactive Background Track (Faint grey) -->
           <path
             class="road-bg-track"
-            d="M 500,60 C 500,140 480,180 480,260 C 480,440 520,500 520,680 C 520,860 480,920 480,1100 C 480,1280 520,1340 520,1520 C 520,1700 480,1760 480,1940 C 480,2120 500,2180 500,2360 L 500,2520"
+            d="M 500,60 C 500,110 420,165 480,260 C 610,465 650,475 520,680 C 390,885 350,895 480,1100 C 610,1305 650,1315 520,1520 C 390,1725 350,1735 480,1940 C 610,2145 630,2155 500,2360 C 436,2450 500,2470 500,2520"
           />
 
           <!-- Active Progressive Road (Brand Gradient) -->
           <path
             id="journey-desktop-path"
             class="road-active-track"
-            d="M 500,60 C 500,140 480,180 480,260 C 480,440 520,500 520,680 C 520,860 480,920 480,1100 C 480,1280 520,1340 520,1520 C 520,1700 480,1760 480,1940 C 480,2120 500,2180 500,2360 L 500,2520"
+            d="M 500,60 C 500,110 420,165 480,260 C 610,465 650,475 520,680 C 390,885 350,895 480,1100 C 610,1305 650,1315 520,1520 C 390,1725 350,1735 480,1940 C 610,2145 630,2155 500,2360 C 436,2450 500,2470 500,2520"
             stroke="url(#journeyRoadGradDesktop)"
           />
 
           <!-- Dashed Center Line -->
           <path
             class="road-center-line"
-            d="M 500,60 C 500,140 480,180 480,260 C 480,440 520,500 520,680 C 520,860 480,920 480,1100 C 480,1280 520,1340 520,1520 C 520,1700 480,1760 480,1940 C 480,2120 500,2180 500,2360 L 500,2520"
+            d="M 500,60 C 500,110 420,165 480,260 C 610,465 650,475 520,680 C 390,885 350,895 480,1100 C 610,1305 650,1315 520,1520 C 390,1725 350,1735 480,1940 C 610,2145 630,2155 500,2360 C 436,2450 500,2470 500,2520"
           />
 
           <!-- Thin Connector Lines from Road Pins to Alternating Cards -->
@@ -819,7 +819,8 @@ const headlineWords = approach.headline.split(' ');
     border-color: color-mix(in srgb, var(--step-accent) 60%, var(--color-border));
     box-shadow:
       0 0 0 1px color-mix(in srgb, var(--step-accent) 35%, transparent),
-      0 8px 36px color-mix(in srgb, var(--step-accent) 25%, transparent),
+      0 10px 44px color-mix(in srgb, var(--step-accent) 42%, transparent),
+      0 0 22px color-mix(in srgb, var(--step-accent) 28%, transparent),
       var(--shadow-card);
     animation: activeCardGlowPulse 3s ease-in-out infinite alternate;
   }
@@ -836,13 +837,13 @@ const headlineWords = approach.headline.split(' ');
     0% {
       box-shadow:
         0 0 0 1px color-mix(in srgb, var(--step-accent) 30%, transparent),
-        0 8px 28px color-mix(in srgb, var(--step-accent) 20%, transparent),
+        0 8px 28px color-mix(in srgb, var(--step-accent) 34%, transparent),
         var(--shadow-card);
     }
     100% {
       box-shadow:
         0 0 0 1.5px color-mix(in srgb, var(--step-accent) 55%, transparent),
-        0 12px 46px color-mix(in srgb, var(--step-accent) 32%, transparent),
+        0 12px 46px color-mix(in srgb, var(--step-accent) 50%, transparent),
         var(--shadow-card);
     }
   }
@@ -1329,6 +1330,17 @@ const headlineWords = approach.headline.split(' ');
           });
         }
       }
+    });
+
+    // Pill dot click: scroll so that stop's pin sits on the viewport centre line, so the cube parks on it
+    railDots.forEach((dot, idx) => {
+      dot.addEventListener('click', (e) => {
+        e.preventDefault();
+        const pinY = pinYList[idx];
+        if (pinY === undefined) return;
+        const top = stageTop + pinY - window.innerHeight * 0.5;
+        window.scrollTo({ top: Math.max(0, Math.round(top)), behavior: 'smooth' });
+      });
     });
 
     // IntersectionObserver to fade pill in/out in 150ms strictly within approach journey section
