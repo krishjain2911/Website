@@ -880,7 +880,7 @@ const headlineWords = approach.headline.split(' ');
 </style>
 
 <script>
-  import { getScrollStory, clamp } from '../scripts/scrollStory';
+  import { getScrollStory, clamp, lerp } from '../scripts/scrollStory';
 
   function initApproachJourney() {
     const stage = document.getElementById('approach-journey-stage');
@@ -891,6 +891,7 @@ const headlineWords = approach.headline.split(' ');
     const railDots = Array.from(document.querySelectorAll<HTMLElement>('.rail-dot'));
     const stops = Array.from(document.querySelectorAll<HTMLElement>('.journey-stop'));
     const cards = Array.from(document.querySelectorAll<HTMLElement>('.stop-content-card'));
+    const pins = Array.from(document.querySelectorAll<HTMLElement>('.road-pin-marker'));
 
     const bgAperture = document.getElementById('bg-parallax-aperture');
     const bgSquare = document.getElementById('bg-parallax-square');
@@ -926,53 +927,73 @@ const headlineWords = approach.headline.split(' ');
       return;
     }
 
-    // Stop targets along path fraction (6 stops)
-    const stopTargets = [
-      0.08,  // Stop 1
-      0.25,  // Stop 2
-      0.42,  // Stop 3
-      0.60,  // Stop 4
-      0.78,  // Stop 5
-      0.94   // Stop 6
-    ];
+    /**
+     * Binary search to find path length at a target Y coordinate.
+     * Guaranteed sub-pixel accuracy since Y is strictly monotonic.
+     */
+    function getLengthAtY(pathEl: SVGPathElement, targetY: number, totalLen: number): number {
+      const startBound = isDesktop ? 60 : 50;
+      if (targetY <= startBound) return 0;
+      let low = 0;
+      let high = totalLen;
+      for (let i = 0; i < 14; i++) {
+        const mid = (low + high) * 0.5;
+        const pt = pathEl.getPointAtLength(mid);
+        if (pt.y < targetY) {
+          low = mid;
+        } else {
+          high = mid;
+        }
+      }
+      return (low + high) * 0.5;
+    }
 
     /**
-     * Piecewise scroll progress mapping with dwell at stops
+     * Dwell: within +/- 70px of a pin's centre Y, ease the cube onto the pin
+     * (smoothstep snap) so it visibly stops there; between pins it glides.
      */
-    function mapProgressWithDwell(pTravel: number): { pathFraction: number; activeIndex: number } {
-      if (pTravel <= 0) return { pathFraction: 0, activeIndex: -1 };
-      if (pTravel >= 1) return { pathFraction: 1, activeIndex: 5 };
+    function calculateDwellY(rawY: number, pinYs: number[]): number {
+      if (pinYs.length === 0) return rawY;
 
-      const numSegments = 6;
-      const scaledP = pTravel * numSegments;
-      const segIndex = Math.min(numSegments - 1, Math.floor(scaledP));
-      const u = scaledP - segIndex; // [0, 1] in current segment
-
-      const prevFraction = segIndex === 0 ? 0 : stopTargets[segIndex - 1];
-      const targetFraction = stopTargets[segIndex];
-
-      const travelLimit = 0.72; // 72% travel, 28% dwell
-
-      let currentFraction: number;
-      if (u <= travelLimit) {
-        const t = u / travelLimit;
-        const eased = t * t * (3 - 2 * t);
-        currentFraction = prevFraction + (targetFraction - prevFraction) * eased;
-      } else {
-        currentFraction = targetFraction;
+      let nearestPin = pinYs[0];
+      let minDiff = Math.abs(rawY - nearestPin);
+      for (let i = 1; i < pinYs.length; i++) {
+        const diff = Math.abs(rawY - pinYs[i]);
+        if (diff < minDiff) {
+          minDiff = diff;
+          nearestPin = pinYs[i];
+        }
       }
 
-      return { pathFraction: currentFraction, activeIndex: segIndex };
+      const delta = rawY - nearestPin;
+      const THRESHOLD = 70; // +/- 70px dwell window
+
+      if (Math.abs(delta) < THRESHOLD) {
+        const x = delta / THRESHOLD; // [-1, 1]
+        // Deadband within |delta| <= 28px (40%) where the cube completely rests on the pin
+        const deadband = 0.40;
+        if (Math.abs(x) <= deadband) {
+          return nearestPin;
+        }
+        // Smoothstep snap transition back to linear gliding
+        const s = (Math.abs(x) - deadband) / (1 - deadband); // [0, 1]
+        const eased = s * s * (3 - 2 * s);
+        return nearestPin + Math.sign(delta) * (deadband * THRESHOLD + (1 - deadband) * THRESHOLD * eased);
+      }
+
+      return rawY;
     }
 
     let sectionTop = 0;
     let sectionHeight = 0;
     let stageTop = 0;
-    let stageHeight = 0;
+    let pinYList: number[] = [];
     let headingRevealed = false;
+    let currentDistance = 0;
 
     const startX = isDesktop ? 500 : 42;
     const startY = isDesktop ? 60 : 50;
+    const finishY = isDesktop ? 2520 : 2160;
 
     const story = getScrollStory();
 
@@ -986,7 +1007,12 @@ const headlineWords = approach.headline.split(' ');
 
         const stRect = stage.getBoundingClientRect();
         stageTop = stRect.top + vp.scrollY;
-        stageHeight = stRect.height;
+
+        // Measure live pin center Y in container coordinates from the DOM
+        pinYList = pins.map((pin) => {
+          const pRect = pin.getBoundingClientRect();
+          return (pRect.top + vp.scrollY + pRect.height * 0.5) - stageTop;
+        });
       },
       update: (vp) => {
         // Trigger word reveal on section heading
@@ -1005,89 +1031,98 @@ const headlineWords = approach.headline.split(' ');
           if (bgSquare) bgSquare.style.transform = `rotate(45deg) translateY(${relScroll * -0.14}px)`;
         }
 
-        // Rail visibility
+        // Rail visibility inside approach section
         if (rail) {
           const inView = vp.scrollY >= sectionTop - 80 && vp.scrollY <= sectionTop + sectionHeight - 200;
           rail.classList.toggle('is-visible', inView && vp.viewportWidth >= 900);
         }
 
-        // Calculate progress p inside the stage container
-        // Starts when stage top hits 75% vh, ends when stage bottom hits 35% vh
-        const startTrigger = vp.viewportHeight * 0.75;
-        const endTrigger = vp.viewportHeight * 0.35;
-        const scrollableRange = stageHeight + (startTrigger - endTrigger);
-        const currentScroll = (vp.scrollY + startTrigger) - stageTop;
+        // Viewport center line in container coordinates
+        const viewportCenterY = (vp.scrollY + vp.viewportHeight * 0.5) - stageTop;
 
-        let p = clamp(currentScroll / scrollableRange, 0, 1);
+        // Sequence: Pop-out when viewport center approaches start socket, then travel
+        if (viewportCenterY < startY) {
+          const distToStart = startY - viewportCenterY;
 
-        // Sequence: Pop-out during first 8% of scroll, then road travel
-        const POP_FRACTION = 0.08;
+          if (distToStart > 220) {
+            // Dormant inside hole
+            cube.setAttribute('transform', `translate(${startX}, ${startY + 10}) scale(0.2)`);
+            cube.style.opacity = '0';
+            path.style.strokeDashoffset = `${totalPathLength}`;
+            if (ripple) ripple.style.opacity = '0';
+            currentDistance = 0;
 
-        if (p <= 0) {
-          // Fully inside hole / dormant
-          cube.setAttribute('transform', `translate(${startX}, ${startY + 10}) scale(0.2)`);
-          cube.style.opacity = '0';
-          path.style.strokeDashoffset = `${totalPathLength}`;
-          if (ripple) ripple.style.opacity = '0';
-
-          stops.forEach((s) => {
-            s.classList.remove('is-active', 'is-passed');
-            s.classList.add('is-upcoming');
-          });
-        } else if (p <= POP_FRACTION) {
-          // Pop-Out Sequence: scale 0.2 -> 1, squash-and-stretch, one ripple ring
-          const u = p / POP_FRACTION; // 0 to 1
-
-          let scale = 1;
-          let translateY = 0;
-          if (u < 0.7) {
-            const t = u / 0.7;
-            const eased = Math.sin((t * Math.PI) / 2);
-            scale = 0.2 + 0.95 * eased; // 0.2 to 1.15
-            translateY = (1 - eased) * 12;
+            stops.forEach((s) => {
+              s.classList.remove('is-active', 'is-passed');
+              s.classList.add('is-upcoming');
+            });
           } else {
-            const t = (u - 0.7) / 0.3;
-            scale = 1.15 - 0.15 * (t * t); // settles from 1.15 to 1.0
-            translateY = 0;
-          }
+            // Pop-Out Sequence: scale 0.2 -> 1, squash-and-stretch, one ripple ring
+            const u = 1 - (distToStart / 220); // 0 to 1
 
-          const alpha = clamp(u / 0.25, 0, 1);
-          cube.style.opacity = `${alpha}`;
-          cube.setAttribute(
-            'transform',
-            `translate(${startX}, ${startY - translateY}) scale(${scale.toFixed(3)})`
-          );
-
-          // Ripple Ring
-          if (ripple) {
-            if (u > 0.35) {
-              const rT = (u - 0.35) / 0.65;
-              const rScale = 0.7 + rT * 1.1; // 0.7 to 1.8
-              const rOpacity = (1 - rT) * 0.85;
-              ripple.setAttribute('transform', `scale(${rScale.toFixed(2)})`);
-              ripple.style.opacity = `${rOpacity}`;
+            let scale = 1;
+            let translateY = 0;
+            if (u < 0.7) {
+              const t = u / 0.7;
+              const eased = Math.sin((t * Math.PI) / 2);
+              scale = 0.2 + 0.95 * eased; // 0.2 to 1.15
+              translateY = (1 - eased) * 12;
             } else {
-              ripple.style.opacity = '0';
+              const t = (u - 0.7) / 0.3;
+              scale = 1.15 - 0.15 * (t * t); // settles from 1.15 to 1.0
+              translateY = 0;
             }
+
+            const alpha = clamp(u / 0.25, 0, 1);
+            cube.style.opacity = `${alpha}`;
+            cube.setAttribute(
+              'transform',
+              `translate(${startX}, ${startY - translateY}) scale(${scale.toFixed(3)})`
+            );
+
+            // Ripple Ring
+            if (ripple) {
+              if (u > 0.35) {
+                const rT = (u - 0.35) / 0.65;
+                const rScale = 0.7 + rT * 1.1; // 0.7 to 1.8
+                const rOpacity = (1 - rT) * 0.85;
+                ripple.setAttribute('transform', `scale(${rScale.toFixed(2)})`);
+                ripple.style.opacity = `${rOpacity}`;
+              } else {
+                ripple.style.opacity = '0';
+              }
+            }
+
+            // Road stays completely hidden before cube finishes emergence
+            path.style.strokeDashoffset = `${totalPathLength}`;
+            currentDistance = 0;
+
+            stops.forEach((s) => {
+              s.classList.remove('is-active', 'is-passed');
+              s.classList.add('is-upcoming');
+            });
           }
-
-          // ROAD IS COMPLETELY HIDDEN BEFORE TRAVEL STARTS
-          path.style.strokeDashoffset = `${totalPathLength}`;
-
-          stops.forEach((s) => {
-            s.classList.remove('is-active', 'is-passed');
-            s.classList.add('is-upcoming');
-          });
         } else {
-          // Travel Sequence: road draws and cube travels along path
+          // Travel Sequence: Road draw ends at the cube; cube dwells at pins
           if (ripple) ripple.style.opacity = '0';
           cube.style.opacity = '1';
 
-          const pTravel = (p - POP_FRACTION) / (1 - POP_FRACTION);
-          const { pathFraction, activeIndex } = mapProgressWithDwell(pTravel);
-          const currentDistance = pathFraction * totalPathLength;
+          // Clamp between start and finish
+          const clampedRawY = clamp(viewportCenterY, startY, finishY);
 
-          // 1. Draw road progressively
+          // Apply Dwell snap (+/- 70px) onto nearest pin
+          const dwellY = calculateDwellY(clampedRawY, pinYList);
+
+          // Find exact path distance corresponding to dwell Y
+          const targetDistance = getLengthAtY(path, dwellY, totalPathLength);
+
+          // Lerp smoothing (~0.12) with instant snap-convergence when stopped
+          currentDistance = lerp(currentDistance, targetDistance, 0.12);
+          if (Math.abs(currentDistance - targetDistance) < 0.4) {
+            currentDistance = targetDistance;
+          }
+
+          // 1. Road draw (travelled part) ends exactly at the cube
           path.style.strokeDashoffset = `${totalPathLength - currentDistance}`;
 
           // 2. Guide cube follows path via getPointAtLength
@@ -1106,23 +1141,41 @@ const headlineWords = approach.headline.split(' ');
             );
           }
 
-          // 3. Update Stop States
+          // 3. Find nearest pin to viewport centre line
+          let nearestIdx = 0;
+          let minDistanceToCenter = Infinity;
+          pinYList.forEach((pinY, idx) => {
+            const dist = Math.abs(viewportCenterY - pinY);
+            if (dist < minDistanceToCenter) {
+              minDistanceToCenter = dist;
+              nearestIdx = idx;
+            }
+          });
+
+          // 4. Update Stop States: Active = nearest pin; Passed = above centre line
           stops.forEach((stop, idx) => {
-            stop.classList.remove('is-passed', 'is-active', 'is-upcoming');
+            const pinY = pinYList[idx] ?? 0;
             const card = cards[idx];
             const isLeft = idx % 2 === 0;
 
-            if (idx < activeIndex) {
+            stop.classList.remove('is-passed', 'is-active', 'is-upcoming');
+
+            if (viewportCenterY >= pinY + 70) {
+              // Passed stops = above the centre line
               stop.classList.add('is-passed');
               if (card && vp.viewportWidth >= 900) {
                 card.style.transform = 'translateX(0) translateY(0)';
               }
-            } else if (idx === activeIndex) {
+            } else if (idx === nearestIdx && Math.abs(viewportCenterY - pinY) <= 160) {
+              // Active stage = pin nearest the viewport centre
               stop.classList.add('is-active');
               if (card && vp.viewportWidth >= 900) {
-                card.style.transform = `translateX(${isLeft ? '-8px' : '8px'}) translateY(-4px) scale(1.02)`;
+                const pRatio = clamp((viewportCenterY - (pinY - 160)) / 320, 0, 1);
+                const slideX = (1 - pRatio) * (isLeft ? -8 : 8);
+                card.style.transform = `translateX(${slideX.toFixed(1)}px) translateY(-4px) scale(1.02)`;
               }
             } else {
+              // Upcoming
               stop.classList.add('is-upcoming');
               if (card && vp.viewportWidth >= 900) {
                 card.style.transform = `translateX(${isLeft ? '-4px' : '4px'}) translateY(0)`;
@@ -1130,16 +1183,34 @@ const headlineWords = approach.headline.split(' ');
             }
           });
 
-          // 4. Update Rail Indicator & Dots
-          if (railText && activeIndex >= 0) {
-            railText.textContent = `Stage ${activeIndex + 1} / 6`;
+          // 5. Update Rail Indicator & Dots
+          if (railText) {
+            railText.textContent = `Stage ${nearestIdx + 1} / 6`;
           }
           railDots.forEach((dot, idx) => {
-            dot.classList.toggle('is-active', idx === activeIndex);
+            dot.classList.toggle('is-active', idx === nearestIdx);
           });
         }
       }
     });
+
+    // Recompute on DOM resize / font load
+    const triggerRemount = () => {
+      story.invalidate();
+    };
+
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(triggerRemount);
+    }
+
+    if (typeof ResizeObserver !== 'undefined') {
+      const ro = new ResizeObserver(triggerRemount);
+      ro.observe(stage);
+      ro.observe(section);
+      stops.forEach((s) => ro.observe(s));
+    }
+
+    window.addEventListener('resize', triggerRemount, { passive: true });
   }
 
   initApproachJourney();
