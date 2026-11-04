@@ -22,7 +22,7 @@ const genAiProjects = allProducts
   <div class="peg-solutions-track" id="peg-solutions-track">
     <div class="peg-solutions-stage" id="peg-solutions-stage">
       <!-- 0. Phase 0 Intro Header (Center-aligned above the cube in Phase 0) -->
-      <div class="stage-intro-header" id="stage-intro-header" aria-hidden="false">
+      <div class="stage-intro-header" id="stage-intro-header" data-layout="intro-text" aria-hidden="false">
         <span class="eyebrow intro-eyebrow">HOW WE THINK</span>
         <h2 class="intro-headline staged-word-heading" id="intro-headline">
           <span class="staged-word color-word-plan" style="--word-idx: 0;">Plan.</span>
@@ -36,76 +36,78 @@ const genAiProjects = allProducts
       <div class="container stage-container" id="stage-main-container">
         <!-- Left Column: 3D CSS Cube + Pedestal + Pill Tabs -->
         <div class="stage-cube-col" id="stage-cube-col">
-          <div class="cube-scene-wrapper" id="cube-scene-wrapper" aria-label="Interactive 3D PEG Cube">
-            <!-- Dynamic cube ambient glow matching active pillar -->
-            <div class="cube-ambient-glow" id="cube-ambient-glow" aria-hidden="true" data-pillar="plan"></div>
+          <div class="cube-zone" id="cube-zone">
+            <div class="cube-scene-wrapper" id="cube-scene-wrapper" data-layout="cube" aria-label="Interactive 3D PEG Cube">
+              <!-- Dynamic cube ambient glow matching active pillar -->
+              <div class="cube-ambient-glow" id="cube-ambient-glow" aria-hidden="true" data-pillar="plan"></div>
 
-            <div class="cube-viewport" id="cube-viewport">
-              <div class="cube-assembly" id="cube-assembly">
-                <!-- Top Face: Plain Solid Brand Gradient (No text / glyphs) -->
-                <div class="cube-face face-top" aria-hidden="true"></div>
+              <div class="cube-viewport" id="cube-viewport">
+                <div class="cube-assembly" id="cube-assembly">
+                  <!-- Top Face: Plain Solid Brand Gradient (No text / glyphs) -->
+                  <div class="cube-face face-top" aria-hidden="true"></div>
 
-                <!-- Bottom Face: Plain Solid Brand Surface (No text / glyphs) -->
-                <div class="cube-face face-bottom" aria-hidden="true"></div>
+                  <!-- Bottom Face: Plain Solid Brand Surface (No text / glyphs) -->
+                  <div class="cube-face face-bottom" aria-hidden="true"></div>
 
-                <!-- Front Face: P - Plan (Navy) -->
-                <div
-                  class="cube-face face-front"
-                  id="cube-face-plan"
-                  data-pillar="plan"
-                  role="button"
-                  tabindex="0"
-                  aria-label="P - Plan"
-                >
-                  <div class="face-content">
-                    <span class="face-letter">P</span>
-                    <span class="face-word">PLAN</span>
+                  <!-- Front Face: P - Plan (Navy) -->
+                  <div
+                    class="cube-face face-front"
+                    id="cube-face-plan"
+                    data-pillar="plan"
+                    role="button"
+                    tabindex="0"
+                    aria-label="P - Plan"
+                  >
+                    <div class="face-content">
+                      <span class="face-letter">P</span>
+                      <span class="face-word">PLAN</span>
+                    </div>
                   </div>
-                </div>
 
-                <!-- Right Face: E - Engineer (Orange) -->
-                <div
-                  class="cube-face face-right"
-                  id="cube-face-engineer"
-                  data-pillar="engineer"
-                  role="button"
-                  tabindex="0"
-                  aria-label="E - Engineer"
-                >
-                  <div class="face-content">
-                    <span class="face-letter">E</span>
-                    <span class="face-word">ENGINEER</span>
+                  <!-- Right Face: E - Engineer (Orange) -->
+                  <div
+                    class="cube-face face-right"
+                    id="cube-face-engineer"
+                    data-pillar="engineer"
+                    role="button"
+                    tabindex="0"
+                    aria-label="E - Engineer"
+                  >
+                    <div class="face-content">
+                      <span class="face-letter">E</span>
+                      <span class="face-word">ENGINEER</span>
+                    </div>
                   </div>
-                </div>
 
-                <!-- Back Face: G - Gen-AI (Red) -->
-                <div
-                  class="cube-face face-back"
-                  id="cube-face-genai"
-                  data-pillar="genai"
-                  role="button"
-                  tabindex="0"
-                  aria-label="G - Gen-AI"
-                >
-                  <div class="face-content">
-                    <span class="face-letter">G</span>
-                    <span class="face-word">GEN-AI</span>
+                  <!-- Back Face: G - Gen-AI (Red) -->
+                  <div
+                    class="cube-face face-back"
+                    id="cube-face-genai"
+                    data-pillar="genai"
+                    role="button"
+                    tabindex="0"
+                    aria-label="G - Gen-AI"
+                  >
+                    <div class="face-content">
+                      <span class="face-letter">G</span>
+                      <span class="face-word">GEN-AI</span>
+                    </div>
                   </div>
-                </div>
 
-                <!-- Left Face: Enclosure Surface -->
-                <div class="cube-face face-left" aria-hidden="true"></div>
+                  <!-- Left Face: Enclosure Surface -->
+                  <div class="cube-face face-left" aria-hidden="true"></div>
+                </div>
               </div>
-            </div>
 
-            <!-- Pedestal Socket -->
-            <div class="cube-socket-ellipse" aria-hidden="true">
-              <div class="socket-inner-depth"></div>
+              <!-- Pedestal Socket -->
+              <div class="cube-socket-ellipse" aria-hidden="true">
+                <div class="socket-inner-depth"></div>
+              </div>
             </div>
           </div>
 
           <!-- P/E/G Pill Tabs (always positioned directly below the cube in left column) -->
-          <div class="stage-pill-tabs" id="stage-pill-tabs" role="tablist" aria-label="PEG Pillars">
+          <div class="stage-pill-tabs" id="stage-pill-tabs" data-layout="tabs" role="tablist" aria-label="PEG Pillars">
             <button
               type="button"
               class="peg-tab-btn is-active"
@@ -145,14 +147,14 @@ const genAiProjects = allProducts
           </div>
 
           <!-- Scroll to Explore Hint (Appears ONLY in Phase 0 below the tabs) -->
-          <div class="intro-scroll-cue" id="intro-scroll-cue" aria-hidden="true">
+          <div class="intro-scroll-cue" id="intro-scroll-cue" data-layout="hint" aria-hidden="true">
             <span class="cue-text">Scroll to explore</span>
             <Icon name="chevron-down" size={14} class="cue-arrow" />
           </div>
         </div>
 
         <!-- Right Column: Top-Aligned Pillar Content Panels (Phases 2-4 only) -->
-        <div class="stage-content-col" id="stage-content-col">
+        <div class="stage-content-col" id="stage-content-col" data-layout="pillar-content">
           <!-- PANEL 1: PLAN -->
           <div
             id="stage-panel-plan"
@@ -608,9 +610,11 @@ const genAiProjects = allProducts
     width: 100%;
     height: calc(100vh - var(--nav-height, 72px));
     max-height: 980px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    display: grid;
+    grid-template-rows: [intro-text] auto [cube-zone] minmax(0, 1fr) [tabs] auto [hint] auto;
+    row-gap: clamp(0.5rem, 1.8vh, 1.25rem);
+    padding: clamp(0.5rem, 1.5vh, 1.25rem) 0;
+    box-sizing: border-box;
     overflow: hidden;
     z-index: 1;
   }
@@ -619,16 +623,16 @@ const genAiProjects = allProducts
      0. Phase 0 Intro Header (Center-aligned above the cube)
      ------------------------------------------------------------- */
   .stage-intro-header {
-    position: absolute;
-    top: calc(50% - 210px);
-    left: 50%;
-    transform: translateX(-50%);
-    text-align: center;
-    width: 90%;
+    grid-row: intro-text;
+    width: 100%;
     max-width: 720px;
+    margin: 0 auto;
+    text-align: center;
     z-index: 20;
     pointer-events: auto;
     transition: opacity 0.4s ease, transform 0.4s ease;
+    padding: 0 var(--space-container, 1.5rem);
+    box-sizing: border-box;
   }
 
   .intro-eyebrow {
@@ -684,11 +688,14 @@ const genAiProjects = allProducts
      36% Left (Cube + Tabs) / 64% Right (Content Panels)
      ------------------------------------------------------------- */
   .stage-container {
+    grid-row: cube-zone;
     display: grid;
     grid-template-columns: 36% 64%;
     gap: 2.5rem;
     align-items: center;
     width: 100%;
+    height: 100%;
+    min-height: 0;
     max-width: var(--max-w-content);
     margin: 0 auto;
     padding: 0 var(--space-container);
@@ -707,13 +714,29 @@ const genAiProjects = allProducts
     justify-content: center;
     position: relative;
     z-index: 10;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    gap: clamp(0.5rem, 1.2vh, 1rem);
     will-change: transform, opacity;
   }
 
-  .cube-scene-wrapper {
+  .cube-zone {
+    container-type: size;
+    width: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: relative;
-    width: 250px;
-    height: 230px;
+  }
+
+  .cube-scene-wrapper {
+    --cube-size: min(calc(100cqh / 1.7), calc(100cqw / 1.7), 360px);
+    width: var(--cube-size);
+    height: var(--cube-size);
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -729,8 +752,8 @@ const genAiProjects = allProducts
   /* Dynamic Cube Ambient Glow */
   .cube-ambient-glow {
     position: absolute;
-    width: 220px;
-    height: 220px;
+    width: min(calc(var(--cube-size) * 0.9), 240px);
+    height: min(calc(var(--cube-size) * 0.9), 240px);
     border-radius: 50%;
     filter: blur(40px);
     pointer-events: none;
@@ -749,8 +772,10 @@ const genAiProjects = allProducts
 
   /* 3D Viewport & Assembly */
   .cube-viewport {
-    width: 130px;
-    height: 130px;
+    --face-size: clamp(80px, calc(var(--cube-size) * 0.52), 160px);
+    --half-face: calc(var(--face-size) / 2);
+    width: var(--face-size);
+    height: var(--face-size);
     perspective: 800px;
     perspective-origin: 50% 50%;
     position: relative;
@@ -768,8 +793,8 @@ const genAiProjects = allProducts
 
   .cube-face {
     position: absolute;
-    width: 130px;
-    height: 130px;
+    width: var(--face-size);
+    height: var(--face-size);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -785,7 +810,7 @@ const genAiProjects = allProducts
 
   /* Top Face: Clean Plain Solid Gradient (No text / glyphs) */
   .face-top {
-    transform: rotateX(90deg) translateZ(65px);
+    transform: rotateX(90deg) translateZ(var(--half-face));
     background: linear-gradient(135deg, #163666 0%, #0D1F35 100%);
     box-shadow: inset 0 0 16px rgba(255, 255, 255, 0.15);
     pointer-events: none;
@@ -793,7 +818,7 @@ const genAiProjects = allProducts
 
   /* Bottom Face: Clean Plain Solid Surface */
   .face-bottom {
-    transform: rotateX(-90deg) translateZ(65px);
+    transform: rotateX(-90deg) translateZ(var(--half-face));
     background: #081524;
     box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.4);
     pointer-events: none;
@@ -801,28 +826,28 @@ const genAiProjects = allProducts
 
   /* Front Face: P - Plan (Navy) */
   .face-front {
-    transform: translateZ(65px);
+    transform: translateZ(var(--half-face));
     background: linear-gradient(135deg, #1E4B8F 0%, #0F2A4A 100%);
     box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.2);
   }
 
   /* Right Face: E - Engineer (Orange) */
   .face-right {
-    transform: rotateY(90deg) translateZ(65px);
+    transform: rotateY(90deg) translateZ(var(--half-face));
     background: linear-gradient(135deg, #FF9E2C 0%, #F7941D 100%);
     box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.15);
   }
 
   /* Back Face: G - Gen-AI (Red) */
   .face-back {
-    transform: rotateY(180deg) translateZ(65px);
+    transform: rotateY(180deg) translateZ(var(--half-face));
     background: linear-gradient(135deg, #FF5B3B 0%, #EE4B2B 100%);
     box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.15);
   }
 
   /* Left Face: Enclosure */
   .face-left {
-    transform: rotateY(-90deg) translateZ(65px);
+    transform: rotateY(-90deg) translateZ(var(--half-face));
     background: linear-gradient(135deg, #122744 0%, #0B192C 100%);
     pointer-events: none;
   }
@@ -1460,6 +1485,64 @@ const genAiProjects = allProducts
     }
   }
 
+  @media (max-height: 639px) and (min-width: 900px) {
+    .peg-solutions-track {
+      height: auto !important;
+    }
+    .peg-solutions-stage {
+      position: relative !important;
+      top: 0 !important;
+      height: auto !important;
+      max-height: none !important;
+      display: flex !important;
+      flex-direction: column !important;
+      padding: 2rem 0 !important;
+      overflow: visible !important;
+    }
+    .stage-intro-header {
+      position: relative !important;
+      transform: none !important;
+      opacity: 1 !important;
+      margin-bottom: 1.5rem !important;
+    }
+    .stage-container {
+      display: grid !important;
+      grid-template-columns: 240px 1fr !important;
+      gap: 1.5rem !important;
+      height: auto !important;
+    }
+    .stage-cube-col {
+      transform: none !important;
+      opacity: 1 !important;
+      height: auto !important;
+    }
+    .cube-scene-wrapper {
+      --cube-size: 180px !important;
+      width: 180px !important;
+      height: 180px !important;
+    }
+    .stage-content-col {
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto !important;
+      transform: none !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 2rem !important;
+    }
+    .stage-panel {
+      display: block !important;
+      opacity: 1 !important;
+      transform: none !important;
+      position: relative !important;
+      pointer-events: auto !important;
+      margin-bottom: 2rem !important;
+    }
+    .intro-scroll-cue {
+      display: none !important;
+    }
+  }
+
   @media (max-width: 899px) {
     .peg-solutions-track {
       display: none; /* Interactive scroll track disabled on mobile */
@@ -1764,7 +1847,7 @@ const genAiProjects = allProducts
       id: 'peg-solutions',
       gateElement: track,
       measure: (vp) => {
-        if (vp.viewportWidth < 900) return;
+        if (vp.viewportWidth < 900 || vp.viewportHeight < 640) return;
         const rect = track.getBoundingClientRect();
         trackTop = rect.top + vp.scrollY;
         trackHeight = track.offsetHeight - vp.viewportHeight;
@@ -1777,7 +1860,7 @@ const genAiProjects = allProducts
         }
       },
       update: (vp) => {
-        if (vp.viewportWidth < 900 || trackHeight <= 0) return;
+        if (vp.viewportWidth < 900 || vp.viewportHeight < 640 || trackHeight <= 0) return;
 
         // Intro headline staggered word reveal
         if (!introRevealed && introHeader) {
@@ -1799,7 +1882,7 @@ const genAiProjects = allProducts
           // Intro header visible
           if (introHeader) {
             introHeader.style.opacity = `${1 - introP * 0.8}`;
-            introHeader.style.transform = `translateX(-50%) translateY(${-introP * 15}px)`;
+            introHeader.style.transform = `translateY(${-introP * 15}px)`;
             introHeader.style.pointerEvents = introP > 0.8 ? 'none' : 'auto';
           }
 
@@ -1836,7 +1919,7 @@ const genAiProjects = allProducts
           // Intro header fades out
           if (introHeader) {
             introHeader.style.opacity = `${(1 - ease1) * 0.2}`;
-            introHeader.style.transform = `translateX(-50%) translateY(${-15 - ease1 * 25}px)`;
+            introHeader.style.transform = `translateY(${-15 - ease1 * 25}px)`;
             introHeader.style.pointerEvents = 'none';
           }
 
