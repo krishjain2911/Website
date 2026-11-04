@@ -21,8 +21,9 @@ outcomes:
     label: "Operational lookup"
 hero:
   type: "image"
-  src: "/media/solutions/product-ask-me-anything-960.webp"
-  alt: "AskMeAnything knowledge search workspace and verifiable citation console"
+  src: "/media/projects/ask-me-anything/hero.webp"
+  alt: "Ask Me Anything knowledge search workspace and verifiable citation console"
+  caption: "Representative interface"
   frame: "browser"
 phases:
   problem:

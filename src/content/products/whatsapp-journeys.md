@@ -21,8 +21,9 @@ outcomes:
     label: "Automated response"
 hero:
   type: "image"
-  src: "/media/solutions/product-whatsapp-journeys-960.webp"
-  alt: "WhatsApp Journeys conversation flow and customer workflow console"
+  src: "/media/projects/whatsapp-journeys/hero.webp"
+  alt: "Conversational WhatsApp Banking interface"
+  caption: "Representative interface"
   frame: "phone"
 phases:
   problem:

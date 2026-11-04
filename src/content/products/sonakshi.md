@@ -25,9 +25,10 @@ outcomes:
     label: "Voice query latency"
 hero:
   type: "image"
-  src: "/media/products/sonakshi/conversation.png"
-  alt: "Sonakshi in-store tablet conversation interface showing multilingual voice dialogue with customer"
-  frame: "phone"
+  src: "/media/projects/sonakshi/hero.webp"
+  alt: "Sonakshi autonomous voice agent architecture interface"
+  caption: "Representative interface"
+  frame: "browser"
 phases:
   problem:
     tagline: "Where walk-ins wait."

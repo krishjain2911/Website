@@ -128,13 +128,25 @@ const item = isMissing ? null : media!;
         tabindex="0"
         aria-label={`Open image in lightbox: ${item.alt}`}
       >
-        <img
-          src={item.src}
-          alt={item.alt}
-          loading={priority ? 'eager' : 'lazy'}
-          decoding="async"
-          class="media-slot-image"
-        />
+        {item.src.endsWith('hero.webp') ? (
+          <img
+            src={item.src}
+            srcset={`${item.src.replace('hero.webp', 'hero-800.webp')} 800w, ${item.src} 1600w`}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 800px"
+            alt={item.alt}
+            loading={priority ? 'eager' : 'lazy'}
+            decoding="async"
+            class="media-slot-image"
+          />
+        ) : (
+          <img
+            src={item.src}
+            alt={item.alt}
+            loading={priority ? 'eager' : 'lazy'}
+            decoding="async"
+            class="media-slot-image"
+          />
+        )}
         <div class="media-expand-overlay" aria-hidden="true">
           <Icon name="search" size={16} />
         </div>

@@ -21,8 +21,9 @@ outcomes:
     label: "Perimeter containment"
 hero:
   type: "image"
-  src: "/media/solutions/product-sovereign-ai-960.webp"
+  src: "/media/projects/sovereign-ai/hero.webp"
   alt: "Sovereign AI private infrastructure perimeter and governance dashboard"
+  caption: "Representative interface"
   frame: "browser"
 phases:
   problem:

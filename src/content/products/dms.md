@@ -21,8 +21,9 @@ outcomes:
     label: "Document retrieval"
 hero:
   type: "image"
-  src: "/media/product-dms-960.webp"
-  alt: "Document management system repository and classification console"
+  src: "/media/projects/dms/hero.webp"
+  alt: "Document Management System intake and classification console"
+  caption: "Representative interface"
   frame: "browser"
 phases:
   problem:

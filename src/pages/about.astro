@@ -331,13 +331,16 @@ function formatMandateText(text: string) {
             <!-- Right: Apollo 13 Imperative Image Illustration -->
             <div class="story-illustration-col">
               <div class="blueprint-canvas">
-                <img
-                  src="/media/raw/aboutus.png"
-                  alt="Apollo 13 imperative: Connecting square lithium hydroxide canisters to round sockets using an engineered adapter"
-                  class="apollo-story-image"
-                  loading="lazy"
-                  decoding="async"
-                />
+                <picture>
+                  <source srcset="/media/about/aboutus.webp" type="image/webp" />
+                  <img
+                    src="/media/raw/aboutus.png"
+                    alt="Apollo 13 imperative: Connecting square lithium hydroxide canisters to round sockets using an engineered adapter"
+                    class="apollo-story-image"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </picture>
               </div>
             </div>
           </div>

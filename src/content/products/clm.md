@@ -21,8 +21,9 @@ outcomes:
     label: "Missed renewals"
 hero:
   type: "image"
-  src: "/media/product-clm-960.webp"
-  alt: "Contract lifecycle management dashboard overview"
+  src: "/media/projects/clm/hero.webp"
+  alt: "Enterprise Contract Lifecycle Management dashboard"
+  caption: "Representative interface"
   frame: "browser"
 phases:
   problem:
