@@ -50,20 +50,20 @@ const svg = `
   </text>
 
   <!-- Wordmark -->
-  <text x="90" y="210" font-family="'Manrope', sans-serif" font-size="76" font-weight="800" fill="#F8FAFC" letter-spacing="-1.5">
+  <text x="90" y="210" font-family="'Raleway', sans-serif" font-size="76" font-weight="800" fill="#F8FAFC" letter-spacing="-1.5">
     RHSP
   </text>
-  <text x="90" y="270" font-family="'Manrope', sans-serif" font-size="28" font-weight="600" fill="#94A3B8" letter-spacing="1">
+  <text x="90" y="270" font-family="'Raleway', sans-serif" font-size="28" font-weight="600" fill="#94A3B8" letter-spacing="1">
     ROUND HOLE SQUARE PEG
   </text>
 
   <!-- Tagline -->
-  <text x="90" y="380" font-family="'Manrope', sans-serif" font-size="52" font-weight="700" fill="#FFFFFF">
-    Wrong shape. <tspan fill="url(#peg-top)">Right fit.</tspan>
+  <text x="90" y="380" font-family="'Raleway', sans-serif" font-size="52" font-weight="700" fill="#FFFFFF">
+    Understand the challenge. <tspan fill="url(#peg-top)">Engineer the adapter.</tspan>
   </text>
 
   <!-- Subtitle -->
-  <text x="90" y="440" font-family="'Manrope', sans-serif" font-size="22" font-weight="400" fill="#94A3B8">
+  <text x="90" y="440" font-family="'Raleway', sans-serif" font-size="22" font-weight="400" fill="#94A3B8">
     Enterprise OutSystems &amp; High-Code Solutions
   </text>
 

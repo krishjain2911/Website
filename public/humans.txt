@@ -8,7 +8,7 @@ Round Hole Square Peg (RHSP) Team
 
 /* SITE */
 Standards: HTML5, CSS3, ESNext, WebGL, SVG
-Components: Astro, OGL, Figtree Variable Font
+Components: Astro, OGL, Raleway Variable Font
 Software: Developed by Krish Jain for Round Hole Square Peg
 Website: https://roundholesquarepeg.com
 Language: English
