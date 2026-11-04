@@ -1,0 +1,367 @@
+---
+import MediaSlot from './MediaSlot.astro';
+import Icon from '../Icon.astro';
+
+interface FeedbackItem {
+  heard: string;
+  changed: string;
+}
+
+interface Props {
+  pilotData?: {
+    headline?: string;
+    story?: string;
+    points?: string[];
+    scope?: {
+      who?: string;
+      where?: string;
+      duration?: string;
+    };
+    feedback?: FeedbackItem[];
+    media?: any[];
+  };
+}
+
+const { pilotData } = Astro.props;
+if (!pilotData) return null;
+
+const primaryMedia = pilotData.media && pilotData.media.length > 0 ? pilotData.media[0] : undefined;
+---
+
+<section id="chapter-pilot" class="project-chapter-section" aria-labelledby="heading-pilot">
+  <div class="chapter-header">
+    <div class="chapter-badge-wrap">
+      <span class="chapter-num-badge">04</span>
+      <span class="chapter-phase-tag">THE PILOT TRIAL</span>
+    </div>
+    <h2 id="heading-pilot" class="chapter-heading">{pilotData.headline || 'Field Trial & Ground Verification'}</h2>
+    {pilotData.story && <p class="chapter-story">{pilotData.story}</p>}
+  </div>
+
+  <!-- Pilot Scope Strip -->
+  {pilotData.scope && (pilotData.scope.who || pilotData.scope.where || pilotData.scope.duration) && (
+    <div class="pilot-scope-strip card-mastercard">
+      <div class="scope-col">
+        <span class="scope-icon" aria-hidden="true">
+          <Icon name="users" size={18} />
+        </span>
+        <div class="scope-content">
+          <span class="scope-label">PARTICIPANTS</span>
+          <span class="scope-value">{pilotData.scope.who || 'Target Operational Unit'}</span>
+        </div>
+      </div>
+      <div class="scope-divider" aria-hidden="true"></div>
+      <div class="scope-col">
+        <span class="scope-icon" aria-hidden="true">
+          <Icon name="map-pin" size={18} />
+        </span>
+        <div class="scope-content">
+          <span class="scope-label">ENVIRONMENT / SITE</span>
+          <span class="scope-value">{pilotData.scope.where || 'Live Production Sandbox'}</span>
+        </div>
+      </div>
+      <div class="scope-divider" aria-hidden="true"></div>
+      <div class="scope-col">
+        <span class="scope-icon" aria-hidden="true">
+          <Icon name="compass" size={18} />
+        </span>
+        <div class="scope-content">
+          <span class="scope-label">TRIAL WINDOW</span>
+          <span class="scope-value">{pilotData.scope.duration || 'Initial Deployment Sprint'}</span>
+        </div>
+      </div>
+    </div>
+  )}
+
+  <!-- Two-Column Feedback & Media -->
+  <div class="pilot-content-grid">
+    <!-- "We heard -> We changed" Column -->
+    {pilotData.feedback && pilotData.feedback.length > 0 && (
+      <div class="pilot-feedback-column">
+        <span class="block-mini-title">GROUND FEEDBACK ITERATIONS</span>
+        <div class="feedback-cards-list">
+          {pilotData.feedback.map((item) => (
+            <div class="feedback-card card-mastercard">
+              <div class="feedback-sub-box heard-box">
+                <div class="feedback-tag tag-heard">WE HEARD</div>
+                <p class="feedback-text heard-text">"{item.heard}"</p>
+              </div>
+              <div class="feedback-bridge" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 5v14M5 12l7 7 7-7" />
+                </svg>
+              </div>
+              <div class="feedback-sub-box changed-box">
+                <div class="feedback-tag tag-changed">WE ENGINEERED</div>
+                <p class="feedback-text changed-text">{item.changed}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <!-- Media / Points Column -->
+    <div class="pilot-side-column">
+      {primaryMedia ? (
+        <MediaSlot
+          media={primaryMedia}
+          fallbackTitle="Pilot Deployment Observations"
+          fallbackDescription="Live field telemetry, user workflows, and pilot validation."
+        />
+      ) : null}
+
+      {pilotData.points && pilotData.points.length > 0 && (
+        <div class="pilot-points-card card-mastercard">
+          <span class="block-mini-title">PILOT LEARNINGS &amp; MILESTONES</span>
+          <ul class="pilot-points-list">
+            {pilotData.points.map((pt) => (
+              <li class="pilot-point-item">
+                <span class="point-marker" aria-hidden="true">&bull;</span>
+                <span>{pt}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  </div>
+</section>
+
+<style>
+  .project-chapter-section {
+    padding: var(--space-8, 2rem) 0 var(--space-12, 3rem);
+    border-bottom: 1px solid var(--border-subtle);
+    scroll-margin-top: calc(var(--header-height, 64px) + 2rem);
+  }
+
+  .chapter-header {
+    margin-bottom: var(--space-6, 1.5rem);
+  }
+
+  .chapter-badge-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2, 0.5rem);
+    margin-bottom: var(--space-3, 0.75rem);
+  }
+
+  .chapter-num-badge {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    background: var(--surface-secondary, rgba(0,0,0,0.05));
+    color: var(--text-muted);
+    border: 1px solid var(--border-subtle);
+  }
+
+  .chapter-phase-tag {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+  }
+
+  .chapter-heading {
+    font-family: var(--font-heading);
+    font-size: clamp(1.6rem, 3vw, 2.25rem);
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+    margin-bottom: var(--space-3, 0.75rem);
+  }
+
+  .chapter-story {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    max-width: 780px;
+    margin: 0;
+  }
+
+  .block-mini-title {
+    display: block;
+    font-family: var(--font-mono, monospace);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: var(--space-4, 1rem);
+  }
+
+  .pilot-scope-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: var(--space-4, 1rem) var(--space-5, 1.25rem);
+    margin-bottom: var(--space-6, 1.5rem);
+    gap: var(--space-4, 1rem);
+    flex-wrap: wrap;
+  }
+
+  .scope-col {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1;
+    min-width: 180px;
+  }
+
+  .scope-icon {
+    display: inline-flex;
+    color: var(--color-primary);
+    background: var(--surface-secondary);
+    padding: 8px;
+    border-radius: 8px;
+  }
+
+  .scope-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .scope-label {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+  }
+
+  .scope-value {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .scope-divider {
+    width: 1px;
+    height: 36px;
+    background: var(--border-subtle);
+  }
+
+  .pilot-content-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: var(--space-6, 1.5rem);
+    align-items: start;
+  }
+
+  .pilot-feedback-column {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .feedback-cards-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4, 1rem);
+  }
+
+  .feedback-card {
+    padding: var(--space-4, 1rem);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .feedback-sub-box {
+    padding: 0.6rem 0.8rem;
+    border-radius: 6px;
+  }
+
+  .heard-box {
+    background: var(--surface-secondary);
+    border-left: 3px solid var(--text-muted);
+  }
+
+  .changed-box {
+    background: rgba(var(--color-primary-rgb, 180, 83, 9), 0.08);
+    border-left: 3px solid var(--color-primary);
+  }
+
+  .feedback-tag {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.25rem;
+  }
+
+  .tag-heard {
+    color: var(--text-muted);
+  }
+
+  .tag-changed {
+    color: var(--color-primary);
+  }
+
+  .feedback-text {
+    font-size: 0.85rem;
+    line-height: 1.45;
+    margin: 0;
+    color: var(--text-primary);
+  }
+
+  .heard-text {
+    font-style: italic;
+    color: var(--text-secondary);
+  }
+
+  .feedback-bridge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-primary);
+    opacity: 0.6;
+    height: 12px;
+  }
+
+  .pilot-side-column {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4, 1rem);
+  }
+
+  .pilot-points-card {
+    padding: var(--space-5, 1.25rem);
+  }
+
+  .pilot-points-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .pilot-point-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    line-height: 1.45;
+    color: var(--text-secondary);
+  }
+
+  .point-marker {
+    color: var(--color-primary);
+    font-weight: bold;
+    font-size: 1.1rem;
+    line-height: 1;
+  }
+
+  @media (max-width: 900px) {
+    .pilot-content-grid {
+      grid-template-columns: 1fr;
+    }
+    .scope-divider {
+      display: none;
+    }
+  }
+</style>

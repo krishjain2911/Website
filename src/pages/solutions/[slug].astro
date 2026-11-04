@@ -3,10 +3,19 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
 import ContactSection from '../../components/ContactSection.astro';
-import MediaAsset from '../../components/MediaAsset.astro';
 import LearnMore from '../../components/LearnMore.astro';
 import Icon from '../../components/Icon.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
+
+import ProjectHero from '../../components/project/ProjectHero.astro';
+import JourneyRail from '../../components/project/JourneyRail.astro';
+import PhaseProblem from '../../components/project/PhaseProblem.astro';
+import PhaseValue from '../../components/project/PhaseValue.astro';
+import PhaseArchitecture from '../../components/project/PhaseArchitecture.astro';
+import PhasePilot from '../../components/project/PhasePilot.astro';
+import PhaseRollout from '../../components/project/PhaseRollout.astro';
+import PhaseImpact from '../../components/project/PhaseImpact.astro';
+import ProjectLightbox from '../../components/project/ProjectLightbox.astro';
 
 export async function getStaticPaths() {
   const products = await getCollection('products');
@@ -24,11 +33,79 @@ interface Props {
 const { product, allProducts } = Astro.props;
 const p = product.data;
 
+// Chronological / ordered navigation
+const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
+const currentIndex = sortedProducts.findIndex((item) => item.slug === product.slug);
+const prevProduct = currentIndex > 0 ? sortedProducts[currentIndex - 1] : sortedProducts[sortedProducts.length - 1];
+const nextProduct = currentIndex < sortedProducts.length - 1 ? sortedProducts[currentIndex + 1] : sortedProducts[0];
 
 // Related products in the same pillar
 const relatedProducts = allProducts
-  .filter((item) => item.slug !== product.slug && (p.related.includes(item.slug) || item.data.pillar === p.pillar))
+  .filter((item) => item.slug !== product.slug && (p.related?.includes(item.slug) || item.data.pillar === p.pillar))
   .slice(0, 3);
+
+// Dynamic 6-phase detection
+const phases = p.phases;
+const rawStops = [
+  {
+    id: 'problem',
+    title: 'The Problem',
+    badge: 'PROBLEM',
+    exists: !!(phases?.problem && (phases.problem.headline || phases.problem.story || phases.problem.process?.length || phases.problem.friction?.length))
+  },
+  {
+    id: 'value',
+    title: 'Latent Revenue',
+    badge: 'VALUE',
+    exists: !!(phases?.value && (phases.value.headline || phases.value.story || phases.value.metrics?.length || phases.value.levers?.length))
+  },
+  {
+    id: 'architecture',
+    title: 'Architecture',
+    badge: 'ARCH',
+    exists: !!(phases?.architecture && (phases.architecture.headline || phases.architecture.story || phases.architecture.layers?.length || phases.architecture.pattern))
+  },
+  {
+    id: 'pilot',
+    title: 'The Pilot',
+    badge: 'PILOT',
+    exists: !!(phases?.pilot && (phases.pilot.headline || phases.pilot.story || phases.pilot.feedback?.length || phases.pilot.scope))
+  },
+  {
+    id: 'rollout',
+    title: 'Rollout',
+    badge: 'ROLLOUT',
+    exists: !!(phases?.rollout && (phases.rollout.headline || phases.rollout.story || phases.rollout.hardening?.length || phases.rollout.steps?.length))
+  },
+  {
+    id: 'impact',
+    title: 'Long-term Impact',
+    badge: 'IMPACT',
+    exists: !!(phases?.impact && (phases.impact.headline || phases.impact.story || phases.impact.outcome || phases.impact.governance?.length))
+  }
+];
+
+const stops = rawStops
+  .filter((s) => s.exists)
+  .map((s, idx) => ({
+    id: s.id,
+    number: `0${idx + 1}`,
+    title: s.title,
+    badge: s.badge
+  }));
+
+// Check before/after interactive asset if applicable
+let beforeAfterId: 'clm' | 'dms' | 'whatsapp' | undefined;
+if (product.slug === 'clm') beforeAfterId = 'clm';
+else if (product.slug === 'dms') beforeAfterId = 'dms';
+else if (product.slug === 'whatsapp-journeys') beforeAfterId = 'whatsapp';
+
+// Clean FAQ items (filter placeholders)
+const cleanFaq = (p.faq || []).filter((item) => {
+  const q = item.question?.trim() || '';
+  const a = item.answer?.trim() || '';
+  return q && a && !q.startsWith('[PLACEHOLDER]') && !a.startsWith('[PLACEHOLDER]');
+});
 ---
 
 <BaseLayout
@@ -36,353 +113,88 @@ const relatedProducts = allProducts
   description={p.seoDescription || p.oneLiner}
   breadcrumbs={[
     { name: 'Home', item: '/' },
+    { name: 'Solutions', item: '/#solutions' },
     { name: p.title, item: `/solutions/${product.slug}` }
   ]}
 >
   <Nav />
 
   <main id="main-content" tabindex="-1">
-    <!-- 1. Product Hero Section -->
-    <section class="product-hero-section" aria-labelledby="product-title">
-      <div class="container">
-        <div class="product-hero-grid">
-          <div class="product-hero-content reveal-on-scroll">
-            <!-- Breadcrumbs with prominent Back to Solutions link -->
-            <nav class="breadcrumb-row" aria-label="Breadcrumb">
-              <a href="/#solutions" class="breadcrumb-back-link">
-                <Icon name="arrow-left" size={14} />
-                <span>Back to solutions</span>
-              </a>
-              <span class="breadcrumb-divider" aria-hidden="true">•</span>
-              <ol class="breadcrumb-list">
-                <li class="breadcrumb-item"><a href="/" class="breadcrumb-link">Home</a></li>
-                <li class="breadcrumb-sep" aria-hidden="true">/</li>
-                <li class="breadcrumb-item"><a href="/#solutions" class="breadcrumb-link">Solutions</a></li>
-                <li class="breadcrumb-sep" aria-hidden="true">/</li>
-                <li class="breadcrumb-item" aria-current="page"><span class="breadcrumb-current">{p.pillar}</span></li>
-              </ol>
-            </nav>
+    <!-- 1. Hero Section with Media Frame, Outcomes, and Meta Chips -->
+    <ProjectHero product={product} />
 
-            <div class="product-badge-row">
-              {p.badges && p.badges.length > 0 ? (
-                p.badges.map((b, idx) => (
-                  <span class={idx === 0 ? "pillar-pill" : "stack-pill"}>{b}</span>
-                ))
-              ) : (
-                <>
-                  <span class="pillar-pill">{p.pillar}</span>
-                  <span class="stack-pill">{p.badge}</span>
-                </>
-              )}
-            </div>
+    <!-- 2. Sticky 6-Phase Approach Journey Layout -->
+    <div class="project-journey-container container">
+      <!-- Left Rail (Sticky Navigation with Guide Cube Scroll-Spy) -->
+      <JourneyRail stops={stops} />
 
-            <h1 id="product-title" class="product-hero-title">
-              {p.title}
-            </h1>
-
-            <p class="product-outcome-lead">
-              {p.outcomeHeadline}
-            </p>
-
-            <p class="product-oneliner-desc">
-              {p.oneLiner.replace(/^\[PLACEHOLDER\]\s*/i, '')}
-            </p>
-
-            <div class="product-cta-row">
-              <a
-                href="#contact"
-                class="btn btn-primary"
-              >
-                <span>{p.ctaText || "Let's talk"}</span>
-                <Icon name="arrow-right" size={16} />
-              </a>
-            </div>
-          </div>
-
-          <!-- Hero Media Asset Frame with Quarter-Circle Corner -->
-          <div class="product-hero-media-wrapper card-mastercard reveal-on-scroll">
-            <MediaAsset
-              assetKey={`product-${product.slug}`}
-              alt={`${p.title} architecture and user interface overview`}
-              aspectRatio="16/10"
-              crop="quarter"
-              theme={p.pillar === 'Gen-AI' ? 'navy' : 'warm'}
-            />
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 2. Problem Section ("Without [product]...") -->
-    <section class="product-problem-section" aria-labelledby="problem-heading">
-      <div class="container">
-        <div class="section-lead-block reveal-on-scroll">
-          <span class="eyebrow">THE OPERATIONAL FRICTION</span>
-          <h2 id="problem-heading" class="section-headline">
-            Without {p.shortTitle}…
-          </h2>
-          <p class="section-lead-subline">{p.problem.replace(/^\[PLACEHOLDER\]\s*/i, '')}</p>
-        </div>
-
-        <div class="pain-points-grid">
-          {p.painPoints.map((pain, idx) => (
-            <div class="pain-card card-mastercard reveal-on-scroll">
-              <span class="pain-number">0{idx + 1}</span>
-              <p class="pain-text">{pain.replace(/^\[PLACEHOLDER\]\s*/i, '')}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <!-- 2.5 What We Built Section -->
-    {p.whatWeBuilt && (
-      <section class="what-we-built-section" aria-labelledby="what-we-built-heading">
-        <div class="container">
-          <div class="built-card card-mastercard reveal-on-scroll">
-            <div class="built-card-header">
-              <span class="eyebrow">WHAT WE BUILT</span>
-              <h2 id="what-we-built-heading" class="built-card-title">
-                Catalogue-grounded AI on the showroom floor.
-              </h2>
-            </div>
-            <p class="built-card-desc">
-              {p.whatWeBuilt}
-            </p>
-          </div>
-        </div>
-      </section>
-    )}
-
-    <!-- 4. How It Works (3-step flow with Optional Interactive Showroom Tablet) -->
-    <section class="how-it-works-section" aria-labelledby="how-it-works-heading">
-      <div class="container">
-        <div class="section-lead-block reveal-on-scroll">
-          <span class="eyebrow">INTEGRATION FLOW</span>
-          <h2 id="how-it-works-heading" class="section-headline">How it works.</h2>
-          <p class="section-lead-subline">{p.value.replace(/^\[PLACEHOLDER\]\s*/i, '')}</p>
-        </div>
-
-        {p.interfaceScreens && p.interfaceScreens.length > 0 ? (
-          <div class="interface-showcase-wrapper reveal-on-scroll" id="interface-showcase">
-            <!-- 3 Step Cards Row (Clickable Interactive Tabs) -->
-            <div class="interactive-steps-nav" role="tablist" aria-label="Showroom flow steps">
-              {p.interfaceScreens.map((screen, idx) => (
-                <button
-                  type="button"
-                  class={`interactive-step-card card-mastercard ${idx === 0 ? 'is-active' : ''}`}
-                  role="tab"
-                  aria-selected={idx === 0 ? "true" : "false"}
-                  aria-controls={`tablet-slide-${idx}`}
-                  id={`step-tab-${idx}`}
-                  data-screen-idx={idx}
-                  data-status-text={screen.statusText || screen.description}
-                >
-                  <div class="step-card-top">
-                    <div class="step-badge-pill">
-                      <span class="step-dot" aria-hidden="true"></span>
-                      <span class="step-pill-label">STEP {screen.step}</span>
-                    </div>
-                    {screen.badge && (
-                      <span class="step-tag-pill">{screen.badge}</span>
-                    )}
-                  </div>
-                  <h3 class="step-card-heading">{screen.title}</h3>
-                  <p class="step-card-copy">{screen.description}</p>
-                  <div class="step-progress-indicator" aria-hidden="true"></div>
-                </button>
-              ))}
-            </div>
-
-            <!-- Showroom Tablet Mockup Chassis -->
-            <div class="showroom-tablet-chassis">
-              <!-- Tablet Header Bar -->
-              <div class="tablet-chassis-topbar">
-                <div class="tablet-camera-notch" aria-hidden="true">
-                  <span class="camera-lens"></span>
-                  <span class="ambient-sensor"></span>
-                </div>
-                <div class="tablet-topbar-meta">
-                  <span class="tablet-app-title">IN-STORE TABLET INTERFACE</span>
-                  <span class="tablet-live-pill">
-                    <span class="live-pulse-dot" aria-hidden="true"></span>
-                    <span>Live Catalogue Active</span>
-                  </span>
-                </div>
-              </div>
-
-              <!-- Tablet Screen Viewport -->
-              <div class="tablet-viewport" id="tablet-viewport">
-                {p.interfaceScreens.map((screen, idx) => (
-                  <div
-                    class={`tablet-screen-slide ${idx === 0 ? 'is-active' : ''}`}
-                    id={`tablet-slide-${idx}`}
-                    role="tabpanel"
-                    aria-labelledby={`step-tab-${idx}`}
-                    data-slide-idx={idx}
-                  >
-                    <img
-                      src={screen.image}
-                      alt={screen.alt}
-                      class="tablet-screenshot-img"
-                      loading={idx === 0 ? "eager" : "lazy"}
-                      draggable="false"
-                    />
-                  </div>
-                ))}
-              </div>
-
-              <!-- Tablet Footer Status Bar -->
-              <div class="tablet-chassis-bottombar">
-                <div class="tablet-caption-box">
-                  <Icon name="check" size={14} class="caption-icon" />
-                  <span class="tablet-caption-text" id="tablet-caption-text">
-                    {p.interfaceScreens[0].statusText || p.interfaceScreens[0].description}
-                  </span>
-                </div>
-
-                <div class="tablet-quick-switch" role="tablist" aria-label="Screen Quick Switcher">
-                  {p.interfaceScreens.map((screen, idx) => (
-                    <button
-                      type="button"
-                      role="tab"
-                      aria-selected={idx === 0 ? "true" : "false"}
-                      class={`quick-switch-btn ${idx === 0 ? 'is-active' : ''}`}
-                      data-target-idx={idx}
-                      aria-label={`Jump to Step ${screen.step}: ${screen.title}`}
-                    >
-                      <span>Step {screen.step}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div class="flow-steps-grid">
-            {p.howItWorks.map((st) => (
-              <div class="flow-step-card card-mastercard reveal-on-scroll">
-                <div class="step-card-top">
-                  <div class="step-badge-pill">
-                    <span class="step-dot" aria-hidden="true"></span>
-                    <span class="step-pill-label">STEP {st.step}</span>
-                  </div>
-                </div>
-                <h3 class="step-card-heading">{st.title}</h3>
-                <p class="step-card-copy">{st.description.replace(/^\[PLACEHOLDER\]\s*/i, '')}</p>
-              </div>
-            ))}
-          </div>
+      <!-- Main Column: Active Phase Chapters -->
+      <div class="project-journey-track">
+        {phases?.problem && (
+          <PhaseProblem problemData={phases.problem} beforeAfterId={beforeAfterId} />
         )}
-      </div>
-    </section>
 
-    <!-- What We've Built (Deployed Proof) -->
-    {p.builtExamples && p.builtExamples.length > 0 && (
-      <section class="built-examples-section" aria-labelledby="built-examples-heading">
-        <div class="container">
-          <div class="section-lead-block reveal-on-scroll">
-            <span class="eyebrow">PROOF OF CAPABILITY</span>
-            <h2 id="built-examples-heading" class="section-headline">What we've built.</h2>
-            <p class="section-lead-subline">Real systems deployed and operational in enterprise environments.</p>
-          </div>
+        {phases?.value && (
+          <PhaseValue valueData={phases.value} />
+        )}
 
-          <div class="built-examples-grid">
-            {p.builtExamples.map((example) => (
-              <article class="built-example-card card-mastercard reveal-on-scroll">
-                <div class="built-example-header">
-                  <div class="example-title-meta">
-                    <h3 class="example-name">{example.name}</h3>
-                    <span class="example-deployed-for">Deployed for {example.deployedFor}</span>
-                  </div>
-                  <div class="example-badges">
-                    <span class="example-stack-badge">{example.stack}</span>
-                    <span class="example-ready-badge">Ready to deploy &middot; customizable</span>
-                  </div>
-                </div>
-                <p class="example-oneliner">{example.oneLiner}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-    )}
+        {phases?.architecture && (
+          <PhaseArchitecture architectureData={phases.architecture} />
+        )}
 
-    <!-- 6. Key Features Grid -->
-    {p.features && p.features.length > 0 && (
-      <section class="features-section" aria-labelledby="features-heading">
-        <div class="container">
-          <div class="section-lead-block reveal-on-scroll">
-            <span class="eyebrow">CAPABILITIES</span>
-            <h2 id="features-heading" class="section-headline">Key features.</h2>
-          </div>
+        {phases?.pilot && (
+          <PhasePilot pilotData={phases.pilot} />
+        )}
 
-          <div class="features-grid">
-            {p.features.map((feat) => (
-              <div class="feature-card card-mastercard reveal-on-scroll">
-                <div class="feature-icon-circle" aria-hidden="true">
-                  <Icon name="check" size={16} />
-                </div>
-                <h3 class="feature-title">{feat.title}</h3>
-                <p class="feature-desc">{feat.description.replace(/^\[PLACEHOLDER\]\s*/i, '')}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-    )}
+        {phases?.rollout && (
+          <PhaseRollout rolloutData={phases.rollout} />
+        )}
 
-    <!-- 6.5 Make It Yours Section -->
-    {p.makeItYours && (
-      <section class="make-it-yours-section" aria-labelledby="make-it-yours-heading">
-        <div class="container">
-          <div class="section-lead-block reveal-on-scroll">
-            <span class="eyebrow">{p.makeItYours.subline || "MAKE IT YOURS"}</span>
-            <h2 id="make-it-yours-heading" class="section-headline">{p.makeItYours.headline}</h2>
-            {p.makeItYours.description && (
-              <p class="make-it-yours-lead">{p.makeItYours.description}</p>
-            )}
-          </div>
+        {phases?.impact && (
+          <PhaseImpact impactData={phases.impact} />
+        )}
 
-          <div class="usecases-grid">
-            {p.makeItYours.useCases.map((uc, idx) => (
-              <div class="usecase-card card-mastercard reveal-on-scroll">
-                <span class="usecase-number">0{idx + 1}</span>
-                <h3 class="usecase-title">{uc.title}</h3>
-                <p class="usecase-desc">{uc.description}</p>
-              </div>
-            ))}
-          </div>
-
-          {p.makeItYours.closing && (
-            <div class="make-it-yours-callout card-mastercard reveal-on-scroll">
-              <span class="callout-badge">PURPOSE-BUILT DEPLOYMENT</span>
-              <p class="callout-text">{p.makeItYours.closing}</p>
+        <!-- Project Pagination (Previous / Next Case Study) -->
+        <nav class="project-pagination card-mastercard" aria-label="Adjacent Solutions">
+          <a href={`/solutions/${prevProduct.slug}`} class="pagination-link prev-link">
+            <span class="pagination-arrow" aria-hidden="true">&larr;</span>
+            <div class="pagination-meta">
+              <span class="pagination-dir">PREVIOUS SOLUTION</span>
+              <span class="pagination-name">{prevProduct.data.title}</span>
             </div>
-          )}
-        </div>
-      </section>
-    )}
+          </a>
 
+          <div class="pagination-divider" aria-hidden="true"></div>
 
-    <!-- 8. Accessible FAQ Accordion -->
-    {p.faq && p.faq.length > 0 && (
-      <section class="faq-section" aria-labelledby="faq-heading">
+          <a href={`/solutions/${nextProduct.slug}`} class="pagination-link next-link">
+            <div class="pagination-meta">
+              <span class="pagination-dir">NEXT SOLUTION</span>
+              <span class="pagination-name">{nextProduct.data.title}</span>
+            </div>
+            <span class="pagination-arrow" aria-hidden="true">&rarr;</span>
+          </a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- 3. Accessible FAQ Section -->
+    {cleanFaq.length > 0 && (
+      <section class="project-faq-section" aria-labelledby="project-faq-heading">
         <div class="container faq-container">
-          <div class="section-lead-block reveal-on-scroll">
+          <div class="section-lead-block">
             <span class="eyebrow">ANSWERS</span>
-            <h2 id="faq-heading" class="section-headline">Frequently asked questions.</h2>
+            <h2 id="project-faq-heading" class="section-headline">Frequently asked questions.</h2>
           </div>
 
           <div class="faq-list">
-            {p.faq.map((item) => (
-              <details class="faq-accordion-item card-mastercard reveal-on-scroll">
+            {cleanFaq.map((item) => (
+              <details class="faq-accordion-item card-mastercard">
                 <summary class="faq-summary">
-                  <span class="faq-question">{item.question.replace(/^\[PLACEHOLDER\]\s*/i, '')}</span>
+                  <span class="faq-question">{item.question}</span>
                   <Icon name="chevron-down" size={18} class="faq-chevron" />
                 </summary>
                 <div class="faq-answer-body">
-                  <p>{item.answer.replace(/^\[PLACEHOLDER\]\s*/i, '')}</p>
+                  <p>{item.answer}</p>
                 </div>
               </details>
             ))}
@@ -391,20 +203,21 @@ const relatedProducts = allProducts
       </section>
     )}
 
-    <!-- 9. Related Solutions -->
+    <!-- 4. Related Solutions Grid -->
     {relatedProducts.length > 0 && (
       <section class="related-section" aria-labelledby="related-heading">
         <div class="container">
-          <div class="section-lead-block reveal-on-scroll">
+          <div class="section-lead-block">
             <span class="eyebrow">RELATED SOLUTIONS</span>
             <h2 id="related-heading" class="section-headline">More in {p.pillar}.</h2>
           </div>
 
           <div class="related-grid">
             {relatedProducts.map((rel) => (
-              <div class="related-card card-mastercard reveal-on-scroll">
+              <div class="related-card card-mastercard">
                 <div class="related-top-row">
                   <span class="pillar-pill">{rel.data.pillar}</span>
+                  <span class="stack-pill">{rel.data.badge}</span>
                 </div>
                 <h3 class="related-title">{rel.data.title}</h3>
                 <p class="related-desc">{rel.data.oneLiner.replace(/^\[PLACEHOLDER\]\s*/i, '')}</p>
@@ -418,1165 +231,270 @@ const relatedProducts = allProducts
       </section>
     )}
 
-    <!-- 10. Universal Contact Section -->
+    <!-- 5. Universal Contact Section -->
     <ContactSection />
   </main>
 
   <Footer />
+
+  <!-- Global Fullscreen Media Viewer / Lightbox -->
+  <ProjectLightbox />
 </BaseLayout>
 
 <style>
-  .product-hero-section {
-    padding: calc(72px + var(--section-spacing-desktop)) 0 var(--section-spacing-desktop);
-    background-color: var(--color-bg);
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .product-hero-grid {
+  .project-journey-container {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 3.5rem;
-    align-items: center;
+    grid-template-columns: 240px 1fr;
+    gap: var(--space-8, 2.5rem);
+    position: relative;
+    padding-top: var(--space-8, 2rem);
+    padding-bottom: var(--space-12, 3rem);
+    align-items: start;
   }
 
-  @media (min-width: 960px) {
-    .product-hero-grid {
-      grid-template-columns: 1.2fr 0.8fr;
-      gap: 5rem;
-    }
-  }
-
-  .breadcrumb-row {
+  .project-journey-track {
+    min-width: 0;
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.625rem;
-    font-size: var(--fs-sm);
-    color: var(--color-text-muted);
-    margin-bottom: 1.5rem;
+    flex-direction: column;
+    gap: var(--space-8, 2.5rem);
   }
 
-  .breadcrumb-back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    padding: 0.25rem 0.625rem;
-    border-radius: 9999px;
-    background-color: var(--color-surface-alt);
-    border: 1px solid var(--color-border);
-    color: var(--color-text-secondary);
-    font-size: var(--fs-xs);
-    font-weight: 500;
-    text-decoration: none;
-    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-  }
-
-  .breadcrumb-back-link:hover {
-    color: var(--color-text-primary);
-    background-color: var(--color-surface-hover);
-    border-color: var(--color-text-secondary);
-  }
-
-  .breadcrumb-divider {
-    color: var(--color-text-muted);
-    opacity: 0.4;
-  }
-
-  .breadcrumb-list {
-    display: inline-flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .breadcrumb-item {
-    display: inline-flex;
-    align-items: center;
-  }
-
-  .breadcrumb-link {
-    color: var(--color-text-secondary);
-    text-decoration: none;
-  }
-
-  .breadcrumb-link:hover {
-    color: var(--color-text-primary);
-  }
-
-  .breadcrumb-sep {
-    color: var(--color-text-muted);
-    user-select: none;
-    opacity: 0.6;
-  }
-
-  .breadcrumb-current {
-    color: var(--color-text-primary);
-    font-weight: 500;
-  }
-
-  .product-badge-row {
+  /* Pagination Bar */
+  .project-pagination {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 1.25rem;
+    justify-content: space-between;
+    padding: var(--space-5, 1.25rem) var(--space-6, 1.5rem);
+    margin-top: var(--space-6, 1.5rem);
+    border-radius: 12px;
   }
 
-  .pillar-pill {
-    padding: 0.25rem 0.75rem;
-    border-radius: var(--radius-pill);
-    background-color: var(--color-surface-alt);
-    border: 1px solid var(--color-border);
-    font-size: var(--fs-eyebrow);
-    font-weight: 600;
-    text-transform: uppercase;
+  .pagination-link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3, 0.75rem);
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: transform 0.2s ease, color 0.2s ease;
+    flex: 1;
+  }
+
+  .pagination-link:hover {
+    color: var(--color-primary);
+  }
+
+  .prev-link:hover {
+    transform: translateX(-4px);
+  }
+
+  .next-link {
+    justify-content: flex-end;
+    text-align: right;
+  }
+
+  .next-link:hover {
+    transform: translateX(4px);
+  }
+
+  .pagination-arrow {
+    font-size: 1.25rem;
+    color: var(--color-primary);
+  }
+
+  .pagination-meta {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pagination-dir {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.65rem;
     letter-spacing: 0.08em;
-    color: var(--color-text-primary);
+    color: var(--text-muted);
   }
 
-  .stack-pill {
-    padding: 0.25rem 0.75rem;
-    border-radius: var(--radius-pill);
-    background-color: var(--color-surface-alt);
-    font-size: var(--fs-sm);
-    color: var(--color-text-secondary);
+  .pagination-name {
+    font-size: 0.95rem;
+    font-weight: 700;
   }
 
-  .product-hero-title {
-    font-size: var(--fs-h1);
-    font-weight: 500;
-    line-height: 1.1;
-    margin-bottom: 1.25rem;
+  .pagination-divider {
+    width: 1px;
+    height: 40px;
+    background: var(--border-subtle);
+    margin: 0 var(--space-4, 1rem);
   }
 
-  .product-outcome-lead {
-    font-size: var(--fs-h3);
-    font-weight: 500;
-    color: var(--color-text-primary);
-    line-height: 1.35;
-    margin-bottom: 1rem;
-    max-width: 44ch;
-  }
-
-  .product-oneliner-desc {
-    font-size: var(--fs-body);
-    color: var(--color-text-secondary);
-    line-height: 1.6;
-    margin-bottom: 2.25rem;
-    max-width: 48ch;
-  }
-
-  .product-cta-row {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-
-  .product-demo-btn {
-    min-height: 52px;
-    padding: 0 2rem;
-  }
-
-  .product-hero-media-wrapper {
-    border-radius: var(--radius-card);
-    overflow: hidden;
-    background-color: var(--color-surface-alt);
-    box-shadow: var(--shadow-card-hover);
-  }
-
-  /* Section Lead */
+  /* Section Lead Block */
   .section-lead-block {
-    max-width: 680px;
-    margin-bottom: 3.5rem;
+    text-align: center;
+    margin-bottom: var(--space-8, 2rem);
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-family: var(--font-mono, monospace);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+    margin-bottom: var(--space-2, 0.5rem);
   }
 
   .section-headline {
-    font-size: var(--fs-h2);
-    font-weight: 500;
-    margin-top: -0.25rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .section-lead-subline {
-    font-size: var(--fs-body-lg);
-    color: var(--color-text-secondary);
-    line-height: 1.55;
-  }
-
-  /* Problem Section */
-  .product-problem-section {
-    padding: var(--section-spacing-desktop) 0;
-    background-color: var(--color-bg-alt);
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .pain-points-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-
-  @media (min-width: 768px) {
-    .pain-points-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  .pain-card {
-    background-color: var(--color-surface);
-    border-radius: var(--radius-card);
-    padding: 2.5rem 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-    border: 1px solid var(--color-border-subtle);
-  }
-
-  .pain-number {
-    font-size: 1.5rem;
-    font-weight: 500;
-    color: var(--rhsp-peg-start);
-  }
-
-  .pain-text {
-    font-size: var(--fs-body);
-    color: var(--color-text-secondary);
-    line-height: 1.6;
-  }
-
-  /* How It Works Grid Fallback */
-  .flow-steps-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-
-  @media (min-width: 768px) {
-    .flow-steps-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  .flow-step-card {
-    background-color: var(--color-surface-alt);
-    border-radius: var(--radius-card);
-    padding: 2.5rem 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    border: 1px solid var(--color-border-subtle);
-  }
-
-  .flow-step-marker {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-    font-size: 0.95rem;
-    color: var(--color-text-primary);
-  }
-
-  .flow-step-title {
-    font-size: 1.25rem;
-    font-weight: 500;
-  }
-
-  .flow-step-desc {
-    font-size: var(--fs-sm);
-    color: var(--color-text-secondary);
-    line-height: 1.6;
-  }
-
-  /* Interactive Showroom Tablet & Flow Showcase */
-  .interface-showcase-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 2.5rem;
-    margin-top: 1rem;
-  }
-
-  .interactive-steps-nav {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.25rem;
-  }
-
-  @media (min-width: 840px) {
-    .interactive-steps-nav {
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
-    }
-  }
-
-  .interactive-step-card {
-    background-color: var(--color-surface-alt);
-    border: 1px solid var(--color-border-subtle);
-    border-radius: var(--radius-card);
-    padding: 1.75rem 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.85rem;
-    text-align: left;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: var(--shadow-subtle);
-    font-family: inherit;
-  }
-
-  .interactive-step-card:hover {
-    background-color: var(--color-surface);
-    border-color: var(--color-border);
-    transform: translateY(-2px);
-  }
-
-  .interactive-step-card.is-active {
-    background-color: var(--color-surface);
-    border-color: var(--rhsp-peg-start);
-    box-shadow: 0 12px 28px -8px rgba(238, 75, 43, 0.18);
-  }
-
-  .step-card-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-    margin-bottom: 0.25rem;
-  }
-
-  .step-badge-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    padding: 0.3rem 0.75rem;
-    border-radius: var(--radius-pill);
-    background-color: rgba(238, 75, 43, 0.08);
-    border: 1px solid rgba(238, 75, 43, 0.22);
-    color: var(--rhsp-peg-start, #EE4B2B);
-    font-family: var(--font-mono, monospace);
-    font-size: 0.78rem;
+    font-family: var(--font-heading);
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
     font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    transition: all 0.25s ease;
-  }
-
-  :global([data-theme="dark"]) .step-badge-pill {
-    background-color: rgba(238, 75, 43, 0.16);
-    border-color: rgba(238, 75, 43, 0.35);
-  }
-
-  .step-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background-color: var(--rhsp-peg-start, #EE4B2B);
-    box-shadow: 0 0 6px rgba(238, 75, 43, 0.6);
-    transition: all 0.25s ease;
-  }
-
-  .step-tag-pill {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.3rem 0.75rem;
-    border-radius: var(--radius-pill);
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
-    color: var(--color-text-secondary);
-    font-family: var(--font-sans);
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    transition: all 0.25s ease;
-  }
-
-  .interactive-step-card.is-active .step-badge-pill {
-    background-color: var(--rhsp-peg-start, #EE4B2B);
-    color: #FFFFFF;
-    border-color: var(--rhsp-peg-start, #EE4B2B);
-    box-shadow: 0 2px 8px rgba(238, 75, 43, 0.3);
-  }
-
-  .interactive-step-card.is-active .step-dot {
-    background-color: #FFFFFF;
-    box-shadow: 0 0 6px rgba(255, 255, 255, 0.9);
-  }
-
-  .interactive-step-card.is-active .step-tag-pill {
-    border-color: rgba(238, 75, 43, 0.3);
-    color: var(--color-text-primary);
-  }
-
-  .step-card-heading {
-    font-size: 1.18rem;
-    font-weight: 600;
-    color: var(--color-text-primary);
-    line-height: 1.35;
+    color: var(--text-primary);
+    line-height: 1.2;
     margin: 0;
   }
 
-  .step-card-copy {
-    font-size: 0.92rem;
-    color: var(--color-text-secondary);
-    line-height: 1.6;
-    flex: 1;
-    margin: 0;
-  }
-
-  .step-progress-indicator {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: 3px;
-    width: 100%;
-    background: var(--rhsp-peg-gradient);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.3s ease;
-  }
-
-  .interactive-step-card.is-active .step-progress-indicator {
-    transform: scaleX(1);
-  }
-
-  /* Showroom Tablet Mockup Chassis */
-  .showroom-tablet-chassis {
-    background-color: #0B0F19;
-    border-radius: 28px;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.06);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    max-width: 1100px;
-    margin: 0 auto;
-    width: 100%;
-  }
-
-  .tablet-chassis-topbar {
-    background: linear-gradient(180deg, #161F33 0%, #0F172A 100%);
-    padding: 0.85rem 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  }
-
-  .tablet-camera-notch {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .camera-lens {
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 35% 35%, #38BDF8 0%, #0284C7 45%, #032A44 100%);
-    box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.8), 0 0 4px rgba(56, 189, 248, 0.4);
-  }
-
-  .ambient-sensor {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background-color: #1E293B;
-  }
-
-  .tablet-topbar-meta {
-    display: flex;
-    align-items: center;
-    gap: 1.25rem;
-  }
-
-  .tablet-app-title {
-    font-size: 0.72rem;
-    font-weight: 600;
-    font-family: var(--font-sans);
-    letter-spacing: 0.08em;
-    color: rgba(255, 255, 255, 0.6);
-    text-transform: uppercase;
-  }
-
-  .tablet-live-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    font-size: 0.72rem;
-    font-weight: 500;
-    color: #4ADE80;
-    background: rgba(34, 197, 94, 0.12);
-    border: 1px solid rgba(34, 197, 94, 0.3);
-    padding: 0.2rem 0.65rem;
-    border-radius: var(--radius-pill);
-  }
-
-  .live-pulse-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background-color: #4ADE80;
-    box-shadow: 0 0 8px #4ADE80;
-    animation: livePulse 2s infinite ease-in-out;
-  }
-
-  @keyframes livePulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.4; transform: scale(0.85); }
-  }
-
-  /* Viewport and Slides */
-  .tablet-viewport {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 1535 / 735;
-    background-color: #030712;
-    overflow: hidden;
-  }
-
-  .tablet-screen-slide {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-    transform: scale(0.985);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .tablet-screen-slide.is-active {
-    opacity: 1;
-    visibility: visible;
-    transform: scale(1);
-    z-index: 2;
-  }
-
-  .tablet-screenshot-img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
-    pointer-events: none;
-    user-select: none;
-    -webkit-user-select: none;
-    -webkit-user-drag: none;
-    cursor: default;
-  }
-
-  /* Tablet Bottom Bar */
-  .tablet-chassis-bottombar {
-    background: #0B0F19;
-    padding: 1rem 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1.25rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    flex-wrap: wrap;
-  }
-
-  .tablet-caption-box {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.65rem;
-    color: rgba(255, 255, 255, 0.85);
-    font-size: var(--fs-sm);
-    line-height: 1.5;
-  }
-
-  .caption-icon {
-    color: var(--rhsp-peg-start);
-    flex-shrink: 0;
-  }
-
-  .tablet-quick-switch {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .quick-switch-btn {
-    padding: 0.35rem 0.85rem;
-    border-radius: var(--radius-pill);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    background-color: rgba(255, 255, 255, 0.05);
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.75rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-
-  .quick-switch-btn:hover {
-    background-color: rgba(255, 255, 255, 0.15);
-    color: #FFFFFF;
-    border-color: rgba(255, 255, 255, 0.3);
-  }
-
-  .quick-switch-btn.is-active {
-    background: var(--rhsp-peg-gradient);
-    color: #FFFFFF;
-    border-color: transparent;
-    box-shadow: 0 2px 10px rgba(238, 75, 43, 0.35);
-  }
-
-  /* Demo */
-  .product-demo-section {
-    padding: var(--section-spacing-desktop) 0;
-    background-color: var(--color-bg-alt);
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .product-demo-frame-wrap {
-    max-width: 960px;
-    margin: 0 auto;
-  }
-
-  /* Features */
-  .features-section {
-    padding: var(--section-spacing-desktop) 0;
-    background-color: var(--color-bg);
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .features-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-
-  @media (min-width: 768px) {
-    .features-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .features-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  .feature-card {
-    background-color: var(--color-surface-alt);
-    border-radius: var(--radius-card);
-    padding: 2.5rem 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    border: 1px solid var(--color-border-subtle);
-  }
-
-  .feature-icon-circle {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: var(--rhsp-peg-gradient);
-    color: #FFFFFF;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .feature-title {
-    font-size: 1.15rem;
-    font-weight: 500;
-  }
-
-  .feature-desc {
-    font-size: var(--fs-sm);
-    color: var(--color-text-secondary);
-    line-height: 1.6;
-  }
-
-  /* Audience & Stack */
-  .audience-stack-section {
-    padding: var(--section-spacing-desktop) 0;
-    background-color: var(--color-bg-alt);
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .audience-stack-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2.5rem;
-  }
-
-  @media (min-width: 768px) {
-    .audience-stack-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  .audience-card {
-    background-color: var(--color-surface);
-    border-radius: var(--radius-card);
-    padding: 3rem 2.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-    border: 1px solid var(--color-border);
-  }
-
-  .audience-card-title {
-    font-size: var(--fs-h3);
-    font-weight: 500;
-  }
-
-  .audience-chips-wrap {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.6rem;
-  }
-
-  .audience-pill {
-    padding: 0.4rem 1rem;
-    border-radius: var(--radius-pill);
-    background-color: var(--color-surface-alt);
-    border: 1px solid var(--color-border);
-    font-size: var(--fs-sm);
-    color: var(--color-text-primary);
-  }
-
-  .stack-rationale {
-    font-size: var(--fs-body);
-    color: var(--color-text-secondary);
-    line-height: 1.6;
-  }
-
-  /* FAQ */
-  .faq-section {
-    padding: var(--section-spacing-desktop) 0;
-    background-color: var(--color-bg);
-    border-bottom: 1px solid var(--color-border);
+  /* FAQ Section */
+  .project-faq-section {
+    padding: var(--space-12, 3rem) 0;
+    background: var(--surface-secondary);
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
   }
 
   .faq-container {
-    max-width: 860px;
+    max-width: 800px;
   }
 
   .faq-list {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--space-3, 0.75rem);
   }
 
   .faq-accordion-item {
-    background-color: var(--color-surface-alt);
-    border-radius: 20px;
+    border-radius: 10px;
     overflow: hidden;
-    border: 1px solid var(--color-border-subtle);
+    transition: background 0.2s ease, border-color 0.2s ease;
   }
 
   .faq-summary {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1.5rem 2rem;
+    padding: var(--space-4, 1rem) var(--space-5, 1.25rem);
     cursor: pointer;
+    user-select: none;
     list-style: none;
-    font-family: var(--font-sans);
-    font-size: 1.15rem;
-    font-weight: 500;
-    color: var(--color-text-primary);
   }
 
   .faq-summary::-webkit-details-marker {
     display: none;
   }
 
-  :global(.faq-chevron) {
-    color: var(--color-text-secondary);
-    transition: transform 0.25s var(--ease-out-expo);
+  .faq-question {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
   }
 
-  .faq-accordion-item[open] :global(.faq-chevron) {
+  .faq-chevron {
+    color: var(--color-primary);
+    transition: transform 0.2s ease;
+  }
+
+  .faq-accordion-item[open] .faq-chevron {
     transform: rotate(180deg);
   }
 
   .faq-answer-body {
-    padding: 0 2rem 1.75rem 2rem;
-    font-size: var(--fs-body);
-    color: var(--color-text-secondary);
+    padding: 0 var(--space-5, 1.25rem) var(--space-4, 1rem);
+    color: var(--text-secondary);
+    font-size: 0.95rem;
     line-height: 1.6;
   }
 
   /* Related Solutions */
   .related-section {
-    padding: var(--section-spacing-desktop) 0;
-    background-color: var(--color-bg-alt);
-    border-bottom: 1px solid var(--color-border);
+    padding: var(--space-12, 3rem) 0;
   }
 
   .related-grid {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-
-  @media (min-width: 768px) {
-    .related-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-5, 1.25rem);
   }
 
   .related-card {
-    background-color: var(--color-surface);
-    border-radius: var(--radius-card);
-    padding: 2.5rem 2rem;
+    padding: var(--space-6, 1.5rem);
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    border: 1px solid var(--color-border-subtle);
+    gap: var(--space-3, 0.75rem);
+  }
+
+  .related-top-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .pillar-pill {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    background: var(--surface-primary);
+    border: 1px solid var(--border-subtle);
+    color: var(--color-primary);
+    text-transform: uppercase;
+  }
+
+  .stack-pill {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.7rem;
+    color: var(--text-muted);
   }
 
   .related-title {
+    font-family: var(--font-heading);
     font-size: 1.25rem;
-    font-weight: 500;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
   }
 
   .related-desc {
-    font-size: var(--fs-sm);
-    color: var(--color-text-secondary);
-    line-height: 1.55;
-    flex: 1;
-    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    flex-grow: 1;
+    margin: 0;
   }
 
   .related-action {
-    margin-top: auto;
-    padding-top: 1rem;
-    border-top: 1px solid var(--color-border);
+    margin-top: var(--space-3, 0.75rem);
   }
 
-  /* What We Built */
-  .what-we-built-section {
-    padding: var(--section-spacing-desktop) 0;
-    background-color: var(--color-bg);
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .built-card {
-    background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-alt) 100%);
-    border-radius: var(--radius-card);
-    padding: 3.5rem 3rem;
-    border: 1px solid var(--color-border);
-    box-shadow: var(--shadow-subtle);
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-  }
-
-  .built-card-title {
-    font-size: var(--fs-h2);
-    font-weight: 500;
-    line-height: 1.2;
-    margin-top: 0.25rem;
-  }
-
-  .built-card-desc {
-    font-size: var(--fs-body-lg);
-    color: var(--color-text-secondary);
-    line-height: 1.7;
-    max-width: 72ch;
-  }
-
-  /* Make It Yours */
-  .make-it-yours-section {
-    padding: var(--section-spacing-desktop) 0;
-    background-color: var(--color-bg-alt);
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .make-it-yours-lead {
-    font-size: var(--fs-body-lg);
-    color: var(--color-text-secondary);
-    line-height: 1.65;
-    margin-top: 1.25rem;
-  }
-
-  .usecases-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    margin-top: 2.5rem;
-  }
-
-  @media (min-width: 640px) {
-    .usecases-grid {
-      grid-template-columns: repeat(2, 1fr);
+  @media (max-width: 1024px) {
+    .project-journey-container {
+      grid-template-columns: 1fr;
+      gap: var(--space-4, 1rem);
+      padding-top: var(--space-2, 0.5rem);
     }
-  }
 
-  @media (min-width: 1024px) {
-    .usecases-grid {
-      grid-template-columns: repeat(4, 1fr);
+    .project-pagination {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: stretch;
     }
-  }
 
-  .usecase-card {
-    background-color: var(--color-surface);
-    border-radius: var(--radius-card);
-    padding: 2rem 1.75rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    border: 1px solid var(--color-border-subtle);
-    transition: transform 0.25s var(--ease-out-expo), box-shadow 0.25s var(--ease-out-expo);
-  }
+    .pagination-divider {
+      width: 100%;
+      height: 1px;
+      margin: 0;
+    }
 
-  .usecase-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-card-hover);
-    border-color: var(--color-border);
-  }
-
-  .usecase-number {
-    font-size: 0.95rem;
-    font-weight: 700;
-    font-family: var(--font-mono);
-    color: var(--rhsp-peg-start);
-    letter-spacing: 0.05em;
-  }
-
-  .usecase-title {
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: var(--color-text-primary);
-  }
-
-  .usecase-desc {
-    font-size: var(--fs-sm);
-    color: var(--color-text-secondary);
-    line-height: 1.55;
-  }
-
-  .make-it-yours-callout {
-    margin-top: 2.5rem;
-    padding: 2rem 2.5rem;
-    background: linear-gradient(135deg, rgba(247, 148, 29, 0.08) 0%, rgba(238, 75, 43, 0.08) 100%);
-    border: 1px solid rgba(247, 148, 29, 0.35);
-    border-radius: var(--radius-card);
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-  }
-
-  .callout-badge {
-    padding: 0.35rem 0.85rem;
-    border-radius: var(--radius-pill);
-    background: var(--rhsp-peg-gradient);
-    color: #FFFFFF;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
-
-  .callout-text {
-    font-size: var(--fs-body);
-    font-weight: 500;
-    color: var(--color-text-primary);
-    line-height: 1.5;
-  }
-
-  /* Tech Stack Pills */
-  .tech-stack-pills-wrap {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin: 0.5rem 0 0.75rem;
-  }
-
-  .tech-pill {
-    padding: 0.25rem 0.65rem;
-    border-radius: var(--radius-pill);
-    background-color: var(--color-surface-alt);
-    border: 1px solid var(--color-border);
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: var(--color-text-primary);
-  }
-
-  /* What We've Built Section */
-  .built-examples-section {
-    padding: var(--section-spacing-desktop) 0;
-    background-color: var(--color-bg-alt);
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .built-examples-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-
-  .built-example-card {
-    background-color: var(--color-surface);
-    border-radius: var(--radius-card);
-    padding: 2.5rem 2.25rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-    border: 1px solid var(--color-border);
-    box-shadow: var(--shadow-subtle);
-  }
-
-  .built-example-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-  }
-
-  .example-title-meta {
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-  }
-
-  .example-name {
-    font-size: var(--fs-h3);
-    font-weight: 600;
-    color: var(--color-text-primary);
-    margin: 0;
-  }
-
-  .example-deployed-for {
-    font-size: var(--fs-body);
-    color: var(--color-text-secondary);
-    font-weight: 500;
-  }
-
-  .example-badges {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-  }
-
-  .example-stack-badge {
-    padding: 0.35rem 0.85rem;
-    border-radius: var(--radius-pill);
-    background-color: var(--color-surface-alt);
-    border: 1px solid var(--color-border);
-    font-size: var(--fs-sm);
-    font-weight: 500;
-    color: var(--color-text-primary);
-  }
-
-  .example-ready-badge {
-    padding: 0.35rem 0.85rem;
-    border-radius: var(--radius-pill);
-    background-color: rgba(30, 75, 143, 0.08);
-    border: 1px solid rgba(30, 75, 143, 0.2);
-    font-size: var(--fs-sm);
-    font-weight: 600;
-    color: var(--color-brand-primary, #1E4B8F);
-  }
-
-  .example-oneliner {
-    font-size: var(--fs-body-lg);
-    color: var(--color-text-secondary);
-    line-height: 1.6;
-    margin: 0;
+    .next-link {
+      justify-content: flex-start;
+      text-align: left;
+    }
   }
 </style>
-
-<script>
-  function setupInterfaceShowcase() {
-    const showcase = document.getElementById('interface-showcase');
-    if (!showcase) return;
-
-    const tabs = showcase.querySelectorAll<HTMLButtonElement>('.interactive-step-card');
-    const slides = showcase.querySelectorAll<HTMLElement>('.tablet-screen-slide');
-    const pills = showcase.querySelectorAll<HTMLButtonElement>('.quick-switch-btn');
-    const captionEl = document.getElementById('tablet-caption-text');
-
-    if (!tabs.length || !slides.length) return;
-
-    let currentIndex = 0;
-    let autoInterval: any = null;
-
-    function activateSlide(index: number) {
-      currentIndex = index;
-
-      tabs.forEach((tab, i) => {
-        const isActive = i === index;
-        tab.classList.toggle('is-active', isActive);
-        tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
-      });
-
-      slides.forEach((slide, i) => {
-        slide.classList.toggle('is-active', i === index);
-      });
-
-      pills.forEach((pill, i) => {
-        pill.classList.toggle('is-active', i === index);
-      });
-
-      const activeTab = tabs[index];
-      if (captionEl && activeTab) {
-        const text = activeTab.getAttribute('data-status-text') || activeTab.querySelector('.step-card-copy')?.textContent || '';
-        if (text) captionEl.textContent = text;
-      }
-    }
-
-    tabs.forEach((tab) => {
-      tab.addEventListener('click', () => {
-        const idx = parseInt(tab.getAttribute('data-screen-idx') || '0', 10);
-        activateSlide(idx);
-        stopAutoplay();
-      });
-    });
-
-    pills.forEach((pill) => {
-      pill.addEventListener('click', () => {
-        const idx = parseInt(pill.getAttribute('data-target-idx') || '0', 10);
-        activateSlide(idx);
-        stopAutoplay();
-      });
-    });
-
-    function startAutoplay() {
-      if (autoInterval) clearInterval(autoInterval);
-      autoInterval = setInterval(() => {
-        const next = (currentIndex + 1) % slides.length;
-        activateSlide(next);
-      }, 5500);
-    }
-
-    function stopAutoplay() {
-      if (autoInterval) {
-        clearInterval(autoInterval);
-        autoInterval = null;
-      }
-    }
-
-    showcase.addEventListener('mouseenter', stopAutoplay);
-    showcase.addEventListener('mouseleave', startAutoplay);
-    showcase.addEventListener('touchstart', stopAutoplay, { passive: true });
-
-    startAutoplay();
-  }
-
-  setupInterfaceShowcase();
-  document.addEventListener('astro:after-swap', setupInterfaceShowcase);
-</script>

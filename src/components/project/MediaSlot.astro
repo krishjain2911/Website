@@ -1,0 +1,375 @@
+---
+import type { MediaItem } from '../../content/config';
+import Icon from '../Icon.astro';
+
+interface Props {
+  media?: MediaItem;
+  aspectRatio?: string;
+  class?: string;
+  priority?: boolean;
+  chapterId?: string;
+  frame?: 'browser' | 'phone' | 'none';
+  fallbackTitle?: string;
+  fallbackDescription?: string;
+}
+
+const {
+  media,
+  aspectRatio = '16/10',
+  class: className = '',
+  priority = false,
+  chapterId = 'project',
+  frame: propFrame,
+  fallbackTitle = 'Media coming soon',
+  fallbackDescription
+} = Astro.props;
+
+// Validation rule: empty string or starting with [PLACEHOLDER] is missing
+const isMissing = !media || !media.src || media.src.trim() === '' || media.src.trim().startsWith('[PLACEHOLDER]');
+const frame = propFrame || media?.frame || 'none';
+const mediaType = media?.type || 'image';
+
+if (mediaType === 'gif' && media?.src) {
+  console.warn(`[MediaSlot] GIF detected (${media.src}). Consider converting to an MP4 video for optimal performance.`);
+}
+
+const item = isMissing ? null : media!;
+---
+
+<div
+  class:list={[
+    'media-slot-wrapper',
+    `frame-${frame}`,
+    { 'is-missing': isMissing },
+    className
+  ]}
+  style={`--slot-aspect-ratio: ${aspectRatio};`}
+  data-chapter={chapterId}
+>
+  {frame === 'browser' && (
+    <div class="browser-frame-chrome" aria-hidden="true">
+      <div class="browser-dots">
+        <span class="browser-dot dot-red"></span>
+        <span class="browser-dot dot-yellow"></span>
+        <span class="browser-dot dot-green"></span>
+      </div>
+      <div class="browser-address-bar">
+        <span class="address-lock"><Icon name="shield" size={10} /></span>
+        <span class="address-text">enterprise.rhsp.io</span>
+      </div>
+    </div>
+  )}
+
+  {frame === 'phone' && (
+    <div class="phone-frame-notch" aria-hidden="true">
+      <div class="phone-speaker"></div>
+    </div>
+  )}
+
+  <div class="media-slot-viewport">
+    {isMissing || !item ? (
+      <div class="media-coming-soon-placeholder" role="img" aria-label={fallbackTitle}>
+        <div class="placeholder-grid-pattern" aria-hidden="true"></div>
+        <div class="placeholder-cube-mark" aria-hidden="true">
+          <svg viewBox="0 0 44 44" width="40" height="40" fill="none">
+            <rect x="6" y="6" width="32" height="32" rx="4" stroke="currentColor" stroke-width="2" />
+            <circle cx="22" cy="22" r="8" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 2" />
+          </svg>
+        </div>
+        <span class="placeholder-badge">{fallbackTitle}</span>
+        <span class="placeholder-caption">{fallbackDescription || media?.caption || 'Enterprise system interface preview'}</span>
+      </div>
+    ) : mediaType === 'video' ? (
+      <div
+        class="media-video-container lightbox-trigger"
+        data-lightbox-src={item.src}
+        data-lightbox-poster={item.poster || ''}
+        data-lightbox-type="video"
+        data-lightbox-caption={item.caption || ''}
+        data-lightbox-alt={item.alt}
+        role="button"
+        tabindex="0"
+        aria-label={`Open video in lightbox: ${item.alt}`}
+      >
+        <video
+          class="media-slot-video"
+          src={item.src}
+          poster={item.poster}
+          preload="none"
+          playsinline
+          muted
+          loop
+          autoplay={false}
+          aria-label={item.alt}
+        ></video>
+        <div class="media-expand-overlay" aria-hidden="true">
+          <Icon name="search" size={16} />
+        </div>
+      </div>
+    ) : mediaType === 'embed' ? (
+      <iframe
+        src={item.src}
+        class="media-slot-iframe"
+        title={item.alt}
+        loading={priority ? 'eager' : 'lazy'}
+      ></iframe>
+    ) : (
+      <div
+        class="media-image-container lightbox-trigger"
+        data-lightbox-src={item.src}
+        data-lightbox-type="image"
+        data-lightbox-caption={item.caption || ''}
+        data-lightbox-alt={item.alt}
+        role="button"
+        tabindex="0"
+        aria-label={`Open image in lightbox: ${item.alt}`}
+      >
+        <img
+          src={item.src}
+          alt={item.alt}
+          loading={priority ? 'eager' : 'lazy'}
+          decoding="async"
+          class="media-slot-image"
+        />
+        <div class="media-expand-overlay" aria-hidden="true">
+          <Icon name="search" size={16} />
+        </div>
+      </div>
+    )}
+  </div>
+
+  {item?.caption && (
+    <figcaption class="media-slot-caption">
+      <span class="caption-bullet" aria-hidden="true">■</span>
+      <span>{item.caption}</span>
+    </figcaption>
+  )}
+</div>
+
+<style>
+  .media-slot-wrapper {
+    position: relative;
+    width: 100%;
+    border-radius: 12px;
+    background: var(--surface-primary, #ffffff);
+    border: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.08));
+    overflow: hidden;
+    box-shadow: var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.04));
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  :global(.theme-dark) .media-slot-wrapper {
+    background: var(--surface-secondary, #12141a);
+    border-color: var(--border-subtle, rgba(255, 255, 255, 0.08));
+  }
+
+  .media-slot-wrapper:hover {
+    border-color: rgba(247, 148, 29, 0.4);
+    box-shadow: 0 8px 24px -4px rgba(247, 148, 29, 0.08);
+  }
+
+  /* Browser Chrome */
+  .browser-frame-chrome {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0.85rem;
+    background: var(--surface-secondary, #f8f9fa);
+    border-bottom: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.08));
+  }
+
+  :global(.theme-dark) .browser-frame-chrome {
+    background: #0d0f14;
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .browser-dots {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .browser-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .dot-red { background: #ff5f56; }
+  .dot-yellow { background: #ffbd2e; }
+  .dot-green { background: #27c93f; }
+
+  .browser-address-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    background: var(--surface-primary, #ffffff);
+    border: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.06));
+    font-family: var(--font-mono, monospace);
+    font-size: 0.7rem;
+    color: var(--text-muted, #71717a);
+    flex-grow: 1;
+    max-width: 280px;
+  }
+
+  :global(.theme-dark) .browser-address-bar {
+    background: #181b22;
+  }
+
+  /* Phone Notch */
+  .frame-phone {
+    max-width: 380px;
+    margin-inline: auto;
+    border-radius: 28px;
+    border-width: 4px;
+  }
+
+  .phone-frame-notch {
+    display: flex;
+    justify-content: center;
+    padding-top: 8px;
+    padding-bottom: 6px;
+    background: #000;
+  }
+
+  .phone-speaker {
+    width: 50px;
+    height: 4px;
+    background: #333;
+    border-radius: 2px;
+  }
+
+  /* Viewport with zero layout shift */
+  .media-slot-viewport {
+    position: relative;
+    width: 100%;
+    aspect-ratio: var(--slot-aspect-ratio, 16/10);
+    overflow: hidden;
+    background: var(--surface-primary);
+  }
+
+  .media-slot-image,
+  .media-slot-video,
+  .media-slot-iframe {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border: none;
+  }
+
+  .media-video-container,
+  .media-image-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    cursor: zoom-in;
+  }
+
+  .media-expand-overlay {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.65);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    backdrop-filter: blur(4px);
+    pointer-events: none;
+  }
+
+  .media-video-container:hover .media-expand-overlay,
+  .media-image-container:hover .media-expand-overlay {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Branded Fallback Placeholder */
+  .media-coming-soon-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 1.5rem;
+    position: relative;
+    background: linear-gradient(135deg, rgba(247, 148, 29, 0.03) 0%, rgba(0, 0, 0, 0.02) 100%);
+  }
+
+  :global(.theme-dark) .media-coming-soon-placeholder {
+    background: linear-gradient(135deg, rgba(247, 148, 29, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+  }
+
+  .placeholder-grid-pattern {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(var(--border-subtle, rgba(0, 0, 0, 0.1)) 1px, transparent 1px);
+    background-size: 16px 16px;
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  .placeholder-cube-mark {
+    color: var(--color-primary, #F7941D);
+    margin-bottom: 0.75rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .placeholder-badge {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-primary, #F7941D);
+    background: rgba(247, 148, 29, 0.1);
+    border: 1px solid rgba(247, 148, 29, 0.2);
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    margin-bottom: 0.5rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .placeholder-caption {
+    font-size: 0.85rem;
+    color: var(--text-muted, #71717a);
+    max-width: 320px;
+    line-height: 1.4;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Caption */
+  .media-slot-caption {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.85rem;
+    font-size: 0.75rem;
+    color: var(--text-muted, #71717a);
+    border-top: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.06));
+    background: var(--surface-primary);
+  }
+
+  :global(.theme-dark) .media-slot-caption {
+    background: var(--surface-secondary);
+  }
+
+  .caption-bullet {
+    color: var(--color-primary, #F7941D);
+    font-size: 0.6rem;
+  }
+</style>

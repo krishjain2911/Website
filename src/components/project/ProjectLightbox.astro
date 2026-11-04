@@ -1,0 +1,283 @@
+---
+import Icon from '../Icon.astro';
+---
+
+<div
+  id="project-lightbox"
+  class="project-lightbox-modal"
+  aria-hidden="true"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Media viewer"
+>
+  <div class="lightbox-backdrop" id="lightbox-backdrop"></div>
+
+  <div class="lightbox-dialog" role="document">
+    <div class="lightbox-toolbar">
+      <span class="lightbox-counter" id="lightbox-counter">1 / 1</span>
+      <button type="button" class="lightbox-close-btn" id="lightbox-close-btn" aria-label="Close media viewer">
+        <Icon name="x" size={20} />
+      </button>
+    </div>
+
+    <div class="lightbox-content-area" id="lightbox-content-area">
+      <img id="lightbox-img" class="lightbox-media-el" src="" alt="" style="display: none;" />
+      <video id="lightbox-video" class="lightbox-media-el" src="" controls playsinline style="display: none;"></video>
+    </div>
+
+    <div class="lightbox-footer">
+      <button type="button" class="lightbox-nav-btn btn-prev" id="lightbox-prev-btn" aria-label="Previous item">
+        <Icon name="chevron-left" size={20} />
+      </button>
+      <div class="lightbox-caption-box">
+        <p class="lightbox-caption-text" id="lightbox-caption-text"></p>
+      </div>
+      <button type="button" class="lightbox-nav-btn btn-next" id="lightbox-next-btn" aria-label="Next item">
+        <Icon name="chevron-right" size={20} />
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .project-lightbox-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  .project-lightbox-modal.is-open {
+    display: flex;
+    opacity: 1;
+  }
+
+  .lightbox-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 15, 25, 0.88);
+    backdrop-filter: blur(10px);
+  }
+
+  .lightbox-dialog {
+    position: relative;
+    z-index: 2;
+    width: 92%;
+    max-width: 1000px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    background: #0D121D;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: var(--radius-lg, 12px);
+    overflow: hidden;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+  }
+
+  .lightbox-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: #FFFFFF;
+  }
+
+  .lightbox-counter {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .lightbox-close-btn {
+    background: transparent;
+    border: none;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.35rem;
+    border-radius: 50%;
+    transition: background 0.2s ease;
+  }
+
+  .lightbox-close-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .lightbox-content-area {
+    position: relative;
+    width: 100%;
+    min-height: 320px;
+    max-height: calc(85vh - 120px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #05080E;
+    overflow: hidden;
+  }
+
+  .lightbox-media-el {
+    max-width: 100%;
+    max-height: calc(85vh - 120px);
+    object-fit: contain;
+  }
+
+  .lightbox-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.85rem 1.25rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: #0D121D;
+  }
+
+  .lightbox-nav-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #FFFFFF;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .lightbox-nav-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .lightbox-caption-box {
+    flex-grow: 1;
+    text-align: center;
+  }
+
+  .lightbox-caption-text {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0;
+    line-height: 1.4;
+  }
+</style>
+
+<script>
+  function initLightbox() {
+    const modal = document.getElementById('project-lightbox');
+    const backdrop = document.getElementById('lightbox-backdrop');
+    const closeBtn = document.getElementById('lightbox-close-btn');
+    const prevBtn = document.getElementById('lightbox-prev-btn');
+    const nextBtn = document.getElementById('lightbox-next-btn');
+    const imgEl = document.getElementById('lightbox-img') as HTMLImageElement;
+    const videoEl = document.getElementById('lightbox-video') as HTMLVideoElement;
+    const captionEl = document.getElementById('lightbox-caption-text');
+    const counterEl = document.getElementById('lightbox-counter');
+
+    if (!modal) return;
+
+    let items: HTMLElement[] = [];
+    let currentIndex = 0;
+    let lastFocusedElement: HTMLElement | null = null;
+
+    function refreshTriggers() {
+      items = Array.from(document.querySelectorAll<HTMLElement>('.lightbox-trigger'));
+    }
+
+    function openLightbox(index: number) {
+      if (!modal || index < 0 || index >= items.length) return;
+      lastFocusedElement = document.activeElement as HTMLElement;
+      currentIndex = index;
+      const target = items[currentIndex];
+
+      const src = target.getAttribute('data-lightbox-src') || '';
+      const type = target.getAttribute('data-lightbox-type') || 'image';
+      const caption = target.getAttribute('data-lightbox-caption') || target.getAttribute('data-lightbox-alt') || '';
+      const alt = target.getAttribute('data-lightbox-alt') || '';
+
+      if (type === 'video') {
+        if (imgEl) imgEl.style.display = 'none';
+        if (videoEl) {
+          videoEl.style.display = 'block';
+          videoEl.src = src;
+          videoEl.play().catch(() => {});
+        }
+      } else {
+        if (videoEl) {
+          videoEl.pause();
+          videoEl.style.display = 'none';
+        }
+        if (imgEl) {
+          imgEl.style.display = 'block';
+          imgEl.src = src;
+          imgEl.alt = alt;
+        }
+      }
+
+      if (captionEl) captionEl.textContent = caption;
+      if (counterEl) counterEl.textContent = `${currentIndex + 1} / ${items.length}`;
+
+      modal.style.display = 'flex';
+      requestAnimationFrame(() => modal.classList.add('is-open'));
+      modal.setAttribute('aria-hidden', 'false');
+      closeBtn?.focus();
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      if (!modal) return;
+      modal.classList.remove('is-open');
+      modal.setAttribute('aria-hidden', 'true');
+      if (videoEl) {
+        videoEl.pause();
+        videoEl.src = '';
+      }
+      setTimeout(() => {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+        lastFocusedElement?.focus();
+      }, 250);
+    }
+
+    function stepLightbox(direction: number) {
+      if (!items.length) return;
+      let nextIdx = (currentIndex + direction + items.length) % items.length;
+      openLightbox(nextIdx);
+    }
+
+    // Event listeners
+    refreshTriggers();
+    items.forEach((item, idx) => {
+      item.addEventListener('click', () => openLightbox(idx));
+      item.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openLightbox(idx);
+        }
+      });
+    });
+
+    closeBtn?.addEventListener('click', closeLightbox);
+    backdrop?.addEventListener('click', closeLightbox);
+    prevBtn?.addEventListener('click', () => stepLightbox(-1));
+    nextBtn?.addEventListener('click', () => stepLightbox(1));
+
+    window.addEventListener('keydown', (e) => {
+      if (!modal.classList.contains('is-open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') stepLightbox(-1);
+      if (e.key === 'ArrowRight') stepLightbox(1);
+    });
+  }
+
+  initLightbox();
+  document.addEventListener('astro:after-swap', initLightbox);
+</script>

@@ -1,0 +1,318 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Icon from '../Icon.astro';
+import MediaSlot from './MediaSlot.astro';
+
+interface Props {
+  product: CollectionEntry<'products'>;
+}
+
+const { product } = Astro.props;
+const p = product.data;
+const outcomes = p.outcomes && p.outcomes.length > 0 ? p.outcomes.slice(0, 3) : [];
+---
+
+<header class="project-hero-section" aria-labelledby="project-hero-title">
+  <div class="container project-hero-container">
+    <!-- Breadcrumb / Back Navigation -->
+    <nav class="project-hero-nav" aria-label="Breadcrumb">
+      <a href="/#solutions" class="hero-back-link">
+        <Icon name="arrow-left" size={14} />
+        <span>Back to solutions</span>
+      </a>
+      <span class="nav-sep" aria-hidden="true">/</span>
+      <span class="nav-pillar">{p.pillar}</span>
+      <span class="nav-sep" aria-hidden="true">/</span>
+      <span class="nav-current" aria-current="page">{p.shortTitle || p.title}</span>
+    </nav>
+
+    <div class="project-hero-grid">
+      <!-- Left: Title, Metadata Chips, Subline, CTAs, Outcome Strip -->
+      <div class="project-hero-left">
+        <!-- Status, Client, Stack Badges -->
+        <div class="project-chips-row">
+          {p.status && (
+            <span class:list={['status-chip', { 'is-deployed': p.status === 'Deployed' }]}>
+              <span class="status-dot"></span>
+              <span>{p.status}</span>
+            </span>
+          )}
+          {p.client && (
+            <span class="meta-chip client-chip">
+              <Icon name="shield" size={12} />
+              <span>Deployed for {p.client}</span>
+            </span>
+          )}
+          <span class="meta-chip stack-chip">{p.badge}</span>
+        </div>
+
+        <h1 id="project-hero-title" class="project-title">{p.title}</h1>
+        <p class="project-oneliner">{p.oneLiner}</p>
+
+        <!-- Outcome Strip (Up to 3 count-up stats) -->
+        {outcomes.length > 0 && (
+          <div class="project-outcome-strip" aria-label="Key outcomes">
+            {outcomes.map((outcome) => (
+              <div class="outcome-stat-card card-mastercard">
+                <span class="outcome-val stat-countup" data-target-val={outcome.value}>{outcome.value}</span>
+                <span class="outcome-lbl">{outcome.label}</span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <!-- Actions Row -->
+        <div class="project-actions-row">
+          <a href="#contact" class="btn btn-primary hero-cta-btn">
+            <span>Talk to us about this</span>
+            <Icon name="arrow-right" size={16} />
+          </a>
+          <a href="/#solutions" class="btn btn-secondary hero-back-btn">
+            <span>All solutions</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Right: Hero Media (Image or looping muted video in device/browser frame) -->
+      <div class="project-hero-right">
+        <MediaSlot
+          media={p.hero || (p.image ? { type: 'image', src: p.image, alt: p.title, frame: 'browser' } : undefined)}
+          aspectRatio="16/10"
+          priority={true}
+          chapterId="hero"
+          class="hero-media-card"
+        />
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  .project-hero-section {
+    padding-top: calc(var(--nav-height, 72px) + 2rem);
+    padding-bottom: 3.5rem;
+    background-color: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .project-hero-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--fs-xs);
+    margin-bottom: 2rem;
+  }
+
+  .hero-back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color 0.2s ease, transform 0.2s ease;
+  }
+
+  .hero-back-link:hover {
+    color: var(--color-text-primary);
+    transform: translateX(-2px);
+  }
+
+  .nav-sep {
+    color: var(--color-border-strong);
+  }
+
+  .nav-pillar {
+    color: var(--color-text-muted);
+    font-weight: 600;
+  }
+
+  .nav-current {
+    color: var(--color-text-primary);
+    font-weight: 700;
+  }
+
+  .project-hero-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    align-items: center;
+  }
+
+  @media (min-width: 960px) {
+    .project-hero-grid {
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 3.5rem;
+    }
+  }
+
+  .project-chips-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.2rem 0.65rem;
+    border-radius: var(--radius-full);
+    background: rgba(247, 148, 29, 0.1);
+    color: #B86200;
+    border: 1px solid rgba(247, 148, 29, 0.25);
+  }
+
+  :global(.dark) .status-chip {
+    color: #F7941D;
+  }
+
+  .status-chip.is-deployed {
+    background: rgba(39, 201, 63, 0.12);
+    color: #1F883D;
+    border-color: rgba(39, 201, 63, 0.3);
+  }
+
+  :global(.dark) .status-chip.is-deployed {
+    color: #3FB950;
+  }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .meta-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 0.2rem 0.65rem;
+    border-radius: var(--radius-full);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+  }
+
+  .project-title {
+    font-size: clamp(2.2rem, 4.2vw, 3.25rem);
+    font-weight: 800;
+    line-height: 1.15;
+    margin: 0 0 1rem 0;
+    color: var(--color-text-primary);
+  }
+
+  .project-oneliner {
+    font-size: clamp(1rem, 1.8vw, 1.18rem);
+    color: var(--color-text-secondary);
+    line-height: 1.55;
+    margin: 0 0 1.75rem 0;
+    max-width: 600px;
+  }
+
+  /* Outcome Strip */
+  .project-outcome-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .outcome-stat-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md, 8px);
+    padding: 0.85rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .outcome-val {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--color-text-primary);
+    line-height: 1.1;
+  }
+
+  .outcome-lbl {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .project-actions-row {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+  }
+
+  .hero-cta-btn {
+    padding: 0.75rem 1.45rem;
+  }
+
+  .hero-back-btn {
+    padding: 0.75rem 1.25rem;
+  }
+</style>
+
+<script>
+  // Count-up animation for numeric stats (Reduced motion = static)
+  function initCountUps() {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const counters = Array.from(document.querySelectorAll<HTMLElement>('.stat-countup'));
+
+    if (prefersReducedMotion || !counters.length) return;
+
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const el = entry.target as HTMLElement;
+            const text = el.getAttribute('data-target-val') || el.textContent || '';
+            const match = text.match(/^([^0-9]*)([0-9]+(?:\.[0-9]+)?)(.*)$/);
+
+            if (match) {
+              const prefix = match[1];
+              const target = parseFloat(match[2]);
+              const suffix = match[3];
+              const isInt = !match[2].includes('.');
+              const duration = 1200;
+              const startTime = performance.now();
+
+              function step(now: number) {
+                const progress = Math.min((now - startTime) / duration, 1);
+                const current = target * progress;
+                el.textContent = `${prefix}${isInt ? Math.round(current) : current.toFixed(1)}${suffix}`;
+                if (progress < 1) {
+                  requestAnimationFrame(step);
+                } else {
+                  el.textContent = text;
+                }
+              }
+              requestAnimationFrame(step);
+            }
+            io.unobserve(el);
+          }
+        });
+      }, { threshold: 0.4 });
+
+      counters.forEach((c) => io.observe(c));
+    }
+  }
+
+  initCountUps();
+  document.addEventListener('astro:after-swap', initCountUps);
+</script>

@@ -1,0 +1,509 @@
+---
+import MediaSlot from './MediaSlot.astro';
+import BeforeAfterSlider from '../BeforeAfterSlider.astro';
+
+interface Props {
+  problemData?: {
+    headline?: string;
+    story?: string;
+    points?: string[];
+    process?: string[];
+    friction?: { title: string; detail: string }[];
+    media?: any[];
+  };
+  beforeAfterId?: 'clm' | 'dms' | 'whatsapp';
+}
+
+const { problemData, beforeAfterId } = Astro.props;
+if (!problemData) return null;
+
+const primaryMedia = problemData.media && problemData.media.length > 0 ? problemData.media[0] : undefined;
+---
+
+<section id="chapter-problem" class="project-chapter-section" aria-labelledby="heading-problem">
+  <div class="chapter-header">
+    <div class="chapter-badge-wrap">
+      <span class="chapter-num-badge">01</span>
+      <span class="chapter-phase-tag">THE PROBLEM</span>
+    </div>
+    <h2 id="heading-problem" class="chapter-heading">{problemData.headline || 'The Operational Challenge'}</h2>
+    {problemData.story && <p class="chapter-story">{problemData.story}</p>}
+  </div>
+
+  <!-- Numbered Old-Process Strip -->
+  {problemData.process && problemData.process.length > 0 && (
+    <div class="problem-process-block">
+      <span class="block-mini-title">BASELINE OPERATIONAL FLOW</span>
+      <ol class="process-steps-track" aria-label="Original operational steps">
+        {problemData.process.map((step, idx) => (
+          <li class="process-step-item">
+            <span class="process-step-num">0{idx + 1}</span>
+            <span class="process-step-text">{step}</span>
+            {idx < problemData.process!.length - 1 && (
+              <span class="process-step-arrow" aria-hidden="true">&rarr;</span>
+            )}
+          </li>
+        ))}
+      </ol>
+    </div>
+  )}
+
+  <!-- Split View: Friction Hotspots & Media -->
+  <div class="problem-split-grid">
+    <!-- Left: Friction Map Cards -->
+    {problemData.friction && problemData.friction.length > 0 && (
+      <div class="friction-cards-column">
+        <span class="block-mini-title">SYSTEM FRICTION POINTS</span>
+        <div class="friction-cards-list">
+          {problemData.friction.map((item, idx) => (
+            <div
+              class="friction-card card-mastercard"
+              data-friction-index={idx}
+              id={`friction-card-${idx}`}
+              tabindex="0"
+              role="region"
+              aria-label={item.title}
+            >
+              <div class="friction-card-top">
+                <span class="friction-dot-num">{idx + 1}</span>
+                <h3 class="friction-title">{item.title}</h3>
+              </div>
+              <p class="friction-detail">{item.detail}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <!-- Right: Friction Media Slot with Interactive Hotspots -->
+    <div class="friction-media-column">
+      <div class="friction-interactive-wrapper">
+        <MediaSlot
+          media={primaryMedia}
+          aspectRatio="16/10"
+          frame="browser"
+          chapterId="problem"
+          class="friction-media-frame"
+        />
+
+        {problemData.friction && problemData.friction.length > 0 && (
+          <div class="friction-hotspots-layer" aria-hidden="true">
+            {problemData.friction.map((item, idx) => {
+              // Placed across the image as representative hotspots
+              const positions = [
+                { top: '30%', left: '25%' },
+                { top: '55%', left: '60%' },
+                { top: '75%', left: '35%' },
+                { top: '40%', left: '75%' }
+              ];
+              const pos = positions[idx % positions.length];
+              return (
+                <div
+                  class="friction-hotspot-pin"
+                  style={`top: ${pos.top}; left: ${pos.left};`}
+                  data-target-card={idx}
+                >
+                  <span class="hotspot-pulse"></span>
+                  <span class="hotspot-core">{idx + 1}</span>
+                  <div class="hotspot-tooltip">
+                    <strong>{item.title}</strong>
+                    <span>{item.detail}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+
+  <!-- Key Observation Points -->
+  {problemData.points && problemData.points.length > 0 && (
+    <div class="chapter-points-row">
+      {problemData.points.map((pt) => (
+        <div class="point-chip card-mastercard">
+          <span class="point-bullet" aria-hidden="true">■</span>
+          <span class="point-text">{pt}</span>
+        </div>
+      ))}
+    </div>
+  )}
+
+  <!-- Optional Before/After Comparison Slider -->
+  {beforeAfterId && (
+    <div class="problem-beforeafter-wrapper">
+      <div class="beforeafter-header">
+        <span class="block-mini-title">TRANSFORMATION COMPARISON</span>
+        <h3 class="beforeafter-title">The Operational Shift</h3>
+      </div>
+      <BeforeAfterSlider hideTabs={true} initialTab={beforeAfterId} />
+    </div>
+  )}
+</section>
+
+<style>
+  .project-chapter-section {
+    padding: 3.5rem 0;
+    border-bottom: 1px solid var(--color-border);
+    scroll-margin-top: calc(var(--nav-height, 72px) + 2rem);
+  }
+
+  .chapter-header {
+    margin-bottom: 2rem;
+  }
+
+  .chapter-badge-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .chapter-num-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 800;
+    background: #1E4B8F;
+    color: #FFFFFF;
+  }
+
+  .chapter-phase-tag {
+    font-size: var(--fs-xs);
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    color: #1E4B8F;
+  }
+
+  :global(.dark) .chapter-phase-tag {
+    color: #5B8FE0;
+  }
+
+  .chapter-heading {
+    font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+    font-weight: 800;
+    color: var(--color-text-primary);
+    margin: 0 0 0.75rem 0;
+    line-height: 1.2;
+  }
+
+  .chapter-story {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    max-width: 680px;
+    margin: 0;
+  }
+
+  .block-mini-title {
+    display: block;
+    font-size: 10.5px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-text-muted);
+    margin-bottom: 0.75rem;
+  }
+
+  /* Numbered Process Strip */
+  .problem-process-block {
+    margin-bottom: 2.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md, 8px);
+    padding: 1.25rem 1.5rem;
+  }
+
+  :global(.dark) .problem-process-block {
+    background: var(--color-surface-raised);
+  }
+
+  .process-steps-track {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.85rem;
+  }
+
+  .process-step-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+  }
+
+  .process-step-num {
+    font-size: 10px;
+    font-weight: 800;
+    padding: 0.15rem 0.45rem;
+    border-radius: var(--radius-sm, 4px);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+  }
+
+  .process-step-text {
+    font-weight: 600;
+  }
+
+  .process-step-arrow {
+    color: var(--color-border-strong);
+    font-weight: 700;
+    margin-left: 0.35rem;
+  }
+
+  /* Split Grid */
+  .problem-split-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  @media (min-width: 900px) {
+    .problem-split-grid {
+      grid-template-columns: 1fr 1.15fr;
+      gap: 2.5rem;
+    }
+  }
+
+  .friction-cards-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .friction-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md, 8px);
+    padding: 1rem 1.15rem;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+  }
+
+  .friction-card:hover,
+  .friction-card:focus-visible,
+  .friction-card.is-active {
+    transform: translateX(3px);
+    border-color: #EE4B2B;
+    box-shadow: 0 4px 16px rgba(238, 75, 43, 0.12);
+  }
+
+  :global(.dark) .friction-card {
+    background: var(--color-surface-raised);
+  }
+
+  .friction-card-top {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .friction-dot-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: 800;
+    background: rgba(238, 75, 43, 0.12);
+    color: #EE4B2B;
+  }
+
+  .friction-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0;
+  }
+
+  .friction-detail {
+    font-size: 0.85rem;
+    line-height: 1.45;
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  /* Interactive Hotspots Layer over Media */
+  .friction-interactive-wrapper {
+    position: relative;
+    width: 100%;
+  }
+
+  .friction-hotspots-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  .friction-hotspot-pin {
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    transform: translate(-50%, -50%);
+    pointer-events: auto;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hotspot-core {
+    position: relative;
+    z-index: 2;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #EE4B2B;
+    color: #FFFFFF;
+    font-size: 11px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+    transition: transform 0.2s ease;
+  }
+
+  .hotspot-pulse {
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 2px solid #EE4B2B;
+    animation: hotspotPulse 2s infinite ease-out;
+  }
+
+  @keyframes hotspotPulse {
+    0% { transform: scale(0.9); opacity: 1; }
+    100% { transform: scale(1.6); opacity: 0; }
+  }
+
+  .friction-hotspot-pin:hover .hotspot-core {
+    transform: scale(1.2);
+  }
+
+  .hotspot-tooltip {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 190px;
+    padding: 0.5rem 0.75rem;
+    background: #111827;
+    color: #FFFFFF;
+    border-radius: var(--radius-sm, 4px);
+    font-size: 11px;
+    line-height: 1.35;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+  }
+
+  .hotspot-tooltip strong {
+    display: block;
+    color: #FF5B3B;
+    margin-bottom: 2px;
+  }
+
+  .friction-hotspot-pin:hover .hotspot-tooltip {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-2px);
+  }
+
+  /* Points Row */
+  .chapter-points-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.85rem;
+    margin-top: 1.5rem;
+  }
+
+  .point-chip {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0.85rem 1rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md, 8px);
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    line-height: 1.4;
+  }
+
+  .point-bullet {
+    color: #1E4B8F;
+    font-size: 8px;
+    flex-shrink: 0;
+  }
+
+  /* Before After Slider Wrapper */
+  .problem-beforeafter-wrapper {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px dashed var(--color-border);
+  }
+
+  .beforeafter-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .beforeafter-title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--color-text-primary);
+    margin: 0;
+  }
+</style>
+
+<script>
+  function initFrictionInteractions() {
+    const pins = Array.from(document.querySelectorAll<HTMLElement>('.friction-hotspot-pin'));
+    const cards = Array.from(document.querySelectorAll<HTMLElement>('.friction-card'));
+
+    pins.forEach((pin) => {
+      const idx = pin.getAttribute('data-target-card');
+      pin.addEventListener('mouseenter', () => {
+        cards.forEach((c) => {
+          c.classList.toggle('is-active', c.getAttribute('data-friction-index') === idx);
+        });
+      });
+      pin.addEventListener('mouseleave', () => {
+        cards.forEach((c) => c.classList.remove('is-active'));
+      });
+    });
+
+    cards.forEach((card) => {
+      const idx = card.getAttribute('data-friction-index');
+      card.addEventListener('mouseenter', () => {
+        pins.forEach((p) => {
+          if (p.getAttribute('data-target-card') === idx) {
+            p.querySelector('.hotspot-core')?.classList.add('is-active');
+          }
+        });
+      });
+      card.addEventListener('mouseleave', () => {
+        pins.forEach((p) => p.querySelector('.hotspot-core')?.classList.remove('is-active'));
+      });
+    });
+  }
+
+  initFrictionInteractions();
+  document.addEventListener('astro:after-swap', initFrictionInteractions);
+</script>

@@ -1,0 +1,400 @@
+---
+export interface JourneyStop {
+  id: string;
+  number: string;
+  title: string;
+  badge: string;
+}
+
+interface Props {
+  stops: JourneyStop[];
+}
+
+const { stops } = Astro.props;
+---
+
+<!-- Desktop Sticky Left Rail (>= 1024px) -->
+<aside class="project-journey-rail-aside" aria-label="Project journey stages">
+  <div class="rail-sticky-wrap" id="project-rail-sticky-wrap">
+    <div class="rail-header">
+      <span class="rail-header-title">JOURNEY</span>
+      <span class="rail-active-step-lbl" id="rail-step-lbl">01 / 0{stops.length}</span>
+    </div>
+
+    <!-- Thin Road SVG with Guide Cube Track -->
+    <div class="rail-road-container" id="rail-road-container">
+      <div class="rail-guide-cube" id="rail-guide-cube" aria-hidden="true">
+        <img src="/media/raw/square.png" alt="" class="cube-guide-img" />
+      </div>
+
+      <nav class="rail-stops-list" role="navigation" aria-label="Journey chapters">
+        {stops.map((stop, idx) => (
+          <a
+            href={`#chapter-${stop.id}`}
+            class:list={['rail-stop-item', { 'is-active': idx === 0 }]}
+            id={`rail-stop-link-${stop.id}`}
+            data-stop-id={stop.id}
+            data-stop-index={idx}
+            aria-label={`Jump to stage 0${idx + 1}: ${stop.title}`}
+          >
+            <div class="stop-pin-wrapper">
+              <span class="stop-pin-circle">
+                <span class="stop-pin-num">{stop.number}</span>
+              </span>
+            </div>
+            <div class="stop-text-meta">
+              <span class="stop-eyebrow">{stop.badge}</span>
+              <span class="stop-title">{stop.title}</span>
+            </div>
+          </a>
+        ))}
+      </nav>
+    </div>
+  </div>
+</aside>
+
+<!-- Mobile Sticky Top Bar (< 1024px) -->
+<nav class="mobile-journey-topbar" id="mobile-journey-topbar" aria-label="Project stages mobile navigation">
+  <div class="mobile-topbar-inner">
+    <span class="mobile-stage-badge" id="mobile-stage-badge">01 {stops[0]?.badge || ''}</span>
+    <span class="mobile-stage-title" id="mobile-stage-title">{stops[0]?.title || ''}</span>
+    <div class="mobile-dots-track" role="tablist">
+      {stops.map((stop, idx) => (
+        <a
+          href={`#chapter-${stop.id}`}
+          class:list={['mobile-dot', { 'is-active': idx === 0 }]}
+          id={`mobile-dot-${stop.id}`}
+          data-stop-id={stop.id}
+          data-stop-index={idx}
+          title={`Stage 0${idx + 1}: ${stop.title}`}
+          aria-label={`Go to ${stop.title}`}
+        ></a>
+      ))}
+    </div>
+  </div>
+</nav>
+
+<style>
+  /* -------------------------------------------------------------
+     Desktop Sticky Left Rail (>= 1024px)
+     ------------------------------------------------------------- */
+  .project-journey-rail-aside {
+    display: none;
+  }
+
+  @media (min-width: 1024px) {
+    .project-journey-rail-aside {
+      display: block;
+      width: 220px;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .rail-sticky-wrap {
+      position: sticky;
+      top: calc(var(--nav-height, 72px) + 2rem);
+      max-height: calc(100vh - 120px);
+      padding: 1.25rem 0.75rem;
+      border-radius: var(--radius-lg, 12px);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+      display: flex;
+      flex-direction: column;
+    }
+
+    :global(.dark) .rail-sticky-wrap {
+      background: var(--color-surface-raised);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    }
+  }
+
+  .rail-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .rail-header-title {
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    color: var(--color-text-muted);
+  }
+
+  .rail-active-step-lbl {
+    font-size: 11px;
+    font-weight: 700;
+    color: #F7941D;
+  }
+
+  /* Road Container & Guide Cube */
+  .rail-road-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding-left: 20px;
+  }
+
+  .rail-road-container::before {
+    content: '';
+    position: absolute;
+    top: 14px;
+    bottom: 14px;
+    left: 10px;
+    width: 2px;
+    background: linear-gradient(180deg, #1E4B8F 0%, #F7941D 50%, #EE4B2B 100%);
+    opacity: 0.35;
+    z-index: 1;
+  }
+
+  .rail-guide-cube {
+    position: absolute;
+    left: 0;
+    top: 4px;
+    width: 22px;
+    height: 22px;
+    z-index: 5;
+    pointer-events: none;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translateY(0);
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3));
+  }
+
+  .cube-guide-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .rail-stops-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.15rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .rail-stop-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    text-decoration: none;
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    opacity: 0.65;
+  }
+
+  .rail-stop-item:hover,
+  .rail-stop-item.is-active {
+    opacity: 1;
+    transform: translateX(2px);
+  }
+
+  .stop-pin-wrapper {
+    margin-left: -19px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .stop-pin-circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--color-surface);
+    border: 1.5px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease;
+  }
+
+  .rail-stop-item.is-active .stop-pin-circle {
+    border-color: #F7941D;
+    background: #F7941D;
+  }
+
+  .stop-pin-num {
+    font-size: 9.5px;
+    font-weight: 800;
+    color: var(--color-text-secondary);
+  }
+
+  .rail-stop-item.is-active .stop-pin-num {
+    color: #FFFFFF;
+  }
+
+  .stop-text-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+
+  .stop-eyebrow {
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+  }
+
+  .rail-stop-item.is-active .stop-eyebrow {
+    color: #F7941D;
+  }
+
+  .stop-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    line-height: 1.25;
+  }
+
+  /* -------------------------------------------------------------
+     Mobile Sticky Top Bar (< 1024px)
+     ------------------------------------------------------------- */
+  .mobile-journey-topbar {
+    display: block;
+    position: sticky;
+    top: var(--nav-height, 72px);
+    z-index: 35;
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    backdrop-filter: blur(12px);
+    padding: 0.5rem 0;
+  }
+
+  @media (min-width: 1024px) {
+    .mobile-journey-topbar {
+      display: none;
+    }
+  }
+
+  :global(.dark) .mobile-journey-topbar {
+    background: rgba(18, 22, 28, 0.92);
+  }
+
+  .mobile-topbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: var(--max-w-content);
+    margin: 0 auto;
+    padding: 0 var(--space-container);
+    gap: 0.75rem;
+  }
+
+  .mobile-stage-badge {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #F7941D;
+    flex-shrink: 0;
+  }
+
+  .mobile-stage-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-grow: 1;
+  }
+
+  .mobile-dots-track {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-shrink: 0;
+  }
+
+  .mobile-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-border);
+    transition: all 0.2s ease;
+    text-decoration: none;
+  }
+
+  .mobile-dot.is-active {
+    width: 18px;
+    border-radius: var(--radius-full);
+    background: #F7941D;
+  }
+</style>
+
+<script>
+  function initProjectJourneyRail() {
+    const stops = Array.from(document.querySelectorAll<HTMLElement>('.rail-stop-item'));
+    const mobileDots = Array.from(document.querySelectorAll<HTMLElement>('.mobile-dot'));
+    const guideCube = document.getElementById('rail-guide-cube');
+    const stepLbl = document.getElementById('rail-step-lbl');
+    const mobileBadge = document.getElementById('mobile-stage-badge');
+    const mobileTitle = document.getElementById('mobile-stage-title');
+
+    if (!stops.length) return;
+
+    const stopIds = stops.map(s => s.getAttribute('data-stop-id') || '');
+    const chapterEls = stopIds.map(id => document.getElementById(`chapter-${id}`));
+
+    function updateActiveStop() {
+      const vCenter = window.scrollY + window.innerHeight * 0.45;
+      let activeIndex = 0;
+
+      for (let i = chapterEls.length - 1; i >= 0; i--) {
+        const el = chapterEls[i];
+        if (el && el.offsetTop <= vCenter) {
+          activeIndex = i;
+          break;
+        }
+      }
+
+      // Update Desktop Rail Active Stop & Dwell Cube
+      stops.forEach((stop, idx) => {
+        const isMatch = idx === activeIndex;
+        stop.classList.toggle('is-active', isMatch);
+        stop.setAttribute('aria-current', isMatch ? 'true' : 'false');
+
+        if (isMatch && guideCube) {
+          // Center the guide cube directly over this active stop pin
+          const pinEl = stop.querySelector<HTMLElement>('.stop-pin-wrapper');
+          if (pinEl) {
+            const stopTop = stop.offsetTop;
+            guideCube.style.transform = `translateY(${stopTop}px)`;
+          }
+        }
+      });
+
+      // Update mobile header
+      mobileDots.forEach((dot, idx) => {
+        dot.classList.toggle('is-active', idx === activeIndex);
+      });
+
+      if (stepLbl) {
+        stepLbl.textContent = `0${activeIndex + 1} / 0${stops.length}`;
+      }
+
+      const activeStop = stops[activeIndex];
+      if (activeStop) {
+        const b = activeStop.querySelector('.stop-eyebrow')?.textContent || '';
+        const t = activeStop.querySelector('.stop-title')?.textContent || '';
+        if (mobileBadge) mobileBadge.textContent = `0${activeIndex + 1} ${b}`;
+        if (mobileTitle) mobileTitle.textContent = t;
+      }
+    }
+
+    window.addEventListener('scroll', updateActiveStop, { passive: true });
+    updateActiveStop();
+  }
+
+  initProjectJourneyRail();
+  document.addEventListener('astro:after-swap', initProjectJourneyRail);
+</script>

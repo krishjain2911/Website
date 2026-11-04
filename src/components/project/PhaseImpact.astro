@@ -1,0 +1,384 @@
+---
+import MediaSlot from './MediaSlot.astro';
+import Icon from '../Icon.astro';
+
+interface Props {
+  impactData?: {
+    headline?: string;
+    story?: string;
+    points?: string[];
+    enablement?: string[];
+    governance?: string[];
+    monitoring?: string[];
+    outcome?: string;
+    quote?: {
+      text: string;
+      role?: string;
+    };
+    media?: any[];
+  };
+}
+
+const { impactData } = Astro.props;
+if (!impactData) return null;
+
+const primaryMedia = impactData.media && impactData.media.length > 0 ? impactData.media[0] : undefined;
+---
+
+<section id="chapter-impact" class="project-chapter-section" aria-labelledby="heading-impact">
+  <div class="chapter-header">
+    <div class="chapter-badge-wrap">
+      <span class="chapter-num-badge">06</span>
+      <span class="chapter-phase-tag">LONG-TERM IMPACT</span>
+    </div>
+    <h2 id="heading-impact" class="chapter-heading">{impactData.headline || 'Lasting Operational Transformation'}</h2>
+    {impactData.story && <p class="chapter-story">{impactData.story}</p>}
+  </div>
+
+  <!-- Big Hero Outcome Statement -->
+  {impactData.outcome && (
+    <div class="outcome-highlight-banner card-mastercard">
+      <div class="outcome-accent-bar" aria-hidden="true"></div>
+      <div class="outcome-body">
+        <span class="outcome-label">FINAL STRATEGIC OUTCOME</span>
+        <blockquote class="outcome-quote">{impactData.outcome}</blockquote>
+      </div>
+    </div>
+  )}
+
+  <!-- Impact Media if Present -->
+  {primaryMedia && (
+    <div class="impact-media-slot-wrap">
+      <MediaSlot
+        media={primaryMedia}
+        fallbackTitle="Telemetry & Impact Analytics"
+        fallbackDescription="Long-term telemetry dashboard showing persistent adoption and throughput gains."
+      />
+    </div>
+  )}
+
+  <!-- 3-Pillar Operational Foundation: Governance / Enablement / Monitoring -->
+  {(impactData.governance || impactData.enablement || impactData.monitoring) && (
+    <div class="impact-pillars-grid">
+      {impactData.enablement && impactData.enablement.length > 0 && (
+        <div class="pillar-card card-mastercard">
+          <div class="pillar-header">
+            <span class="pillar-icon" aria-hidden="true">
+              <Icon name="users" size={18} />
+            </span>
+            <h3 class="pillar-title">Enablement &amp; Handover</h3>
+          </div>
+          <ul class="pillar-list">
+            {impactData.enablement.map((item) => (
+              <li class="pillar-item">
+                <span class="pillar-bullet" aria-hidden="true">&bull;</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {impactData.governance && impactData.governance.length > 0 && (
+        <div class="pillar-card card-mastercard">
+          <div class="pillar-header">
+            <span class="pillar-icon" aria-hidden="true">
+              <Icon name="shield" size={18} />
+            </span>
+            <h3 class="pillar-title">Governance &amp; Controls</h3>
+          </div>
+          <ul class="pillar-list">
+            {impactData.governance.map((item) => (
+              <li class="pillar-item">
+                <span class="pillar-bullet" aria-hidden="true">&bull;</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {impactData.monitoring && impactData.monitoring.length > 0 && (
+        <div class="pillar-card card-mastercard">
+          <div class="pillar-header">
+            <span class="pillar-icon" aria-hidden="true">
+              <Icon name="eye" size={18} />
+            </span>
+            <h3 class="pillar-title">Monitoring &amp; Telemetry</h3>
+          </div>
+          <ul class="pillar-list">
+            {impactData.monitoring.map((item) => (
+              <li class="pillar-item">
+                <span class="pillar-bullet" aria-hidden="true">&bull;</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  )}
+
+  <!-- Client / Stakeholder Quote -->
+  {impactData.quote && impactData.quote.text && (
+    <div class="impact-quote-card card-mastercard">
+      <div class="quote-mark-icon" aria-hidden="true">&ldquo;</div>
+      <p class="quote-body-text">{impactData.quote.text}</p>
+      {impactData.quote.role && (
+        <div class="quote-author-row">
+          <span class="quote-author-role">{impactData.quote.role}</span>
+        </div>
+      )}
+    </div>
+  )}
+
+  <!-- Key Impact Points -->
+  {impactData.points && impactData.points.length > 0 && (
+    <div class="impact-points-card card-mastercard">
+      <span class="block-mini-title">ENDURING CAPABILITY HIGHLIGHTS</span>
+      <ul class="impact-points-grid">
+        {impactData.points.map((pt) => (
+          <li class="impact-point-item">
+            <span class="pt-star" aria-hidden="true">&#x2714;</span>
+            <span>{pt}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
+</section>
+
+<style>
+  .project-chapter-section {
+    padding: var(--space-8, 2rem) 0 var(--space-12, 3rem);
+    border-bottom: 1px solid var(--border-subtle);
+    scroll-margin-top: calc(var(--header-height, 64px) + 2rem);
+  }
+
+  .chapter-header {
+    margin-bottom: var(--space-6, 1.5rem);
+  }
+
+  .chapter-badge-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2, 0.5rem);
+    margin-bottom: var(--space-3, 0.75rem);
+  }
+
+  .chapter-num-badge {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    background: var(--surface-secondary, rgba(0,0,0,0.05));
+    color: var(--text-muted);
+    border: 1px solid var(--border-subtle);
+  }
+
+  .chapter-phase-tag {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+  }
+
+  .chapter-heading {
+    font-family: var(--font-heading);
+    font-size: clamp(1.6rem, 3vw, 2.25rem);
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+    margin-bottom: var(--space-3, 0.75rem);
+  }
+
+  .chapter-story {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    max-width: 780px;
+    margin: 0;
+  }
+
+  .block-mini-title {
+    display: block;
+    font-family: var(--font-mono, monospace);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: var(--space-3, 0.75rem);
+  }
+
+  .outcome-highlight-banner {
+    display: flex;
+    overflow: hidden;
+    margin-bottom: var(--space-6, 1.5rem);
+    padding: var(--space-6, 1.5rem);
+    position: relative;
+    background: linear-gradient(135deg, var(--surface-primary) 0%, var(--surface-secondary) 100%);
+  }
+
+  .outcome-accent-bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 6px;
+    background: var(--color-primary);
+  }
+
+  .outcome-body {
+    padding-left: var(--space-2, 0.5rem);
+  }
+
+  .outcome-label {
+    display: block;
+    font-family: var(--font-mono, monospace);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--color-primary);
+    margin-bottom: var(--space-2, 0.5rem);
+  }
+
+  .outcome-quote {
+    font-family: var(--font-heading);
+    font-size: clamp(1.15rem, 2vw, 1.4rem);
+    font-weight: 600;
+    line-height: 1.45;
+    color: var(--text-primary);
+    margin: 0;
+  }
+
+  .impact-media-slot-wrap {
+    margin-bottom: var(--space-6, 1.5rem);
+  }
+
+  .impact-pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--space-4, 1rem);
+    margin-bottom: var(--space-6, 1.5rem);
+  }
+
+  .pillar-card {
+    padding: var(--space-5, 1.25rem);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3, 0.75rem);
+  }
+
+  .pillar-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 0.5rem;
+  }
+
+  .pillar-icon {
+    color: var(--color-primary);
+    display: inline-flex;
+  }
+
+  .pillar-title {
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+  }
+
+  .pillar-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .pillar-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+  }
+
+  .pillar-bullet {
+    color: var(--color-primary);
+    font-size: 1rem;
+    line-height: 1;
+  }
+
+  .impact-quote-card {
+    padding: var(--space-6, 1.5rem);
+    margin-bottom: var(--space-6, 1.5rem);
+    position: relative;
+    background: var(--surface-secondary);
+  }
+
+  .quote-mark-icon {
+    font-family: Georgia, serif;
+    font-size: 3rem;
+    line-height: 1;
+    color: var(--color-primary);
+    opacity: 0.3;
+    margin-bottom: -1rem;
+  }
+
+  .quote-body-text {
+    font-size: 1.1rem;
+    font-style: italic;
+    line-height: 1.6;
+    color: var(--text-primary);
+    margin: 0 0 var(--space-3, 0.75rem) 0;
+  }
+
+  .quote-author-row {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .quote-author-role {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-primary);
+  }
+
+  .impact-points-card {
+    padding: var(--space-5, 1.25rem);
+  }
+
+  .impact-points-grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-3, 0.75rem);
+  }
+
+  .impact-point-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    color: var(--text-secondary);
+  }
+
+  .pt-star {
+    color: var(--color-primary);
+    font-size: 0.85rem;
+    margin-top: 2px;
+  }
+</style>
