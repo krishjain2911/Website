@@ -2,11 +2,17 @@
 import LogoMark from './brand/LogoMark.astro';
 import ThemeToggle from './ThemeToggle.astro';
 import Icon from './Icon.astro';
+import MediaAsset from './MediaAsset.astro';
 import { siteConfig } from '../config/site';
+import { getCollection } from 'astro:content';
 
 const { nav } = siteConfig;
 const currentPath = Astro.url.pathname;
 const isAboutActive = currentPath === '/about' || currentPath.startsWith('/about/');
+const isSolutionsActive = currentPath.startsWith('/solutions');
+
+const allProducts = await getCollection('products');
+const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
 ---
 
 <header id="main-nav-header" class="site-header">
@@ -19,6 +25,58 @@ const isAboutActive = currentPath === '/about' || currentPath.startsWith('/about
     <!-- Center: Main Nav Links -->
     <nav class="desktop-nav" aria-label="Main Navigation">
       <ul class="nav-links">
+        <!-- 1. Solutions Dropdown (Non-clickable trigger button) -->
+        <li class="nav-item-dropdown" id="solutions-dropdown-item">
+          <button
+            type="button"
+            class={`nav-link nav-btn-dropdown ${isSolutionsActive ? 'is-active' : ''}`}
+            id="solutions-menu-trigger"
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-controls="solutions-dropdown-panel"
+          >
+            <span>Solutions</span>
+            <Icon name="chevron-down" size={14} class="dropdown-chevron" />
+          </button>
+
+          <!-- Flat 3-Column Dropdown Panel -->
+          <div
+            class="solutions-dropdown-panel"
+            id="solutions-dropdown-panel"
+            role="region"
+            aria-label="Solutions Catalog"
+            hidden
+          >
+            <div class="container solutions-dropdown-inner">
+              <div class="solutions-flat-grid" role="menu">
+                {sortedProducts.map((proj) => {
+                  const assetKey = proj.data.image || proj.data.imageKey || `product-${proj.slug}`;
+                  return (
+                    <a
+                      href={`/solutions/${proj.slug}`}
+                      class="solutions-card-link card-mastercard"
+                      role="menuitem"
+                      data-solution-card
+                    >
+                      <div class="sol-card-thumb">
+                        <MediaAsset assetKey={assetKey} alt={proj.data.shortTitle || proj.data.title} aspectRatio="16/10" />
+                      </div>
+                      <div class="sol-card-info">
+                        <div class="sol-card-top">
+                          <span class="sol-card-badge">{proj.data.badge}</span>
+                        </div>
+                        <h4 class="sol-card-title">{proj.data.title}</h4>
+                        <p class="sol-card-desc">{proj.data.oneLiner.replace(/^\[PLACEHOLDER\]\s*/i, '')}</p>
+                      </div>
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <!-- 2. About Us -->
         <li>
           <a
             href="/about"
@@ -28,6 +86,8 @@ const isAboutActive = currentPath === '/about' || currentPath.startsWith('/about
             About Us
           </a>
         </li>
+
+        <!-- 3. PEG Board (Coming Soon) -->
         <li>
           <span
             class="nav-link nav-link--pegboard"
@@ -39,6 +99,8 @@ const isAboutActive = currentPath === '/about' || currentPath.startsWith('/about
             <span class="nav-coming-soon-pill">Coming soon</span>
           </span>
         </li>
+
+        <!-- 4. Contact -->
         <li>
           <a href="/#contact" class="nav-link">Contact</a>
         </li>
@@ -86,6 +148,23 @@ const isAboutActive = currentPath === '/about' || currentPath.startsWith('/about
     <div class="mobile-drawer-body">
       <!-- Mobile Navigation Sections -->
       <div class="mobile-nav-sections">
+        <!-- 0. Solutions (Expandable Accordion) -->
+        <details class="mobile-section mobile-accordion" open={isSolutionsActive}>
+          <summary class="mobile-accordion-summary">
+            <span class="eyebrow">SOLUTIONS ({sortedProducts.length})</span>
+            <Icon name="chevron-down" size={16} class="accordion-chevron" />
+          </summary>
+          <div class="mobile-links-grid mobile-solutions-column">
+            {sortedProducts.map((proj) => (
+              <a href={`/solutions/${proj.slug}`} class="mobile-nav-link">
+                <span class="mobile-sol-badge">{proj.data.badge}</span>
+                <strong>{proj.data.title}</strong>
+                <span>{proj.data.oneLiner.replace(/^\[PLACEHOLDER\]\s*/i, '')}</span>
+              </a>
+            ))}
+          </div>
+        </details>
+
         <!-- 1. About Us -->
         <div class="mobile-section">
           <span class="eyebrow">ABOUT US</span>
@@ -151,7 +230,7 @@ const isAboutActive = currentPath === '/about' || currentPath.startsWith('/about
     width: 100%;
     height: 72px;
     z-index: 1000;
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--color-border);
@@ -162,7 +241,7 @@ const isAboutActive = currentPath === '/about' || currentPath.startsWith('/about
   }
 
   :global([data-theme="dark"]) .site-header {
-    background-color: rgba(14, 14, 14, 0.9);
+    background-color: rgba(14, 14, 14, 0.95);
   }
 
   @media (max-width: 767px) {
@@ -208,7 +287,7 @@ const isAboutActive = currentPath === '/about' || currentPath.startsWith('/about
     flex-shrink: 0;
   }
 
-  /* Desktop Nav Links */
+  /* Desktop Nav Links (Visible >= 1100px) */
   .desktop-nav {
     display: none;
     flex-shrink: 0;
@@ -224,7 +303,7 @@ const isAboutActive = currentPath === '/about' || currentPath.startsWith('/about
     list-style: none;
     display: flex;
     align-items: center;
-    gap: 2rem;
+    gap: 1.5rem;
     margin: 0;
     padding: 0;
   }
@@ -248,55 +327,167 @@ const isAboutActive = currentPath === '/about' || currentPath.startsWith('/about
     align-items: center;
     gap: 0.35rem;
     padding: 0.4rem 0.85rem;
-    border-radius: var(--radius-pill);
-    white-space: nowrap;
-    flex-shrink: 0;
-    transition: color 0.2s ease, background-color 0.2s ease;
+    border-radius: var(--radius-full);
+    transition: color 0.15s ease, background-color 0.15s ease;
   }
 
-  .nav-link:hover {
+  .nav-link:hover,
+  .nav-link:focus-visible {
     color: var(--color-text-primary);
-    background-color: var(--color-surface-alt);
+    background-color: var(--color-surface-hover, rgba(0,0,0,0.04));
+    outline: none;
+  }
+
+  :global([data-theme="dark"]) .nav-link:hover,
+  :global([data-theme="dark"]) .nav-link:focus-visible {
+    background-color: rgba(255, 255, 255, 0.06);
   }
 
   .nav-link.is-active {
-    color: var(--color-text-primary);
-    background-color: var(--color-surface-alt);
+    color: var(--color-primary);
     font-weight: 600;
   }
 
-  /* PEG Board Coming Soon Pill & Non-Clickable Link */
-  .nav-link--pegboard {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    cursor: default;
-    user-select: none;
-    pointer-events: auto;
+  /* Solutions Dropdown Trigger & Panel */
+  .nav-item-dropdown {
+    position: relative;
   }
 
-  .nav-link--pegboard:hover {
+  .nav-btn-dropdown {
+    outline: none;
+  }
+
+  .dropdown-chevron {
+    transition: transform 0.2s ease;
+  }
+
+  .nav-btn-dropdown[aria-expanded="true"] .dropdown-chevron {
+    transform: rotate(180deg);
+  }
+
+  .solutions-dropdown-panel {
+    position: absolute;
+    top: calc(100% + 12px);
+    left: -20px;
+    width: 820px;
+    background: var(--color-surface, #ffffff);
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    box-shadow: 0 20px 48px -8px rgba(0, 0, 0, 0.16);
+    z-index: 1050;
+    padding: 1.5rem;
+    box-sizing: border-box;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+  }
+
+  :global([data-theme="dark"]) .solutions-dropdown-panel {
+    background: #14171d;
+    box-shadow: 0 24px 56px -8px rgba(0, 0, 0, 0.5);
+  }
+
+  .solutions-dropdown-panel.is-open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    display: block !important;
+  }
+
+  .solutions-flat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .solutions-card-link {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    border-radius: 10px;
+    padding: 0.75rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .solutions-card-link:hover,
+  .solutions-card-link:focus-visible {
+    border-color: #F7941D;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px -4px rgba(247, 148, 29, 0.16);
+    outline: none;
+  }
+
+  .sol-card-thumb {
+    width: 100%;
+    aspect-ratio: 16/10;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 0.6rem;
+    background: var(--color-surface-hover);
+  }
+
+  .sol-card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .sol-card-badge {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--color-primary, #F7941D);
+    background: rgba(247, 148, 29, 0.1);
+    padding: 2px 5px;
+    border-radius: 3px;
+    display: inline-block;
+    align-self: flex-start;
+  }
+
+  .sol-card-title {
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0;
+    line-height: 1.25;
+  }
+
+  .sol-card-desc {
+    font-size: 0.75rem;
+    line-height: 1.35;
     color: var(--color-text-secondary);
-    background-color: transparent;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* PEG Board link */
+  .nav-link--pegboard {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 
   .nav-coming-soon-pill {
-    display: inline-flex;
-    align-items: center;
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
     padding: 0.15rem 0.45rem;
-    border-radius: var(--radius-pill);
-    background-color: rgba(247, 148, 29, 0.14);
-    color: #F7941D;
-    line-height: 1.1;
-    border: 1px solid rgba(247, 148, 29, 0.3);
-    white-space: nowrap;
+    border-radius: var(--radius-full);
+    background-color: var(--color-surface);
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
   }
 
-  /* Header Actions */
+  /* Right Header Actions */
   .header-actions {
     display: flex;
     align-items: center;
@@ -399,16 +590,13 @@ const isAboutActive = currentPath === '/about' || currentPath.startsWith('/about
   }
 
   .mobile-close-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     background: transparent;
     border: none;
     color: var(--color-text-primary);
     cursor: pointer;
-    min-width: 44px;
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: var(--radius-pill);
     padding: 0.5rem;
   }
 
@@ -416,67 +604,123 @@ const isAboutActive = currentPath === '/about' || currentPath.startsWith('/about
     flex: 1;
     overflow-y: auto;
     padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
   }
 
   .mobile-nav-sections {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1.5rem;
+  }
+
+  .mobile-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .mobile-accordion {
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 1rem;
+  }
+
+  .mobile-accordion-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .mobile-accordion-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .accordion-chevron {
+    color: var(--color-text-muted);
+    transition: transform 0.2s ease;
+  }
+
+  .mobile-accordion[open] .accordion-chevron {
+    transform: rotate(180deg);
+  }
+
+  .mobile-solutions-column {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+  }
+
+  .mobile-sol-badge {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.65rem;
+    color: var(--color-primary);
+  }
+
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
   }
 
   .mobile-links-grid {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-    margin-top: 0.5rem;
   }
 
   .mobile-nav-link {
     display: flex;
     flex-direction: column;
-    padding: 0.75rem 1rem;
-    border-radius: 12px;
-    background-color: var(--color-surface-alt);
+    gap: 0.25rem;
+    padding: 0.85rem 1rem;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
     text-decoration: none;
+    color: inherit;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .mobile-nav-link:hover,
+  .mobile-nav-link:active {
+    background-color: var(--color-surface-hover);
+    border-color: #F7941D;
   }
 
   .mobile-nav-link strong {
-    font-size: 1rem;
-    font-weight: 500;
+    font-size: var(--fs-body);
+    font-weight: 600;
     color: var(--color-text-primary);
   }
 
   .mobile-nav-link span {
-    font-size: var(--fs-sm);
+    font-size: var(--fs-xs);
     color: var(--color-text-secondary);
+    line-height: 1.4;
   }
 
   .mobile-nav-link--disabled {
-    cursor: default;
-    opacity: 0.9;
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 
   .mobile-pegboard-title-row {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    margin-bottom: 0.2rem;
   }
 
   .mobile-drawer-footer {
-    padding: 1.25rem 1.5rem max(1.5rem, env(safe-area-inset-bottom));
-    border-top: 1px solid var(--color-border);
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    position: sticky;
-    bottom: 0;
-    background-color: var(--color-bg);
-    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.05);
-    z-index: 10;
+    gap: 1.25rem;
+    padding: 1.25rem 1.5rem max(1.25rem, env(safe-area-inset-bottom));
+    border-top: 1px solid var(--color-border);
+    background-color: var(--color-surface);
   }
 
   .mobile-theme-row {
@@ -484,123 +728,167 @@ const isAboutActive = currentPath === '/about' || currentPath.startsWith('/about
     align-items: center;
     justify-content: space-between;
     font-size: var(--fs-sm);
+    font-weight: 500;
     color: var(--color-text-secondary);
   }
 
   .mobile-cta-pill {
     width: 100%;
-    min-height: 50px;
-    font-size: 1rem;
+    height: 48px;
+    font-size: var(--fs-body);
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 </style>
 
 <script>
-  function setupNav() {
+  function setupNavHandlers() {
+    // 1. Mobile Menu Drawer
+    const openBtn = document.getElementById('mobile-menu-open-btn');
+    const closeBtn = document.getElementById('mobile-menu-close-btn');
+    const drawer = document.getElementById('mobile-menu-drawer');
+    const drawerLinks = drawer?.querySelectorAll('a');
+
+    function openDrawer() {
+      if (!drawer) return;
+      drawer.classList.add('is-open');
+      drawer.setAttribute('aria-hidden', 'false');
+      openBtn?.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+      closeBtn?.focus();
+    }
+
+    function closeDrawer() {
+      if (!drawer) return;
+      drawer.classList.remove('is-open');
+      drawer.setAttribute('aria-hidden', 'true');
+      openBtn?.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+      openBtn?.focus();
+    }
+
+    openBtn?.addEventListener('click', openDrawer);
+    closeBtn?.addEventListener('click', closeDrawer);
+    drawerLinks?.forEach(link => link.addEventListener('click', closeDrawer));
+
+    // 2. Solutions Dropdown Hover, Click & Keyboard Navigation
+    const dropdownItem = document.getElementById('solutions-dropdown-item');
+    const trigger = document.getElementById('solutions-menu-trigger');
+    const panel = document.getElementById('solutions-dropdown-panel');
+    const cards = Array.from(panel?.querySelectorAll<HTMLAnchorElement>('[data-solution-card]') || []);
+
+    let closeTimer: ReturnType<typeof setTimeout> | null = null;
+
+    function openDropdown() {
+      if (closeTimer) clearTimeout(closeTimer);
+      if (!panel || !trigger) return;
+      panel.removeAttribute('hidden');
+      panel.classList.add('is-open');
+      trigger.setAttribute('aria-expanded', 'true');
+    }
+
+    function closeDropdown(returnFocus = false) {
+      if (closeTimer) clearTimeout(closeTimer);
+      if (!panel || !trigger) return;
+      panel.classList.remove('is-open');
+      panel.setAttribute('hidden', '');
+      trigger.setAttribute('aria-expanded', 'false');
+      if (returnFocus) trigger.focus();
+    }
+
+    if (trigger && panel && dropdownItem) {
+      // Click toggle
+      trigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = panel.classList.contains('is-open');
+        if (isOpen) closeDropdown();
+        else openDropdown();
+      });
+
+      // Hover
+      dropdownItem.addEventListener('mouseenter', openDropdown);
+      dropdownItem.addEventListener('mouseleave', () => {
+        closeTimer = setTimeout(closeDropdown, 180);
+      });
+
+      // Focus
+      trigger.addEventListener('focus', openDropdown);
+
+      // Trigger Keydown
+      trigger.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openDropdown();
+          if (cards.length > 0) cards[0].focus();
+        } else if (e.key === 'Escape') {
+          closeDropdown(true);
+        }
+      });
+
+      // Cards Arrow Key Navigation
+      cards.forEach((card, index) => {
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+            e.preventDefault();
+            const nextIdx = (index + 1) % cards.length;
+            cards[nextIdx].focus();
+          } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            const prevIdx = (index - 1 + cards.length) % cards.length;
+            cards[prevIdx].focus();
+          } else if (e.key === 'Escape') {
+            e.preventDefault();
+            closeDropdown(true);
+          }
+        });
+      });
+
+      // Outside click closes
+      document.addEventListener('click', (e) => {
+        if (!dropdownItem.contains(e.target as Node)) {
+          closeDropdown();
+        }
+      });
+    }
+
+    // 3. Scroll Progress Indicator & Header Scroll Hide
     const header = document.getElementById('main-nav-header');
-    const mobileOpenBtn = document.getElementById('mobile-menu-open-btn');
-    const mobileCloseBtn = document.getElementById('mobile-menu-close-btn');
-    const mobileDrawer = document.getElementById('mobile-menu-drawer');
-    const mobileCtaBtn = document.getElementById('mobile-cta-btn');
-
-    if (!header) return;
-
-    // Sticky header shrink & mobile hide on scroll down
+    const progressBar = document.getElementById('scroll-progress-line');
     let lastScrollY = window.scrollY;
-    let ticking = false;
 
     function handleScroll() {
       const currentScrollY = window.scrollY;
-      if (currentScrollY > 30) {
-        header?.classList.add('is-scrolled');
-      } else {
-        header?.classList.remove('is-scrolled');
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+
+      if (progressBar && totalHeight > 0) {
+        const progress = Math.min(100, Math.max(0, (currentScrollY / totalHeight) * 100));
+        progressBar.style.width = `${progress}%`;
       }
 
-      if (window.innerWidth < 1100 && currentScrollY > 140) {
-        if (currentScrollY > lastScrollY + 20) {
-          header?.classList.add('is-hidden');
-        } else if (currentScrollY < lastScrollY - 15) {
-          header?.classList.remove('is-hidden');
+      if (header) {
+        if (currentScrollY > 40) {
+          header.classList.add('is-scrolled');
+        } else {
+          header.classList.remove('is-scrolled');
         }
-      } else {
-        header?.classList.remove('is-hidden');
-      }
 
-      // Update thin scroll progress line
-      const progressBar = document.getElementById('scroll-progress-line');
-      if (progressBar) {
-        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-        const progress = docHeight > 0 ? (currentScrollY / docHeight) * 100 : 0;
-        progressBar.style.width = `${Math.min(100, Math.max(0, progress))}%`;
+        if (window.innerWidth < 1100) {
+          if (currentScrollY > lastScrollY && currentScrollY > 120) {
+            header.classList.add('is-hidden');
+          } else {
+            header.classList.remove('is-hidden');
+          }
+        }
       }
-
-      lastScrollY = Math.max(0, currentScrollY);
-      ticking = false;
+      lastScrollY = currentScrollY;
     }
 
-    window.addEventListener('scroll', () => {
-      if (!ticking) {
-        window.requestAnimationFrame(handleScroll);
-        ticking = true;
-      }
-    }, { passive: true });
+    window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
-
-    // Mobile Drawer Open / Close
-    function openMobileMenu() {
-      mobileDrawer?.classList.add('is-open');
-      mobileDrawer?.setAttribute('aria-hidden', 'false');
-      mobileOpenBtn?.setAttribute('aria-expanded', 'true');
-      document.body.style.overflow = 'hidden';
-      setTimeout(() => mobileCloseBtn?.focus(), 60);
-    }
-
-    function closeMobileMenu() {
-      mobileDrawer?.classList.remove('is-open');
-      mobileDrawer?.setAttribute('aria-hidden', 'true');
-      mobileOpenBtn?.setAttribute('aria-expanded', 'false');
-      document.body.style.overflow = '';
-      mobileOpenBtn?.focus();
-    }
-
-    // Escape key
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        if (mobileDrawer?.classList.contains('is-open')) closeMobileMenu();
-      }
-    });
-
-    // Focus trap inside mobile drawer
-    mobileDrawer?.addEventListener('keydown', (e) => {
-      if (e.key === 'Tab') {
-        const focusables = mobileDrawer.querySelectorAll<HTMLElement>(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
-        if (!focusables.length) return;
-        const first = focusables[0];
-        const last = focusables[focusables.length - 1];
-
-        if (e.shiftKey && document.activeElement === first) {
-          e.preventDefault();
-          last.focus();
-        } else if (!e.shiftKey && document.activeElement === last) {
-          e.preventDefault();
-          first.focus();
-        }
-      }
-    });
-
-    mobileOpenBtn?.addEventListener('click', openMobileMenu);
-    mobileCloseBtn?.addEventListener('click', closeMobileMenu);
-    mobileCtaBtn?.addEventListener('click', closeMobileMenu);
-
-    // Close mobile drawer on link navigation
-    const mobileLinks = mobileDrawer?.querySelectorAll('a');
-    mobileLinks?.forEach(link => {
-      link.addEventListener('click', closeMobileMenu);
-    });
   }
 
-  setupNav();
-  document.addEventListener('astro:after-swap', setupNav);
+  setupNavHandlers();
+  document.addEventListener('astro:after-swap', setupNavHandlers);
 </script>
