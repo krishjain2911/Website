@@ -12,8 +12,126 @@ badges:
   - "Low-code (OutSystems)"
 oneLiner: "Private enterprise AI deployments that keep sensitive organization data strictly within your perimeter."
 outcomeHeadline: "Enterprise AI utility without exposing corporate intellectual property to public clouds."
-# TODO: add built examples
-builtExamples: []
+status: "Accelerator"
+timeline: "4 weeks typical deployment"
+outcomes:
+  - value: "Zero"
+    label: "Data leakage"
+  - value: "100%"
+    label: "Perimeter containment"
+hero:
+  type: "image"
+  src: "/media/solutions/product-sovereign-ai-960.webp"
+  alt: "Sovereign AI private infrastructure perimeter and governance dashboard"
+  frame: "browser"
+phases:
+  problem:
+    headline: "Public cloud compliance and data residency risks"
+    story: "Public multi-tenant AI services present compliance, data sovereignty, and security concerns for regulated enterprise data, exposing intellectual property to third-party retention."
+    points:
+      - "Strict regulatory guidelines prohibit sending proprietary data to external cloud services"
+      - "Unaudited third-party AI models create ambiguity regarding intellectual property retention"
+      - "Teams cannot easily integrate open-source or localized models with internal permission models"
+    process:
+      - "Staff seeks generative AI assistance for internal analysis"
+      - "Pasting sensitive enterprise records into public AI tools"
+      - "Data leaves organizational boundary into multi-tenant models"
+      - "Compliance exposure and unmonitored intellectual property leakage"
+    friction:
+      - title: "Compliance Boundaries"
+        detail: "Regulatory mandates forbid transmission of confidential or customer records outside corporate VPCs."
+      - title: "Model Ambiguity"
+        detail: "Public AI vendor retention and fine-tuning policies create legal ambiguity."
+      - title: "Entitlement Mismatch"
+        detail: "Standard cloud models lack awareness of internal corporate access entitlements."
+  value:
+    headline: "Full institutional custody of prompts, training and outputs"
+    story: "Delivers modern AI capabilities with full institutional custody of training assets, prompts, and outputs, operating strictly behind your security perimeter."
+    points:
+      - "Perimeter-contained model inference on your dedicated VPC or on-premise hardware"
+      - "Model neutrality allowing foundation models to be updated or swapped"
+      - "Granular enterprise access enforcement mapped to corporate directory roles"
+    metrics:
+      - label: "Data exposure"
+        before: "Public multi-tenant cloud"
+        after: "Zero external routing"
+        note: "Dedicated VPC or on-premise hardware"
+      - label: "Query auditability"
+        before: "Unlogged consumer AI"
+        after: "100% audited telemetry"
+        note: "Complete prompt and output retention"
+    levers:
+      - "Perimeter VPC or on-premise hardware containment"
+      - "Model-neutral inference decoupling"
+      - "OutSystems role-based enterprise administration"
+  architecture:
+    headline: "Isolated infrastructure and audited application interface"
+    story: "A fully private, perimeter-contained deployment architecture keeping corporate documents and localized foundation models strictly within company-controlled compute."
+    points:
+      - "Isolated inference cluster with external public API routes disabled"
+      - "OutSystems application layer providing enterprise governance and monitoring"
+      - "Decoupled model adapter enabling seamless foundation model upgrades"
+    layers:
+      - name: "Channels"
+        items:
+          - name: "Employee Console"
+            role: "Secure internal chat and document exploration UI"
+          - name: "Admin Dashboard"
+            role: "Model telemetry and policy configuration"
+      - name: "Intelligence"
+        items:
+          - name: "Private LLM Cluster"
+            role: "Localized foundation model inference"
+          - name: "Semantic Embedding"
+            role: "Private vector database search"
+      - name: "Business logic"
+        items:
+          - name: "Access Enforcer"
+            role: "Row and document-level permission verification"
+          - name: "Prompt Firewall"
+            role: "PII detection and prompt sanitization"
+      - name: "Integrations"
+        items:
+          - name: "Corporate Directory"
+            role: "SSO and enterprise group role mapping"
+          - name: "Document Vault"
+            role: "Internal document repository connection"
+      - name: "Data"
+        items:
+          - name: "VPC Storage"
+            role: "Local vector weights and indexed documents"
+          - name: "Audit Vault"
+            role: "Immutable query logs and security timestamps"
+    pattern: "Isolated Perimeter Inference with Decoupled Model Adapter"
+    security: "Zero external network egress, internal VPC security groups, and granular access enforcement."
+  rollout:
+    headline: "Hardware sizing, network isolation and model tuning"
+    story: "Workload evaluation and compute sizing followed by localized model deployment and enterprise directory integration."
+    points:
+      - "Compute and GPU infrastructure configuration"
+      - "Air-gap and private subnet network routing verification"
+    hardening:
+      - "Outbound internet access blacklisting for inference cluster"
+      - "Hardware health monitoring and automated failover"
+      - "Prompt injection defense rules"
+    steps:
+      - "Workload sizing and VPC infrastructure provisioning"
+      - "Foundation model deployment and domain benchmarking"
+      - "Corporate SSO and role-based entitlement integration"
+      - "Security penetration testing and audit verification"
+  impact:
+    headline: "Enterprise AI utility without exposing corporate intellectual property"
+    story: "High-performance AI utility deployed strictly inside your walls, ensuring total compliance with enterprise regulatory mandates."
+    points:
+      - "Complete regulatory compliance across regulated domains"
+      - "Zero third-party data leakage risk"
+    enablement:
+      - "Enterprise user safety and query best-practices guide"
+      - "Admin operator runbook for model lifecycle management"
+    governance:
+      - "Strict network perimeter isolation"
+      - "Full auditability of every model query and output"
+    outcome: "Enterprise AI utility without exposing corporate intellectual property to public clouds."
 problem: "Public multi-tenant AI services present compliance, data sovereignty, and security concerns for regulated enterprise data."
 painPoints:
   - "Strict regulatory guidelines prohibit sending proprietary data to external cloud services."
@@ -71,4 +189,3 @@ related:
   - "ask-me-anything"
 ctaText: "Let's talk"
 ---
-Sovereign AI architecture and deployment guidelines.

@@ -12,8 +12,123 @@ badges:
   - "Low-code (OutSystems)"
 oneLiner: "End-to-end contract drafting, multi-stakeholder approval routing, and renewal tracking built on OutSystems."
 outcomeHeadline: "Accelerate agreement turnaround with clear audit trails from draft to signature."
-# TODO: add built examples
-builtExamples: []
+status: "Accelerator"
+timeline: "3 weeks typical deployment"
+outcomes:
+  - value: "100%"
+    label: "Approval audit trail"
+  - value: "Zero"
+    label: "Missed renewals"
+hero:
+  type: "image"
+  src: "/media/product-clm-960.webp"
+  alt: "Contract lifecycle management dashboard overview"
+  frame: "browser"
+phases:
+  problem:
+    headline: "Disjointed drafting and stalled email approvals"
+    story: "Disjointed contract drafting, uncoordinated email approvals, and manual milestone tracking introduce operational delays and audit blind spots."
+    points:
+      - "Agreements stall across multiple department review inboxes without visibility"
+      - "Untracked renewal and expiration milestones result in missed deadlines"
+      - "Inconsistent clause templates complicate standard compliance audits"
+    process:
+      - "Drafting in disparate offline text documents"
+      - "Uncoordinated email threads across departments"
+      - "Untracked manual redlining with revision drift"
+      - "Missed contract renewal and expiration dates"
+    friction:
+      - title: "Review Bottlenecks"
+        detail: "Agreements stall across multiple review inboxes with zero real-time progress visibility."
+      - title: "Milestone Blind Spots"
+        detail: "Untracked renewal dates result in missed contractual obligations or unwanted rollovers."
+      - title: "Template Inconsistency"
+        detail: "Outdated clause copies complicate corporate compliance audits."
+  value:
+    headline: "Accelerated agreement cycles and audit trails"
+    story: "Centralizes contract repository access and streamlines departmental review cycles with automated milestone tracking."
+    points:
+      - "Pre-approved clause library maintaining corporate compliance"
+      - "Configurable multi-tier approval routing based on contract value"
+      - "Proactive notifications ahead of renewal and expiration dates"
+    metrics:
+      - label: "Approval cycle"
+        before: "Days in email threads"
+        after: "Automated routing"
+        note: "Configurable signer thresholds"
+      - label: "Milestone tracking"
+        before: "Untracked spreadsheets"
+        after: "Automated alert schedules"
+        note: "Pre-expiration notifications"
+    levers:
+      - "Pre-approved clause bundles"
+      - "Automated multi-tier approval routing"
+      - "Integrated digital signature workflows"
+  architecture:
+    headline: "OutSystems enterprise workflow foundation"
+    story: "Built on OutSystems low-code architecture with centralized clause management, configurable approval matrices, and e-signature connectors."
+    points:
+      - "Visual workflow engine enforcing business approval thresholds"
+      - "Version-controlled central clause repository"
+      - "Integration hooks for enterprise e-signature services"
+    layers:
+      - name: "Channels"
+        items:
+          - name: "Web Portal"
+            role: "Drafting, redlining, and approval console"
+          - name: "Notification Hub"
+            role: "Email and task reminder routing"
+      - name: "Business logic"
+        items:
+          - name: "Approval Engine"
+            role: "Value and department threshold matrix"
+          - name: "Milestone Scheduler"
+            role: "Automated renewal and obligation alerts"
+      - name: "Integrations"
+        items:
+          - name: "E-Signature Service"
+            role: "Digital signature dispatch and status tracking"
+          - name: "ERP & CRM Sync"
+            role: "Vendor and customer account linkage"
+      - name: "Data"
+        items:
+          - name: "Clause Repository"
+            role: "Standardized legal text blocks"
+          - name: "Contract Archive"
+            role: "Signed agreements with execution audit logs"
+    pattern: "Tiered Governance and Approval Routing"
+    security: "Enterprise role-based permissions, multi-subsidiary partitioning, and immutable execution logs."
+  rollout:
+    headline: "Enterprise hardening and import tooling"
+    story: "Bulk historical PDF ingestion followed by department-by-department approval matrix deployment."
+    points:
+      - "Role-based access validation across finance, legal, and procurement"
+      - "Historical PDF and metadata spreadsheet import"
+    hardening:
+      - "Role-based permission validation"
+      - "Multi-subsidiary access partitioning"
+      - "Digital signature connector failover"
+    steps:
+      - "Approved clause library sign-off"
+      - "Historical agreement bulk import"
+      - "Department approval matrix setup"
+      - "User orientation and template training"
+  impact:
+    headline: "Clear audit trails from draft to signature"
+    story: "End-to-end contract drafting, multi-stakeholder approval routing, and proactive renewal tracking built on OutSystems."
+    points:
+      - "Complete visibility across agreement stages"
+      - "Zero missed renewal deadlines"
+    enablement:
+      - "Legal template management documentation"
+      - "Signer approval guidance and checklist"
+    governance:
+      - "Mandatory legal approval for non-standard clauses"
+      - "Immutable execution audit logs"
+    monitoring:
+      - "Average approval turnaround time telemetry"
+      - "Upcoming renewal milestone calendar"
+    outcome: "Accelerate agreement turnaround with clear audit trails from draft to signature."
 problem: "Disjointed contract drafting, uncoordinated email approvals, and manual milestone tracking introduce operational delays."
 painPoints:
   - "Agreements stall across multiple department review inboxes without visibility."
@@ -59,6 +174,7 @@ makeItYours:
       description: "Proactive alert notifications for compliance expirations, audits, and SLA renewals."
   closing: "Adapted to your company signing matrices, legal guidelines, and enterprise security policies."
 hideAudienceStack: true
+beforeAfterId: "clm"
 faq:
   - question: "Can custom approval hierarchies be configured?"
     answer: "Yes, approval matrices can be adapted to match your organization's signing policies and spending thresholds."
@@ -71,4 +187,3 @@ related:
   - "whatsapp-journeys"
 ctaText: "Let's talk"
 ---
-CLM product architecture and workflow capabilities.

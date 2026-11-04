@@ -13,12 +13,174 @@ badges:
 seoDescription: "Multilingual AI voice assistant for retail showrooms. Catalogue-grounded product guidance, automated catalogue ingestion and assisted checkout."
 oneLiner: "Multilingual voice assistant that helps showroom customers find, compare and cart appliances on a tablet."
 outcomeHeadline: "Every walk-in gets an expert salesperson instantly"
-problem: "In a busy multi-brand appliance showroom, customers wait for a free salesperson, and staff can’t remember specs and prices for thousands of models across dozens of brands. Product knowledge sits scattered across Excel price lists and brand PDF brochures, so answers are slow, inconsistent and variable."
+status: "Deployed"
+client: "a retail store"
+timeline: "4 weeks to showroom pilot"
+outcomes:
+  - value: "100%"
+    label: "Catalogue grounding"
+  - value: "4"
+    label: "Languages supported"
+  - value: "<1.2s"
+    label: "Voice query latency"
+hero:
+  type: "image"
+  src: "/media/products/sonakshi/conversation.png"
+  alt: "Sonakshi in-store tablet conversation interface showing multilingual voice dialogue with customer"
+  frame: "phone"
+phases:
+  problem:
+    headline: "Walk-in delays and fragmented product data"
+    story: "In a busy multi-brand appliance showroom, customers wait for a free salesperson, and staff cannot recall specs and prices for thousands of models across dozens of brands. Product knowledge sits scattered across Excel price lists and brand PDF brochures, so answers are slow and inconsistent."
+    points:
+      - "Customers wait or walk out when salespeople are busy"
+      - "Staff cannot recall specs and prices across thousands of models"
+      - "Catalogue data scattered across Excel sheets and brand PDFs"
+    process:
+      - "Customer walks into multi-brand showroom"
+      - "Waits for an available sales representative"
+      - "Staff consults disconnected paper brochures or Excel files"
+      - "Customer leaves if answers stall or reps are occupied"
+    friction:
+      - title: "Customer Wait Friction"
+        detail: "Walk-ins delay or exit before consultation during busy showroom peak hours."
+      - title: "Information Fragmentation"
+        detail: "Specs and pricing live across disparate Excel sheets, PDFs, and binder prints."
+      - title: "Variable Answers"
+        detail: "Product specifications and inventory availability vary depending on staff recall."
+    media:
+      - type: "image"
+        src: "/media/products/sonakshi/product-without-image.png"
+        alt: "Sonakshi catalogue comparison view showing multiple appliance options"
+        frame: "browser"
+  value:
+    headline: "Zero wait times and verified catalogue grounding"
+    story: "Turns static Excel price sheets and brand brochures into an interactive, multilingual sales expert on the showroom floor, capturing every walk-in opportunity."
+    points:
+      - "Immediate engagement for every showroom customer"
+      - "Verified pricing drawn directly from live store inventory"
+      - "Multilingual assistance across Hindi, Gujarati, Marathi and English"
+    metrics:
+      - label: "Showroom floor coverage"
+        before: "Limited by headcount"
+        after: "Instant per walk-in"
+        note: "Tablet kiosk at showroom entry"
+      - label: "Price and spec recall"
+        before: "Manual PDF lookup"
+        after: "Instant verified match"
+        note: "Direct catalogue grounding"
+    levers:
+      - "Walk-in capture and queue elimination"
+      - "Automated Excel and PDF catalogue ingestion"
+      - "Assisted cart pre-loading for cashier checkout"
+  architecture:
+    headline: "High-code MERN and private vector retrieval"
+    story: "Full-stack engineering combining React tablet interface, Node.js ingestion backend, vector indexing, and speech recognition without hallucination."
+    points:
+      - "React tablet interface with live audio waveform visualization"
+      - "Vector search over structured store data with zero pricing hallucination"
+      - "Automated catalogue parser transforming Excel sheets and PDFs into structured records"
+    layers:
+      - name: "Channels"
+        items:
+          - name: "In-store Tablet"
+            role: "Touch and microphone conversational input"
+          - name: "Showroom Audio"
+            role: "Multilingual speech synthesis playback"
+      - name: "Intelligence"
+        items:
+          - name: "Speech Recognition"
+            role: "Speech-to-text in Hindi, Gujarati, Marathi, English"
+          - name: "Vector Engine"
+            role: "Semantic search and catalogue boundary grounding"
+      - name: "Business logic"
+        items:
+          - name: "Needs Discovery"
+            role: "Budget and preference evaluation"
+          - name: "Cart Engine"
+            role: "Live database price lock and assisted checkout"
+      - name: "Integrations"
+        items:
+          - name: "Admin Portal"
+            role: "Catalogue upload and exception review"
+          - name: "Billing POS"
+            role: "Cart handoff to store cashiers"
+      - name: "Data"
+        items:
+          - name: "Product Database"
+            role: "Structured models, specifications, and prices"
+          - name: "Telemetry Store"
+            role: "Anonymized session logs and resolution rates"
+    pattern: "Catalogue-Grounded Retrieval with Human Review Loop"
+    ai:
+      - "Multilingual STT / TTS"
+      - "Semantic catalogue embedding search"
+      - "Low-confidence extraction human review queue"
+    security: "Private boundary architecture; customer voice audio is never stored or transmitted after session completion."
+    media:
+      - type: "image"
+        src: "/media/products/sonakshi/Product-image.png"
+        alt: "Sonakshi recommendation card showing product photo, specifications, and Add to Cart button"
+        frame: "phone"
+  pilot:
+    headline: "Showroom deployment for a retail store"
+    story: "Piloted on tablet devices on the retail showroom floor, assisting live shoppers with home appliance discovery and comparison."
+    points:
+      - "Field validation in active multi-brand appliance retail store"
+      - "Trained on real store inventory across major consumer categories"
+    scope:
+      who: "Showroom customers and floor sales assistants"
+      where: "A multi-brand retail appliance showroom"
+      duration: "4-week on-floor pilot"
+    feedback:
+      - heard: "Customers naturally switch languages mid-sentence during exploration"
+        changed: "Added fluid Hinglish code-switching recognition across conversation turns"
+      - heard: "Customers requested instant visual verification of technical specifications"
+        changed: "Added side-by-side spec comparison card displayed upon model mention"
+  rollout:
+    headline: "Hardened kiosk mode and automated ingestion"
+    story: "Kiosk hardening with auto-reset between sessions and background catalogue synchronisation from admin uploads."
+    points:
+      - "Kiosk isolation preventing operating system escapes"
+      - "Automatic session timeout and cart reset when customers depart"
+      - "Admin validation queue for new supplier catalog uploads"
+    hardening:
+      - "Kiosk sandbox preventing tablet OS access"
+      - "Session auto-reset upon customer departure"
+      - "Admin approval for newly extracted prices before going live"
+    steps:
+      - "Initial Excel catalogue ingestion and schema validation"
+      - "Store sales staff walkthrough and assisted handoff training"
+      - "Entrance kiosk placement with guided voice prompts"
+      - "Daily audit log review and confidence score analysis"
+    scale:
+      - value: "1000s"
+        label: "Catalogue SKU capacity"
+      - value: "4"
+        label: "Supported regional languages"
+  impact:
+    headline: "Every walk-in gets an expert salesperson instantly"
+    story: "Showroom customers receive immediate guidance in their chosen language, with selected appliances pre-loaded into cart for store staff completion."
+    points:
+      - "Zero wait times for walk-in shoppers"
+      - "Zero price hallucination with live database lock"
+      - "Full auditability of conversation logs and extraction confidence"
+    enablement:
+      - "Sales staff orientation on assisted tablet handoffs"
+      - "Admin portal training for Excel price list uploads"
+    governance:
+      - "Strict database grounding preventing generated pricing"
+      - "Human-in-the-loop review for low-confidence catalogue extractions"
+    monitoring:
+      - "Daily voice interaction session counts"
+      - "Catalogue search query resolution rate telemetry"
+    outcome: "Every walk-in gets an expert salesperson instantly, with prices locked from the live database."
+problem: "In a busy multi-brand appliance showroom, customers wait for a free salesperson, and staff cannot recall specs and prices for thousands of models across dozens of brands. Product knowledge sits scattered across Excel price lists and brand PDF brochures, so answers are slow, inconsistent and variable."
 painPoints:
   - "Customers wait or walk out when salespeople are busy"
-  - "Staff can’t recall specs and prices across thousands of models"
+  - "Staff cannot recall specs and prices across thousands of models"
   - "Catalogue data scattered across Excel sheets and brand PDFs"
-whatWeBuilt: "An in-store tablet assistant, Sonakshi, that talks with customers in Hindi, Gujarati, Marathi or English, asks about their needs, recommends matching products from the store’s live catalogue, and adds them to a cart for checkout. Behind it is an admin portal where the store uploads Excel price lists and brand PDF catalogues, which AI turns into a searchable, spec-rich product database."
+whatWeBuilt: "An in-store tablet assistant, Sonakshi, that talks with customers in Hindi, Gujarati, Marathi or English, asks about their needs, recommends matching products from the store's live catalogue, and adds them to a cart for checkout. Behind it is an admin portal where the store uploads Excel price lists and brand PDF catalogues, which AI turns into a searchable, spec-rich product database."
 howItWorks:
   - step: "01"
     title: "Conversational Needs Discovery"
@@ -61,7 +223,7 @@ demoMedia:
   caption: "Sonakshi tablet interface, live voice waveform, and real-time catalogue match preview."
 features:
   - title: "Multilingual voice conversations"
-    description: "Replies in the customer’s language: Hindi, Gujarati, Marathi, English or Hinglish."
+    description: "Replies in the customer's language: Hindi, Gujarati, Marathi, English or Hinglish."
   - title: "Consultative recommendations"
     description: "Asks about needs and budget, then shows the single best-matching product card."
   - title: "Catalogue-grounded answers"
@@ -77,7 +239,7 @@ features:
 makeItYours:
   headline: "One voice AI engine. Any industry. Your brand."
   subline: "MAKE IT YOURS"
-  description: "The technology behind Sonakshi isn’t limited to retail. At its core is a multilingual voice agent that learns from your own data, whether that’s product catalogues, policy documents, FAQs or service manuals, and answers only from that knowledge, in your brand’s voice. Swap the data, guidelines and branding, and the same engine becomes a banking assistant, a skincare advisor or a customer support agent, ready in a fraction of the time of building from scratch."
+  description: "The technology behind Sonakshi isn't limited to retail. At its core is a multilingual voice agent that learns from your own data, whether that's product catalogues, policy documents, FAQs or service manuals, and answers only from that knowledge, in your brand's voice. Swap the data, guidelines and branding, and the same engine becomes a banking assistant, a skincare advisor or a customer support agent, ready in a fraction of the time of building from scratch."
   useCases:
     - title: "Retail & showrooms"
       description: "In-store product advisors that recommend, compare and add to cart."
@@ -95,7 +257,7 @@ makeItYours:
       description: "Voice access to SOPs, manuals and policies for staff on the floor."
     - title: "Feedback & surveys"
       description: "Natural voice conversations that capture richer customer insight than forms."
-  closing: "Every deployment, configured for your business: your data, your guidelines, your branding, your customers’ languages."
+  closing: "Every deployment, configured for your business: your data, your guidelines, your branding, your customers' languages."
 hideAudienceStack: true
 faq:
   - question: "How do you prevent the AI from giving incorrect prices or specs?"

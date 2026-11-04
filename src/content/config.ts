@@ -1,5 +1,86 @@
 import { defineCollection, z } from 'astro:content';
 
+export const mediaItemSchema = z.object({
+  type: z.enum(['image', 'video', 'gif', 'embed']),
+  src: z.string(),
+  poster: z.string().optional(),
+  alt: z.string().default(''),
+  caption: z.string().optional(),
+  frame: z.enum(['browser', 'phone', 'none']).default('none').optional()
+});
+
+export type MediaItem = z.infer<typeof mediaItemSchema>;
+
+const basePhaseSchema = z.object({
+  headline: z.string().optional(),
+  story: z.string().optional(),
+  points: z.array(z.string()).default([]),
+  media: z.array(mediaItemSchema).default([])
+});
+
+const problemPhaseSchema = basePhaseSchema.extend({
+  process: z.array(z.string()).default([]),
+  friction: z.array(z.object({
+    title: z.string(),
+    detail: z.string()
+  })).default([])
+});
+
+const valuePhaseSchema = basePhaseSchema.extend({
+  metrics: z.array(z.object({
+    label: z.string(),
+    before: z.string().optional(),
+    after: z.string().optional(),
+    note: z.string().optional()
+  })).default([]),
+  levers: z.array(z.string()).default([])
+});
+
+const architecturePhaseSchema = basePhaseSchema.extend({
+  layers: z.array(z.object({
+    name: z.string(),
+    items: z.array(z.object({
+      name: z.string(),
+      role: z.string()
+    })).default([])
+  })).default([]),
+  pattern: z.string().optional(),
+  ai: z.array(z.string()).default([]),
+  security: z.string().optional()
+});
+
+const pilotPhaseSchema = basePhaseSchema.extend({
+  scope: z.object({
+    who: z.string().optional(),
+    where: z.string().optional(),
+    duration: z.string().optional()
+  }).optional(),
+  feedback: z.array(z.object({
+    heard: z.string(),
+    changed: z.string()
+  })).default([])
+});
+
+const rolloutPhaseSchema = basePhaseSchema.extend({
+  hardening: z.array(z.string()).default([]),
+  steps: z.array(z.string()).default([]),
+  scale: z.array(z.object({
+    value: z.string(),
+    label: z.string()
+  })).default([])
+});
+
+const impactPhaseSchema = basePhaseSchema.extend({
+  enablement: z.array(z.string()).default([]),
+  governance: z.array(z.string()).default([]),
+  monitoring: z.array(z.string()).default([]),
+  outcome: z.string().optional(),
+  quote: z.object({
+    text: z.string(),
+    role: z.string()
+  }).optional()
+});
+
 const products = defineCollection({
   type: 'content',
   schema: z.object({
@@ -73,7 +154,26 @@ const products = defineCollection({
       answer: z.string()
     })).default([]),
     related: z.array(z.string()).default([]),
-    ctaText: z.string().default("Let's talk")
+    ctaText: z.string().default("Let's talk"),
+
+    // New 6-Phase Journey Fields (all optional for smooth backward-compatibility)
+    status: z.enum(['Deployed', 'Accelerator']).optional(),
+    client: z.string().optional(),
+    timeline: z.string().optional(),
+    outcomes: z.array(z.object({
+      value: z.string(),
+      label: z.string()
+    })).max(3).default([]),
+    hero: mediaItemSchema.optional(),
+
+    phases: z.object({
+      problem: problemPhaseSchema.optional(),
+      value: valuePhaseSchema.optional(),
+      architecture: architecturePhaseSchema.optional(),
+      pilot: pilotPhaseSchema.optional(),
+      rollout: rolloutPhaseSchema.optional(),
+      impact: impactPhaseSchema.optional()
+    }).optional()
   })
 });
 

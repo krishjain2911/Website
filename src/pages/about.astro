@@ -332,82 +332,16 @@ function formatMandateText(text: string) {
               </div>
             </div>
 
-            <!-- Right: Blueprint-Style Technical SVG Illustration -->
+            <!-- Right: Apollo 13 Imperative Image Illustration -->
             <div class="story-illustration-col">
               <div class="blueprint-canvas">
-                <svg
-                  viewBox="0 0 380 320"
-                  fill="none"
-                  class="blueprint-svg"
-                  id="apollo-blueprint-svg"
-                  role="img"
-                  aria-label="Apollo 13 engineering blueprint: Round socket challenge connected to square canister solution via engineered adapter."
-                >
-                  <defs>
-                    <pattern id="apolloGrid" width="16" height="16" patternUnits="userSpaceOnUse">
-                      <path d="M 16 0 L 0 0 0 16" fill="none" stroke="#1E4B8F" stroke-width="0.5" stroke-opacity="0.15" />
-                    </pattern>
-                  </defs>
-
-                  <!-- Blueprint Background Grid -->
-                  <rect width="380" height="320" fill="url(#apolloGrid)" rx="8" />
-
-                  <!-- Header Specification Text (>= 13px) -->
-                  <text x="24" y="32" font-family="var(--font-sans)" font-size="13" font-weight="700" letter-spacing="0.1em" fill="#1E4B8F">
-                    NASA APOLLO 13 // ADAPTER INTERFACE
-                  </text>
-                  <text x="24" y="48" font-family="var(--font-sans)" font-size="11" font-weight="600" fill="var(--color-text-muted)">
-                    SPEC: CM-TO-LM CO2 SCRUBBER ADAPTER
-                  </text>
-
-                  <!-- Left: Round Socket (The Challenge) -->
-                  <g transform="translate(85, 145)">
-                    <circle cx="0" cy="0" r="48" stroke="#1E4B8F" stroke-width="2" class="bp-draw" />
-                    <circle cx="0" cy="0" r="32" stroke="#1E4B8F" stroke-width="1.25" stroke-dasharray="4 4" class="bp-draw" />
-                    <line x1="-54" y1="0" x2="54" y2="0" stroke="#1E4B8F" stroke-width="1" stroke-dasharray="3 3" />
-                    <line x1="0" y1="-54" x2="0" y2="54" stroke="#1E4B8F" stroke-width="1" stroke-dasharray="3 3" />
-                    <text y="-56" font-family="var(--font-sans)" font-size="13" font-weight="700" fill="#1E4B8F" text-anchor="middle">
-                      ROUND SOCKET
-                    </text>
-                    <text y="70" font-family="var(--font-sans)" font-size="11" fill="var(--color-text-secondary)" text-anchor="middle">
-                      The challenge
-                    </text>
-                  </g>
-
-                  <!-- Center: Engineered Adapter -->
-                  <g transform="translate(190, 145)">
-                    <path d="M -40 -28 C -15 -42 15 -42 40 -28" stroke="#F7941D" stroke-width="2.25" stroke-linecap="round" class="bp-draw" />
-                    <path d="M -40 28 C -15 42 15 42 40 28" stroke="#F7941D" stroke-width="2.25" stroke-linecap="round" class="bp-draw" />
-                    <rect x="-26" y="-22" width="52" height="44" rx="6" fill="var(--color-surface)" stroke="#F7941D" stroke-width="2" class="bp-draw" />
-                    <text y="-2" font-family="var(--font-sans)" font-size="13" font-weight="800" fill="#F7941D" text-anchor="middle">
-                      ADAPTER
-                    </text>
-                    <text y="14" font-family="var(--font-sans)" font-size="9.5" font-weight="600" fill="var(--color-text-secondary)" text-anchor="middle">
-                      RHSP
-                    </text>
-                  </g>
-
-                  <!-- Right: Square LiOH Canister (The Solution) -->
-                  <g transform="translate(295, 145)">
-                    <rect x="-42" y="-42" width="84" height="84" rx="4" stroke="#EE4B2B" stroke-width="2" stroke-dasharray="5 3" class="bp-draw" />
-                    <rect x="-24" y="-24" width="48" height="48" stroke="#EE4B2B" stroke-width="1" fill="none" opacity="0.6" class="bp-draw" />
-                    <text y="-56" font-family="var(--font-sans)" font-size="13" font-weight="700" fill="#EE4B2B" text-anchor="middle">
-                      SQUARE CANISTER
-                    </text>
-                    <text y="70" font-family="var(--font-sans)" font-size="11" fill="var(--color-text-secondary)" text-anchor="middle">
-                      The solution
-                    </text>
-                  </g>
-
-                  <!-- Bottom Measurement Baseline -->
-                  <line x1="30" y1="260" x2="350" y2="260" stroke="var(--color-border)" stroke-width="1.25" />
-                  <circle cx="85" cy="260" r="3" fill="#1E4B8F" />
-                  <circle cx="190" cy="260" r="3" fill="#F7941D" />
-                  <circle cx="295" cy="260" r="3" fill="#EE4B2B" />
-                  <text x="190" y="285" font-family="var(--font-sans)" font-size="11.5" font-weight="600" letter-spacing="0.08em" fill="var(--color-text-secondary)" text-anchor="middle">
-                    From challenge to solution — engineered with available tools
-                  </text>
-                </svg>
+                <img
+                  src="/media/raw/aboutus.png"
+                  alt="Apollo 13 imperative: Connecting square lithium hydroxide canisters to round sockets using an engineered adapter"
+                  class="apollo-story-image"
+                  loading="lazy"
+                  decoding="async"
+                />
               </div>
             </div>
           </div>
@@ -1149,25 +1083,21 @@ function formatMandateText(text: string) {
 
   .blueprint-canvas {
     width: 100%;
-    max-width: 440px;
+    max-width: 480px;
     background: var(--color-bg);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-card);
-    padding: 1.25rem;
+    padding: 0.5rem;
     box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
   }
 
-  .blueprint-svg {
+  .apollo-story-image {
     width: 100%;
     height: auto;
     display: block;
-  }
-
-  /* Stroke drawing reveal animation */
-  .bp-draw {
-    stroke-dasharray: 200;
-    stroke-dashoffset: 0;
-    transition: stroke-dashoffset 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+    object-fit: cover;
+    border-radius: calc(var(--radius-card) - 4px);
   }
 
   /* -------------------------------------------------------------
