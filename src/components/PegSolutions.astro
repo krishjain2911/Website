@@ -1,5 +1,17 @@
 ---
+import { getCollection } from 'astro:content';
+import MediaAsset from './MediaAsset.astro';
 import Icon from './Icon.astro';
+
+const allProducts = await getCollection('products');
+
+const engineerProjects = allProducts
+  .filter((p) => p.data.pillar === 'Engineer' || p.data.pillar === 'Build')
+  .sort((a, b) => a.data.order - b.data.order);
+
+const genAiProjects = allProducts
+  .filter((p) => p.data.pillar === 'Gen-AI' || p.data.pillar === 'Intelligence')
+  .sort((a, b) => a.data.order - b.data.order);
 ---
 
 <section id="solutions" class="peg-solutions-section" aria-label="How we think and capabilities">
@@ -20,7 +32,7 @@ import Icon from './Icon.astro';
         <p class="intro-subline">Three disciplines. One accountable team.</p>
       </div>
 
-      <!-- Main Stage Container: 2-Column Grid (38% Left / 62% Right) -->
+      <!-- Main Stage Container: 2-Column Grid (36% Left / 64% Right) -->
       <div class="container stage-container" id="stage-main-container">
         <!-- Left Column: 3D CSS Cube + Pedestal + Pill Tabs -->
         <div class="stage-cube-col" id="stage-cube-col">
@@ -30,9 +42,15 @@ import Icon from './Icon.astro';
 
             <div class="cube-viewport" id="cube-viewport">
               <div class="cube-assembly" id="cube-assembly">
-                <!-- Top Face: P - Plan -->
+                <!-- Top Face: Plain Solid Brand Gradient (No text / glyphs) -->
+                <div class="cube-face face-top" aria-hidden="true"></div>
+
+                <!-- Bottom Face: Plain Solid Brand Surface (No text / glyphs) -->
+                <div class="cube-face face-bottom" aria-hidden="true"></div>
+
+                <!-- Front Face: P - Plan (Navy) -->
                 <div
-                  class="cube-face face-top"
+                  class="cube-face face-front"
                   id="cube-face-plan"
                   data-pillar="plan"
                   role="button"
@@ -45,9 +63,9 @@ import Icon from './Icon.astro';
                   </div>
                 </div>
 
-                <!-- Left Face: E - Engineer -->
+                <!-- Right Face: E - Engineer (Orange) -->
                 <div
-                  class="cube-face face-left"
+                  class="cube-face face-right"
                   id="cube-face-engineer"
                   data-pillar="engineer"
                   role="button"
@@ -60,9 +78,9 @@ import Icon from './Icon.astro';
                   </div>
                 </div>
 
-                <!-- Right Face: G - Gen-AI -->
+                <!-- Back Face: G - Gen-AI (Red) -->
                 <div
-                  class="cube-face face-right"
+                  class="cube-face face-back"
                   id="cube-face-genai"
                   data-pillar="genai"
                   role="button"
@@ -75,10 +93,8 @@ import Icon from './Icon.astro';
                   </div>
                 </div>
 
-                <!-- Enclosure Faces -->
-                <div class="cube-face face-bottom" aria-hidden="true"></div>
-                <div class="cube-face face-back" aria-hidden="true"></div>
-                <div class="cube-face face-back-left" aria-hidden="true"></div>
+                <!-- Left Face: Enclosure Surface -->
+                <div class="cube-face face-left" aria-hidden="true"></div>
               </div>
             </div>
 
@@ -140,7 +156,7 @@ import Icon from './Icon.astro';
           <!-- PANEL 1: PLAN -->
           <div
             id="stage-panel-plan"
-            class="stage-panel"
+            class="stage-panel is-active"
             role="tabpanel"
             aria-labelledby="tab-peg-plan"
           >
@@ -234,7 +250,7 @@ import Icon from './Icon.astro';
               </p>
             </div>
 
-            <!-- Two Services Row -->
+            <!-- Slim Two Services Row with wrapped buttons -->
             <div class="services-duo-grid">
               <article class="stage-card service-card card-mastercard">
                 <div class="service-meta">
@@ -265,42 +281,71 @@ import Icon from './Icon.astro';
               </article>
             </div>
 
-            <!-- Accelerators Row -->
-            <div class="accelerators-block">
-              <div class="accelerators-label">Accelerators (Ready Building Blocks)</div>
-              <div class="accelerators-grid">
-                <a href="/solutions/clm" class="accelerator-item card-mastercard">
-                  <div class="accelerator-content">
-                    <span class="accelerator-code">CLM</span>
-                    <h4 class="accelerator-title">Contract Lifecycle</h4>
-                    <p class="accelerator-desc">Drafting, approvals, redlining, digital signing.</p>
-                  </div>
-                  <span class="accelerator-link-icon" aria-hidden="true">
-                    <Icon name="arrow-right" size={14} />
-                  </span>
-                </a>
+            <!-- Accelerators & Projects Horizontal Scroll Rail -->
+            <div class="projects-rail-section" data-rail-id="engineer">
+              <div class="rail-header-row">
+                <div class="rail-title-group">
+                  <span class="rail-label">Accelerators &amp; Projects</span>
+                  <span class="rail-count">({engineerProjects.length})</span>
+                </div>
 
-                <a href="/solutions/dms" class="accelerator-item card-mastercard">
-                  <div class="accelerator-content">
-                    <span class="accelerator-code">DMS</span>
-                    <h4 class="accelerator-title">Document Management</h4>
-                    <p class="accelerator-desc">Intelligent indexing, access control, compliant flows.</p>
+                {engineerProjects.length > 4 && (
+                  <div class="rail-filter-chips" role="group" aria-label="Filter accelerators">
+                    <button type="button" class="rail-chip is-active" data-filter="all">All</button>
+                    <button type="button" class="rail-chip" data-filter="outsystems">OutSystems</button>
+                    <button type="button" class="rail-chip" data-filter="custom">Custom</button>
                   </div>
-                  <span class="accelerator-link-icon" aria-hidden="true">
-                    <Icon name="arrow-right" size={14} />
-                  </span>
-                </a>
+                )}
 
-                <a href="/solutions/whatsapp-journeys" class="accelerator-item card-mastercard">
-                  <div class="accelerator-content">
-                    <span class="accelerator-code">WHATSAPP</span>
-                    <h4 class="accelerator-title">WhatsApp Journeys</h4>
-                    <p class="accelerator-desc">Two-way customer engagement &amp; automated alerts.</p>
-                  </div>
-                  <span class="accelerator-link-icon" aria-hidden="true">
-                    <Icon name="arrow-right" size={14} />
-                  </span>
-                </a>
+                <div class="rail-nav-controls">
+                  <button type="button" class="rail-nav-btn rail-nav-prev" aria-label="Previous accelerator" data-rail-target="engineer">
+                    <Icon name="chevron-left" size={16} />
+                  </button>
+                  <button type="button" class="rail-nav-btn rail-nav-next" aria-label="Next accelerator" data-rail-target="engineer">
+                    <Icon name="chevron-right" size={16} />
+                  </button>
+                </div>
+              </div>
+
+              <div class="projects-rail-track" id="rail-track-engineer" role="region" aria-label="Engineer accelerators carousel">
+                {engineerProjects.map((proj, idx) => {
+                  const isSpotlight = proj.data.featured || idx === 0;
+                  const assetKey = proj.data.image || proj.data.imageKey || `product-${proj.slug}`;
+                  const badge = proj.data.badge || (proj.data.badges && proj.data.badges[0]) || 'Low-code';
+                  return (
+                    <article class:list={['stage-card', 'project-rail-card', 'card-mastercard', { 'is-spotlight': isSpotlight }]}>
+                      {isSpotlight && (
+                        <div class="spotlight-ribbon">
+                          <span>Spotlight</span>
+                        </div>
+                      )}
+                      <div class="rail-card-media">
+                        <MediaAsset
+                          assetKey={assetKey}
+                          alt={proj.data.shortTitle || proj.data.title}
+                          aspectRatio="16/10"
+                          class="rail-card-image"
+                        />
+                        <span class="rail-badge">{badge}</span>
+                      </div>
+                      <div class="rail-card-body">
+                        <h4 class="rail-card-title">{proj.data.shortTitle || proj.data.title}</h4>
+                        <p class="rail-card-desc">{proj.data.oneLiner}</p>
+                        <a href={`/solutions/${proj.slug}`} class="rail-card-link">
+                          <span>View project</span>
+                          <Icon name="arrow-right" size={14} />
+                        </a>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+
+              <!-- Rail Progress Dots -->
+              <div class="rail-dots-row" id="rail-dots-engineer" aria-hidden="true">
+                {engineerProjects.map((_, idx) => (
+                  <span class:list={['rail-dot', { 'is-active': idx === 0 }]} data-index={idx}></span>
+                ))}
               </div>
             </div>
           </div>
@@ -327,60 +372,72 @@ import Icon from './Icon.astro';
               </p>
             </div>
 
-            <div class="cards-grid genai-grid">
-              <!-- Solution 1: Sonakshi -->
-              <article class="stage-card solution-card card-mastercard">
-                <div class="card-tags-row">
-                  <span class="stage-tag highlight-tag" style="background-color: rgba(238, 75, 43, 0.12); color: #B82810;">High-code (MERN)</span>
-                  <span class="stage-tag">Retail Deployment</span>
+            <!-- Gen-AI Solutions Horizontal Scroll Rail -->
+            <div class="projects-rail-section" data-rail-id="genai">
+              <div class="rail-header-row">
+                <div class="rail-title-group">
+                  <span class="rail-label">Solutions &amp; Deployments</span>
+                  <span class="rail-count">({genAiProjects.length})</span>
                 </div>
-                <h3 class="card-heading">Sonakshi – AI Voice Agent</h3>
-                <p class="card-copy">
-                  Multilingual voice assistant built in MERN, deployed for a retail store. Helps showroom customers find, compare, and order with live catalogue grounding.
-                </p>
-                <div class="card-footer-action">
-                  <a href="/solutions/sonakshi" class="solution-link" aria-label="Explore Sonakshi solution">
-                    <span>Explore Sonakshi</span>
-                    <Icon name="arrow-right" size={14} />
-                  </a>
-                </div>
-              </article>
 
-              <!-- Solution 2: Sovereign AI -->
-              <article class="stage-card solution-card card-mastercard">
-                <div class="card-tags-row">
-                  <span class="stage-tag highlight-tag" style="background-color: rgba(238, 75, 43, 0.12); color: #B82810;">Private Infrastructure</span>
-                  <span class="stage-tag">Zero Leakage</span>
-                </div>
-                <h3 class="card-heading">Sovereign AI</h3>
-                <p class="card-copy">
-                  Private enterprise LLM deployments running entirely on your infrastructure with strict boundaries and zero third-party data exposure.
-                </p>
-                <div class="card-footer-action">
-                  <a href="/solutions/sovereign-ai" class="solution-link" aria-label="Explore Sovereign AI solution">
-                    <span>Explore Sovereign AI</span>
-                    <Icon name="arrow-right" size={14} />
-                  </a>
-                </div>
-              </article>
+                {genAiProjects.length > 4 && (
+                  <div class="rail-filter-chips" role="group" aria-label="Filter Gen-AI solutions">
+                    <button type="button" class="rail-chip is-active" data-filter="all">All</button>
+                    <button type="button" class="rail-chip" data-filter="voice">Voice</button>
+                    <button type="button" class="rail-chip" data-filter="sovereign">Sovereign</button>
+                  </div>
+                )}
 
-              <!-- Solution 3: AskMeAnything -->
-              <article class="stage-card solution-card card-mastercard">
-                <div class="card-tags-row">
-                  <span class="stage-tag highlight-tag" style="background-color: rgba(238, 75, 43, 0.12); color: #B82810;">RAG Search</span>
-                  <span class="stage-tag">Enterprise Knowledge</span>
+                <div class="rail-nav-controls">
+                  <button type="button" class="rail-nav-btn rail-nav-prev" aria-label="Previous solution" data-rail-target="genai">
+                    <Icon name="chevron-left" size={16} />
+                  </button>
+                  <button type="button" class="rail-nav-btn rail-nav-next" aria-label="Next solution" data-rail-target="genai">
+                    <Icon name="chevron-right" size={16} />
+                  </button>
                 </div>
-                <h3 class="card-heading">AskMeAnything</h3>
-                <p class="card-copy">
-                  Enterprise search and conversational intelligence grounded in your private documents, contracts, spreadsheets, and databases.
-                </p>
-                <div class="card-footer-action">
-                  <a href="/solutions/ask-me-anything" class="solution-link" aria-label="Explore AskMeAnything solution">
-                    <span>Explore AskMeAnything</span>
-                    <Icon name="arrow-right" size={14} />
-                  </a>
-                </div>
-              </article>
+              </div>
+
+              <div class="projects-rail-track" id="rail-track-genai" role="region" aria-label="Gen-AI solutions carousel">
+                {genAiProjects.map((proj, idx) => {
+                  const isSpotlight = proj.data.featured || idx === 0;
+                  const assetKey = proj.data.image || proj.data.imageKey || `product-${proj.slug}`;
+                  const badge = proj.data.badge || (proj.data.badges && proj.data.badges[0]) || 'Gen-AI';
+                  return (
+                    <article class:list={['stage-card', 'project-rail-card', 'card-mastercard', { 'is-spotlight': isSpotlight }]}>
+                      {isSpotlight && (
+                        <div class="spotlight-ribbon">
+                          <span>Spotlight</span>
+                        </div>
+                      )}
+                      <div class="rail-card-media">
+                        <MediaAsset
+                          assetKey={assetKey}
+                          alt={proj.data.shortTitle || proj.data.title}
+                          aspectRatio="16/10"
+                          class="rail-card-image"
+                        />
+                        <span class="rail-badge">{badge}</span>
+                      </div>
+                      <div class="rail-card-body">
+                        <h4 class="rail-card-title">{proj.data.shortTitle || proj.data.title}</h4>
+                        <p class="rail-card-desc">{proj.data.oneLiner}</p>
+                        <a href={`/solutions/${proj.slug}`} class="rail-card-link">
+                          <span>View solution</span>
+                          <Icon name="arrow-right" size={14} />
+                        </a>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+
+              <!-- Rail Progress Dots -->
+              <div class="rail-dots-row" id="rail-dots-genai" aria-hidden="true">
+                {genAiProjects.map((_, idx) => (
+                  <span class:list={['rail-dot', { 'is-active': idx === 0 }]} data-index={idx}></span>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -404,6 +461,7 @@ import Icon from './Icon.astro';
 
   <!-- Mobile Stacked Content (<900px) -->
   <div class="mobile-stacked-content" aria-label="Pillar solutions">
+    <!-- Mobile Plan -->
     <div id="mobile-pillar-plan" class="mobile-pillar-section" data-pillar="plan">
       <div class="container">
         <div class="panel-header">
@@ -435,6 +493,7 @@ import Icon from './Icon.astro';
       </div>
     </div>
 
+    <!-- Mobile Engineer -->
     <div id="mobile-pillar-engineer" class="mobile-pillar-section" data-pillar="engineer">
       <div class="container">
         <div class="panel-header">
@@ -449,36 +508,48 @@ import Icon from './Icon.astro';
           <article class="stage-card card-mastercard">
             <span class="stage-tag primary-tint">OutSystems Low-Code</span>
             <h3 class="card-heading">Implementation &amp; Transformation</h3>
-            <p class="card-copy">Enterprise apps deployed in weeks with built-in governance and security.</p>
-            <a href="#contact" class="btn btn-secondary btn-sm" style="margin-top: 0.75rem;">Start an OutSystems project →</a>
+            <p class="card-copy">Enterprise applications deployed in weeks with built-in governance, security, and connectivity.</p>
+            <a href="#contact" class="btn btn-secondary btn-sm" style="margin-top: 0.75rem; width: 100%;">
+              <span>Start an OutSystems project</span>
+              <Icon name="arrow-right" size={14} />
+            </a>
           </article>
           <article class="stage-card card-mastercard">
             <span class="stage-tag primary-tint">High-Code (MERN)</span>
             <h3 class="card-heading">Custom Full-Stack Development</h3>
-            <p class="card-copy">Full-stack engineering with complete architectural autonomy and high performance.</p>
-            <a href="#contact" class="btn btn-secondary btn-sm" style="margin-top: 0.75rem;">Build custom software →</a>
+            <p class="card-copy">Full-stack engineering with complete architectural autonomy, speed, and zero platform ceilings.</p>
+            <a href="#contact" class="btn btn-secondary btn-sm" style="margin-top: 0.75rem; width: 100%;">
+              <span>Build custom software</span>
+              <Icon name="arrow-right" size={14} />
+            </a>
           </article>
         </div>
-        <div class="mobile-accelerators" style="margin-top: 1.5rem;">
-          <div class="accelerators-label">Accelerators</div>
-          <div class="mobile-cards-stack" style="gap: 0.75rem; margin-top: 0.5rem;">
-            <a href="/solutions/clm" class="accelerator-item card-mastercard">
-              <span class="accelerator-code">CLM</span>
-              <span class="accelerator-title">Contract Lifecycle Management</span>
-            </a>
-            <a href="/solutions/dms" class="accelerator-item card-mastercard">
-              <span class="accelerator-code">DMS</span>
-              <span class="accelerator-title">Document Management System</span>
-            </a>
-            <a href="/solutions/whatsapp-journeys" class="accelerator-item card-mastercard">
-              <span class="accelerator-code">WHATSAPP</span>
-              <span class="accelerator-title">WhatsApp Journeys</span>
-            </a>
+
+        <div class="mobile-accelerators-block">
+          <h3 class="mobile-acc-title">Accelerators &amp; Projects</h3>
+          <div class="mobile-project-cards">
+            {engineerProjects.map((proj) => {
+              const assetKey = proj.data.image || proj.data.imageKey || `product-${proj.slug}`;
+              return (
+                <a href={`/solutions/${proj.slug}`} class="mobile-project-card card-mastercard">
+                  <div class="mobile-card-media">
+                    <MediaAsset assetKey={assetKey} alt={proj.data.shortTitle || proj.data.title} aspectRatio="16/10" />
+                  </div>
+                  <div class="mobile-card-content">
+                    <span class="mobile-badge">{proj.data.badge}</span>
+                    <h4 class="mobile-card-title">{proj.data.shortTitle || proj.data.title}</h4>
+                    <p class="mobile-card-desc">{proj.data.oneLiner}</p>
+                    <span class="mobile-card-link">View project &rarr;</span>
+                  </div>
+                </a>
+              );
+            })}
           </div>
         </div>
       </div>
     </div>
 
+    <!-- Mobile Gen-AI -->
     <div id="mobile-pillar-genai" class="mobile-pillar-section" data-pillar="genai">
       <div class="container">
         <div class="panel-header">
@@ -489,25 +560,23 @@ import Icon from './Icon.astro';
           <h2 class="panel-title"><strong class="highlight-genai">Gen-AI</strong> the leap.</h2>
           <p class="panel-desc">Private, catalogue-grounded, production-ready AI operating inside your walls.</p>
         </div>
-        <div class="mobile-cards-stack">
-          <article class="stage-card card-mastercard">
-            <span class="stage-tag" style="color: #B82810;">High-code (MERN)</span>
-            <h3 class="card-heading">Sonakshi – AI Voice Agent</h3>
-            <p class="card-copy">Multilingual voice assistant built in MERN, deployed for a retail store.</p>
-            <a href="/solutions/sonakshi" class="solution-link" style="margin-top: 0.75rem;">Explore Sonakshi →</a>
-          </article>
-          <article class="stage-card card-mastercard">
-            <span class="stage-tag" style="color: #B82810;">Private Cloud</span>
-            <h3 class="card-heading">Sovereign AI</h3>
-            <p class="card-copy">Private enterprise LLM deployments running entirely on your infrastructure.</p>
-            <a href="/solutions/sovereign-ai" class="solution-link" style="margin-top: 0.75rem;">Explore Sovereign AI →</a>
-          </article>
-          <article class="stage-card card-mastercard">
-            <span class="stage-tag" style="color: #B82810;">RAG Search</span>
-            <h3 class="card-heading">AskMeAnything</h3>
-            <p class="card-copy">Enterprise search across private documents, spreadsheets, and databases.</p>
-            <a href="/solutions/ask-me-anything" class="solution-link" style="margin-top: 0.75rem;">Explore AskMeAnything →</a>
-          </article>
+        <div class="mobile-project-cards">
+          {genAiProjects.map((proj) => {
+            const assetKey = proj.data.image || proj.data.imageKey || `product-${proj.slug}`;
+            return (
+              <a href={`/solutions/${proj.slug}`} class="mobile-project-card card-mastercard">
+                <div class="mobile-card-media">
+                  <MediaAsset assetKey={assetKey} alt={proj.data.shortTitle || proj.data.title} aspectRatio="16/10" />
+                </div>
+                <div class="mobile-card-content">
+                  <span class="mobile-badge">{proj.data.badge}</span>
+                  <h4 class="mobile-card-title">{proj.data.shortTitle || proj.data.title}</h4>
+                  <p class="mobile-card-desc">{proj.data.oneLiner}</p>
+                  <span class="mobile-card-link">View solution &rarr;</span>
+                </div>
+              </a>
+            );
+          })}
         </div>
       </div>
     </div>
@@ -515,217 +584,222 @@ import Icon from './Icon.astro';
 </section>
 
 <style>
+  /* -------------------------------------------------------------
+     Dynamic Atmosphere Background Tint (Part D Item 6)
+     <= 6% opacity subtle brand wash that transitions smoothly
+     ------------------------------------------------------------- */
+  .pillar-atmosphere-tint {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    transition: background 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
+    opacity: 0.05;
+  }
+
+  .pillar-atmosphere-tint[data-pillar="plan"] {
+    background: radial-gradient(circle at 65% 50%, #1E4B8F 0%, transparent 70%);
+  }
+
+  .pillar-atmosphere-tint[data-pillar="engineer"] {
+    background: radial-gradient(circle at 65% 50%, #F7941D 0%, transparent 70%);
+  }
+
+  .pillar-atmosphere-tint[data-pillar="genai"] {
+    background: radial-gradient(circle at 65% 50%, #EE4B2B 0%, transparent 70%);
+  }
+
+  :global(.dark) .pillar-atmosphere-tint {
+    opacity: 0.07;
+  }
+
+  /* -------------------------------------------------------------
+     Track & Sticky Stage
+     ------------------------------------------------------------- */
   .peg-solutions-section {
     position: relative;
     width: 100%;
     background-color: var(--color-bg);
   }
 
-  /* Atmosphere Tint Wash (<= 6% opacity, Item 6) */
-  .pillar-atmosphere-tint {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-    transition: background 0.8s ease;
-  }
-
-  .pillar-atmosphere-tint[data-pillar="plan"] {
-    background: radial-gradient(circle at 62% 48%, rgba(30, 75, 143, 0.045) 0%, transparent 70%);
-  }
-
-  .pillar-atmosphere-tint[data-pillar="engineer"] {
-    background: radial-gradient(circle at 62% 48%, rgba(247, 148, 29, 0.04) 0%, transparent 70%);
-  }
-
-  .pillar-atmosphere-tint[data-pillar="genai"] {
-    background: radial-gradient(circle at 62% 48%, rgba(238, 75, 43, 0.045) 0%, transparent 70%);
-  }
-
-  :global(.dark) .pillar-atmosphere-tint[data-pillar="plan"] {
-    background: radial-gradient(circle at 62% 48%, rgba(77, 139, 255, 0.07) 0%, transparent 70%);
-  }
-
-  :global(.dark) .pillar-atmosphere-tint[data-pillar="engineer"] {
-    background: radial-gradient(circle at 62% 48%, rgba(247, 148, 29, 0.065) 0%, transparent 70%);
-  }
-
-  :global(.dark) .pillar-atmosphere-tint[data-pillar="genai"] {
-    background: radial-gradient(circle at 62% 48%, rgba(238, 75, 43, 0.07) 0%, transparent 70%);
-  }
-
-  /* Desktop Sticky Track (~380vh) */
   .peg-solutions-track {
     position: relative;
-    height: 380vh;
-    min-height: 2800px;
     width: 100%;
+    height: 380vh; /* Smooth scroll progression through phases */
   }
 
-  /* Stage height fitted to viewport minus header */
   .peg-solutions-stage {
     position: sticky;
     top: var(--nav-height, 72px);
-    height: calc(100vh - var(--nav-height, 72px));
     width: 100%;
+    height: calc(100vh - var(--nav-height, 72px));
+    max-height: 1000px;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     justify-content: center;
     overflow: hidden;
-    box-sizing: border-box;
-    padding: 1rem 0;
+    z-index: 1;
   }
 
-  /* Phase 0 Intro Header (Center-aligned, positioned near top of stage in Phase 0) */
+  /* -------------------------------------------------------------
+     0. Phase 0 Intro Header (Center-aligned above the cube)
+     ------------------------------------------------------------- */
   .stage-intro-header {
     position: absolute;
-    top: clamp(1rem, 2.8vh, 2rem);
+    top: calc(50% - 210px);
     left: 50%;
     transform: translateX(-50%);
     text-align: center;
-    z-index: 10;
-    pointer-events: none;
-    transition: opacity 0.35s ease, transform 0.35s ease;
-    width: 100%;
-    max-width: 680px;
-    padding: 0 1rem;
-    box-sizing: border-box;
+    width: 90%;
+    max-width: 720px;
+    z-index: 20;
+    pointer-events: auto;
+    transition: opacity 0.4s ease, transform 0.4s ease;
   }
 
   .intro-eyebrow {
-    letter-spacing: 0.1em;
+    display: inline-block;
+    font-size: var(--fs-xs);
     font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--color-text-muted);
+    margin-bottom: 0.5rem;
   }
 
   .intro-headline {
-    font-size: clamp(1.85rem, 3vw, 2.5rem);
-    font-weight: 700;
-    color: var(--color-text-primary);
-    margin: 0.35rem 0;
-    letter-spacing: -0.025em;
-    line-height: 1.15;
+    font-size: clamp(2.2rem, 4.5vw, 3.5rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin: 0 0 0.5rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
   }
 
+  .intro-subline {
+    font-size: clamp(0.95rem, 1.8vw, 1.15rem);
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  /* Staged Word Highlight Colors */
   .color-word-plan {
     color: #1E4B8F;
   }
 
   :global(.dark) .color-word-plan {
-    color: #4D8BFF;
+    color: #5B8FE0;
   }
 
   .color-word-engineer {
     color: #F7941D;
   }
 
-  :global(.dark) .color-word-engineer {
-    color: #FFA940;
-  }
-
   .color-word-genai {
     color: #EE4B2B;
   }
 
-  :global(.dark) .color-word-genai {
-    color: #FF6647;
+  /* Staggered word reveal animation */
+  .staged-word-heading .staged-word {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: calc(var(--word-idx, 0) * 80ms);
   }
 
-  .intro-subline {
-    font-size: var(--fs-md);
-    color: var(--color-text-secondary);
-    margin: 0;
+  .staged-word-heading.is-revealed .staged-word,
+  .stage-panel.is-active .staged-word {
+    opacity: 1;
+    transform: translateY(0);
   }
 
-  /* 2-Column Grid Stage Container: 38% Cube / 62% Content */
+  /* -------------------------------------------------------------
+     Stage Container Grid
+     36% Left (Cube + Tabs) / 64% Right (Content Panels)
+     ------------------------------------------------------------- */
   .stage-container {
     display: grid;
-    grid-template-columns: 38% 62%;
+    grid-template-columns: 36% 64%;
     gap: 2.5rem;
     align-items: center;
     width: 100%;
-    max-width: 1240px;
-    height: 100%;
-    max-height: calc(100vh - var(--nav-height, 72px) - 20px);
+    max-width: var(--max-w-content);
+    margin: 0 auto;
+    padding: 0 var(--space-container);
+    box-sizing: border-box;
     position: relative;
-    z-index: 2;
+    z-index: 5;
   }
 
-  /* Left Column: Cube Scene + Tabs (Fixed on the left in Phases 1-4) */
+  /* -------------------------------------------------------------
+     Left Column: Cube + Ambient Glow + Tabs + Scroll Cue
+     ------------------------------------------------------------- */
   .stage-cube-col {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     position: relative;
-    transform-origin: center center;
-    will-change: transform;
-    z-index: 5;
-    margin-top: clamp(2.5rem, 5.5vh, 4rem);
+    z-index: 10;
+    will-change: transform, opacity;
   }
 
   .cube-scene-wrapper {
     position: relative;
-    width: clamp(190px, 24vh, 220px);
-    height: clamp(190px, 24vh, 220px);
+    width: 260px;
+    height: 240px;
     display: flex;
     align-items: center;
     justify-content: center;
-    perspective: 1200px;
-    user-select: none;
-    touch-action: pan-y;
     cursor: grab;
+    user-select: none;
+    touch-action: none;
   }
 
   .cube-scene-wrapper:active {
     cursor: grabbing;
   }
 
-  /* Cube Ambient Glow (Matching active pillar) */
+  /* Dynamic Cube Ambient Glow */
   .cube-ambient-glow {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 190px;
-    height: 190px;
+    width: 220px;
+    height: 220px;
     border-radius: 50%;
+    filter: blur(40px);
     pointer-events: none;
-    z-index: 0;
-    filter: blur(28px);
-    transition: background-color 0.6s ease;
-    opacity: 0.45;
+    z-index: 1;
+    transition: background 0.6s ease, opacity 0.6s ease;
+    opacity: 0.18;
   }
 
   .cube-ambient-glow[data-pillar="plan"] {
-    background-color: rgba(30, 75, 143, 0.4);
+    background: #1E4B8F;
   }
 
   .cube-ambient-glow[data-pillar="engineer"] {
-    background-color: rgba(247, 148, 29, 0.4);
+    background: #F7941D;
   }
 
   .cube-ambient-glow[data-pillar="genai"] {
-    background-color: rgba(238, 75, 43, 0.4);
+    background: #EE4B2B;
   }
 
-  :global(.dark) .cube-ambient-glow[data-pillar="plan"] {
-    background-color: rgba(77, 139, 255, 0.4);
+  :global(.dark) .cube-ambient-glow {
+    opacity: 0.28;
   }
 
-  :global(.dark) .cube-ambient-glow[data-pillar="engineer"] {
-    background-color: rgba(247, 148, 29, 0.45);
-  }
-
-  :global(.dark) .cube-ambient-glow[data-pillar="genai"] {
-    background-color: rgba(238, 75, 43, 0.45);
-  }
-
+  /* 3D Viewport & Assembly */
   .cube-viewport {
-    position: relative;
     width: 130px;
     height: 130px;
-    transform-style: preserve-3d;
-    z-index: 2;
+    perspective: 800px;
+    perspective-origin: 50% 50%;
+    position: relative;
+    z-index: 5;
   }
 
   .cube-assembly {
@@ -733,7 +807,7 @@ import Icon from './Icon.astro';
     height: 100%;
     position: absolute;
     transform-style: preserve-3d;
-    transform: rotateX(-30deg) rotateY(45deg);
+    transform: rotateX(-20deg) rotateY(-30deg);
     transition: transform 0.6s cubic-bezier(0.34, 1.25, 0.64, 1);
   }
 
@@ -754,43 +828,47 @@ import Icon from './Icon.astro';
     transition: box-shadow 0.3s ease;
   }
 
-  /* Top Face: P - Plan (Navy) - Flush solid cube face */
+  /* Top Face: Clean Plain Solid Gradient (No text / glyphs) */
   .face-top {
     transform: rotateX(90deg) translateZ(65px);
+    background: linear-gradient(135deg, #163666 0%, #0D1F35 100%);
+    box-shadow: inset 0 0 16px rgba(255, 255, 255, 0.15);
+    pointer-events: none;
+  }
+
+  /* Bottom Face: Clean Plain Solid Surface */
+  .face-bottom {
+    transform: rotateX(-90deg) translateZ(65px);
+    background: #081524;
+    box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.4);
+    pointer-events: none;
+  }
+
+  /* Front Face: P - Plan (Navy) */
+  .face-front {
+    transform: translateZ(65px);
     background: linear-gradient(135deg, #1E4B8F 0%, #0F2A4A 100%);
     box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.2);
   }
 
-  /* Left Face: E - Engineer (Orange) - Flush solid cube face */
-  .face-left {
-    transform: rotateY(-90deg) translateZ(65px);
+  /* Right Face: E - Engineer (Orange) */
+  .face-right {
+    transform: rotateY(90deg) translateZ(65px);
     background: linear-gradient(135deg, #FF9E2C 0%, #F7941D 100%);
     box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.15);
   }
 
-  /* Right Face: G - Gen-AI (Red) - Flush solid cube face */
-  .face-right {
-    transform: translateZ(65px);
+  /* Back Face: G - Gen-AI (Red) */
+  .face-back {
+    transform: rotateY(180deg) translateZ(65px);
     background: linear-gradient(135deg, #FF5B3B 0%, #EE4B2B 100%);
     box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.15);
   }
 
-  /* Enclosure Faces - All translateZ(half-size) from center origin */
-  .face-bottom {
-    transform: rotateX(-90deg) translateZ(65px);
-    background: #0A1B30;
-    pointer-events: none;
-  }
-
-  .face-back {
-    transform: rotateY(180deg) translateZ(65px);
-    background: #C43818;
-    pointer-events: none;
-  }
-
-  .face-back-left {
-    transform: rotateY(90deg) translateZ(65px);
-    background: #0F2A4A;
+  /* Left Face: Enclosure */
+  .face-left {
+    transform: rotateY(-90deg) translateZ(65px);
+    background: linear-gradient(135deg, #122744 0%, #0B192C 100%);
     pointer-events: none;
   }
 
@@ -805,97 +883,95 @@ import Icon from './Icon.astro';
 
   .face-letter {
     font-size: 2.5rem;
-    font-weight: 700;
+    font-weight: 800;
     line-height: 1;
-    letter-spacing: -0.03em;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    letter-spacing: -0.02em;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   }
 
   .face-word {
     font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.18em;
     opacity: 0.95;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
   }
 
-  /* Socket Pedestal */
+  /* Active Face Highlight */
+  .cube-face.is-active-face {
+    box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.6), inset 0 0 24px rgba(255, 255, 255, 0.3);
+  }
+
+  /* Pedestal Socket */
   .cube-socket-ellipse {
     position: absolute;
-    bottom: 16px;
-    width: 190px;
-    height: 50px;
+    bottom: 24px;
+    width: 140px;
+    height: 28px;
     border-radius: 50%;
-    background: radial-gradient(ellipse at center, rgba(30, 75, 143, 0.28) 0%, rgba(30, 75, 143, 0.08) 50%, transparent 75%);
-    pointer-events: none;
-    z-index: 1;
+    background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.1) 60%, transparent 80%);
     display: flex;
     align-items: center;
     justify-content: center;
+    pointer-events: none;
+    z-index: 2;
   }
 
   .socket-inner-depth {
-    width: 110px;
-    height: 26px;
+    width: 90px;
+    height: 14px;
     border-radius: 50%;
-    background: radial-gradient(ellipse at center, rgba(15, 42, 74, 0.45) 0%, transparent 70%);
+    background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.5) 0%, transparent 75%);
   }
 
-  /* Pill Tabs below cube */
+  /* Pill Tabs (Strictly below the cube in left column) */
   .stage-pill-tabs {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
-    background-color: var(--color-surface);
+    background: var(--color-surface);
     border: 1px solid var(--color-border);
-    border-radius: var(--radius-pill);
-    padding: 3px;
-    box-shadow: var(--shadow-subtle);
-    margin-top: 0.75rem;
-    z-index: 3;
+    border-radius: var(--radius-full);
+    padding: 0.25rem;
+    gap: 0.25rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    margin-top: 1rem;
+    z-index: 10;
+  }
+
+  :global(.dark) .stage-pill-tabs {
+    background: var(--color-surface-raised);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
   }
 
   .peg-tab-btn {
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
-    padding: 0.35rem 0.75rem;
-    border-radius: var(--radius-pill);
-    border: 1px solid transparent;
-    background: transparent;
+    gap: 0.4rem;
+    padding: 0.35rem 0.85rem;
     font-family: var(--font-sans);
     font-size: var(--fs-xs);
     font-weight: 600;
     color: var(--color-text-secondary);
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-full);
     cursor: pointer;
     transition: all 0.2s ease;
   }
 
   .peg-tab-btn:hover {
     color: var(--color-text-primary);
-    background-color: var(--color-surface-hover);
-  }
-
-  .peg-tab-btn.is-active {
-    background-color: var(--color-surface-elevated, #FFFFFF);
-    color: var(--color-text-primary);
-    border-color: var(--color-border);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  }
-
-  :global(.dark) .peg-tab-btn.is-active {
-    background-color: var(--color-surface-hover);
   }
 
   .tab-badge {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
     font-size: 10px;
-    font-weight: 700;
+    font-weight: 800;
     color: #FFFFFF;
   }
 
@@ -903,60 +979,64 @@ import Icon from './Icon.astro';
   .engineer-badge { background-color: #F7941D; }
   .genai-badge { background-color: #EE4B2B; }
 
-  /* "Scroll to explore" cue (Phase 0 only, directly below tabs) */
+  .peg-tab-btn.is-active {
+    background: var(--color-bg);
+    color: var(--color-text-primary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  :global(.dark) .peg-tab-btn.is-active {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  /* Scroll to Explore Cue */
   .intro-scroll-cue {
     display: flex;
     align-items: center;
     gap: 0.35rem;
-    margin-top: 1.5rem;
-    color: var(--color-text-muted);
     font-size: var(--fs-xs);
     font-weight: 600;
-    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    margin-top: 1.25rem;
+    transition: opacity 0.3s ease;
     text-transform: uppercase;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    animation: gentleBounce 2s infinite ease-in-out;
+    letter-spacing: 0.08em;
   }
 
-  @keyframes gentleBounce {
+  .cue-arrow {
+    animation: cueBounce 1.8s infinite ease-in-out;
+  }
+
+  @keyframes cueBounce {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(5px); }
   }
 
-  /* Right Column: Stage Content Panels (Opacity 0 by default in Phase 0) */
+  /* -------------------------------------------------------------
+     Right Column: Pillar Content Panels
+     ------------------------------------------------------------- */
   .stage-content-col {
     position: relative;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transition: opacity 0.35s ease, visibility 0.35s ease;
-  }
-
-  .stage-panel {
-    position: absolute;
-    inset: 0;
+    min-height: 400px;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    transition: opacity 0.4s ease;
+  }
+
+  .stage-panel {
+    display: none;
     opacity: 0;
-    visibility: hidden;
     transform: translateY(12px);
-    transition: opacity 0.35s ease, transform 0.35s ease, visibility 0.35s;
-    pointer-events: none;
+    transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .stage-panel.is-active {
+    display: block;
     opacity: 1;
-    visibility: visible;
     transform: translateY(0);
-    pointer-events: auto;
   }
 
-  /* Panel Header */
   .panel-header {
     margin-bottom: 1rem;
   }
@@ -964,149 +1044,124 @@ import Icon from './Icon.astro';
   .panel-eyebrow {
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
-    margin-bottom: 0.25rem;
+    gap: 0.45rem;
+    margin-bottom: 0.35rem;
   }
 
   .pillar-indicator {
-    width: 18px;
-    height: 18px;
-    border-radius: 4px;
-    color: #FFFFFF;
-    font-size: 11px;
-    font-weight: 700;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 800;
+    color: #FFFFFF;
   }
 
   .eyebrow-text {
-    font-size: 11px;
+    font-size: var(--fs-xs);
     font-weight: 700;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
   }
 
   .panel-title {
-    font-size: clamp(1.6rem, 2.4vw, 2.2rem);
-    font-weight: 400;
-    color: var(--color-text-primary);
+    font-size: clamp(1.4rem, 2.8vw, 2.1rem);
+    font-weight: 800;
     line-height: 1.15;
-    letter-spacing: -0.02em;
-    margin: 0 0 0.35rem;
+    margin: 0 0 0.35rem 0;
+    color: var(--color-text-primary);
   }
 
-  /* Staggered Word Reveals (Part D Item 7) */
-  .staged-word-heading {
-    display: block;
-  }
-
-  .staged-word {
-    display: inline-block;
-    opacity: 0;
-    transform: translateY(12px);
-    transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-    transition-delay: calc(var(--word-idx, 0) * 80ms);
-  }
-
-  .staged-word-heading.is-revealed .staged-word,
-  .stage-panel.is-active .panel-title .staged-word {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  .highlight-plan {
-    color: #1E4B8F;
-    font-weight: 700;
-  }
-
-  :global(.dark) .highlight-plan {
-    color: #4D8BFF;
-  }
-
-  .highlight-engineer {
-    color: #F7941D;
-    font-weight: 700;
-  }
-
-  :global(.dark) .highlight-engineer {
-    color: #FFA940;
-  }
-
-  .highlight-genai {
-    color: #EE4B2B;
-    font-weight: 700;
-  }
-
-  :global(.dark) .highlight-genai {
-    color: #FF6647;
-  }
+  .highlight-plan { color: #1E4B8F; }
+  :global(.dark) .highlight-plan { color: #5B8FE0; }
+  .highlight-engineer { color: #F7941D; }
+  .highlight-genai { color: #EE4B2B; }
 
   .panel-desc {
-    font-size: var(--fs-sm);
+    font-size: clamp(0.85rem, 1.4vw, 0.95rem);
     color: var(--color-text-secondary);
-    max-width: 620px;
-    line-height: 1.45;
     margin: 0;
+    max-width: 600px;
+    line-height: 1.4;
   }
 
-  /* Card Grids */
-  .cards-grid {
-    display: grid;
-    gap: 0.75rem;
-  }
-
+  /* Plan 3-Card Grid */
   .plan-grid {
+    display: grid;
     grid-template-columns: repeat(3, 1fr);
+    gap: 0.85rem;
+    margin-bottom: 1.25rem;
   }
 
   .stage-card {
-    padding: 1rem;
+    background: var(--color-surface);
     border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    box-sizing: border-box;
+  }
+
+  .stage-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    border-color: var(--color-border-strong);
+  }
+
+  :global(.dark) .stage-card {
+    background: var(--color-surface-raised);
+  }
+
+  :global(.dark) .stage-card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
   }
 
   .card-top-icon {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.65rem;
   }
 
   .card-heading {
-    font-size: 0.9375rem;
-    font-weight: 600;
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 0 0 0.35rem 0;
     color: var(--color-text-primary);
-    margin: 0 0 0.3rem;
-    line-height: 1.3;
   }
 
   .card-copy {
-    font-size: 0.8125rem;
+    font-size: var(--fs-xs);
     color: var(--color-text-secondary);
     line-height: 1.45;
-    margin: 0 0 0.65rem;
-    flex-grow: 1;
+    margin: 0 0 0.75rem 0;
   }
 
   .card-tags-row {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.3rem;
+    gap: 0.35rem;
     margin-top: auto;
   }
 
   .stage-tag {
-    font-size: 10px;
-    font-weight: 500;
-    padding: 0.12rem 0.45rem;
-    border-radius: var(--radius-pill);
-    background-color: var(--color-surface-alt);
-    color: var(--color-text-secondary);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 0.15rem 0.45rem;
+    background: var(--color-bg);
     border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-secondary);
+  }
+
+  :global(.dark) .stage-tag {
+    background: rgba(255, 255, 255, 0.05);
   }
 
   .stage-tag.primary-tint {
-    background-color: rgba(247, 148, 29, 0.12);
+    background: rgba(247, 148, 29, 0.1);
     color: #B86200;
     border-color: rgba(247, 148, 29, 0.25);
   }
@@ -1116,154 +1171,316 @@ import Icon from './Icon.astro';
   }
 
   .panel-action {
-    margin-top: 1rem;
+    display: flex;
+    align-items: center;
   }
 
   .plan-cta-btn {
-    background-color: #1E4B8F;
-    border-color: #1E4B8F;
-    color: #FFFFFF;
-    font-size: var(--fs-sm);
-    padding: 0 1.25rem;
-    height: 40px;
+    padding: 0.65rem 1.25rem;
   }
 
-  .plan-cta-btn:hover {
-    background-color: #163666;
-    border-color: #163666;
-  }
-
-  /* Engineer Panel Layout */
+  /* -------------------------------------------------------------
+     Engineer Panel Slim Duo Services Row
+     ------------------------------------------------------------- */
   .services-duo-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 0.75rem;
-    margin-bottom: 0.85rem;
+    gap: 0.85rem;
+    margin-bottom: 1rem;
   }
 
   .service-card {
+    padding: 0.85rem 1rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 1rem;
   }
 
-  .service-action {
-    margin-top: 0.65rem;
-    align-self: flex-start;
+  .service-card .card-heading {
+    font-size: 0.9rem;
+    margin: 0.25rem 0 0.25rem 0;
   }
 
-  .accelerators-block {
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
+  .service-card .card-copy {
+    font-size: 0.775rem;
+    line-height: 1.35;
+    margin: 0 0 0.5rem 0;
   }
 
-  .accelerators-label {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--color-text-muted);
+  /* Fixed wrapped button so text never overflows */
+  .service-card .service-action {
+    margin-top: 0.4rem;
+    width: 100%;
+    white-space: normal;
+    text-align: center;
+    justify-content: center;
+    padding: 0.45rem 0.75rem;
+    font-size: 0.775rem;
+    line-height: 1.25;
   }
 
-  .accelerators-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.6rem;
+  /* -------------------------------------------------------------
+     Projects & Accelerators Horizontal Scroll-Snap Rail
+     ------------------------------------------------------------- */
+  .projects-rail-section {
+    position: relative;
+    width: 100%;
+    margin-top: 0.25rem;
   }
 
-  .accelerator-item {
+  .rail-header-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.75rem 0.85rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .rail-title-group {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .rail-label {
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+  }
+
+  .rail-count {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+  }
+
+  .rail-filter-chips {
+    display: flex;
+    gap: 0.35rem;
+  }
+
+  .rail-chip {
+    padding: 0.15rem 0.55rem;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: var(--radius-full);
     border: 1px solid var(--color-border);
-    text-decoration: none;
-    transition: border-color 0.2s ease, transform 0.2s ease;
+    background: transparent;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
   }
 
-  .accelerator-item:hover {
-    border-color: #F7941D;
-    transform: translateY(-2px);
+  .rail-chip.is-active,
+  .rail-chip:hover {
+    background: var(--color-surface-raised);
+    color: var(--color-text-primary);
+    border-color: var(--color-border-strong);
   }
 
-  .accelerator-content {
+  .rail-nav-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .rail-nav-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .rail-nav-btn:hover {
+    background: var(--color-surface-raised);
+    color: var(--color-text-primary);
+    border-color: var(--color-border-strong);
+  }
+
+  .rail-nav-btn:disabled,
+  .rail-nav-btn[aria-disabled="true"] {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  /* Horizontal Snap Track (no vertical wheel hijacking) */
+  .projects-rail-track {
+    display: flex;
+    gap: 0.85rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    padding-bottom: 0.65rem;
+    padding-right: 2.5rem; /* Visible partial card hint */
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    cursor: grab;
+    user-select: none;
+  }
+
+  .projects-rail-track:active {
+    cursor: grabbing;
+  }
+
+  .projects-rail-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .project-rail-card {
+    flex: 0 0 280px;
+    width: 280px;
+    scroll-snap-align: start;
+    padding: 0;
+    overflow: hidden;
+    position: relative;
     display: flex;
     flex-direction: column;
-    gap: 0.1rem;
   }
 
-  .accelerator-code {
+  .project-rail-card.is-spotlight {
+    flex: 0 0 340px;
+    width: 340px;
+    border-color: rgba(247, 148, 29, 0.4);
+  }
+
+  #stage-panel-genai .project-rail-card.is-spotlight {
+    border-color: rgba(238, 75, 43, 0.4);
+  }
+
+  .spotlight-ribbon {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 3;
+    padding: 0.15rem 0.5rem;
+    border-radius: var(--radius-full);
     font-size: 10px;
     font-weight: 700;
-    color: #B86200;
-    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: #111827;
+    color: #FFFFFF;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
   }
 
-  :global(.dark) .accelerator-code {
-    color: #F7941D;
+  .rail-card-media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    background: var(--color-bg);
+    overflow: hidden;
   }
 
-  .accelerator-title {
-    font-size: 0.8125rem;
-    font-weight: 600;
-    color: var(--color-text-primary);
-    margin: 0;
+  .rail-card-media :global(img),
+  .rail-card-media :global(picture) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.35s ease;
   }
 
-  .accelerator-desc {
-    font-size: 11px;
-    color: var(--color-text-secondary);
-    margin: 0;
-    line-height: 1.3;
+  .project-rail-card:hover .rail-card-media :global(img) {
+    transform: scale(1.04);
   }
 
-  .accelerator-link-icon {
-    color: var(--color-text-muted);
-    transition: transform 0.2s ease, color 0.2s ease;
-    margin-left: 0.4rem;
-    flex-shrink: 0;
+  .rail-badge {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    padding: 0.15rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-size: 10px;
+    font-weight: 700;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(4px);
+    color: #FFFFFF;
+    border: 1px solid rgba(255, 255, 255, 0.2);
   }
 
-  .accelerator-item:hover .accelerator-link-icon {
-    color: #F7941D;
-    transform: translateX(3px);
-  }
-
-  /* Gen-AI Panel Layout */
-  .genai-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .solution-card {
+  .rail-card-body {
+    padding: 0.85rem;
     display: flex;
     flex-direction: column;
+    flex-grow: 1;
   }
 
-  .card-footer-action {
-    margin-top: auto;
-    padding-top: 0.65rem;
-    border-top: 1px solid var(--color-border);
+  .rail-card-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    margin: 0 0 0.25rem 0;
+    color: var(--color-text-primary);
   }
 
-  .solution-link {
+  .rail-card-desc {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    line-height: 1.35;
+    margin: 0 0 0.65rem 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .rail-card-link {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
     font-size: var(--fs-xs);
     font-weight: 600;
-    color: #B82810;
+    color: #B86200;
     text-decoration: none;
+    margin-top: auto;
     transition: transform 0.2s ease, color 0.2s ease;
   }
 
-  :global(.dark) .solution-link {
+  :global(.dark) .rail-card-link {
+    color: #F7941D;
+  }
+
+  #stage-panel-genai .rail-card-link {
+    color: #B82810;
+  }
+
+  :global(.dark) #stage-panel-genai .rail-card-link {
     color: #EE4B2B;
   }
 
-  .solution-link:hover {
+  .rail-card-link:hover {
     transform: translateX(3px);
+  }
+
+  /* Rail Progress Dots */
+  .rail-dots-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.35rem;
+  }
+
+  .rail-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-border);
+    transition: all 0.25s ease;
+    cursor: pointer;
+  }
+
+  .rail-dot.is-active {
+    width: 16px;
+    border-radius: var(--radius-full);
+    background: var(--color-text-primary);
   }
 
   /* Mobile Elements default hidden on desktop */
@@ -1275,156 +1492,239 @@ import Icon from './Icon.astro';
     display: none;
   }
 
-  /* Responsive & Mobile Breakpoints */
-  @media (max-width: 1099px) {
+  /* -------------------------------------------------------------
+     Responsive Breakpoints
+     ------------------------------------------------------------- */
+  @media (max-width: 1199px) {
     .stage-container {
       grid-template-columns: 35% 65%;
       gap: 1.5rem;
     }
 
-    .plan-grid,
-    .genai-grid {
-      grid-template-columns: 1fr;
-      gap: 0.6rem;
+    .project-rail-card {
+      flex: 0 0 250px;
+      width: 250px;
     }
 
-    .services-duo-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .accelerators-grid {
-      grid-template-columns: 1fr;
+    .project-rail-card.is-spotlight {
+      flex: 0 0 290px;
+      width: 290px;
     }
   }
 
   @media (max-width: 899px) {
     .peg-solutions-track {
-      display: none;
+      display: none; /* Interactive scroll track disabled on mobile */
     }
 
     /* Mobile Sticky Header */
     .mobile-peg-header {
       display: block;
       position: sticky;
-      top: 60px;
-      z-index: 40;
-      background-color: var(--color-surface);
+      top: var(--nav-height, 72px);
+      background: var(--color-surface);
       border-bottom: 1px solid var(--color-border);
-      padding: 0.75rem 1rem;
-      backdrop-filter: blur(8px);
+      z-index: 40;
+      backdrop-filter: blur(12px);
+      padding: 0.5rem 0;
+    }
+
+    :global(.dark) .mobile-peg-header {
+      background: rgba(18, 22, 28, 0.9);
     }
 
     .mobile-header-inner {
-      max-width: 600px;
-      margin: 0 auto;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 1rem;
+      max-width: var(--max-w-content);
+      margin: 0 auto;
+      padding: 0 var(--space-container);
     }
 
     .mobile-logo-mark {
-      font-size: var(--fs-xs);
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      color: var(--color-text-secondary);
+      font-weight: 800;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      color: var(--color-text-primary);
     }
 
     .mobile-pill-tabs {
       display: flex;
       gap: 0.35rem;
-      background-color: var(--color-surface-alt);
+      background: var(--color-bg);
       border: 1px solid var(--color-border);
-      border-radius: var(--radius-pill);
-      padding: 3px;
+      border-radius: var(--radius-full);
+      padding: 0.2rem;
     }
 
     .mobile-tab {
-      padding: 0.3rem 0.75rem;
-      border-radius: var(--radius-pill);
-      font-size: var(--fs-xs);
+      padding: 0.25rem 0.65rem;
+      font-size: 11px;
       font-weight: 600;
       color: var(--color-text-secondary);
       text-decoration: none;
+      border-radius: var(--radius-full);
       transition: all 0.2s ease;
     }
 
     .mobile-tab.is-active {
-      background-color: var(--color-surface);
+      background: var(--color-surface);
       color: var(--color-text-primary);
       box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
     }
 
-    /* Mobile Stacked Sections */
+    /* Mobile Stacked Content */
     .mobile-stacked-content {
       display: block;
-      padding: 2.5rem 0 4rem;
+      padding: 2.5rem 0;
     }
 
     .mobile-pillar-section {
-      padding: 3rem 0;
+      padding: 2rem 0;
       border-bottom: 1px solid var(--color-border);
-      scroll-margin-top: 140px;
+      scroll-margin-top: calc(var(--nav-height, 72px) + 50px);
     }
 
     .mobile-cards-stack {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 0.85rem;
       margin-top: 1.25rem;
+    }
+
+    .mobile-accelerators-block {
+      margin-top: 1.5rem;
+    }
+
+    .mobile-acc-title {
+      font-size: var(--fs-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-text-muted);
+      margin: 0 0 0.85rem 0;
+    }
+
+    .mobile-project-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      margin-top: 1rem;
+    }
+
+    .mobile-project-card {
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .mobile-card-media {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      background: var(--color-bg);
+      overflow: hidden;
+    }
+
+    .mobile-card-content {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .mobile-badge {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .mobile-card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin: 0;
+      color: var(--color-text-primary);
+    }
+
+    .mobile-card-desc {
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+      line-height: 1.4;
+      margin: 0;
+    }
+
+    .mobile-card-link {
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      color: #1E4B8F;
+      margin-top: 0.4rem;
+    }
+
+    :global(.dark) .mobile-card-link {
+      color: #5B8FE0;
     }
   }
 
-  /* Reduced Motion Fallback */
-  @media (prefers-reduced-motion: reduce) {
-    .peg-solutions-track {
-      height: auto !important;
-      min-height: 0 !important;
-    }
-
-    .peg-solutions-stage {
-      position: static !important;
-      height: auto !important;
-      padding: 3rem 0 !important;
-    }
-
+  /* Compact Viewports (e.g. 1440x720, 1280x650) */
+  @media (max-height: 750px) and (min-width: 900px) {
     .stage-intro-header {
-      position: static !important;
-      transform: none !important;
-      margin-bottom: 2rem !important;
+      top: calc(50% - 180px);
     }
 
-    .stage-container {
-      grid-template-columns: 1fr !important;
-      max-height: none !important;
+    .intro-headline {
+      font-size: 2.2rem;
     }
 
-    .stage-cube-col {
-      display: none !important;
+    .cube-scene-wrapper {
+      height: 200px;
     }
 
-    .stage-content-col {
-      position: static !important;
-      display: flex !important;
-      flex-direction: column !important;
-      gap: 3rem !important;
-      opacity: 1 !important;
-      visibility: visible !important;
-      pointer-events: auto !important;
+    .panel-header {
+      margin-bottom: 0.65rem;
     }
 
-    .stage-panel {
-      position: static !important;
-      opacity: 1 !important;
-      visibility: visible !important;
-      transform: none !important;
-      pointer-events: auto !important;
+    .panel-title {
+      font-size: 1.35rem;
     }
 
-    .staged-word {
-      opacity: 1 !important;
-      transform: none !important;
-      transition: none !important;
+    .panel-desc {
+      font-size: 0.8125rem;
+    }
+
+    .services-duo-grid {
+      gap: 0.5rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .service-card {
+      padding: 0.65rem 0.85rem;
+    }
+
+    .project-rail-card {
+      flex: 0 0 240px;
+      width: 240px;
+    }
+
+    .project-rail-card.is-spotlight {
+      flex: 0 0 280px;
+      width: 280px;
+    }
+
+    .rail-card-body {
+      padding: 0.65rem;
+    }
+
+    .rail-card-title {
+      font-size: 0.8125rem;
+    }
+
+    .rail-card-desc {
+      font-size: 0.7rem;
+      margin-bottom: 0.4rem;
     }
   }
 </style>
@@ -1457,11 +1757,14 @@ import Icon from './Icon.astro';
     if (!track || !stage || !cubeAssembly || !cubeCol || !contentCol) return;
 
     // Cube rotation angles
+    // Face-front: Plan (y: 0)
+    // Face-right: Engineer (y: -90)
+    // Face-back: Gen-AI (y: -180)
     const pillarAngles: Record<string, { x: number; y: number }> = {
-      intro: { x: -30, y: 45 },
-      plan: { x: -65, y: 45 },
-      engineer: { x: -12, y: 90 },
-      genai: { x: -12, y: 0 }
+      intro: { x: -20, y: -30 },
+      plan: { x: -8, y: 0 },
+      engineer: { x: -8, y: -90 },
+      genai: { x: -8, y: -180 }
     };
 
     let activePillar = 'plan';
@@ -1494,7 +1797,7 @@ import Icon from './Icon.astro';
         panel.classList.toggle('is-active', key === pillar);
       });
 
-      // Active Face indicator without translating face geometry (cube remains 100% solid)
+      // Active Face indicator
       Object.entries(faces).forEach(([key, face]) => {
         if (!face) return;
         face.classList.toggle('is-active-face', key === pillar);
@@ -1568,7 +1871,7 @@ import Icon from './Icon.astro';
           contentCol.style.visibility = 'hidden';
           contentCol.style.pointerEvents = 'none';
 
-          // Cube is on Face P (Plan)
+          // Cube is on Intro angle
           cubeAssembly.style.transform = `rotateX(${pillarAngles.intro.x}deg) rotateY(${pillarAngles.intro.y}deg)`;
           setPanelActive('plan');
         }
@@ -1739,6 +2042,97 @@ import Icon from './Icon.astro';
       sceneWrapper.addEventListener('pointerup', endDrag);
       sceneWrapper.addEventListener('pointercancel', endDrag);
     }
+
+    // Horizontal Rails Setup (Engineer & Gen-AI)
+    ['engineer', 'genai'].forEach((railId) => {
+      const trackEl = document.getElementById(`rail-track-${railId}`);
+      const prevBtn = document.querySelector<HTMLButtonElement>(`.rail-nav-prev[data-rail-target="${railId}"]`);
+      const nextBtn = document.querySelector<HTMLButtonElement>(`.rail-nav-next[data-rail-target="${railId}"]`);
+      const dots = Array.from(document.querySelectorAll<HTMLElement>(`#rail-dots-${railId} .rail-dot`));
+
+      if (!trackEl) return;
+
+      const cardStep = 290;
+
+      const updateRailState = () => {
+        const scrollLeft = trackEl.scrollLeft;
+        const maxScroll = trackEl.scrollWidth - trackEl.clientWidth;
+
+        if (prevBtn) {
+          prevBtn.disabled = scrollLeft <= 4;
+          prevBtn.setAttribute('aria-disabled', scrollLeft <= 4 ? 'true' : 'false');
+        }
+        if (nextBtn) {
+          nextBtn.disabled = scrollLeft >= maxScroll - 4;
+          nextBtn.setAttribute('aria-disabled', scrollLeft >= maxScroll - 4 ? 'true' : 'false');
+        }
+
+        const activeIdx = Math.round(scrollLeft / cardStep);
+        dots.forEach((dot, idx) => {
+          dot.classList.toggle('is-active', idx === activeIdx);
+        });
+      };
+
+      prevBtn?.addEventListener('click', () => {
+        trackEl.scrollBy({ left: -cardStep, behavior: 'smooth' });
+      });
+
+      nextBtn?.addEventListener('click', () => {
+        trackEl.scrollBy({ left: cardStep, behavior: 'smooth' });
+      });
+
+      dots.forEach((dot, idx) => {
+        dot.addEventListener('click', () => {
+          trackEl.scrollTo({ left: idx * cardStep, behavior: 'smooth' });
+        });
+      });
+
+      trackEl.addEventListener('scroll', updateRailState, { passive: true });
+      updateRailState();
+
+      // Drag to scroll horizontally on the track (without vertical wheel hijacking)
+      let isRailDragging = false;
+      let railStartX = 0;
+      let railScrollLeft = 0;
+      let hasDragged = false;
+
+      trackEl.addEventListener('pointerdown', (e) => {
+        isRailDragging = true;
+        hasDragged = false;
+        railStartX = e.pageX - trackEl.offsetLeft;
+        railScrollLeft = trackEl.scrollLeft;
+        trackEl.style.scrollBehavior = 'auto';
+      });
+
+      window.addEventListener('pointermove', (e) => {
+        if (!isRailDragging) return;
+        const x = e.pageX - trackEl.offsetLeft;
+        const walk = (x - railStartX) * 1.2;
+        if (Math.abs(walk) > 4) {
+          hasDragged = true;
+        }
+        trackEl.scrollLeft = railScrollLeft - walk;
+      });
+
+      const endRailDrag = () => {
+        if (!isRailDragging) return;
+        isRailDragging = false;
+        trackEl.style.scrollBehavior = 'smooth';
+      };
+
+      window.addEventListener('pointerup', endRailDrag);
+      window.addEventListener('pointercancel', endRailDrag);
+
+      // Prevent link clicks if user was dragging
+      trackEl.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', (e) => {
+          if (hasDragged) {
+            e.preventDefault();
+            hasDragged = false;
+          }
+        });
+      });
+    });
   }
 
   initPegSolutions();

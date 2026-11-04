@@ -10,6 +10,8 @@ const products = defineCollection({
     pillar: z.enum(['Engineer', 'Gen-AI', 'Build', 'Intelligence']),
     badge: z.string().default('High-code'),
     badges: z.array(z.string()).optional(),
+    featured: z.boolean().default(false).optional(),
+    image: z.string().optional(),
     seoDescription: z.string().optional(),
     oneLiner: z.string(),
     outcomeHeadline: z.string(),
