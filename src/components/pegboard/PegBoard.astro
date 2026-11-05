@@ -202,6 +202,7 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
     togglePin,
     getExploredSlugs,
     markExplored,
+    initExploredState,
     resetTileOrder,
     clearLayout,
     setArrivalVisited,
@@ -213,6 +214,9 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
   function initPegBoard() {
     const board = document.getElementById('peg-board-panel');
     if (!board) return;
+
+    // Initialize/reset explored progress on page reload or fresh visit
+    initExploredState();
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
