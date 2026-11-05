@@ -696,15 +696,24 @@ html.pb-is-dragging .pb-tile:not(.is-dragging) {
   color: var(--pb-peg, #F7941D);
 }
 
-/* Sticky filter bar stuck shadow & border (Item 6: blue bottom hairline) */
-.board-filter-ledge.is-stuck {
-  border-bottom: 1px solid var(--pb-line);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+/* Sticky filter bar stuck shadow & border (rounded pill, blue hairline in dark) */
+.board-filter-ledge {
+  position: sticky;
+  top: var(--nav-h, 72px);
+  z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 0;
+  margin-bottom: 3rem;
+  background: var(--pb-board);
 }
 
 :root[data-theme="dark"] .board-filter-ledge.is-stuck,
 :root:not([data-theme="light"]) .board-filter-ledge.is-stuck {
-  border-bottom: 1px solid rgba(91, 143, 224, 0.25);
+  border: 1px solid rgba(91, 143, 224, 0.25);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
