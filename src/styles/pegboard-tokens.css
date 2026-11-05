@@ -34,23 +34,34 @@
 
 /* Dark mode: apply to BOTH [data-theme="dark"] and the unset + prefers-dark block */
 :root[data-theme="dark"] .pegboard-page {
-  --pb-page: #04060A;                       /* outside the board */
-  --pb-board: #0B1018;                      /* the board panel: lighter than the page */
-  --pb-tile: #131A26;                       /* tiles: clearly lighter than the board */
-  --pb-tile-raised: #19222F;                /* drawer, popups, hovered tile */
-  --pb-tile-line: rgba(255, 255, 255, 0.07); /* neutral hairline; orange/blue accents are added on top */
+  --pb-page: #04060A;
+  /* outside the board */
+  --pb-board: #0B1018;
+  /* the board panel: lighter than the page */
+  --pb-tile: #131A26;
+  /* tiles: clearly lighter than the board */
+  --pb-tile-raised: #19222F;
+  /* drawer, popups, hovered tile */
+  --pb-tile-line: rgba(255, 255, 255, 0.07);
+  /* neutral hairline; orange/blue accents are added on top */
   --pb-line: rgba(255, 255, 255, 0.09);
   --pb-panel-edge: rgba(91, 143, 224, 0.22);
   --pb-text: #F5F7FB;
   --pb-text-2: #BAC3D2;
-  --pb-text-3: #8A95A8;                     /* >= 4.5:1 on --pb-tile */
-  --pb-blue: #5B8FE0;                       /* logo light blue: links, info, ambient */
-  --pb-blue-deep: #1E4B8F;                  /* logo navy: fills and rails */
+  --pb-text-3: #8A95A8;
+  /* >= 4.5:1 on --pb-tile */
+  --pb-blue: #5B8FE0;
+  /* logo light blue: links, info, ambient */
+  --pb-blue-deep: #1E4B8F;
+  /* logo navy: fills and rails */
   --pb-blue-wash: rgba(91, 143, 224, 0.14);
   --pb-accent-wash: rgba(247, 148, 29, 0.14);
-  --pb-hole: rgba(247, 148, 29, 0.16);      /* keep: subtle holes */
-  --pb-hole-alt: rgba(91, 143, 224, 0.18);  /* every 4th hole */
-  --pb-cord: rgba(140, 170, 225, 0.55);     /* cords pick up the blue, pegs stay orange */
+  --pb-hole: rgba(247, 148, 29, 0.16);
+  /* keep: subtle holes */
+  --pb-hole-alt: rgba(91, 143, 224, 0.18);
+  /* every 4th hole */
+  --pb-cord: rgba(140, 170, 225, 0.55);
+  /* cords pick up the blue, pegs stay orange */
   --pb-hole-r: 1.6px;
   --pb-hole-ring: rgba(255, 255, 255, 0.035);
   --pb-peg: #F7941D;
@@ -78,23 +89,34 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .pegboard-page {
-    --pb-page: #04060A;                       /* outside the board */
-    --pb-board: #0B1018;                      /* the board panel: lighter than the page */
-    --pb-tile: #131A26;                       /* tiles: clearly lighter than the board */
-    --pb-tile-raised: #19222F;                /* drawer, popups, hovered tile */
-    --pb-tile-line: rgba(255, 255, 255, 0.07); /* neutral hairline; orange/blue accents are added on top */
+    --pb-page: #04060A;
+    /* outside the board */
+    --pb-board: #0B1018;
+    /* the board panel: lighter than the page */
+    --pb-tile: #131A26;
+    /* tiles: clearly lighter than the board */
+    --pb-tile-raised: #19222F;
+    /* drawer, popups, hovered tile */
+    --pb-tile-line: rgba(255, 255, 255, 0.07);
+    /* neutral hairline; orange/blue accents are added on top */
     --pb-line: rgba(255, 255, 255, 0.09);
     --pb-panel-edge: rgba(91, 143, 224, 0.22);
     --pb-text: #F5F7FB;
     --pb-text-2: #BAC3D2;
-    --pb-text-3: #8A95A8;                     /* >= 4.5:1 on --pb-tile */
-    --pb-blue: #5B8FE0;                       /* logo light blue: links, info, ambient */
-    --pb-blue-deep: #1E4B8F;                  /* logo navy: fills and rails */
+    --pb-text-3: #8A95A8;
+    /* >= 4.5:1 on --pb-tile */
+    --pb-blue: #5B8FE0;
+    /* logo light blue: links, info, ambient */
+    --pb-blue-deep: #1E4B8F;
+    /* logo navy: fills and rails */
     --pb-blue-wash: rgba(91, 143, 224, 0.14);
     --pb-accent-wash: rgba(247, 148, 29, 0.14);
-    --pb-hole: rgba(247, 148, 29, 0.16);      /* keep: subtle holes */
-    --pb-hole-alt: rgba(91, 143, 224, 0.18);  /* every 4th hole */
-    --pb-cord: rgba(140, 170, 225, 0.55);     /* cords pick up the blue, pegs stay orange */
+    --pb-hole: rgba(247, 148, 29, 0.16);
+    /* keep: subtle holes */
+    --pb-hole-alt: rgba(91, 143, 224, 0.18);
+    /* every 4th hole */
+    --pb-cord: rgba(140, 170, 225, 0.55);
+    /* cords pick up the blue, pegs stay orange */
     --pb-hole-r: 1.6px;
     --pb-hole-ring: rgba(255, 255, 255, 0.035);
     --pb-peg: #F7941D;
@@ -136,6 +158,7 @@ body:has(.pegboard-page) {
 }
 
 @media (prefers-color-scheme: dark) {
+
   :root:not([data-theme="light"]) html:has(.pegboard-page),
   :root:not([data-theme="light"]) body:has(.pegboard-page),
   :root:not([data-theme="light"]) .peg-board-page-main,
@@ -188,6 +211,7 @@ body:has(.pegboard-page) {
     background-size: 24px 24px;
     background-position: 12px 12px;
   }
+
   :root[data-theme="dark"] .pb-board,
   :root:not([data-theme="light"]) .pb-board {
     background-size:
@@ -356,6 +380,7 @@ body:has(.pegboard-page) {
   color: #9DBBF0;
   box-shadow: 0 0 16px -6px rgba(91, 143, 224, 0.4);
 }
+
 :root[data-theme="dark"] .zone-plaque.zone-blue .plaque-dot,
 :root:not([data-theme="light"]) .zone-plaque.zone-blue .plaque-dot {
   background-color: var(--pb-blue, #5B8FE0);
@@ -368,6 +393,7 @@ body:has(.pegboard-page) {
   color: #FFD9A8;
   box-shadow: 0 0 16px -6px rgba(247, 148, 29, 0.4);
 }
+
 :root[data-theme="dark"] .zone-plaque.zone-orange .plaque-dot,
 :root:not([data-theme="light"]) .zone-plaque.zone-orange .plaque-dot {
   background-color: var(--pb-peg, #F7941D);
@@ -413,7 +439,10 @@ body:has(.pegboard-page) {
   min-height: 480px;
   background-image: radial-gradient(circle at center, var(--pb-hole) 0 var(--pb-hole-r), transparent calc(var(--pb-hole-r) + 0.5px));
   background-size: 32px 32px;
-  background-position: 0 0;
+  background-position:
+    16px 16px,
+    0 0,
+    0 0;
 }
 
 :root[data-theme="dark"] .pb-canvas,
@@ -435,16 +464,23 @@ body:has(.pegboard-page) {
     repeat,
     repeat;
 }
+
 .pb-canvas[hidden] {
   display: none;
 }
+
 [data-mode="free"] .board-zones-container,
 .board-zones-container[hidden] {
   display: none !important;
 }
+
 /* the board panel keeps its colour but no longer paints its own holes in free mode */
 [data-mode="free"].pb-board,
-[data-mode="free"] .pb-board {
+[data-mode="free"] .pb-board,
+:root[data-theme="dark"] [data-mode="free"].pb-board,
+:root[data-theme="dark"] [data-mode="free"] .pb-board,
+:root:not([data-theme="light"]) [data-mode="free"].pb-board,
+:root:not([data-theme="light"]) [data-mode="free"] .pb-board {
   background-image:
     radial-gradient(ellipse 60% 35% at 12% 0%, rgba(30, 75, 143, 0.28), transparent 70%),
     radial-gradient(ellipse 40% 25% at 100% 0%, rgba(247, 148, 29, 0.07), transparent 70%);
@@ -465,9 +501,11 @@ body:has(.pegboard-page) {
   translate: var(--x, 0) var(--y, 0);
   transition: translate 0.24s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.2s, box-shadow 0.2s, opacity 0.25s;
 }
+
 [data-mode="free"] .pb-tile .tile-description {
   -webkit-line-clamp: 3;
 }
+
 [data-mode="free"] .pb-plaque-row,
 [data-mode="free"] [data-plaque] {
   position: absolute;
@@ -480,6 +518,7 @@ body:has(.pegboard-page) {
   align-items: center;
   gap: 16px;
 }
+
 @media (hover: hover) and (pointer: fine) and (min-width: 900px) {
   [data-mode="free"] .pb-tile {
     cursor: grab;
@@ -488,6 +527,7 @@ body:has(.pegboard-page) {
     -webkit-user-drag: none;
   }
 }
+
 .pb-tile.is-dragging {
   z-index: 60 !important;
   cursor: grabbing !important;
@@ -497,14 +537,17 @@ body:has(.pegboard-page) {
   box-shadow: 0 28px 48px -12px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(247, 148, 29, 0.6) !important;
   outline: none !important;
 }
+
 .pb-tile.is-dragging::before,
 .pb-tile.is-dragging::after {
   display: none;
 }
+
 html.pb-is-dragging {
   cursor: grabbing;
   user-select: none;
 }
+
 html.pb-is-dragging .pb-tile:not(.is-dragging) {
   pointer-events: none;
   transition: none;
@@ -526,6 +569,7 @@ html.pb-is-dragging .pb-tile:not(.is-dragging) {
   transition: translate 0.1s ease-out;
   contain: layout paint;
 }
+
 .pb-ghost::before {
   content: "";
   position: absolute;
@@ -536,9 +580,11 @@ html.pb-is-dragging .pb-tile:not(.is-dragging) {
   background-position: center;
   opacity: 0.9;
 }
+
 .pb-ghost.is-nudged {
   border-color: rgba(255, 255, 255, 0.35);
 }
+
 .pb-hole-origin {
   position: absolute;
   left: 0;
@@ -550,17 +596,22 @@ html.pb-is-dragging .pb-tile:not(.is-dragging) {
   box-shadow: 0 0 0 2px rgba(247, 148, 29, 0.7), 0 0 18px rgba(247, 148, 29, 0.6);
   opacity: 0.9;
 }
+
 :root[data-theme="light"] .pb-ghost,
 :root:not([data-theme="dark"]) .pb-ghost {
   background-color: rgba(238, 75, 43, 0.05);
 }
+
 @media (prefers-reduced-motion: reduce) {
+
   [data-mode="free"] .pb-tile,
   .pb-ghost {
     transition: none;
   }
 }
-@media (max-width: 899px), (hover: none) {
+
+@media (max-width: 899px),
+(hover: none) {
   .pb-canvas {
     display: none;
   }
@@ -590,11 +641,14 @@ html.pb-is-dragging .pb-tile:not(.is-dragging) {
   white-space: nowrap;
   margin-left: auto;
 }
+
 .board-reset-layout-btn:hover {
   color: var(--pb-ink);
   background-color: var(--pb-chip-bg);
 }
-@media (max-width: 899px), (hover: none) {
+
+@media (max-width: 899px),
+(hover: none) {
   .board-reset-layout-btn {
     display: none;
   }
@@ -602,12 +656,29 @@ html.pb-is-dragging .pb-tile:not(.is-dragging) {
 
 /* Damped swing (1.2s ±1.5deg) on drop or pin */
 @keyframes pbTileSwing {
-  0% { transform: rotate(0deg); }
-  20% { transform: rotate(1.5deg); }
-  45% { transform: rotate(-1.2deg); }
-  70% { transform: rotate(0.6deg); }
-  88% { transform: rotate(-0.3deg); }
-  100% { transform: rotate(0deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  20% {
+    transform: rotate(1.5deg);
+  }
+
+  45% {
+    transform: rotate(-1.2deg);
+  }
+
+  70% {
+    transform: rotate(0.6deg);
+  }
+
+  88% {
+    transform: rotate(-0.3deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
 }
 
 .pb-tile.is-swinging {
@@ -648,12 +719,14 @@ html.pb-is-dragging .pb-tile:not(.is-dragging) {
 :root:not([data-theme="light"]) .guide-page-main a:not(.btn):not(.cta-pin-btn) {
   color: var(--pb-blue, #5B8FE0);
 }
+
 :root[data-theme="dark"] .guide-page-main a:not(.btn):not(.cta-pin-btn):hover,
 :root:not([data-theme="light"]) .guide-page-main a:not(.btn):not(.cta-pin-btn):hover {
   color: #8CBAF5;
 }
 
-@media (max-width: 899px), (hover: none) {
+@media (max-width: 899px),
+(hover: none) {
   .pb-tile {
     cursor: pointer;
     touch-action: auto;

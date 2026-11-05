@@ -17,7 +17,7 @@ import Icon from '../Icon.astro';
       <div class="adapter-modal-title-group">
         <span class="adapter-eyebrow">INTERACTIVE</span>
         <h2 id="adapter-modal-title" class="adapter-heading">Try the adapter</h2>
-        <p class="adapter-subline">Slide the square peg into the round hole. Every problem has an angle.</p>
+        <p class="adapter-subline">Throw the square peg through the round hoop. Switch on the RHSP adapter and every throw finds it.</p>
       </div>
       <button type="button" class="adapter-modal-close-btn" id="adapter-modal-close-btn" aria-label="Close adapter">
         <Icon name="x" size={16} />
@@ -26,78 +26,203 @@ import Icon from '../Icon.astro';
 
     <div class="adapter-stage-container">
       <div class="adapter-status-row">
-        <span class="adapter-label" id="adapter-status-label">Slide to engage the adapter</span>
+        <span class="adapter-stat">Score <b id="ah-score">0</b></span>
+        <span class="adapter-stat">Streak <b id="ah-streak">0</b></span>
+        <button type="button" class="adapter-power" id="ah-power" aria-pressed="false">RHSP adapter: off</button>
       </div>
-
-      <div class="adapter-track" id="adapter-track" aria-hidden="false">
-        <!-- Round hole target on the right -->
-        <div class="adapter-hole-target" id="adapter-hole" aria-hidden="true">
-          <div class="adapter-hole-shadow"></div>
-          <div class="adapter-ring-overlay" id="adapter-ring-fade"></div>
-        </div>
-
-        <!-- Square peg draggable on the left -->
-        <div
-          class="adapter-square-peg"
-          id="adapter-peg"
-          tabindex="0"
-          role="slider"
-          aria-label="Square peg adapter. Use arrow keys to slide into round hole or drag with pointer."
-          aria-valuemin="0"
-          aria-valuemax="100"
-          aria-valuenow="0"
-        >
-          <div class="peg-core"></div>
-        </div>
-      </div>
+      <canvas
+        id="ah-canvas"
+        class="adapter-canvas"
+        width="480"
+        height="260"
+        aria-label="Basketball style game. Drag back from the square peg and release to throw it through the round hoop. Turn on the RHSP adapter to auto-aim every throw."
+      ></canvas>
+      <p class="adapter-hint" id="ah-hint">Drag back from the peg, then let go.</p>
     </div>
   </div>
 </div>
 
 <script>
   function initAdapterWidget() {
-    const modalDialog = document.getElementById('adapter-modal-dialog');
-    const modalBackdrop = document.getElementById('adapter-modal-backdrop');
-    const modalCloseBtn = document.getElementById('adapter-modal-close-btn');
+    const modal = document.getElementById('adapter-modal-dialog');
+    const backdrop = document.getElementById('adapter-modal-backdrop');
+    const closeBtn = document.getElementById('adapter-modal-close-btn');
+    const cv = document.getElementById('ah-canvas') as HTMLCanvasElement | null;
+    const scoreEl = document.getElementById('ah-score');
+    const streakEl = document.getElementById('ah-streak');
+    const powerBtn = document.getElementById('ah-power');
+    const hintEl = document.getElementById('ah-hint');
+    if (!modal || !cv || !scoreEl || !streakEl || !powerBtn || !hintEl) return;
 
-    const track = document.getElementById('adapter-track');
-    const peg = document.getElementById('adapter-peg');
-    const hole = document.getElementById('adapter-hole');
-    const ring = document.getElementById('adapter-ring-fade');
-    const label = document.getElementById('adapter-status-label');
+    const elModal = modal;
+    const elCv = cv;
+    const ctx = elCv.getContext('2d')!;
+    const W = 480, H = 260, G = 600;
+    const START = { x: 56, y: 190 }, HALF = 10;
+    const RIM_L = { x: 340, y: 112 }, RIM_R = { x: 394, y: 112 }, BOARD_X = 402;
+    const TARGET = { x: (RIM_L.x + RIM_R.x) / 2, y: 102 };
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    elCv.width = W * dpr;
+    elCv.height = H * dpr;
+    ctx.scale(dpr, dpr);
 
-    if (!modalDialog || !track || !peg || !hole || !ring || !label) return;
+    let score = 0, streak = 0, power = false, flash = 0, respawnAt = 0;
+    let aim: { x: number; y: number } | null = null;
+    const peg = { x: START.x, y: START.y, vx: 0, vy: 0, a: 0, live: false, scored: false };
+    let raf = 0, last = 0;
 
-    const elModalDialog = modalDialog;
-    const elTrack = track;
-    const elPeg = peg;
-    const elRing = ring;
-    const elLabel = label;
+    const isDark = () => {
+      const t = document.documentElement.getAttribute('data-theme');
+      return t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches);
+    };
+    const css = (name: string, fallback: string) =>
+      getComputedStyle(elModal).getPropertyValue(name).trim() || fallback;
 
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let isDragging = false;
-    let startX = 0;
-    let currentX = 0;
-    let isEngaged = false;
-    let resetTimer: any = null;
+    function setPower(on: boolean) {
+      power = on;
+      powerBtn!.setAttribute('aria-pressed', String(on));
+      powerBtn!.textContent = `RHSP adapter: ${on ? 'on' : 'off'}`;
+      hintEl!.textContent = on ? 'Adapter on: click anywhere to throw.' : 'Drag back from the peg, then let go.';
+    }
+    powerBtn.addEventListener('click', () => setPower(!power));
+
+    function resetGame() {
+      score = 0; streak = 0; flash = 0; respawnAt = 0; aim = null;
+      scoreEl!.textContent = '0'; streakEl!.textContent = '0';
+      Object.assign(peg, { x: START.x, y: START.y, vx: 0, vy: 0, a: 0, live: false, scored: false });
+      setPower(false);
+    }
+
+    // zoom-safe pointer position (the page runs under html { zoom }), so use the rect, not offsetWidth
+    function pos(e: PointerEvent) {
+      const r = elCv.getBoundingClientRect();
+      return { x: ((e.clientX - r.left) / r.width) * W, y: ((e.clientY - r.top) / r.height) * H };
+    }
+    // velocity that lands the peg through the hoop centre in a fixed flight time
+    function autoVel() {
+      const T = 1.05;
+      return { vx: (TARGET.x - START.x) / T, vy: (TARGET.y - START.y - 0.5 * G * T * T) / T };
+    }
+    function dragVel() {
+      let vx = (START.x - aim!.x) * 5.5, vy = (START.y - aim!.y) * 5.5;
+      const m = Math.hypot(vx, vy), max = 620;
+      if (m > max) { vx *= max / m; vy *= max / m; }
+      return { vx, vy };
+    }
+
+    elCv.addEventListener('pointerdown', (e) => {
+      if (peg.live) return;
+      elCv.setPointerCapture(e.pointerId);
+      aim = pos(e);
+    });
+    elCv.addEventListener('pointermove', (e) => { if (aim) aim = pos(e); });
+    elCv.addEventListener('pointerup', () => {
+      if (!aim) return;
+      const dragged = Math.hypot(START.x - aim.x, START.y - aim.y) > 12;
+      if (dragged || power) {
+        const v = power ? autoVel() : dragVel();
+        peg.vx = v.vx; peg.vy = v.vy; peg.live = true; peg.scored = false;
+      }
+      aim = null;
+    });
+    elCv.addEventListener('pointercancel', () => { aim = null; });
+
+    function endThrow() {
+      if (!peg.scored) { streak = 0; streakEl!.textContent = '0'; }
+      peg.live = false;
+      respawnAt = performance.now() + 500;
+    }
+
+    function step(dt: number) {
+      if (!peg.live) {
+        if (respawnAt && performance.now() > respawnAt) {
+          Object.assign(peg, { x: START.x, y: START.y, vx: 0, vy: 0, a: 0 });
+          respawnAt = 0;
+        }
+        return;
+      }
+      const py = peg.y;
+      peg.vy += G * dt; peg.x += peg.vx * dt; peg.y += peg.vy * dt; peg.a += peg.vx * dt * 0.03;
+      if (peg.x + HALF > BOARD_X && peg.y > 50 && peg.y < 130) { peg.x = BOARD_X - HALF; peg.vx *= -0.45; }
+      for (const r of [RIM_L, RIM_R]) {
+        const dx = peg.x - r.x, dy = peg.y - r.y, d = Math.hypot(dx, dy);
+        if (d < HALF + 3 && d > 0) {
+          const nx = dx / d, ny = dy / d, dot = peg.vx * nx + peg.vy * ny;
+          peg.vx = (peg.vx - 1.6 * dot * nx) * 0.7; peg.vy = (peg.vy - 1.6 * dot * ny) * 0.7;
+          peg.x = r.x + nx * (HALF + 3); peg.y = r.y + ny * (HALF + 3);
+        }
+      }
+      if (!peg.scored && py < RIM_L.y && peg.y >= RIM_L.y && peg.vy > 0 && peg.x > RIM_L.x && peg.x < RIM_R.x) {
+        peg.scored = true; score++; streak++; flash = 1;
+        scoreEl!.textContent = String(score); streakEl!.textContent = String(streak);
+      }
+      if (peg.y > H - 10) { peg.y = H - 10; peg.vy *= -0.4; peg.vx *= 0.8; if (Math.abs(peg.vy) < 40) endThrow(); }
+      if (peg.x < -30 || peg.x > W + 30) endThrow();
+    }
+
+    function draw() {
+      const accent = css('--pb-accent', '#F7941D');
+      const ink = css('--pb-text-2', '#888');
+      const blue = isDark() ? '#5B8FE0' : '#1E4B8F';
+      ctx.clearRect(0, 0, W, H);
+      ctx.globalAlpha = 0.3; ctx.strokeStyle = ink; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(0, H - 0.5); ctx.lineTo(W, H - 0.5); ctx.stroke(); ctx.globalAlpha = 1;
+      ctx.fillStyle = blue; ctx.globalAlpha = 0.22; ctx.fillRect(BOARD_X, 46, 8, 90); ctx.globalAlpha = 1;
+      ctx.strokeStyle = blue; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(RIM_L.x, RIM_L.y); ctx.lineTo(RIM_R.x, RIM_R.y); ctx.stroke();
+      ctx.lineWidth = 1.2; ctx.globalAlpha = 0.5; ctx.beginPath();
+      ctx.moveTo(RIM_L.x, RIM_L.y); ctx.lineTo(RIM_L.x + 11, RIM_L.y + 32); ctx.lineTo(RIM_R.x - 11, RIM_R.y + 32); ctx.lineTo(RIM_R.x, RIM_R.y); ctx.stroke(); ctx.globalAlpha = 1;
+      ctx.fillStyle = accent;
+      for (const r of [RIM_L, RIM_R]) { ctx.beginPath(); ctx.arc(r.x, r.y, 3.5, 0, 6.3); ctx.fill(); }
+      if (flash > 0) {
+        ctx.globalAlpha = flash * 0.35; ctx.beginPath(); ctx.arc(TARGET.x, TARGET.y + 8, 44, 0, 6.3); ctx.fill();
+        ctx.globalAlpha = 1; flash -= 0.03;
+      }
+      if (!peg.live && (aim || power)) {
+        const v = power ? autoVel() : dragVel();
+        ctx.fillStyle = accent;
+        for (let i = 1; i <= 14; i++) {
+          const t = i * 0.07;
+          ctx.globalAlpha = 1 - i / 16;
+          ctx.beginPath(); ctx.arc(START.x + v.vx * t, START.y + v.vy * t + 0.5 * G * t * t, 2.2, 0, 6.3); ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+      }
+      ctx.save(); ctx.translate(peg.x, peg.y); ctx.rotate(peg.a);
+      ctx.fillStyle = accent; ctx.strokeStyle = css('--pb-accent-lo', '#B86200'); ctx.lineWidth = 1.5;
+      if (power) { ctx.shadowColor = accent; ctx.shadowBlur = 14; }
+      ctx.beginPath(); ctx.roundRect(-HALF, -HALF, HALF * 2, HALF * 2, 3); ctx.fill(); ctx.stroke();
+      ctx.shadowBlur = 0; ctx.fillStyle = css('--pb-on-accent', '#14110F'); ctx.globalAlpha = 0.3;
+      ctx.fillRect(-3.5, -3.5, 7, 7);
+      ctx.restore();
+    }
+
+    function loop(now: number) {
+      const dt = Math.min((now - last) / 1000, 0.033); last = now;
+      step(dt); draw();
+      raf = requestAnimationFrame(loop);
+    }
 
     let previousOverflow = '';
     let lastActiveElement: HTMLElement | null = null;
     function openModal() {
       lastActiveElement = document.activeElement as HTMLElement | null;
-      elModalDialog.classList.add('is-open');
-      elModalDialog.setAttribute('aria-hidden', 'false');
+      elModal.classList.add('is-open');
+      elModal.setAttribute('aria-hidden', 'false');
       previousOverflow = document.documentElement.style.overflow;
       document.documentElement.style.overflow = 'hidden';
       document.body.style.overflow = 'hidden';
-      elPeg.focus();
+      resetGame();
+      last = performance.now();
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(loop);
+      (powerBtn as HTMLElement).focus();
     }
-
     function closeModal() {
-      elModalDialog.classList.remove('is-open');
-      elModalDialog.setAttribute('aria-hidden', 'true');
+      elModal.classList.remove('is-open');
+      elModal.setAttribute('aria-hidden', 'true');
       document.documentElement.style.overflow = previousOverflow;
       document.body.style.overflow = '';
+      cancelAnimationFrame(raf);
       lastActiveElement?.focus();
     }
 
@@ -108,146 +233,10 @@ import Icon from '../Icon.astro';
         openModal();
       }
     });
-
-    modalCloseBtn?.addEventListener('click', closeModal);
-    modalBackdrop?.addEventListener('click', closeModal);
-
+    closeBtn?.addEventListener('click', closeModal);
+    backdrop?.addEventListener('click', closeModal);
     window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && modalDialog.classList.contains('is-open')) {
-        closeModal();
-      }
-    });
-
-    // Helper: calculate zoom factor k
-    function getK(): number {
-      const rect = elTrack.getBoundingClientRect();
-      const offsetW = elTrack.offsetWidth || 1;
-      return rect.width / offsetW || 1;
-    }
-
-    function getMaxX(): number {
-      const trackW = elTrack.offsetWidth || 260;
-      const pegW = elPeg.offsetWidth || 28;
-      return Math.max(10, trackW - pegW - 8);
-    }
-
-    function updatePegPosition(x: number) {
-      const maxX = getMaxX();
-      const clampedX = Math.max(0, Math.min(maxX, x));
-      currentX = clampedX;
-      elPeg.style.transform = `translateX(${clampedX}px)`;
-      elPeg.setAttribute('aria-valuenow', Math.round((clampedX / maxX) * 100).toString());
-
-      // Distance to hole (hole is at maxX)
-      const ratio = clampedX / maxX;
-
-      // Orange adapter ring fades in as peg gets close (ratio > 0.35)
-      if (ratio > 0.35) {
-        const ringOpacity = Math.min(1, (ratio - 0.35) / 0.5);
-        elRing.style.opacity = ringOpacity.toFixed(2);
-      } else {
-        elRing.style.opacity = '0';
-      }
-
-      // Check engagement
-      if (ratio >= 0.88 && !isEngaged) {
-        engage();
-      }
-    }
-
-    function engage() {
-      if (isEngaged) return;
-      isEngaged = true;
-      const maxX = getMaxX();
-
-      if (reduceMotion) {
-        updatePegPosition(maxX);
-        elRing.style.opacity = '1';
-        elLabel.textContent = 'Every problem has an angle.';
-        elLabel.classList.add('is-solved');
-      } else {
-        elPeg.style.transition = 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)';
-        elPeg.style.transform = `translateX(${maxX}px)`;
-        elRing.style.opacity = '1';
-        elLabel.textContent = 'Every problem has an angle.';
-        elLabel.classList.add('is-solved');
-      }
-
-      clearTimeout(resetTimer);
-      resetTimer = setTimeout(() => {
-        reset();
-      }, 3000);
-    }
-
-    function reset() {
-      isEngaged = false;
-      elLabel.textContent = 'Slide to engage the adapter';
-      elLabel.classList.remove('is-solved');
-      elRing.style.opacity = '0';
-      if (reduceMotion) {
-        elPeg.style.transform = 'translateX(0px)';
-      } else {
-        elPeg.style.transition = 'transform 0.35s ease';
-        elPeg.style.transform = 'translateX(0px)';
-        setTimeout(() => {
-          elPeg.style.transition = '';
-        }, 350);
-      }
-      currentX = 0;
-      elPeg.setAttribute('aria-valuenow', '0');
-    }
-
-    // Pointer events (desktop drag & touch)
-    elPeg.addEventListener('pointerdown', (e) => {
-      if (isEngaged) return;
-      isDragging = true;
-      startX = e.clientX;
-      elPeg.style.transition = '';
-      elPeg.setPointerCapture(e.pointerId);
-
-      const onPointerMove = (moveEv: PointerEvent) => {
-        if (!isDragging) return;
-        const k = getK();
-        const delta = (moveEv.clientX - startX) / k;
-        updatePegPosition(currentX + delta);
-        startX = moveEv.clientX;
-      };
-
-      const onPointerUp = (upEv: PointerEvent) => {
-        isDragging = false;
-        try {
-          elPeg.releasePointerCapture(upEv.pointerId);
-        } catch {}
-        window.removeEventListener('pointermove', onPointerMove);
-        window.removeEventListener('pointerup', onPointerUp);
-
-        if (!isEngaged) {
-          elPeg.style.transition = 'transform 0.2s ease';
-          elPeg.style.transform = 'translateX(0px)';
-          currentX = 0;
-          elRing.style.opacity = '0';
-        }
-      };
-
-      window.addEventListener('pointermove', onPointerMove);
-      window.addEventListener('pointerup', onPointerUp);
-    });
-
-    // Keyboard controls (arrow keys & Enter)
-    elPeg.addEventListener('keydown', (e) => {
-      const maxX = getMaxX();
-      const step = maxX / 5;
-
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-        e.preventDefault();
-        updatePegPosition(currentX + step);
-      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-        e.preventDefault();
-        updatePegPosition(currentX - step);
-      } else if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        engage();
-      }
+      if (e.key === 'Escape' && elModal.classList.contains('is-open')) closeModal();
     });
   }
 
@@ -288,7 +277,7 @@ import Icon from '../Icon.astro';
   .adapter-modal-card {
     position: relative;
     width: 100%;
-    max-width: 480px;
+    max-width: 560px;
     padding: 1.75rem 2rem;
     border-radius: 20px;
     background-color: var(--pb-tile);
@@ -370,102 +359,60 @@ import Icon from '../Icon.astro';
 
   .adapter-status-row {
     width: 100%;
-    text-align: center;
-    min-height: 20px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
   }
 
-  .adapter-label {
+  .adapter-stat {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--pb-text-2, var(--color-text-secondary));
+  }
+
+  .adapter-stat b {
+    margin-left: 0.25rem;
+    font-size: 1rem;
+    color: var(--pb-text, var(--color-text-primary));
+  }
+
+  .adapter-power {
+    margin-left: auto;
+    cursor: pointer;
+    font: inherit;
     font-size: 12px;
     font-weight: 700;
-    letter-spacing: 0.04em;
-    color: var(--pb-text-2, var(--color-text-secondary));
-    transition: color 0.2s ease;
-  }
-
-  .adapter-label.is-solved {
-    color: var(--pb-accent, #F7941D);
-  }
-
-  .adapter-track {
-    position: relative;
-    width: 100%;
-    max-width: 340px;
-    height: 40px;
-    background-color: var(--pb-panel, rgba(0, 0, 0, 0.05));
+    padding: 0.4rem 0.85rem;
     border-radius: 999px;
-    border: 1px solid var(--pb-line, var(--color-border));
-    display: flex;
-    align-items: center;
-    padding: 3px;
-    touch-action: none;
+    color: var(--pb-accent, #F7941D);
+    border: 1.5px solid var(--pb-accent, #F7941D);
+    background: transparent;
+    transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
   }
 
-  /* Hole target on right */
-  .adapter-hole-target {
-    position: absolute;
-    right: 6px;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background-color: var(--pb-hole, #070605);
-    border: 1px solid var(--pb-panel-edge, rgba(0, 0, 0, 0.2));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    pointer-events: none;
+  .adapter-power[aria-pressed="true"] {
+    background: var(--pb-accent, #F7941D);
+    color: var(--pb-on-accent, #14110F);
+    box-shadow: 0 0 16px var(--pb-glow, rgba(247, 148, 29, 0.5));
   }
 
-  .adapter-hole-shadow {
-    position: absolute;
-    inset: 1px;
-    border-radius: 50%;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6);
-  }
-
-  /* Adapter orange ring that fades in */
-  .adapter-ring-overlay {
-    position: absolute;
-    inset: -3px;
-    border-radius: 50%;
-    border: 2.5px solid var(--pb-accent, #F7941D);
-    box-shadow: 0 0 10px var(--pb-glow, rgba(247, 148, 29, 0.5));
-    opacity: 0;
-    transition: opacity 0.15s ease;
-  }
-
-  /* Square peg on left */
-  .adapter-square-peg {
-    position: absolute;
-    left: 6px;
-    width: 28px;
-    height: 28px;
-    border-radius: 6px;
-    background-color: var(--pb-accent, #F7941D);
-    border: 1px solid var(--pb-accent-lo, #B86200);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.35);
-    cursor: grab;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2;
-    touch-action: none;
-    outline: none;
-  }
-
-  .adapter-square-peg:active {
-    cursor: grabbing;
-  }
-
-  .adapter-square-peg:focus-visible {
+  .adapter-power:focus-visible {
     outline: 2px solid var(--pb-focus-ring, #FFAE4A);
     outline-offset: 2px;
   }
 
-  .peg-core {
-    width: 8px;
-    height: 8px;
-    border-radius: 2px;
-    background-color: var(--pb-on-accent, #14110F);
-    opacity: 0.3;
+  .adapter-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    touch-action: none;
+    cursor: crosshair;
+  }
+
+  .adapter-hint {
+    margin: 0;
+    font-size: 12px;
+    color: var(--pb-text-2, var(--color-text-secondary));
   }
 </style>

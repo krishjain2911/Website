@@ -5,13 +5,42 @@ import Icon from './Icon.astro';
 
 const allProducts = await getCollection('products');
 
-const engineerProjects = allProducts
-  .filter((p) => p.data.pillar === 'Engineer' || p.data.pillar === 'Build')
-  .sort((a, b) => a.data.order - b.data.order);
+// Every solution is shown under Engineer, whatever its pillar tag says.
+// (Gen-AI tags stay on the product content; they are only no longer used to split the carousel.)
+const engineerProjects = [...allProducts].sort((x, y) => x.data.order - y.data.order);
 
-const genAiProjects = allProducts
-  .filter((p) => p.data.pillar === 'Gen-AI' || p.data.pillar === 'Intelligence')
-  .sort((a, b) => a.data.order - b.data.order);
+// Govern: three service blocks (content lives here, edit the text as needed)
+const governBlocks = [
+  {
+    icon: 'server' as const,
+    title: 'Application and platform ops',
+    points: [
+      'Managed services for your platform and application operations',
+      'Periodic review of platform and application performance',
+      'Application support service',
+      'AI and ML ops: agent evals and guardrails'
+    ]
+  },
+  {
+    icon: 'layers' as const,
+    title: 'Architecture review',
+    points: [
+      'Infrastructure and application architecture review',
+      'Security and performance reviews',
+      'AI architecture review',
+      'Tech debt monitoring and mitigation strategy'
+    ]
+  },
+  {
+    icon: 'users' as const,
+    title: 'Training and best practices',
+    points: [
+      'OutSystems training',
+      'Architecture best practices',
+      'Coding best practices'
+    ]
+  }
+];
 ---
 
 <section id="solutions" class="peg-solutions-section" aria-label="How we think and capabilities">
@@ -27,7 +56,7 @@ const genAiProjects = allProducts
         <h2 class="intro-headline staged-word-heading" id="intro-headline">
           <span class="staged-word color-word-plan" style="--word-idx: 0;">Plan.</span>
           <span class="staged-word color-word-engineer" style="--word-idx: 1;">Engineer.</span>
-          <span class="staged-word color-word-genai" style="--word-idx: 2;">Gen-AI.</span>
+          <span class="staged-word color-word-genai" style="--word-idx: 2;">Govern.</span>
         </h2>
         <p class="intro-subline">Three disciplines. One accountable team.</p>
       </div>
@@ -79,18 +108,18 @@ const genAiProjects = allProducts
                     </div>
                   </div>
 
-                  <!-- Back Face: G - Gen-AI (Red) -->
+                  <!-- Back Face: G - Govern (Red) -->
                   <div
                     class="cube-face face-back"
                     id="cube-face-genai"
                     data-pillar="genai"
                     role="button"
                     tabindex="0"
-                    aria-label="G - Gen-AI"
+                    aria-label="G - Govern"
                   >
                     <div class="face-content">
                       <span class="face-letter">G</span>
-                      <span class="face-word">GEN-AI</span>
+                      <span class="face-word">GOVERN</span>
                     </div>
                   </div>
 
@@ -142,7 +171,7 @@ const genAiProjects = allProducts
               data-pillar="genai"
             >
               <span class="tab-badge genai-badge">G</span>
-              <span>Gen-AI</span>
+              <span>Govern</span>
             </button>
           </div>
 
@@ -260,118 +289,28 @@ const genAiProjects = allProducts
               </div>
             </div>
 
-            <!-- Fixed Slot 3: Horizontal Scroll Rail (Starts at identical Y in Engineer & Gen-AI) -->
+            <!-- Fixed Slot 3: Horizontal Scroll Rail (Starts at identical Y in Engineer & Govern) -->
             <div class="projects-rail-section" data-rail-id="engineer">
               <div class="rail-header-row">
                 <div class="rail-title-group">
-                  <span class="rail-label">Projects &amp; accelerators</span>
+                  <span class="rail-label">Solutions &amp; accelerators</span>
                   <span class="rail-count">({engineerProjects.length})</span>
                 </div>
 
                 <div class="rail-nav-controls">
-                  <button type="button" class="rail-nav-btn rail-nav-prev" aria-label="Previous accelerator" data-rail-target="engineer">
+                  <button type="button" class="rail-nav-btn rail-nav-prev" aria-label="Previous solution" data-rail-target="engineer">
                     <Icon name="chevron-left" size={15} />
                   </button>
-                  <button type="button" class="rail-nav-btn rail-nav-next" aria-label="Next accelerator" data-rail-target="engineer">
+                  <button type="button" class="rail-nav-btn rail-nav-next" aria-label="Next solution" data-rail-target="engineer">
                     <Icon name="chevron-right" size={15} />
                   </button>
                 </div>
               </div>
 
-              <div class="projects-rail-track" id="rail-track-engineer" role="region" aria-label="Engineer projects carousel">
+              <div class="projects-rail-track" id="rail-track-engineer" role="region" aria-label="Engineer solutions carousel">
                 {engineerProjects.map((proj) => {
                   const assetKey = proj.data.image || proj.data.imageKey || `product-${proj.slug}`;
                   const badge = proj.data.badge || (proj.data.badges && proj.data.badges[0]) || 'Low-code';
-                  return (
-                    <article class="stage-card project-rail-card card-mastercard">
-                      {proj.data.featured && (
-                        <div class="spotlight-ribbon">
-                          <span>Spotlight</span>
-                        </div>
-                      )}
-                      <div class="rail-card-media">
-                        <MediaAsset
-                          assetKey={assetKey}
-                          alt={proj.data.shortTitle || proj.data.title}
-                          aspectRatio="16/10"
-                          class="rail-card-image"
-                        />
-                        <span class="rail-badge">{badge}</span>
-                      </div>
-                      <div class="rail-card-body">
-                        <h4 class="rail-card-title">{proj.data.shortTitle || proj.data.title}</h4>
-                        <p class="rail-card-desc">{proj.data.oneLiner}</p>
-                        <a href={`/solutions/${proj.slug}`} class="rail-card-link">
-                          <span>View project</span>
-                          <Icon name="arrow-right" size={14} />
-                        </a>
-                      </div>
-                    </article>
-                  );
-                })}
-              </div>
-
-              <!-- Rail Progress Dots -->
-              <div class="rail-dots-row" id="rail-dots-engineer" aria-hidden="true">
-                {engineerProjects.map((_, idx) => (
-                  <span class:list={['rail-dot', { 'is-active': idx === 0 }]} data-index={idx}></span>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <!-- PANEL 3: GEN-AI -->
-          <div
-            id="stage-panel-genai"
-            class="stage-panel"
-            data-pillar="genai"
-            role="tabpanel"
-            aria-labelledby="tab-peg-genai"
-          >
-            <!-- Fixed Slot 1: Header (Identical positioning & height) -->
-            <div class="panel-header">
-              <h2 class="panel-title staged-word-heading">
-                <span class="pillar-indicator" style="background-color: #EE4B2B;" aria-hidden="true">G</span>
-                <strong class="highlight-genai staged-word" style="--word-idx: 0;">Gen-AI</strong>
-                <span class="staged-word" style="--word-idx: 1;">the</span>
-                <span class="staged-word" style="--word-idx: 2;">leap.</span>
-              </h2>
-              <p class="panel-desc">
-                Private, catalogue-grounded, production-ready AI operating inside your walls.
-              </p>
-            </div>
-
-            <!-- Fixed Slot 2: Single-Line Two Stacks Strip (Matching slot & style) -->
-            <div class="stacks-strip" aria-label="Deployment environments">
-              <span class="stacks-strip-intro">We deploy across two architectures, chosen per project.</span>
-              <div class="stacks-badges-wrap">
-                <span class="stack-badge badge-mern">High-code (MERN) · retail &amp; voice</span>
-                <span class="stack-badge badge-outsystems">Low-code (OutSystems) · enterprise grounding</span>
-              </div>
-            </div>
-
-            <!-- Fixed Slot 3: Horizontal Scroll Rail (Starts at identical Y in Engineer & Gen-AI) -->
-            <div class="projects-rail-section" data-rail-id="genai">
-              <div class="rail-header-row">
-                <div class="rail-title-group">
-                  <span class="rail-label">Solutions &amp; deployments</span>
-                  <span class="rail-count">({genAiProjects.length})</span>
-                </div>
-
-                <div class="rail-nav-controls">
-                  <button type="button" class="rail-nav-btn rail-nav-prev" aria-label="Previous solution" data-rail-target="genai">
-                    <Icon name="chevron-left" size={15} />
-                  </button>
-                  <button type="button" class="rail-nav-btn rail-nav-next" aria-label="Next solution" data-rail-target="genai">
-                    <Icon name="chevron-right" size={15} />
-                  </button>
-                </div>
-              </div>
-
-              <div class="projects-rail-track" id="rail-track-genai" role="region" aria-label="Gen-AI solutions carousel">
-                {genAiProjects.map((proj) => {
-                  const assetKey = proj.data.image || proj.data.imageKey || `product-${proj.slug}`;
-                  const badge = proj.data.badge || (proj.data.badges && proj.data.badges[0]) || 'Gen-AI';
                   return (
                     <article class="stage-card project-rail-card card-mastercard">
                       {proj.data.featured && (
@@ -402,11 +341,50 @@ const genAiProjects = allProducts
               </div>
 
               <!-- Rail Progress Dots -->
-              <div class="rail-dots-row" id="rail-dots-genai" aria-hidden="true">
-                {genAiProjects.map((_, idx) => (
+              <div class="rail-dots-row" id="rail-dots-engineer" aria-hidden="true">
+                {engineerProjects.map((_, idx) => (
                   <span class:list={['rail-dot', { 'is-active': idx === 0 }]} data-index={idx}></span>
                 ))}
               </div>
+            </div>
+          </div>
+
+          <!-- PANEL 3: Govern -->
+          <div
+            id="stage-panel-genai"
+            class="stage-panel"
+            data-pillar="genai"
+            role="tabpanel"
+            aria-labelledby="tab-peg-genai"
+          >
+            <!-- Fixed Slot 1: Header (Identical positioning & height) -->
+            <div class="panel-header">
+              <h2 class="panel-title staged-word-heading">
+                <span class="pillar-indicator" style="background-color: #EE4B2B;" aria-hidden="true">G</span>
+                <strong class="highlight-genai staged-word" style="--word-idx: 0;">Govern</strong>
+                <span class="staged-word" style="--word-idx: 1;">to</span>
+                <span class="staged-word" style="--word-idx: 2;">scale.</span>
+              </h2>
+              <p class="panel-desc">
+                Proactive governance is key to scaling any platform / application at the pace of business.
+              </p>
+            </div>
+
+            <!-- Govern: three service blocks -->
+            <div class="govern-grid" aria-label="Govern services">
+              {governBlocks.map((block) => (
+                <article class="govern-card card-mastercard">
+                  <span class="govern-icon" aria-hidden="true">
+                    <Icon name={block.icon} size={18} />
+                  </span>
+                  <h4 class="govern-card-title">{block.title}</h4>
+                  <ul class="govern-list">
+                    {block.points.map((pt) => (
+                      <li>{pt}</li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
             </div>
           </div>
         </div>
@@ -725,7 +703,7 @@ const genAiProjects = allProducts
     box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.15);
   }
 
-  /* Back Face: G - Gen-AI (Red) */
+  /* Back Face: G - Govern (Red) */
   .face-back {
     transform: rotateY(180deg) translateZ(var(--half-face));
     background: linear-gradient(135deg, #FF5B3B 0%, #EE4B2B 100%);
@@ -1775,6 +1753,96 @@ const genAiProjects = allProducts
   .stage-panel .rail-card-desc { font-size: 0.8125rem; line-height: 1.5; margin: 0 0 0.7rem; }
   .stage-panel .rail-card-link { font-size: 0.8125rem; font-weight: 700; }
   .stage-panel .rail-dots-row { margin-top: 0.7rem; }
+
+  /* -------------------------------------------------------------
+     Govern: three service blocks
+     ------------------------------------------------------------- */
+  .govern-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.85rem;
+    width: 100%;
+    margin-top: clamp(0.75rem, 1.8vh, 1.25rem);
+  }
+
+  @media (min-width: 1100px) {
+    .govern-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      align-items: stretch;
+    }
+  }
+
+  .stage-panel .govern-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    padding: 1.05rem 1.1rem 1.15rem;
+    border-radius: 18px;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+    min-width: 0;
+    height: 100%;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stage-panel .govern-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #EE4B2B, #F7941D);
+  }
+
+  .govern-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: rgba(238, 75, 43, 0.12);
+    color: #EE4B2B;
+  }
+
+  .govern-card-title {
+    margin: 0;
+    font-size: 1.02rem;
+    line-height: 1.25;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--color-text-primary);
+  }
+
+  .govern-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+
+  .govern-list li {
+    position: relative;
+    padding-left: 1.05rem;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: var(--color-text-secondary);
+  }
+
+  .govern-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.5em;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #EE4B2B;
+  }
 </style>
 
 <script>
@@ -2040,7 +2108,7 @@ const genAiProjects = allProducts
                 };
                 cubeAssembly.style.transform = `rotateX(${ang.x}deg) rotateY(${ang.y}deg)`;
               }
-              // Transition towards Gen-AI near end of Engineer
+              // Transition towards Govern near end of Engineer
               else if (pillarScroll > stopDist * 1.75) {
                 const blend = (pillarScroll - stopDist * 1.75) / (stopDist * 0.25);
                 const ang = {
@@ -2270,6 +2338,15 @@ const genAiProjects = allProducts
         updateDots();
         updateRailState();
       }, { passive: true });
+
+      // The panel is hidden (display: none) when this runs, so widths read as 0 and the next button
+      // starts disabled. Re-measure whenever the track gets a real size (panel shown, window resized).
+      if ('ResizeObserver' in window) {
+        new ResizeObserver(() => {
+          updateDots();
+          updateRailState();
+        }).observe(trackEl);
+      }
 
       // Drag to scroll horizontally on the track (without vertical wheel hijacking)
       let isRailDragging = false;

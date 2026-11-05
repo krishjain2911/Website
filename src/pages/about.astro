@@ -220,7 +220,7 @@ function formatMandateText(text: string) {
                     id="theory-interactive-svg"
                     xmlns="http://www.w3.org/2000/svg"
                     role="img"
-                    aria-label="RHSP animation: a square peg and a round hole. Six lines run from the edges of the square and map onto the circle, then the peg settles into the hole."
+                    aria-label="RHSP animation: a square peg and a round hole. Eight lines run from the edges of the square and map onto the circle, then the peg settles into the hole."
                   >
                     <defs>
                       <radialGradient id="holeGlow" cx="50%" cy="50%" r="50%">
@@ -237,7 +237,7 @@ function formatMandateText(text: string) {
                     <g class="d-hole" id="d-hole" transform="translate(420, 140)">
                       <circle r="92" fill="url(#holeGlow)" class="d-hole-glow" />
                       <text y="-94" class="d-label d-label-hole" text-anchor="middle">ROUND HOLE</text>
-                      <text y="92" class="d-sub" text-anchor="middle">Your business reality</text>
+                      <text y="92" class="d-sub" text-anchor="middle">The business reality</text>
                       <circle r="62" class="d-hole-ring" />
                       <circle r="46" class="d-hole-inner" />
                       <!-- ghost of the peg: shows the corner clash in the first beat -->
@@ -250,14 +250,16 @@ function formatMandateText(text: string) {
                       </g>
                     </g>
 
-                    <!-- SIX MAPPING LINES (square edges to circle), drawn by script -->
+                    <!-- EIGHT MAPPING LINES (square edges to circle), drawn by script -->
                     <g class="d-lines">
                       <path class="d-line" /><path class="d-line" /><path class="d-line" />
                       <path class="d-line" /><path class="d-line" /><path class="d-line" />
+                      <path class="d-line" /><path class="d-line" />
                     </g>
                     <g class="d-nodes">
                       <circle class="d-node" r="3.5" /><circle class="d-node" r="3.5" /><circle class="d-node" r="3.5" />
                       <circle class="d-node" r="3.5" /><circle class="d-node" r="3.5" /><circle class="d-node" r="3.5" />
+                      <circle class="d-node" r="3.5" /><circle class="d-node" r="3.5" />
                     </g>
 
                     <!-- SQUARE PEG -->
@@ -268,7 +270,7 @@ function formatMandateText(text: string) {
 
                     <!-- Labels -->
                     <text x="120" y="46" class="d-label d-label-peg" text-anchor="middle">SQUARE PEG</text>
-                    <text x="120" y="232" class="d-sub d-sub-peg" text-anchor="middle">Your technology</text>
+                    <text x="120" y="232" class="d-sub d-sub-peg" text-anchor="middle">The technology</text>
                     <text x="270" y="262" class="d-label d-label-adapter" text-anchor="middle">RHSP ADAPTER</text>
                     <text x="280" y="270" class="d-sub d-sub-fit" text-anchor="middle">Zero compromise on either side</text>
                   </svg>
@@ -278,7 +280,7 @@ function formatMandateText(text: string) {
                 <div class="diagram-caption-footer">
                   <span class="caption-tag">Story</span>
                   <p class="caption-text" id="diagram-caption-text">
-                    The square peg meets the round hole. Its corners clash with the socket.
+                    The square peg meets the round hole.
                   </p>
                 </div>
               </div>
@@ -1036,7 +1038,7 @@ function formatMandateText(text: string) {
       'The peg sits inside the hole through the adapter. No compromise on either side.'
     ];
 
-    // ---- Diagram animation: peg slides, six lines map square edges to the circle ----
+    // ---- Diagram animation: peg slides, eight lines map square edges to the circle ----
     const dSvg = document.getElementById('theory-interactive-svg');
     const dPeg = document.getElementById('d-peg');
     const dLines = Array.from(document.querySelectorAll<SVGPathElement>('.d-line'));
@@ -1046,9 +1048,12 @@ function formatMandateText(text: string) {
     const RADIUS = 62;
     const PEG_START = 120;
     // anchor on the square (x, y, outward normal x, y), then target angle on the circle (left arc, then radial)
-    const ANCHORS = [[-14, -38, 0, -1], [14, -38, 0, -1], [38, -14, 1, 0], [38, 14, 1, 0], [14, 38, 0, 1], [-14, 38, 0, 1]];
-    const ANG_ARC = [240, 216, 192, 168, 144, 120];
-    const ANG_RADIAL = [250, 290, 340, 380, 430, 470];
+    // the last two (far = true) start on the left edge and sweep over / under the hole to land on its far (right) side
+    const ANCHORS = [[-14, -38, 0, -1], [14, -38, 0, -1], [38, -14, 1, 0], [38, 14, 1, 0], [14, 38, 0, 1], [-14, 38, 0, 1], [-38, -16, -1, 0], [-38, 16, -1, 0]];
+    const ANG_ARC = [240, 216, 192, 168, 144, 120, 300, 60];
+    // settled state: two lines each to north, east, south and west of the circle
+    const ANG_RADIAL = [255, 285, 345, 375, 435, 465, 195, 165];
+    const FAR = [false, false, false, false, false, false, true, true];
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const dState = { pegX: PEG_START, holeX: HOLE.x, draw: 0, merge: 0 };
     const dTargets = [
@@ -1073,12 +1078,26 @@ function formatMandateText(text: string) {
         const ex = dState.holeX + RADIUS * Math.cos(th);
         const ey = HOLE.y + RADIUS * Math.sin(th);
         const k = Math.min(Math.hypot(ex - sx, ey - sy) * 0.45, 90);
+        let c1x = sx + nx * k, c1y = sy + ny * k;
+        let c2x = ex + (sx - ex) * 0.35, c2y = ey + (sy - ey) * 0.35;
+        if (FAR[i]) {
+          // exit the left edge, arc around the outside of the hole, and enter its far side from outside
+          const up = ay < 0 ? -1 : 1;
+          const f1x = sx - 80, f1y = sy + up * 105;
+          const f2x = ex + Math.cos(th) * 70, f2y = ey + Math.sin(th) * 70;
+          // blend toward the plain short curve as the peg settles into the hole
+          c1x = f1x + (c1x - f1x) * m;
+          c1y = f1y + (c1y - f1y) * m;
+          c2x = f2x + (c2x - f2x) * m;
+          c2y = f2y + (c2y - f2y) * m;
+        }
+        // +0.6 keeps perfectly flat lines from having a zero-height box (the gradient stroke would vanish)
         ln.setAttribute(
           'd',
-          `M${sx.toFixed(1)},${sy.toFixed(1)} C${(sx + nx * k).toFixed(1)},${(sy + ny * k).toFixed(1)} ${(ex + (sx - ex) * 0.35).toFixed(1)},${(ey + (sy - ey) * 0.35).toFixed(1)} ${ex.toFixed(1)},${ey.toFixed(1)}`
+          `M${sx.toFixed(1)},${sy.toFixed(1)} C${c1x.toFixed(1)},${(c1y + 0.6).toFixed(1)} ${c2x.toFixed(1)},${c2y.toFixed(1)} ${ex.toFixed(1)},${ey.toFixed(1)}`
         );
         const len = ln.getTotalLength();
-        const p = clamp01(dState.draw * 1.6 - i * 0.12);
+        const p = clamp01(dState.draw * 1.8 - i * 0.1);
         ln.style.strokeDasharray = `${len}`;
         ln.style.strokeDashoffset = `${len * (1 - p)}`;
         const node = dNodes[i];

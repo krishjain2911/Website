@@ -100,7 +100,7 @@ export const siteConfig = {
   // Brand Framework: The PEG Method
   pegMethod: {
     badge: "HOW WE THINK",
-    headline: "Plan with foresight. Engineer with precision. Gen-AI the leap.",
+    headline: "Plan with foresight. Engineer with precision. Govern to scale.",
     primaryTagline: "Three disciplines. One accountable team.",
     pillars: [
       {
@@ -138,13 +138,13 @@ export const siteConfig = {
         iconType: 'solid'
       },
       {
-        id: 'gen-ai',
+        id: 'govern',
         letter: 'G',
-        name: 'Gen-AI',
-        title: 'Gen-AI the leap.',
+        name: 'Govern',
+        title: 'Govern to Scale.',
         color: '#EE4B2B', // Red-Orange
-        tagline: 'Gen-AI the leap.',
-        description: 'Private, catalogue-grounded, production-ready AI operating inside your walls.',
+        tagline: 'Govern to Scale.',
+        description: 'Proactive governance is key to scaling any platform / application at the pace of business. ',
         bullets: [
           'Sonakshi: AI voice agent in MERN, deployed for a retail store',
           'Sovereign AI: Private enterprise LLM deployments on your infrastructure',
@@ -171,7 +171,7 @@ export const siteConfig = {
         number: 1,
         title: "Understand the business",
         description: "We study your processes, goals and challenges before proposing anything.",
-        detail: "OT and IT experience lets us read both the floor-level process and the system of record.",
+        detail: "IT and Operations experience lets us read both the floor-level process and the system of record. Understanding the nuances is the Key to unlocking value.",
         icon: "compass" as const,
         color: "#1E4B8F"
       },
@@ -187,7 +187,7 @@ export const siteConfig = {
         number: 3,
         title: "Design adaptive systems",
         description: "We architect intelligent systems that adapt to how your business runs and unlock that value.",
-        detail: "Low-code or high-code is chosen on merit: OutSystems for speed, MERN for depth, AI where the data calls for it.",
+        detail: "We design systems around what is currently available and the business needs, Outsystems, MERN , AI as needed. No force-fits. Value creation is Key",
         icon: "sliders" as const,
         color: "#C28026"
       },
@@ -203,15 +203,15 @@ export const siteConfig = {
         number: 5,
         title: "Refine and deploy",
         description: "We improve from pilot feedback and launch with confidence.",
-        detail: "Paperless, audit-ready releases informed by regulated financial-services delivery.",
+        detail: "Systematic testing , Code review gates, Closed loop user testing ensure better adoption and an Agile system ready to meet the business needs",
         icon: "code" as const,
         color: "#F16524"
       },
       {
         number: 6,
         title: "Enable and monitor",
-        description: "We train your teams and keep watching the system so the value keeps growing.",
-        detail: "Training, SLAs and monitoring keep adoption high and the value growing at scale.",
+        description: "We implement Observability systems and governance systems so that you Platform and application scale with the business.",
+        detail: "Ops Dashboards, Periodic Architecture reviews and Upskilling keep the Value growing at scale ",
         icon: "shield" as const,
         color: "#EE4B2B"
       }
