@@ -1,85 +1,168 @@
 /* PEG Board Design Tokens */
 
 .pegboard-page {
-  /* Light mode tokens (keep today's clean visual system) */
-  --pb-page: #FFFFFF;
-  --pb-panel: #F8F9FA;
-  --pb-panel-edge: var(--color-border, #E5E7EB);
-  --pb-hole: rgba(140, 150, 165, 0.35);
-  --pb-hole-highlight: transparent;
+  --pb-board: #F7F7F8;
+  --pb-hole: rgba(20, 20, 24, 0.14);
+  --pb-hole-r: 2.5px;
   --pb-tile: #FFFFFF;
-  --pb-tile-raised: #FFFFFF;
-  --pb-line: var(--color-border, #E5E7EB);
-  --pb-text: var(--color-text-primary, #101828);
-  --pb-text-2: var(--color-text-secondary, #475467);
-  --pb-text-3: var(--color-text-muted, #8C96A5);
+  --pb-tile-line: rgba(20, 20, 24, 0.10);
+  --pb-text: #16161A;
+  --pb-text-2: #55555E;
+  --pb-text-3: #8C96A5;
+  --pb-peg: #F7941D;
+  --pb-cord: rgba(20, 20, 24, 0.28);
+  --pb-shadow: 0 10px 24px -12px rgba(20, 20, 24, 0.28);
+  --pb-glow: rgba(247, 148, 29, 0);
+
+  /* Functional Tokens */
+  --pb-on-accent: #FFFFFF;
+  --pb-focus-ring: #F7941D;
   --pb-accent: #F7941D;
   --pb-accent-hi: #FFAE4A;
   --pb-accent-lo: #B86200;
   --pb-accent-wash: rgba(247, 148, 29, 0.12);
-  --pb-glow: rgba(247, 148, 29, 0.25);
-  --pb-on-accent: #FFFFFF;
-  --pb-focus-ring: #F7941D;
-  --pb-ember-glow: rgba(247, 148, 29, 0.04);
+  --pb-tile-raised: #FFFFFF;
+  --pb-line: rgba(20, 20, 24, 0.10);
+  --pb-panel-edge: rgba(20, 20, 24, 0.12);
+  --pb-page: #F7F7F8;
 }
 
-/* Dark mode by user toggle */
+/* Dark mode: apply to BOTH [data-theme="dark"] and the unset + prefers-dark block */
 :root[data-theme="dark"] .pegboard-page {
-  color-scheme: dark;
-  --pb-page: #0B0A09;
-  --pb-panel: #14110F;
-  --pb-panel-edge: #2B231B;
-  --pb-hole: #070605;
-  --pb-hole-highlight: rgba(255, 170, 60, 0.10);
-  --pb-tile: #1C1814;
-  --pb-tile-raised: #241E18;
-  --pb-line: #3A3025;
+  --pb-board: #050505;
+  --pb-hole: #F7941D;
+  --pb-hole-r: 2px;
+  --pb-tile: #0F0E0D;
+  --pb-tile-line: rgba(247, 148, 29, 0.22);
   --pb-text: #F6F1EA;
   --pb-text-2: #BDB3A6;
   --pb-text-3: #8E8478;
+  --pb-peg: #F7941D;
+  --pb-cord: rgba(247, 148, 29, 0.55);
+  --pb-shadow: 0 14px 30px -14px #000000;
+  --pb-glow: rgba(247, 148, 29, 0.45);
+
+  --pb-on-accent: #14110F;
+  --pb-focus-ring: #FFAE4A;
   --pb-accent: #F7941D;
   --pb-accent-hi: #FFAE4A;
   --pb-accent-lo: #B86200;
   --pb-accent-wash: rgba(247, 148, 29, 0.12);
-  --pb-glow: rgba(247, 148, 29, 0.35);
-  --pb-on-accent: #14110F;
-  --pb-focus-ring: #FFAE4A;
-  --pb-ember-glow: rgba(247, 148, 29, 0.10);
+  --pb-tile-raised: #141312;
+  --pb-line: rgba(247, 148, 29, 0.22);
+  --pb-panel-edge: rgba(247, 148, 29, 0.25);
+  --pb-page: #050505;
 }
 
-/* Dark mode by system preference (when no manual light preference is set) */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .pegboard-page {
-    color-scheme: dark;
-    --pb-page: #0B0A09;
-    --pb-panel: #14110F;
-    --pb-panel-edge: #2B231B;
-    --pb-hole: #070605;
-    --pb-hole-highlight: rgba(255, 170, 60, 0.10);
-    --pb-tile: #1C1814;
-    --pb-tile-raised: #241E18;
-    --pb-line: #3A3025;
+    --pb-board: #050505;
+    --pb-hole: #F7941D;
+    --pb-hole-r: 2px;
+    --pb-tile: #0F0E0D;
+    --pb-tile-line: rgba(247, 148, 29, 0.22);
     --pb-text: #F6F1EA;
     --pb-text-2: #BDB3A6;
     --pb-text-3: #8E8478;
+    --pb-peg: #F7941D;
+    --pb-cord: rgba(247, 148, 29, 0.55);
+    --pb-shadow: 0 14px 30px -14px #000000;
+    --pb-glow: rgba(247, 148, 29, 0.45);
+
+    --pb-on-accent: #14110F;
+    --pb-focus-ring: #FFAE4A;
     --pb-accent: #F7941D;
     --pb-accent-hi: #FFAE4A;
     --pb-accent-lo: #B86200;
     --pb-accent-wash: rgba(247, 148, 29, 0.12);
-    --pb-glow: rgba(247, 148, 29, 0.35);
-    --pb-on-accent: #14110F;
-    --pb-focus-ring: #FFAE4A;
-    --pb-ember-glow: rgba(247, 148, 29, 0.10);
+    --pb-tile-raised: #141312;
+    --pb-line: rgba(247, 148, 29, 0.22);
+    --pb-panel-edge: rgba(247, 148, 29, 0.25);
+    --pb-page: #050505;
   }
 }
 
-/* Prevent white flash during view transitions */
+/* Page and View Transition styling in Dark Mode */
 html:has(.pegboard-page),
 body:has(.pegboard-page) {
-  background-color: var(--pb-page);
+  background-color: var(--pb-page, #F7F7F8);
+  transition: background-color 0.25s ease;
 }
 
-::view-transition-old(root),
-::view-transition-new(root) {
-  /* Keep view-transition root coherent */
+/* Board Background with Holes Grid */
+.pb-board {
+  background-color: var(--pb-board);
+  background-image: radial-gradient(circle at center, var(--pb-hole) 0 var(--pb-hole-r), transparent calc(var(--pb-hole-r) + 0.6px));
+  background-size: 32px 32px;
+  background-position: 16px 16px;
+}
+
+:root[data-theme="dark"] .pb-board {
+  background-blend-mode: normal;
+}
+
+:root[data-theme="dark"] html:has(.pegboard-page),
+:root[data-theme="dark"] body:has(.pegboard-page),
+:root[data-theme="dark"] .peg-board-page-main,
+:root[data-theme="dark"] .pegboard-page {
+  background-color: #050505 !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) html:has(.pegboard-page),
+  :root:not([data-theme="light"]) body:has(.pegboard-page),
+  :root:not([data-theme="light"]) .peg-board-page-main,
+  :root:not([data-theme="light"]) .pegboard-page {
+    background-color: #050505 !important;
+  }
+}
+
+.pb-tile {
+  background: var(--pb-tile);
+  border: 1px solid var(--pb-tile-line);
+  box-shadow: var(--pb-shadow);
+  color: var(--pb-text);
+  border-radius: 16px;
+  position: relative;
+  transform-origin: 50% -22px;
+}
+
+.pb-tile::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -22px;
+  width: 1.5px;
+  height: 22px;
+  background: var(--pb-cord);
+  transform: translateX(-50%);
+}
+
+.pb-tile::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -27px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--pb-peg);
+  transform: translateX(-50%);
+  box-shadow: 0 0 12px var(--pb-glow);
+}
+
+.pb-tile:hover {
+  border-color: var(--pb-peg);
+}
+
+.pb-tile[aria-pressed="true"]::after,
+.pb-tile.is-pinned::after {
+  box-shadow: 0 0 18px 2px var(--pb-glow);
+}
+
+@media (max-width: 640px) {
+  .pb-board {
+    background-size: 24px 24px;
+    background-position: 12px 12px;
+  }
 }

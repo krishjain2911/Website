@@ -44,7 +44,7 @@ const contactEmail = siteConfig.contact.email;
       </ul>
     </div>
 
-    <!-- Drawer Footer: Discuss my board + Email copy -->
+    <!-- Drawer Footer: Discuss my board + Email copy + Reset board -->
     <div class="drawer-footer">
       <div class="drawer-actions-col">
         <a
@@ -70,6 +70,17 @@ const contactEmail = siteConfig.contact.email;
               <span id="copy-email-feedback">Copy</span>
             </button>
           </div>
+        </div>
+
+        <div class="drawer-reset-row">
+          <button
+            type="button"
+            class="drawer-reset-board-btn"
+            id="drawer-reset-board-btn"
+            title="Reset board layout"
+          >
+            Reset board
+          </button>
         </div>
       </div>
     </div>
@@ -408,6 +419,36 @@ const contactEmail = siteConfig.contact.email;
   }
 
   .copy-email-btn:focus-visible {
+    outline: 2px solid var(--pb-focus-ring);
+  }
+
+  .drawer-reset-row {
+    display: flex;
+    justify-content: center;
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px dashed var(--pb-line);
+  }
+
+  .drawer-reset-board-btn {
+    background: transparent;
+    border: none;
+    color: var(--pb-text-3);
+    font-size: 11.5px;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    transition: color 0.15s ease;
+  }
+
+  .drawer-reset-board-btn:hover {
+    color: var(--pb-text);
+  }
+
+  .drawer-reset-board-btn:focus-visible {
     outline: 2px solid var(--pb-focus-ring);
   }
 </style>

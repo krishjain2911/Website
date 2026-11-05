@@ -4,29 +4,21 @@ import { finderQuestions } from '../../data/pegBoard';
 ---
 
 <div class="peg-finder-container" id="peg-finder-root">
-  <!-- Mobile trigger button: opens as bottom sheet -->
-  <div class="finder-mobile-trigger-bar">
-    <button
-      type="button"
-      class="btn btn-secondary finder-mobile-open-btn"
-      id="finder-mobile-open-btn"
-      aria-haspopup="dialog"
-      aria-expanded="false"
-      aria-controls="finder-sheet-dialog"
-    >
-      <Icon name="search" size={14} />
-      <span>Find my starting point</span>
-    </button>
-  </div>
-
-  <!-- Finder Panel (Sheet on mobile / Compact block on desktop) -->
-  <div class="finder-panel-wrapper" id="finder-sheet-dialog" role="region" aria-label="Peg finder interactive recommendation">
+  <!-- Finder Modal (Centered dialog on desktop, bottom sheet on mobile) -->
+  <div
+    class="finder-panel-wrapper"
+    id="finder-sheet-dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="finder-heading"
+    aria-hidden="true"
+  >
     <div class="finder-panel-backdrop" id="finder-sheet-backdrop" tabindex="-1"></div>
 
     <div class="finder-card card-mastercard" id="finder-card">
       <div class="finder-header">
         <div class="finder-title-group">
-          <span class="finder-eyebrow">FIND MY STARTING POINT</span>
+          <span class="finder-eyebrow">PEG FINDER</span>
           <h2 class="finder-heading" id="finder-heading">Not sure where to start?</h2>
           <p class="finder-subline">Answer three quick questions. The board highlights your best starting point.</p>
         </div>
@@ -34,7 +26,7 @@ import { finderQuestions } from '../../data/pegBoard';
           <button type="button" class="finder-reset-btn" id="finder-clear-btn" style="display: none;">
             Clear
           </button>
-          <button type="button" class="finder-sheet-close-btn" id="finder-sheet-close-btn" aria-label="Close finder sheet">
+          <button type="button" class="finder-sheet-close-btn" id="finder-sheet-close-btn" aria-label="Close peg finder">
             <Icon name="x" size={16} />
           </button>
         </div>
@@ -91,6 +83,9 @@ import { finderQuestions } from '../../data/pegBoard';
             <span>Open the guide</span>
             <Icon name="arrow-right" size={13} />
           </a>
+          <button type="button" class="btn btn-secondary btn-sm" id="finder-view-board-btn">
+            <span>View on board</span>
+          </button>
           <button type="button" class="btn btn-secondary btn-sm finder-pin-btn" id="finder-pin-btn">
             <Icon name="bookmark" size={13} />
             <span id="finder-pin-btn-text">Pin it</span>
@@ -110,19 +105,20 @@ import { finderQuestions } from '../../data/pegBoard';
     const resultBox = document.getElementById('finder-result-box');
     const resultSentence = document.getElementById('finder-result-sentence');
     const openGuideBtn = document.getElementById('finder-open-guide-btn') as HTMLAnchorElement | null;
+    const viewBoardBtn = document.getElementById('finder-view-board-btn');
     const pinBtn = document.getElementById('finder-pin-btn') as HTMLButtonElement | null;
     const pinBtnText = document.getElementById('finder-pin-btn-text');
     const clearBtn = document.getElementById('finder-clear-btn');
     const estateChip = document.getElementById('finder-estate-chip');
 
-    // Mobile sheet elements
-    const mobileOpenBtn = document.getElementById('finder-mobile-open-btn');
+    // Modal elements
     const sheetDialog = document.getElementById('finder-sheet-dialog');
     const sheetBackdrop = document.getElementById('finder-sheet-backdrop');
     const sheetCloseBtn = document.getElementById('finder-sheet-close-btn');
 
-    if (!root || !form || !resultBox || !resultSentence || !openGuideBtn) return;
+    if (!root || !form || !resultBox || !resultSentence || !openGuideBtn || !sheetDialog) return;
 
+    const elSheetDialog = sheetDialog;
     const elResultBox = resultBox;
     const elResultSentence = resultSentence;
     const elOpenGuideBtn = openGuideBtn;
@@ -131,24 +127,44 @@ import { finderQuestions } from '../../data/pegBoard';
     let answers: Record<string, string> = {};
     let currentBestSlug = '';
 
-    // Sheet toggle for mobile
-    function openSheet() {
-      if (!sheetDialog) return;
-      sheetDialog.classList.add('is-sheet-open');
+    function openModal() {
+      elSheetDialog.classList.add('is-sheet-open');
+      elSheetDialog.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
       sheetCloseBtn?.focus();
     }
 
-    function closeSheet() {
-      if (!sheetDialog) return;
-      sheetDialog.classList.remove('is-sheet-open');
+    function closeModal() {
+      elSheetDialog.classList.remove('is-sheet-open');
+      elSheetDialog.setAttribute('aria-hidden', 'true');
       document.body.style.overflow = '';
-      mobileOpenBtn?.focus();
     }
 
-    mobileOpenBtn?.addEventListener('click', openSheet);
-    sheetCloseBtn?.addEventListener('click', closeSheet);
-    sheetBackdrop?.addEventListener('click', closeSheet);
+    // Trigger open from anywhere on the page with data-action="open-finder"
+    document.addEventListener('click', (e) => {
+      const target = (e.target as HTMLElement).closest('[data-action="open-finder"]');
+      if (target) {
+        e.preventDefault();
+        openModal();
+      }
+    });
+
+    sheetCloseBtn?.addEventListener('click', closeModal);
+    sheetBackdrop?.addEventListener('click', closeModal);
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && sheetDialog.classList.contains('is-sheet-open')) {
+        closeModal();
+      }
+    });
+
+    viewBoardBtn?.addEventListener('click', () => {
+      closeModal();
+      if (currentBestSlug) {
+        const targetTile = document.querySelector(`[data-tile-slug="${currentBestSlug}"]`);
+        targetTile?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    });
 
     // Pill click handlers
     const pillButtons = Array.from(root.querySelectorAll<HTMLButtonElement>('.finder-pill-btn'));
@@ -246,7 +262,7 @@ import { finderQuestions } from '../../data/pegBoard';
 
       currentBestSlug = bestSlug;
 
-      // When all 3 core questions answered, display result box
+      // When questions answered, display result box
       const coreAnswered = !!(answers['speed'] && answers['custom'] && answers['data']) || !!answers['estate'];
       if (coreAnswered) {
         elResultBox.style.display = 'flex';
@@ -257,7 +273,7 @@ import { finderQuestions } from '../../data/pegBoard';
         elResultBox.style.display = 'none';
       }
 
-      // Board tile lighting: matching tile is lit, others dim to 55%
+      // Board tile lighting: matching tile is lit, others dim to 35%
       document.querySelectorAll<HTMLElement>('.board-tile-wrapper').forEach((tileEl) => {
         const slug = tileEl.getAttribute('data-tile-slug');
         if (slug === bestSlug) {
@@ -294,73 +310,79 @@ import { finderQuestions } from '../../data/pegBoard';
 
 <style>
   .peg-finder-container {
-    margin-bottom: 2.25rem;
+    position: relative;
+    z-index: 10;
   }
 
-  .finder-mobile-trigger-bar {
-    display: none;
-    margin-bottom: 1.5rem;
+  /* Fixed modal overlay */
+  .finder-panel-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100dvh;
+    z-index: 3500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    padding: 1.5rem;
+    transition: opacity 0.25s ease, visibility 0.25s;
+  }
+
+  .finder-panel-wrapper.is-sheet-open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .finder-panel-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  .finder-card {
+    position: relative;
+    width: 100%;
+    max-width: 680px;
+    max-height: 85dvh;
+    overflow-y: auto;
+    padding: 1.75rem 2rem;
+    border-radius: 20px;
+    background-color: var(--pb-tile-raised, #FFFFFF);
+    border: 1px solid var(--pb-line, var(--color-border));
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+    z-index: 2;
+    transform: scale(0.96);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .finder-panel-wrapper.is-sheet-open .finder-card {
+    transform: scale(1);
   }
 
   @media (max-width: 639px) {
-    .finder-mobile-trigger-bar {
-      display: block;
-    }
-
     .finder-panel-wrapper {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100dvh;
-      z-index: 3500;
-      display: flex;
       align-items: flex-end;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.25s ease, visibility 0.25s;
-    }
-
-    .finder-panel-wrapper.is-sheet-open {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .finder-panel-backdrop {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.65);
+      padding: 0;
     }
 
     .finder-card {
-      position: relative;
-      width: 100%;
-      max-height: 85dvh;
-      overflow-y: auto;
-      border-radius: 20px 20px 0 0 !important;
+      max-width: 100%;
+      border-radius: 20px 20px 0 0;
+      padding: 1.5rem 1.25rem;
       transform: translateY(100%);
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      z-index: 2;
     }
 
     .finder-panel-wrapper.is-sheet-open .finder-card {
       transform: translateY(0);
     }
-
-    .finder-sheet-close-btn {
-      display: inline-flex !important;
-    }
-  }
-
-  .finder-card {
-    padding: 1.5rem 1.75rem;
-    border-radius: 18px;
-    background-color: var(--pb-tile, #FFFFFF);
-    border: 1px solid var(--pb-line, var(--color-border));
-    box-shadow: 0 4px 16px rgba(16, 24, 40, 0.04);
   }
 
   .finder-header {
@@ -416,16 +438,22 @@ import { finderQuestions } from '../../data/pegBoard';
   }
 
   .finder-sheet-close-btn {
-    display: none;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 28px;
-    height: 28px;
-    border-radius: 6px;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
     border: 1px solid var(--pb-line, var(--color-border));
     background: transparent;
     color: var(--pb-text-2, var(--color-text-secondary));
     cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .finder-sheet-close-btn:hover {
+    color: var(--pb-text);
+    border-color: var(--pb-accent);
   }
 
   .finder-questions-row {
@@ -448,92 +476,107 @@ import { finderQuestions } from '../../data/pegBoard';
     font-size: 11px;
     font-weight: 600;
     color: var(--pb-text-2, var(--color-text-muted));
-    padding: 0;
-    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
   }
 
   .finder-pills-group {
     display: flex;
-    flex-wrap: wrap;
     gap: 0.45rem;
   }
 
   .finder-pill-btn {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.4rem 0.85rem;
-    border-radius: 999px;
-    background-color: var(--pb-panel, #F8F9FA);
-    border: 1px solid var(--pb-line, var(--color-border));
-    color: var(--pb-text, var(--color-text-secondary));
-    font-size: 0.8125rem;
+    padding: 0.45rem 0.95rem;
+    font-size: 12.5px;
     font-weight: 500;
+    border-radius: 999px;
+    border: 1px solid var(--pb-line, var(--color-border));
+    background-color: var(--pb-tile, #FFFFFF);
+    color: var(--pb-text-2, var(--color-text-secondary));
     cursor: pointer;
     transition: all 0.15s ease;
+    white-space: nowrap;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
   }
 
   .finder-pill-btn:hover {
+    color: var(--pb-text, var(--color-text-primary));
     border-color: var(--pb-accent, #F7941D);
   }
 
-  .finder-pill-btn.is-active {
+  .finder-pill-btn.is-active,
+  .finder-pill-btn[aria-checked="true"] {
     background-color: var(--pb-accent-wash, rgba(247, 148, 29, 0.12));
     border-color: var(--pb-accent, #F7941D);
     color: var(--pb-accent, #F7941D);
-    font-weight: 700;
+    font-weight: 600;
   }
 
   .finder-optional-row {
-    margin-top: 0.5rem;
+    margin-bottom: 1.25rem;
   }
 
   .finder-estate-chip {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.35rem 0.75rem;
-    border-radius: 999px;
-    background-color: transparent;
-    border: 1px dashed var(--pb-line, var(--color-border));
-    color: var(--pb-text-2, var(--color-text-secondary));
+    padding: 0.4rem 0.85rem;
     font-size: 11.5px;
+    font-weight: 500;
+    border-radius: 6px;
+    border: 1px dashed var(--pb-line, var(--color-border));
+    background: transparent;
+    color: var(--pb-text-2, var(--color-text-secondary));
     cursor: pointer;
     transition: all 0.15s ease;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
   }
 
   .finder-estate-chip:hover {
-    border-color: var(--pb-accent, #F7941D);
-    color: var(--pb-accent, #F7941D);
+    color: var(--pb-text);
+    border-color: var(--pb-accent);
   }
 
-  .finder-estate-chip.is-active {
-    background-color: var(--pb-accent-wash, rgba(247, 148, 29, 0.12));
-    border-color: var(--pb-accent, #F7941D);
-    border-style: solid;
-    color: var(--pb-accent, #F7941D);
-    font-weight: 700;
+  .finder-estate-chip.is-active,
+  .finder-estate-chip[aria-pressed="true"] {
+    background-color: var(--pb-accent-wash);
+    border: 1px solid var(--pb-accent);
+    color: var(--pb-accent);
+    font-weight: 600;
   }
 
   /* Result Box */
   .finder-result-box {
-    margin-top: 1.25rem;
-    padding: 1rem 1.25rem;
-    border-radius: 12px;
-    background-color: var(--pb-accent-wash, rgba(247, 148, 29, 0.08));
-    border: 1px solid var(--pb-accent-lo, rgba(247, 148, 29, 0.35));
-    border-left: 3px solid var(--pb-accent, #F7941D);
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
+    padding: 1rem 1.25rem;
+    background-color: var(--pb-accent-wash, rgba(247, 148, 29, 0.08));
+    border: 1px solid var(--pb-accent, #F7941D);
+    border-radius: 12px;
+    animation: fadeInResult 0.25s ease-out;
+  }
+
+  @keyframes fadeInResult {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .finder-result-text-col {
+    flex: 1;
+    min-width: 240px;
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
-    flex: 1;
-    min-width: 260px;
+    gap: 0.25rem;
   }
 
   .finder-rec-badge {
@@ -548,18 +591,30 @@ import { finderQuestions } from '../../data/pegBoard';
     line-height: 1.45;
     color: var(--pb-text, var(--color-text-primary));
     margin: 0;
+    font-weight: 500;
   }
 
   .finder-result-actions {
     display: flex;
     align-items: center;
-    gap: 0.65rem;
+    gap: 0.5rem;
   }
 
-  .finder-open-guide-btn,
+  .finder-open-guide-btn {
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
   .finder-pin-btn {
-    border-radius: 999px;
-    font-size: 0.8125rem;
-    padding: 0.45rem 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .finder-pin-btn.is-pinned {
+    color: var(--pb-accent, #F7941D);
+    border-color: var(--pb-accent, #F7941D);
   }
 </style>

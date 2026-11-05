@@ -10,10 +10,13 @@ export const FEATURES = {
   adapterMoment: true
 };
 
+export const ZONE_ORDER = ['solutions', 'case-studies', 'resources', 'playground'] as const;
+export type ZoneId = (typeof ZONE_ORDER)[number];
+
 export interface BoardZone {
-  id: 'case-studies' | 'solutions' | 'resources';
+  id: ZoneId;
   label: string;
-  accentColor: string; // e.g. '#F7941D' | '#EE4B2B' | '#1E4B8F'
+  accentColor: string; // e.g. '#EE4B2B' | '#F7941D' | '#1E4B8F'
   accentClass: string;
 }
 
@@ -62,12 +65,13 @@ export type IconName =
 
 export interface BoardTileItem {
   slug: string;
-  zoneId: 'case-studies' | 'solutions' | 'resources';
+  zoneId: ZoneId;
   title: string;
   description: string;
   quickTake?: string;
-  tag: string; // "Coming soon" | "Plan / Engineer / Gen-AI" | "Guide"
+  tag: string; // "Coming soon" | "Solution" | "Guide" | "Interactive" | "Tool" | "Comparison"
   href: string;
+  action?: 'open-adapter' | 'open-finder';
   iconName: IconName;
   pegColor: string;
 }
@@ -132,11 +136,7 @@ export interface EmptySlot {
   pegColor: string;
 }
 
-export const emptySlots: EmptySlot[] = [
-  { id: 'cs-empty-1', title: 'Coming soon', hasSway: true, pegColor: '#F7941D' },
-  { id: 'cs-empty-2', hasSway: false, pegColor: '#EE4B2B' },
-  { id: 'cs-empty-3', hasSway: false, pegColor: '#1E4B8F' }
-];
+export const emptySlots: EmptySlot[] = [];
 
 export const finderQuestions: FinderQuestion[] = [
   {
@@ -174,27 +174,105 @@ export const finderQuestions: FinderQuestion[] = [
 
 export const zones: BoardZone[] = [
   {
-    id: 'case-studies',
-    label: 'Case studies',
-    accentColor: '#F7941D', // orange
-    accentClass: 'zone-orange'
-  },
-  {
     id: 'solutions',
     label: 'Solutions',
     accentColor: '#EE4B2B', // red-orange
     accentClass: 'zone-red'
   },
   {
+    id: 'case-studies',
+    label: 'Case studies',
+    accentColor: '#F7941D', // orange
+    accentClass: 'zone-orange'
+  },
+  {
     id: 'resources',
     label: 'Resources',
     accentColor: '#1E4B8F', // blue
     accentClass: 'zone-blue'
+  },
+  {
+    id: 'playground',
+    label: 'Playground',
+    accentColor: '#F7941D', // orange
+    accentClass: 'zone-orange'
   }
 ];
 
 export const tiles: BoardTileItem[] = [
-  // Zone 1: Case studies (1 tile)
+  // Zone 1: Solutions (7 individual solutions from products)
+  {
+    slug: 'clm',
+    zoneId: 'solutions',
+    title: 'CLM',
+    description: 'Contract workflow from request to signature, for business, risk, legal and vendor teams.',
+    tag: 'Solution',
+    href: '/solutions/clm',
+    iconName: 'file-text',
+    pegColor: '#EE4B2B'
+  },
+  {
+    slug: 'vernacular-documents',
+    zoneId: 'solutions',
+    title: 'Vernacular Documents',
+    description: 'Template-driven documents in any language you supply, generated on demand for business systems.',
+    tag: 'Solution',
+    href: '/solutions/vernacular-documents',
+    iconName: 'file-text',
+    pegColor: '#EE4B2B'
+  },
+  {
+    slug: 'sonakshi',
+    zoneId: 'solutions',
+    title: 'Sonakshi',
+    description: "Voice assistant that answers shoppers' product questions in their own language.",
+    tag: 'Solution',
+    href: '/solutions/sonakshi',
+    iconName: 'phone',
+    pegColor: '#EE4B2B'
+  },
+  {
+    slug: 'ask-me-anything',
+    zoneId: 'solutions',
+    title: 'AskMeAnything',
+    description: 'Grounded enterprise knowledge search answering operational questions across internal documents and systems.',
+    tag: 'Solution',
+    href: '/solutions/ask-me-anything',
+    iconName: 'message-square',
+    pegColor: '#EE4B2B'
+  },
+  {
+    slug: 'dms',
+    zoneId: 'solutions',
+    title: 'DMS',
+    description: 'Centralized enterprise document archival, metadata classification, and compliance retention on OutSystems.',
+    tag: 'Solution',
+    href: '/solutions/dms',
+    iconName: 'database',
+    pegColor: '#EE4B2B'
+  },
+  {
+    slug: 'sovereign-ai',
+    zoneId: 'solutions',
+    title: 'Sovereign AI',
+    description: 'Private enterprise AI deployments that keep sensitive organization data strictly within your perimeter.',
+    tag: 'Solution',
+    href: '/solutions/sovereign-ai',
+    iconName: 'shield',
+    pegColor: '#EE4B2B'
+  },
+  {
+    slug: 'whatsapp-journeys',
+    zoneId: 'solutions',
+    title: 'WhatsApp Journeys',
+    description: 'Customer service workflows, automated updates, and self-service interactions running on WhatsApp.',
+    tag: 'Solution',
+    href: '/solutions/whatsapp-journeys',
+    iconName: 'message-square',
+    pegColor: '#EE4B2B'
+  },
+
+  // Zone 2: Case studies (1 tile)
   {
     slug: 'case-studies',
     zoneId: 'case-studies',
@@ -206,39 +284,7 @@ export const tiles: BoardTileItem[] = [
     pegColor: '#F7941D'
   },
 
-  // Zone 2: Solutions (3 tiles)
-  {
-    slug: 'plan',
-    zoneId: 'solutions',
-    title: 'Plan',
-    description: 'Objective platform selection and blueprints.',
-    tag: 'Plan / Engineer / Gen-AI',
-    href: '/#solutions',
-    iconName: 'compass',
-    pegColor: '#1E4B8F'
-  },
-  {
-    slug: 'engineer',
-    zoneId: 'solutions',
-    title: 'Engineer',
-    description: 'OutSystems and custom MERN development.',
-    tag: 'Plan / Engineer / Gen-AI',
-    href: '/#solutions',
-    iconName: 'cpu',
-    pegColor: '#F7941D'
-  },
-  {
-    slug: 'gen-ai',
-    zoneId: 'solutions',
-    title: 'Gen-AI',
-    description: 'Private, catalogue-grounded enterprise AI.',
-    tag: 'Plan / Engineer / Gen-AI',
-    href: '/#solutions',
-    iconName: 'sparkles',
-    pegColor: '#EE4B2B'
-  },
-
-  // Zone 3: Resources (4 tiles with quickTake)
+  // Zone 3: Resources (4 guides with quickTake)
   {
     slug: 'outsystems-vs-mern',
     zoneId: 'resources',
@@ -282,6 +328,70 @@ export const tiles: BoardTileItem[] = [
     href: '/peg-board/low-code-vs-high-code',
     iconName: 'code',
     pegColor: '#1E4B8F'
+  },
+
+  // Zone 4: Playground (interactive tools and comparisons)
+  {
+    slug: 'adapter-widget',
+    zoneId: 'playground',
+    title: 'Try the adapter',
+    description: 'Slide the square peg into the round hole.',
+    tag: 'Interactive',
+    href: '#adapter-modal',
+    action: 'open-adapter',
+    iconName: 'sliders',
+    pegColor: '#F7941D'
+  },
+  {
+    slug: 'peg-finder',
+    zoneId: 'playground',
+    title: 'Peg Finder',
+    description: 'Answer three quick questions to highlight your starting point.',
+    tag: 'Interactive',
+    href: '#finder-modal',
+    action: 'open-finder',
+    iconName: 'compass',
+    pegColor: '#F7941D'
+  },
+  {
+    slug: 'priority-picker',
+    zoneId: 'playground',
+    title: 'Priority picker',
+    description: 'Toggle decision criteria to weigh architectural options.',
+    tag: 'Tool',
+    href: '/peg-board/outsystems-vs-mern#picker-section',
+    iconName: 'sliders',
+    pegColor: '#F7941D'
+  },
+  {
+    slug: 'calc-outsystems-vs-mern',
+    zoneId: 'playground',
+    title: 'OutSystems vs MERN',
+    description: 'Side-by-side comparison across speed, governance and control.',
+    tag: 'Comparison',
+    href: '/peg-board/outsystems-vs-mern#comparison-table',
+    iconName: 'layers',
+    pegColor: '#F7941D'
+  },
+  {
+    slug: 'calc-o11-vs-odc',
+    zoneId: 'playground',
+    title: 'O11 vs ODC',
+    description: 'Compare containerized cloud deployment and traditional architectures.',
+    tag: 'Comparison',
+    href: '/peg-board/o11-vs-odc#comparison-table',
+    iconName: 'cloud',
+    pegColor: '#F7941D'
+  },
+  {
+    slug: 'calc-cloud-vs-on-premises',
+    zoneId: 'playground',
+    title: 'Cloud vs on-premises',
+    description: 'Compare isolation, residency boundaries and operational overhead.',
+    tag: 'Comparison',
+    href: '/peg-board/cloud-vs-on-premises#comparison-table',
+    iconName: 'server',
+    pegColor: '#F7941D'
   }
 ];
 
