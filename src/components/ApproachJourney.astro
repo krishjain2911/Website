@@ -23,12 +23,23 @@ const headlineWords = approach.headline.split(' ');
         <a
           href={`#journey-stop-${idx}`}
           class={`rail-dot ${idx === 0 ? 'is-active' : ''}`}
+          aria-current={idx === 0 ? 'step' : undefined}
           id={`rail-dot-${idx}`}
           data-stage={idx}
           title={`Stage 0${step.number}: ${step.title}`}
           aria-label={`Jump to Stage 0${step.number}: ${step.title}`}
         >
           <span class="dot-inner" style={`--dot-color: ${step.color};`}></span>
+          <img
+            src="/brand/pill-square-64.webp"
+            srcset="/brand/pill-square-64.webp 1x, /brand/pill-square-128.webp 2x"
+            alt=""
+            aria-hidden="true"
+            class="rail-cube"
+            width="22"
+            height="22"
+            decoding="async"
+          />
         </a>
       ))}
     </div>
@@ -391,11 +402,12 @@ const headlineWords = approach.headline.split(' ');
   }
 
   .rail-dot {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     text-decoration: none;
     outline: none;
@@ -419,12 +431,42 @@ const headlineWords = approach.headline.split(' ');
     transform: scale(1.2);
   }
 
-  .rail-dot.is-active .dot-inner {
-    width: 12px;
-    height: 12px;
+  /* Passed stages: filled stage-colour dot */
+  .rail-dot.is-passed .dot-inner {
     background-color: var(--dot-color, #F7941D);
-    opacity: 1;
-    box-shadow: 0 0 8px var(--dot-color, #F7941D);
+    opacity: 0.9;
+  }
+
+  /* Current stage: the square logo cube replaces the dot */
+  .rail-cube {
+    display: none;
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    pointer-events: none;
+    filter: drop-shadow(0 2px 4px rgba(247, 148, 29, 0.45));
+  }
+
+  .rail-dot.is-active .dot-inner {
+    display: none;
+  }
+
+  .rail-dot.is-active .rail-cube {
+    display: block;
+    animation: railCubePop 0.26s cubic-bezier(0.34, 1.4, 0.64, 1);
+  }
+
+  .rail-dot:hover .rail-cube {
+    transform: scale(1.12);
+  }
+
+  @keyframes railCubePop {
+    from { transform: scale(0.6); opacity: 0.4; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rail-dot.is-active .rail-cube { animation: none; }
   }
 
   /* Centered Header (<= 96px vertical gap from Hero) */
@@ -1421,6 +1463,9 @@ const headlineWords = approach.headline.split(' ');
           }
           railDots.forEach((dot, idx) => {
             dot.classList.toggle('is-active', idx === nearestIdx);
+            dot.classList.toggle('is-passed', idx < nearestIdx);
+            if (idx === nearestIdx) dot.setAttribute('aria-current', 'step');
+            else dot.removeAttribute('aria-current');
           });
         }
       }

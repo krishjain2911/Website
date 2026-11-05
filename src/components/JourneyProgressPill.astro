@@ -37,11 +37,14 @@ const steps = siteConfig.approach.steps;
             <span class="peg-slot" style={`--dot-color: ${step.color};`}>
               <span class="dot-inner dot-passed"></span>
               <img
-                src="/brand/rhsp-logo.png"
-                alt="Active Stage Peg"
+                src="/brand/pill-square-64.webp"
+                srcset="/brand/pill-square-64.webp 1x, /brand/pill-square-128.webp 2x"
+                alt=""
+                aria-hidden="true"
                 class="peg-marker-cube"
                 width="22"
                 height="22"
+                decoding="async"
               />
             </span>
           ) : (
@@ -177,7 +180,7 @@ const steps = siteConfig.approach.steps;
     background-color: #cbd5e1;
     opacity: 0.7;
   }
-  :global(.dark) .marker-peg .rail-dot.is-upcoming .dot-passed {
+  :global(:root[data-theme="dark"]) .marker-peg .rail-dot.is-upcoming .dot-passed {
     background-color: rgba(255, 255, 255, 0.25);
   }
   .marker-peg .rail-dot.is-upcoming .peg-marker-cube {
@@ -208,6 +211,16 @@ const steps = siteConfig.approach.steps;
     height: 22px;
     object-fit: contain;
     filter: drop-shadow(0 2px 4px rgba(247, 148, 29, 0.4));
+    animation: pillCubePop 0.26s cubic-bezier(0.34, 1.4, 0.64, 1);
+  }
+
+  @keyframes pillCubePop {
+    from { transform: scale(0.6); opacity: 0.4; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marker-peg .rail-dot.is-current .peg-marker-cube { animation: none; }
   }
 </style>
 
