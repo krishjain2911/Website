@@ -16,124 +16,63 @@ const tileAriaLabel = tile.quickTake
   : `${tile.title}: ${tile.description}`;
 ---
 
-<div
-  class="board-tile-wrapper"
+<article
+  class="pb-tile board-tile-card board-tile-wrapper"
+  data-id={tile.slug}
   data-tile-slug={tile.slug}
+  data-zone={tile.zoneId}
   data-zone-id={tile.zoneId}
   data-has-quicktake={tile.quickTake ? 'true' : 'false'}
+  tabindex="0"
+  style={`view-transition-name: tile-${tile.slug};`}
 >
   <!-- Start here pointer badge when recommended by Finder -->
   <span class="peg-start-ribbon" data-start-ribbon aria-hidden="true">Start here</span>
 
-  <article
-    class="pb-tile board-tile-card"
-    style={`view-transition-name: tile-${tile.slug};`}
+  <a
+    href={tile.href}
+    class="tile-hit-link"
+    data-tile-link={tile.slug}
+    data-action={tile.action}
+    title={tileTooltip}
+    aria-label={tileAriaLabel}
+    draggable="false"
   >
-    <a
-      href={tile.href}
-      class="tile-hit-link"
-      data-tile-link={tile.slug}
-      data-action={tile.action}
-      title={tileTooltip}
-      aria-label={tileAriaLabel}
-    >
-      <div class="tile-header-row">
-        <div class="tile-icon-badge" style={`--peg-color: ${tile.pegColor};`}>
-          <Icon name={tile.iconName} size={16} />
-        </div>
+    <div class="tile-header-row">
+      <div class="tile-icon-badge" style={`--peg-color: ${tile.pegColor};`}>
+        <Icon name={tile.iconName} size={16} />
       </div>
+    </div>
 
-      <div class="tile-body">
-        <h3 class="tile-title">{tile.title}</h3>
-        <p class="tile-description">{tile.description}</p>
-      </div>
+    <div class="tile-body">
+      <h3 class="tile-title pb-title">{tile.title}</h3>
+      <p class="tile-description">{tile.description}</p>
+    </div>
 
-      <div class="tile-footer-row">
-        <span
-          class={`tile-tag ${tile.tag === 'Coming soon' ? 'tile-tag--soon' : ''}`}
-          data-tile-tag
-        >
-          {tile.tag}
-        </span>
-      </div>
-    </a>
+    <div class="tile-footer-row">
+      <span
+        class={`tile-tag ${tile.tag === 'Coming soon' ? 'tile-tag--soon' : ''}`}
+        data-tile-tag
+      >
+        {tile.tag}
+      </span>
+    </div>
+  </a>
 
-    <!-- Pin button (accessible focusable control) -->
-    <button
-      type="button"
-      class="tile-pin-btn"
-      data-pin-btn={tile.slug}
-      aria-label={`Pin ${tile.title} to my board`}
-      aria-pressed="false"
-    >
-      <Icon name="bookmark" size={13} class="pin-icon" />
-      <span class="pin-dot" aria-hidden="true"></span>
-    </button>
-  </article>
-</div>
+  <!-- Pin button (accessible focusable control) -->
+  <button
+    type="button"
+    class="tile-pin-btn"
+    data-pin-btn={tile.slug}
+    aria-label={`Pin ${tile.title} to my board`}
+    aria-pressed="false"
+  >
+    <Icon name="bookmark" size={13} class="pin-icon" />
+    <span class="pin-dot" aria-hidden="true"></span>
+  </button>
+</article>
 
 <style>
-  .board-tile-wrapper {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    padding-top: 28px;
-    user-select: none;
-    -webkit-user-select: none;
-    touch-action: pan-y;
-    transition: opacity 0.25s ease;
-  }
-
-  /* Start here ribbon placed above peg */
-  .peg-start-ribbon {
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: var(--pb-accent, #F7941D);
-    color: var(--pb-on-accent, #14110F);
-    font-size: 10px;
-    font-weight: 700;
-    padding: 2px 7px;
-    border-radius: 4px;
-    white-space: nowrap;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
-    pointer-events: none;
-    z-index: 10;
-  }
-
-  .peg-start-ribbon::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border-width: 3px;
-    border-style: solid;
-    border-color: var(--pb-accent, #F7941D) transparent transparent transparent;
-  }
-
-  .board-tile-wrapper[data-start-here="true"] .peg-start-ribbon {
-    display: block;
-    animation: ribbonPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  @keyframes ribbonPop {
-    from {
-      opacity: 0;
-      transform: translateX(-50%) translateY(4px) scale(0.9);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0) scale(1);
-    }
-  }
-
   /* Hanging tile card */
   .pb-tile {
     background: var(--pb-tile);
@@ -147,8 +86,16 @@ const tileAriaLabel = tile.quickTake
     transform-origin: 50% -22px;
     display: flex;
     flex-direction: column;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.25s ease;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.25s ease, opacity 0.25s ease;
     z-index: 2;
+    user-select: none;
+    -webkit-user-select: none;
+    outline: none;
+  }
+
+  .pb-tile:focus-visible {
+    outline: 2px solid var(--pb-focus-ring, var(--pb-peg));
+    outline-offset: 3px;
   }
 
   /* Cord: 1.5px wide, 22px long */
@@ -180,7 +127,56 @@ const tileAriaLabel = tile.quickTake
     transition: box-shadow 0.25s ease, background-color 0.25s ease;
   }
 
-  /* Hover swing ±2deg once */
+  /* Start here ribbon placed above peg */
+  .peg-start-ribbon {
+    display: none;
+    position: absolute;
+    top: -52px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--pb-accent, #F7941D);
+    color: var(--pb-on-accent, #14110F);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+    white-space: nowrap;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  .peg-start-ribbon::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 3px;
+    border-style: solid;
+    border-color: var(--pb-accent, #F7941D) transparent transparent transparent;
+  }
+
+  .pb-tile[data-start-here="true"] .peg-start-ribbon,
+  .pb-tile.is-start-here .peg-start-ribbon {
+    display: block;
+    animation: ribbonPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes ribbonPop {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(4px) scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0) scale(1);
+    }
+  }
+
+  /* Hover swing ±2deg once (when not dragging) */
   @keyframes tileHangingSwing {
     0% { transform: rotate(0deg); }
     25% { transform: rotate(-2deg); }
@@ -190,27 +186,28 @@ const tileAriaLabel = tile.quickTake
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    .board-tile-wrapper:hover .pb-tile,
-    .board-tile-wrapper:focus-within .pb-tile {
+    .pb-tile:hover:not(.is-dragging),
+    .pb-tile:focus-within:not(.is-dragging) {
       animation: tileHangingSwing 0.7s ease-in-out 1;
       border-color: var(--pb-peg);
     }
   }
 
   /* Pinned peg state: solid orange with stronger glow */
-  .board-tile-wrapper[data-pinned="true"] .pb-tile::after,
+  .pb-tile[data-pinned="true"]::after,
   .pb-tile[aria-pressed="true"]::after,
   .pb-tile.is-pinned::after {
     box-shadow: 0 0 18px 2px var(--pb-glow);
   }
 
-  .board-tile-wrapper[data-pinned="true"] .pb-tile {
+  .pb-tile[data-pinned="true"],
+  .pb-tile.is-pinned {
     border-color: var(--pb-peg);
     box-shadow: 0 0 0 1px var(--pb-peg), var(--pb-shadow);
   }
 
   /* Explored peg state: peg ring */
-  .board-tile-wrapper[data-explored="true"] .pb-tile::after,
+  .pb-tile[data-explored="true"]::after,
   .pb-tile.is-explored::after {
     box-shadow: 0 0 0 2px var(--pb-board), 0 0 0 4px var(--pb-peg), 0 0 12px var(--pb-glow);
   }
@@ -353,23 +350,23 @@ const tileAriaLabel = tile.quickTake
   }
 
   /* Lit & Dimmed states for Finder & Search */
-  .board-tile-wrapper.is-lit .pb-tile {
+  .pb-tile.is-lit {
     opacity: 1;
     border-color: var(--pb-peg, #F7941D);
     box-shadow: 0 0 0 1px var(--pb-peg), 0 8px 24px var(--pb-glow);
   }
 
-  .board-tile-wrapper.is-dimmed {
+  .pb-tile.is-dimmed {
     opacity: 0.35;
   }
 
-  .board-tile-wrapper.is-dimmed .tile-pin-btn {
+  .pb-tile.is-dimmed .tile-pin-btn {
     pointer-events: none;
   }
 
   /* Mobile horizontal swipe rail styling */
   @media (max-width: 639px) {
-    .board-tile-wrapper {
+    .pb-tile {
       width: 250px;
       flex-shrink: 0;
       scroll-snap-align: start;

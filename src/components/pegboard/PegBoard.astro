@@ -133,7 +133,7 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
             </div>
 
             <!-- Tiles Track: 4 cols desktop, 3 tablet, 2 small tablet, swipe rail on mobile -->
-            <div class="zone-tiles-track" id={`zone-track-${zone.id}`} data-zone-id={zone.id}>
+            <div class="zone-tiles-track" id={`zone-track-${zone.id}`} data-zone={zone.id} data-zone-id={zone.id}>
               {zoneTiles.map((tile, idx) => (
                 <BoardTile tile={tile} index={idx} />
               ))}
@@ -179,11 +179,11 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
     getExploredSlugs,
     markExplored,
     getSavedTileOrder,
-    saveTileOrder,
     resetTileOrder,
     setArrivalVisited,
     hasVisitedArrival
   } from '../../scripts/pegBoardState';
+  import { initPegDrag } from '../../scripts/pegDrag';
   import { tiles, FEATURES } from '../../data/pegBoard';
 
   function initPegBoard() {
@@ -602,123 +602,27 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
     }
     initMobileRails();
 
-    // 6. DESKTOP DRAGGABLE TILES WITH ZOOM FACTOR K (>= 900px only)
-    function initTileDragging() {
-      if (window.innerWidth < 900) return;
-
+    // 6. RESTORE SAVED ORDER & INITIALIZE DRAGGING (>= 900px, hover & fine pointer)
+    const savedOrder = getSavedTileOrder();
+    if (savedOrder) {
       const tracks = document.querySelectorAll<HTMLElement>('.zone-tiles-track');
-
-      // Restore saved order
-      const savedOrder = getSavedTileOrder();
-      if (savedOrder) {
-        tracks.forEach((track) => {
-          const zoneId = track.getAttribute('data-zone-id');
-          if (zoneId && savedOrder[zoneId]) {
-            const slugs = savedOrder[zoneId];
-            slugs.forEach((slug) => {
-              const el = track.querySelector(`[data-tile-slug="${slug}"]`);
-              if (el) track.appendChild(el);
-            });
-          }
-        });
-      }
-
       tracks.forEach((track) => {
-        const zoneId = track.getAttribute('data-zone-id') || '';
-        let draggingEl: HTMLElement | null = null;
-        let startX = 0;
-        let startY = 0;
-        let hasMovedFar = false;
-
-        track.addEventListener('pointerdown', (e) => {
-          if ((e.target as HTMLElement).closest('.tile-pin-btn')) return;
-          if ((e.target as HTMLElement).closest('.tile-hit-link') && e.button !== 0) return;
-
-          const tileWrapper = (e.target as HTMLElement).closest<HTMLElement>('.board-tile-wrapper');
-          if (!tileWrapper) return;
-
-          draggingEl = tileWrapper;
-          startX = e.clientX;
-          startY = e.clientY;
-          hasMovedFar = false;
-
-          const onPointerMove = (moveEv: PointerEvent) => {
-            if (!draggingEl) return;
-            const k = getZoomK();
-            const dx = (moveEv.clientX - startX) / k;
-            const dy = (moveEv.clientY - startY) / k;
-
-            if (!hasMovedFar && (Math.abs(dx) > 6 || Math.abs(dy) > 6)) {
-              hasMovedFar = true;
-              draggingEl.classList.add('is-dragging');
-              draggingEl.setPointerCapture(moveEv.pointerId);
-            }
-
-            if (hasMovedFar) {
-              draggingEl.style.transform = `translate(${dx}px, ${dy}px)`;
-
-              const siblings = Array.from(track.querySelectorAll<HTMLElement>('.board-tile-wrapper'));
-              const dragRect = draggingEl.getBoundingClientRect();
-              const dragCenterX = dragRect.left + dragRect.width / 2;
-
-              for (const sib of siblings) {
-                if (sib === draggingEl) continue;
-                const sibRect = sib.getBoundingClientRect();
-                const sibCenterX = sibRect.left + sibRect.width / 2;
-                if (dragCenterX > sibCenterX && draggingEl.previousElementSibling === sib) {
-                  track.insertBefore(draggingEl, sib);
-                  break;
-                } else if (dragCenterX < sibCenterX && draggingEl.nextElementSibling === sib) {
-                  track.insertBefore(sib, draggingEl);
-                  break;
-                }
-              }
-            }
-          };
-
-          const onPointerUp = (upEv: PointerEvent) => {
-            window.removeEventListener('pointermove', onPointerMove);
-            window.removeEventListener('pointerup', onPointerUp);
-
-            if (draggingEl) {
-              if (hasMovedFar) {
-                try {
-                  draggingEl.releasePointerCapture(upEv.pointerId);
-                } catch {}
-
-                draggingEl.style.transition = 'transform 150ms ease';
-                draggingEl.style.transform = 'translate(0px, 0px)';
-                setTimeout(() => {
-                  if (draggingEl) {
-                    draggingEl.style.transition = '';
-                    draggingEl.style.transform = '';
-                    draggingEl.classList.remove('is-dragging');
-                  }
-                }, 150);
-
-                const currentOrder = getSavedTileOrder() || {};
-                const currentSlugs = Array.from(track.querySelectorAll('.board-tile-wrapper')).map(
-                  (el) => el.getAttribute('data-tile-slug') || ''
-                );
-                currentOrder[zoneId] = currentSlugs;
-                saveTileOrder(currentOrder);
-              } else {
-                draggingEl.classList.remove('is-dragging');
-              }
-              draggingEl = null;
-            }
-          };
-
-          window.addEventListener('pointermove', onPointerMove);
-          window.addEventListener('pointerup', onPointerUp);
-        });
+        const zoneId = track.getAttribute('data-zone') || track.getAttribute('data-zone-id');
+        if (zoneId && savedOrder[zoneId]) {
+          const slugs = savedOrder[zoneId];
+          slugs.forEach((slug) => {
+            const el = track.querySelector(`[data-id="${slug}"], [data-tile-slug="${slug}"]`);
+            if (el) track.appendChild(el);
+          });
+        }
       });
     }
+
+    initPegDrag(board);
 
     // Initial UI synchronization
     syncPinsUI();
     syncExploredUI();
-    initTileDragging();
 
     // Re-sync on custom storage and theme change events
     window.addEventListener('rhsp:pegboard:pins-changed', syncPinsUI);
@@ -1100,6 +1004,7 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
 
   /* Tiles track grid: 4 cols desktop, 3 tablet, 2 small tablet; row gap 56px, col gap 28px */
   .zone-tiles-track {
+    position: relative;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     column-gap: 28px;

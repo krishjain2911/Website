@@ -29,18 +29,21 @@
 
 /* Dark mode: apply to BOTH [data-theme="dark"] and the unset + prefers-dark block */
 :root[data-theme="dark"] .pegboard-page {
-  --pb-board: #050505;
-  --pb-hole: #F7941D;
-  --pb-hole-r: 2px;
-  --pb-tile: #0F0E0D;
-  --pb-tile-line: rgba(247, 148, 29, 0.22);
-  --pb-text: #F6F1EA;
-  --pb-text-2: #BDB3A6;
+  --pb-board: #050506;
+  --pb-hole: rgba(247, 148, 29, 0.16);
+  --pb-hole-r: 1.6px;
+  --pb-hole-ring: rgba(255, 255, 255, 0.035);
+  --pb-tile: #0D0C0B;
+  --pb-tile-line: rgba(247, 148, 29, 0.28);
+  --pb-tile-glow: 0 0 0 1px rgba(247, 148, 29, 0.10), 0 0 26px -8px rgba(247, 148, 29, 0.35), 0 16px 32px -16px #000;
+  --pb-text: #FFFFFF;
+  --pb-text-2: #C9C1B6;
   --pb-text-3: #8E8478;
+  --pb-text-glow: 0 0 14px rgba(255, 255, 255, 0.18);
   --pb-peg: #F7941D;
   --pb-cord: rgba(247, 148, 29, 0.55);
   --pb-shadow: 0 14px 30px -14px #000000;
-  --pb-glow: rgba(247, 148, 29, 0.45);
+  --pb-glow: rgba(247, 148, 29, 0.55);
 
   --pb-on-accent: #14110F;
   --pb-focus-ring: #FFAE4A;
@@ -49,25 +52,28 @@
   --pb-accent-lo: #B86200;
   --pb-accent-wash: rgba(247, 148, 29, 0.12);
   --pb-tile-raised: #141312;
-  --pb-line: rgba(247, 148, 29, 0.22);
+  --pb-line: rgba(247, 148, 29, 0.28);
   --pb-panel-edge: rgba(247, 148, 29, 0.25);
-  --pb-page: #050505;
+  --pb-page: #050506;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .pegboard-page {
-    --pb-board: #050505;
-    --pb-hole: #F7941D;
-    --pb-hole-r: 2px;
-    --pb-tile: #0F0E0D;
-    --pb-tile-line: rgba(247, 148, 29, 0.22);
-    --pb-text: #F6F1EA;
-    --pb-text-2: #BDB3A6;
+    --pb-board: #050506;
+    --pb-hole: rgba(247, 148, 29, 0.16);
+    --pb-hole-r: 1.6px;
+    --pb-hole-ring: rgba(255, 255, 255, 0.035);
+    --pb-tile: #0D0C0B;
+    --pb-tile-line: rgba(247, 148, 29, 0.28);
+    --pb-tile-glow: 0 0 0 1px rgba(247, 148, 29, 0.10), 0 0 26px -8px rgba(247, 148, 29, 0.35), 0 16px 32px -16px #000;
+    --pb-text: #FFFFFF;
+    --pb-text-2: #C9C1B6;
     --pb-text-3: #8E8478;
+    --pb-text-glow: 0 0 14px rgba(255, 255, 255, 0.18);
     --pb-peg: #F7941D;
     --pb-cord: rgba(247, 148, 29, 0.55);
     --pb-shadow: 0 14px 30px -14px #000000;
-    --pb-glow: rgba(247, 148, 29, 0.45);
+    --pb-glow: rgba(247, 148, 29, 0.55);
 
     --pb-on-accent: #14110F;
     --pb-focus-ring: #FFAE4A;
@@ -76,9 +82,9 @@
     --pb-accent-lo: #B86200;
     --pb-accent-wash: rgba(247, 148, 29, 0.12);
     --pb-tile-raised: #141312;
-    --pb-line: rgba(247, 148, 29, 0.22);
+    --pb-line: rgba(247, 148, 29, 0.28);
     --pb-panel-edge: rgba(247, 148, 29, 0.25);
-    --pb-page: #050505;
+    --pb-page: #050506;
   }
 }
 
@@ -89,6 +95,22 @@ body:has(.pegboard-page) {
   transition: background-color 0.25s ease;
 }
 
+:root[data-theme="dark"] html:has(.pegboard-page),
+:root[data-theme="dark"] body:has(.pegboard-page),
+:root[data-theme="dark"] .peg-board-page-main,
+:root[data-theme="dark"] .pegboard-page {
+  background-color: #050506 !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) html:has(.pegboard-page),
+  :root:not([data-theme="light"]) body:has(.pegboard-page),
+  :root:not([data-theme="light"]) .peg-board-page-main,
+  :root:not([data-theme="light"]) .pegboard-page {
+    background-color: #050506 !important;
+  }
+}
+
 /* Board Background with Holes Grid */
 .pb-board {
   background-color: var(--pb-board);
@@ -97,26 +119,44 @@ body:has(.pegboard-page) {
   background-position: 16px 16px;
 }
 
+/* Dark mode board background: holes subtle with quiet ring + ambient top glow */
 :root[data-theme="dark"] .pb-board {
+  background-color: var(--pb-board);
+  background-image:
+    radial-gradient(circle at center, var(--pb-hole) 0 var(--pb-hole-r), transparent calc(var(--pb-hole-r) + 0.5px)),
+    radial-gradient(circle at center, var(--pb-hole-ring) 0 4px, transparent 4.5px),
+    radial-gradient(ellipse 70% 40% at 50% 0%, rgba(247, 148, 29, 0.06), transparent 70%);
+  background-size: 32px 32px, 32px 32px, 100% 100%;
+  background-position: 16px 16px, 16px 16px, 0 0;
   background-blend-mode: normal;
 }
 
-:root[data-theme="dark"] html:has(.pegboard-page),
-:root[data-theme="dark"] body:has(.pegboard-page),
-:root[data-theme="dark"] .peg-board-page-main,
-:root[data-theme="dark"] .pegboard-page {
-  background-color: #050505 !important;
-}
-
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) html:has(.pegboard-page),
-  :root:not([data-theme="light"]) body:has(.pegboard-page),
-  :root:not([data-theme="light"]) .peg-board-page-main,
-  :root:not([data-theme="light"]) .pegboard-page {
-    background-color: #050505 !important;
+  :root:not([data-theme="light"]) .pb-board {
+    background-color: var(--pb-board);
+    background-image:
+      radial-gradient(circle at center, var(--pb-hole) 0 var(--pb-hole-r), transparent calc(var(--pb-hole-r) + 0.5px)),
+      radial-gradient(circle at center, var(--pb-hole-ring) 0 4px, transparent 4.5px),
+      radial-gradient(ellipse 70% 40% at 50% 0%, rgba(247, 148, 29, 0.06), transparent 70%);
+    background-size: 32px 32px, 32px 32px, 100% 100%;
+    background-position: 16px 16px, 16px 16px, 0 0;
+    background-blend-mode: normal;
   }
 }
 
+@media (max-width: 640px) {
+  .pb-board {
+    background-size: 24px 24px;
+    background-position: 12px 12px;
+  }
+  :root[data-theme="dark"] .pb-board,
+  :root:not([data-theme="light"]) .pb-board {
+    background-size: 24px 24px, 24px 24px, 100% 100%;
+    background-position: 12px 12px, 12px 12px, 0 0;
+  }
+}
+
+/* Tile base hanging look */
 .pb-tile {
   background: var(--pb-tile);
   border: 1px solid var(--pb-tile-line);
@@ -160,9 +200,125 @@ body:has(.pegboard-page) {
   box-shadow: 0 0 18px 2px var(--pb-glow);
 }
 
-@media (max-width: 640px) {
-  .pb-board {
-    background-size: 24px 24px;
-    background-position: 12px 12px;
+/* Dark mode glow so tiles and controls stand out softly */
+:root[data-theme="dark"] .pb-tile,
+:root:not([data-theme="light"]) .pb-tile {
+  box-shadow: var(--pb-tile-glow);
+}
+
+:root[data-theme="dark"] .pb-tile:hover,
+:root:not([data-theme="light"]) .pb-tile:hover {
+  border-color: var(--pb-peg);
+  box-shadow: 0 0 0 1px rgba(247, 148, 29, 0.4), 0 0 36px -6px rgba(247, 148, 29, 0.55), 0 18px 36px -16px #000000;
+}
+
+:root[data-theme="dark"] .pb-tile h3,
+:root[data-theme="dark"] .tile-title,
+:root[data-theme="dark"] .pb-title,
+:root[data-theme="dark"] .board-heading,
+:root[data-theme="dark"] .pb-board h1,
+:root:not([data-theme="light"]) .pb-tile h3,
+:root:not([data-theme="light"]) .tile-title,
+:root:not([data-theme="light"]) .pb-title,
+:root:not([data-theme="light"]) .board-heading,
+:root:not([data-theme="light"]) .pb-board h1 {
+  color: var(--pb-text);
+  text-shadow: var(--pb-text-glow);
+}
+
+:root[data-theme="dark"] .pb-tile::after,
+:root:not([data-theme="light"]) .pb-tile::after {
+  box-shadow: 0 0 14px 2px var(--pb-glow);
+}
+
+:root[data-theme="dark"] .pb-tile.is-pinned,
+:root[data-theme="dark"] .pb-tile[data-pinned="true"],
+:root[data-theme="dark"] .board-tile-wrapper[data-pinned="true"],
+:root:not([data-theme="light"]) .pb-tile.is-pinned,
+:root:not([data-theme="light"]) .pb-tile[data-pinned="true"],
+:root:not([data-theme="light"]) .board-tile-wrapper[data-pinned="true"] {
+  border-color: var(--pb-peg);
+  box-shadow: 0 0 0 1px rgba(247, 148, 29, 0.5), 0 0 40px -4px rgba(247, 148, 29, 0.6);
+}
+
+:root[data-theme="dark"] .pb-chip,
+:root[data-theme="dark"] .zone-filter-chip,
+:root[data-theme="dark"] .pb-plaque,
+:root[data-theme="dark"] .zone-plaque,
+:root:not([data-theme="light"]) .pb-chip,
+:root:not([data-theme="light"]) .zone-filter-chip,
+:root:not([data-theme="light"]) .pb-plaque,
+:root:not([data-theme="light"]) .zone-plaque {
+  background: #12100E;
+  border: 1px solid rgba(247, 148, 29, 0.35);
+  color: #FFD9A8;
+  box-shadow: 0 0 18px -8px rgba(247, 148, 29, 0.6);
+}
+
+:root[data-theme="dark"] .pb-chip.is-active,
+:root[data-theme="dark"] .zone-filter-chip.is-active,
+:root:not([data-theme="light"]) .pb-chip.is-active,
+:root:not([data-theme="light"]) .zone-filter-chip.is-active {
+  background: rgba(247, 148, 29, 0.16);
+  color: #FFFFFF;
+  box-shadow: 0 0 20px -4px rgba(247, 148, 29, 0.7);
+}
+
+:root[data-theme="dark"] .pb-search,
+:root[data-theme="dark"] .board-search-input,
+:root:not([data-theme="light"]) .pb-search,
+:root:not([data-theme="light"]) .board-search-input {
+  background: #0B0A09;
+  border: 1px solid rgba(247, 148, 29, 0.25);
+}
+
+:root[data-theme="dark"] .board-search-box:focus-within .board-search-input,
+:root[data-theme="dark"] .pb-search:focus-within,
+:root:not([data-theme="light"]) .board-search-box:focus-within .board-search-input,
+:root:not([data-theme="light"]) .pb-search:focus-within {
+  border-color: var(--pb-peg);
+  box-shadow: 0 0 0 3px rgba(247, 148, 29, 0.18), 0 0 24px -6px rgba(247, 148, 29, 0.5);
+}
+
+:root[data-theme="dark"] .zone-shelf-line,
+:root:not([data-theme="light"]) .zone-shelf-line {
+  background: linear-gradient(to right, rgba(247, 148, 29, 0.35) 0%, transparent 95%);
+  box-shadow: 0 0 8px rgba(247, 148, 29, 0.2);
+}
+
+/* Dragging styling: Desktop only */
+@media (hover: hover) and (pointer: fine) and (min-width: 900px) {
+  .drag-enabled .pb-tile,
+  .drag-enabled .pb-tile * {
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+}
+
+.pb-tile.is-dragging {
+  position: absolute !important;
+  margin: 0 !important;
+  cursor: grabbing !important;
+  z-index: 20 !important;
+  transition: none !important;
+  box-shadow: 0 24px 48px -12px #000000, 0 0 40px -4px rgba(247, 148, 29, 0.6) !important;
+}
+
+.pb-tile-ph {
+  border-radius: 16px;
+  border: 1px dashed rgba(247, 148, 29, 0.35);
+  background: rgba(247, 148, 29, 0.03);
+  min-height: 148px;
+}
+
+@media (max-width: 899px), (hover: none) {
+  .pb-tile {
+    cursor: pointer;
+    touch-action: auto;
+  }
+  .pb-tile-ph {
+    display: none;
   }
 }

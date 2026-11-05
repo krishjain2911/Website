@@ -3,7 +3,8 @@
 
 const PINS_KEY = 'rhsp.pegboard.pins';
 const EXPLORED_KEY = 'rhsp.pegboard.explored';
-const ORDER_KEY = 'rhsp.pegboard.order';
+const ORDER_KEY = 'rhsp.pegboard.v2.order';
+const LEGACY_ORDER_KEY = 'rhsp.pegboard.order';
 const ARRIVAL_KEY = 'rhsp.pegboard.v2.arrival';
 
 export function getPinnedSlugs(): string[] {
@@ -81,7 +82,7 @@ export function markExplored(slug: string): string[] {
 export function getSavedTileOrder(): Record<string, string[]> | null {
   try {
     if (typeof window === 'undefined' || !window.localStorage) return null;
-    const raw = window.localStorage.getItem(ORDER_KEY);
+    const raw = window.localStorage.getItem(ORDER_KEY) || window.localStorage.getItem(LEGACY_ORDER_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw);
     return typeof parsed === 'object' && parsed !== null ? parsed : null;
@@ -100,10 +101,21 @@ export function saveTileOrder(order: Record<string, string[]>): void {
   }
 }
 
+export function saveOrder(zoneId: string, ids: string[]): void {
+  try {
+    const current = getSavedTileOrder() || {};
+    current[zoneId] = ids;
+    saveTileOrder(current);
+  } catch {
+    // silent degrade
+  }
+}
+
 export function resetTileOrder(): void {
   try {
     if (typeof window !== 'undefined' && window.localStorage) {
       window.localStorage.removeItem(ORDER_KEY);
+      window.localStorage.removeItem(LEGACY_ORDER_KEY);
     }
     window.dispatchEvent(new CustomEvent('rhsp:pegboard:order-reset'));
   } catch {
