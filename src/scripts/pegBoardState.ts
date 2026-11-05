@@ -1,9 +1,10 @@
-// localStorage helpers for PEG Board (pins, explored, order)
-// Access is always wrapped in try/catch; counters and pins degrade silently
+// localStorage and sessionStorage helpers for PEG Board (pins, explored, order, arrival)
+// All storage access stays inside try/catch; counters and pins degrade silently
 
 const PINS_KEY = 'rhsp.pegboard.pins';
 const EXPLORED_KEY = 'rhsp.pegboard.explored';
 const ORDER_KEY = 'rhsp.pegboard.order';
+const ARRIVAL_KEY = 'rhsp.pegboard.v2.arrival';
 
 export function getPinnedSlugs(): string[] {
   try {
@@ -21,7 +22,7 @@ export function isPinned(slug: string): boolean {
   return getPinnedSlugs().includes(slug);
 }
 
-export function togglePin(slug: string): { pinned: boolean; slugs: string[] } {
+export function togglePin(slug: string, source: string = 'toggle'): { pinned: boolean; slugs: string[] } {
   try {
     const slugs = getPinnedSlugs();
     const idx = slugs.indexOf(slug);
@@ -37,7 +38,11 @@ export function togglePin(slug: string): { pinned: boolean; slugs: string[] } {
     if (typeof window !== 'undefined' && window.localStorage) {
       window.localStorage.setItem(PINS_KEY, JSON.stringify(next));
     }
-    window.dispatchEvent(new CustomEvent('rhsp:pegboard:pins-changed', { detail: { slugs: next } }));
+    window.dispatchEvent(
+      new CustomEvent('rhsp:pegboard:pins-changed', {
+        detail: { slugs: next, toggledSlug: slug, pinned, source }
+      })
+    );
     return { pinned, slugs: next };
   } catch {
     return { pinned: false, slugs: [] };
@@ -105,3 +110,25 @@ export function resetTileOrder(): void {
     // silent degrade
   }
 }
+
+export function hasArrivalPlayed(): boolean {
+  try {
+    if (typeof window === 'undefined' || !window.sessionStorage) return true;
+    return window.sessionStorage.getItem(ARRIVAL_KEY) === 'true';
+  } catch {
+    return true;
+  }
+}
+
+export function markArrivalPlayed(): void {
+  try {
+    if (typeof window !== 'undefined' && window.sessionStorage) {
+      window.sessionStorage.setItem(ARRIVAL_KEY, 'true');
+    }
+  } catch {
+    // silent degrade
+  }
+}
+
+export const hasVisitedArrival = hasArrivalPlayed;
+export const setArrivalVisited = markArrivalPlayed;

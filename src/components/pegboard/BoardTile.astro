@@ -14,14 +14,19 @@ const { tile } = Astro.props;
   class="board-tile-wrapper"
   data-tile-slug={tile.slug}
   data-zone-id={tile.zoneId}
+  data-has-quicktake={tile.quickTake ? 'true' : 'false'}
 >
   <!-- Square peg on top edge entering drilled hole -->
   <div class="tile-peg-assembly" aria-hidden="true">
     <div class="peg-hole-shadow"></div>
-    <div class="tile-square-peg" style={`--peg-color: ${tile.pegColor};`}></div>
+    <div class="tile-square-peg" style={`--peg-color: ${tile.pegColor};`}>
+      <span class="peg-start-ribbon" data-start-ribbon>Start here</span>
+    </div>
   </div>
 
   <article class="board-tile-card" style={`view-transition-name: tile-${tile.slug};`}>
+    <div class="tile-sheen-layer" aria-hidden="true"></div>
+
     <a
       href={tile.href}
       class="tile-hit-link"
@@ -37,10 +42,20 @@ const { tile } = Astro.props;
       <div class="tile-body">
         <h3 class="tile-title">{tile.title}</h3>
         <p class="tile-description">{tile.description}</p>
+        {tile.quickTake && (
+          <div class="tile-quick-take-box" aria-hidden="true">
+            <span class="quick-take-indicator"></span>
+            <p class="quick-take-text">{tile.quickTake}</p>
+          </div>
+        )}
       </div>
 
       <div class="tile-footer-row">
-        <span class={`tile-tag ${tile.tag === 'Coming soon' ? 'tile-tag--soon' : ''}`}>
+        <span
+          class={`tile-tag ${tile.tag === 'Coming soon' ? 'tile-tag--soon' : ''}`}
+          data-tile-tag
+          data-original-tag={tile.tag}
+        >
           {tile.tag}
         </span>
       </div>
@@ -71,6 +86,7 @@ const { tile } = Astro.props;
     user-select: none;
     -webkit-user-select: none;
     touch-action: pan-y;
+    transition: opacity 0.3s ease;
   }
 
   /* Peg and hole visual alignment */
@@ -81,7 +97,7 @@ const { tile } = Astro.props;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 2;
+    z-index: 4;
     margin-bottom: -4px;
   }
 
@@ -93,12 +109,8 @@ const { tile } = Astro.props;
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.15) 55%, transparent 75%);
+    background: radial-gradient(circle, var(--pb-hole, rgba(0, 0, 0, 0.4)) 0%, rgba(0, 0, 0, 0.15) 55%, transparent 75%);
     pointer-events: none;
-  }
-
-  :global(.dark) .peg-hole-shadow {
-    background: radial-gradient(circle, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.3) 55%, transparent 75%);
   }
 
   /* Square peg pushed into hole */
@@ -107,9 +119,68 @@ const { tile } = Astro.props;
     width: 10px;
     height: 10px;
     border-radius: 2px;
-    background-color: var(--peg-color, #1E4B8F);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    background-color: var(--peg-color, var(--pb-accent, #1E4B8F));
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.3);
     z-index: 3;
+    transition: box-shadow 0.25s ease;
+  }
+
+  /* "Start here" ribbon on peg */
+  .peg-start-ribbon {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 4px);
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--pb-accent, #F7941D);
+    color: var(--pb-on-accent, #14110F);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+    white-space: nowrap;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  .peg-start-ribbon::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 3px;
+    border-style: solid;
+    border-color: var(--pb-accent, #F7941D) transparent transparent transparent;
+  }
+
+  .board-tile-wrapper[data-start-here="true"] .peg-start-ribbon {
+    display: block;
+    animation: ribbonPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes ribbonPop {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(4px) scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0) scale(1);
+    }
+  }
+
+  /* Explored peg state: subtle pillar/orange glow halo */
+  .board-tile-wrapper[data-explored="true"] .tile-square-peg {
+    box-shadow: 0 0 0 5px var(--pb-glow, rgba(247, 148, 29, 0.35)), 0 1px 3px rgba(0, 0, 0, 0.35);
+  }
+
+  /* Pinned peg state: longer cast shadow */
+  .board-tile-wrapper[data-pinned="true"] .tile-square-peg {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.4);
   }
 
   /* Hanging tile card */
@@ -117,38 +188,54 @@ const { tile } = Astro.props;
     position: relative;
     width: 100%;
     height: 158px;
-    background-color: #FFFFFF;
-    border: 1px solid var(--color-border);
+    background-color: var(--pb-tile, #FFFFFF);
+    border: 1px solid var(--pb-line, var(--color-border));
     border-radius: 18px;
     box-shadow: 0 2px 8px rgba(16, 24, 40, 0.05), 0 1px 2px rgba(16, 24, 40, 0.04);
     transform-origin: 50% 0;
-    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.2s ease;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.2s ease, height 0.22s cubic-bezier(0.16, 1, 0.3, 1);
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    z-index: 2;
   }
 
-  :global(.dark) .board-tile-card {
-    background-color: var(--color-surface-raised, #1B2028);
-    border-color: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  /* Pinned tile card outline */
+  .board-tile-wrapper[data-pinned="true"] .board-tile-card {
+    border-color: var(--pb-accent, #F7941D);
+    box-shadow: 0 0 0 1px var(--pb-accent, #F7941D), 0 4px 14px rgba(0, 0, 0, 0.12);
   }
 
-  /* Gentle swing keyframes */
+  /* Sheen layer for pointer tilt */
+  .tile-sheen-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.2) 0%, transparent 60%);
+    transition: opacity 0.25s ease;
+    border-radius: 18px;
+    z-index: 3;
+  }
+
+  /* Hover / focus swing animation fallback */
   @keyframes tileSwing {
     0% { transform: rotate(0deg); }
-    25% { transform: rotate(-2.5deg); }
-    60% { transform: rotate(2deg); }
-    85% { transform: rotate(-0.8deg); }
+    25% { transform: rotate(-2.2deg); }
+    60% { transform: rotate(1.6deg); }
+    85% { transform: rotate(-0.6deg); }
     100% { transform: rotate(0deg); }
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    .board-tile-wrapper:hover .board-tile-card,
-    .board-tile-wrapper:focus-within .board-tile-card {
-      animation: tileSwing 0.9s ease-out 1;
+    .board-tile-wrapper:hover:not(.is-tilting) .board-tile-card,
+    .board-tile-wrapper:focus-within:not(.is-tilting) .board-tile-card {
+      animation: tileSwing 0.85s ease-out 1;
       box-shadow: 0 10px 24px rgba(16, 24, 40, 0.09), 0 2px 6px rgba(16, 24, 40, 0.04);
-      border-color: color-mix(in srgb, var(--color-text-primary) 18%, var(--color-border));
+      border-color: color-mix(in srgb, var(--pb-accent) 40%, var(--pb-line));
     }
 
     .board-tile-card.is-lifting {
@@ -157,19 +244,61 @@ const { tile } = Astro.props;
     }
   }
 
+  /* Quick take expansion: card expands downwards 24px into the row gap */
+  .board-tile-wrapper[data-has-quicktake="true"]:hover .board-tile-card,
+  .board-tile-wrapper[data-has-quicktake="true"]:focus-within .board-tile-card,
+  .board-tile-wrapper[data-has-quicktake="true"].is-expanded .board-tile-card {
+    height: 182px;
+    z-index: 5;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+  }
+
+  .tile-quick-take-box {
+    display: none;
+    margin-top: 0.25rem;
+    padding-top: 0.25rem;
+    border-top: 1px dashed var(--pb-line);
+    animation: fadeInQuickTake 0.2s ease-out;
+  }
+
+  .board-tile-wrapper[data-has-quicktake="true"]:hover .tile-quick-take-box,
+  .board-tile-wrapper[data-has-quicktake="true"]:focus-within .tile-quick-take-box,
+  .board-tile-wrapper[data-has-quicktake="true"].is-expanded .tile-quick-take-box {
+    display: block;
+  }
+
+  @keyframes fadeInQuickTake {
+    from {
+      opacity: 0;
+      transform: translateY(-2px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .quick-take-text {
+    font-size: 0.75rem;
+    line-height: 1.35;
+    color: var(--pb-accent, #F7941D);
+    font-weight: 600;
+    margin: 0;
+  }
+
   /* Link hit region */
   .tile-hit-link {
     display: flex;
     flex-direction: column;
     height: 100%;
-    padding: 1rem 1rem 0.85rem;
+    padding: 0.95rem 1rem 0.85rem;
     color: inherit;
     text-decoration: none;
     outline: none;
   }
 
   .tile-hit-link:focus-visible {
-    outline: 2px solid var(--color-accent, #1E4B8F);
+    outline: 2px solid var(--pb-focus-ring, var(--pb-accent));
     outline-offset: -2px;
     border-radius: 17px;
   }
@@ -178,7 +307,7 @@ const { tile } = Astro.props;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.45rem;
   }
 
   .tile-icon-badge {
@@ -188,15 +317,15 @@ const { tile } = Astro.props;
     width: 28px;
     height: 28px;
     border-radius: 8px;
-    background: color-mix(in srgb, var(--peg-color, #1E4B8F) 12%, transparent);
-    color: var(--peg-color, #1E4B8F);
+    background: var(--pb-accent-wash, rgba(247, 148, 29, 0.12));
+    color: var(--pb-accent, #F7941D);
   }
 
   .tile-body {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.2rem;
   }
 
   .tile-title {
@@ -204,14 +333,14 @@ const { tile } = Astro.props;
     font-weight: 700;
     line-height: 1.25;
     margin: 0;
-    color: var(--color-text-primary);
+    color: var(--pb-text, var(--color-text-primary));
     letter-spacing: -0.01em;
   }
 
   .tile-description {
     font-size: 0.8125rem;
     line-height: 1.4;
-    color: var(--color-text-secondary);
+    color: var(--pb-text-2, var(--color-text-secondary));
     margin: 0;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -221,7 +350,7 @@ const { tile } = Astro.props;
 
   .tile-footer-row {
     margin-top: auto;
-    padding-top: 0.4rem;
+    padding-top: 0.35rem;
   }
 
   .tile-tag {
@@ -230,19 +359,16 @@ const { tile } = Astro.props;
     font-weight: 600;
     padding: 0.2rem 0.55rem;
     border-radius: 999px;
-    background: color-mix(in srgb, var(--color-text-primary) 6%, transparent);
-    color: var(--color-text-secondary);
+    background: var(--pb-accent-wash, rgba(247, 148, 29, 0.12));
+    color: var(--pb-accent, #F7941D);
     letter-spacing: 0.02em;
+    border: 1px solid transparent;
   }
 
   .tile-tag--soon {
-    background: rgba(247, 148, 29, 0.12);
-    color: #F7941D;
-  }
-
-  :global(.dark) .tile-tag--soon {
-    background: rgba(247, 148, 29, 0.2);
-    color: #FFA534;
+    background: transparent;
+    border: 1px solid var(--pb-line);
+    color: var(--pb-text-2);
   }
 
   /* Pin button */
@@ -250,29 +376,29 @@ const { tile } = Astro.props;
     position: absolute;
     top: 0.65rem;
     right: 0.65rem;
-    width: 26px;
-    height: 26px;
+    width: 44px;
+    height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
     background: transparent;
     border: 1px solid transparent;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
-    color: var(--color-text-muted, #8C96A5);
+    color: var(--pb-text-3, #8C96A5);
     padding: 0;
     transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
     z-index: 4;
   }
 
   .tile-pin-btn:hover {
-    color: var(--color-text-primary);
-    background-color: var(--color-surface, rgba(0, 0, 0, 0.04));
-    border-color: var(--color-border);
+    color: var(--pb-text);
+    background-color: var(--pb-accent-wash);
+    border-color: var(--pb-line);
   }
 
   .tile-pin-btn:focus-visible {
-    outline: 2px solid var(--color-accent, #1E4B8F);
+    outline: 2px solid var(--pb-focus-ring, var(--pb-accent));
     outline-offset: 1px;
   }
 
@@ -281,18 +407,33 @@ const { tile } = Astro.props;
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background-color: var(--peg-color, #1E4B8F);
+    background-color: var(--pb-accent, #F7941D);
     position: absolute;
-    top: 2px;
-    right: 2px;
+    top: 9px;
+    right: 9px;
   }
 
   .tile-pin-btn[aria-pressed="true"] {
-    color: var(--color-text-primary);
+    color: var(--pb-accent, #F7941D);
   }
 
   .tile-pin-btn[aria-pressed="true"] .pin-dot {
     display: block;
+  }
+
+  /* Lit & Dimmed states for Finder & Search */
+  .board-tile-wrapper.is-lit .board-tile-card {
+    opacity: 1;
+    border-color: var(--pb-accent, #F7941D);
+    box-shadow: 0 0 0 1px var(--pb-accent), 0 8px 24px var(--pb-glow);
+  }
+
+  .board-tile-wrapper.is-dimmed {
+    opacity: 0.45;
+  }
+
+  .board-tile-wrapper.is-dimmed .tile-pin-btn {
+    pointer-events: none;
   }
 
   /* Drag state styling */
@@ -302,8 +443,8 @@ const { tile } = Astro.props;
   }
 
   .board-tile-wrapper.is-dragging .board-tile-card {
-    box-shadow: 0 20px 40px rgba(16, 24, 40, 0.2);
-    border-color: var(--color-accent, #1E4B8F);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+    border-color: var(--pb-accent, #F7941D);
     transform: scale(1.04);
   }
 </style>

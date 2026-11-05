@@ -9,3 +9,6 @@ lh-*.json
 Thumbs.db
 scratch/
 scratch-screenshots/
+
+before-screenshots/
+after-screenshots/

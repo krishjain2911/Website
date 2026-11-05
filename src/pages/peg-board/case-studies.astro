@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
 import Icon from '../../components/Icon.astro';
+import '../../styles/pegboard-tokens.css';
 
 const title = 'Case studies | RHSP PEG Board';
 const description = 'Our case studies are coming soon.';
@@ -11,7 +12,7 @@ const description = 'Our case studies are coming soon.';
 <BaseLayout title={title} description={description}>
   <Nav />
 
-  <main id="main-content" class="case-studies-main">
+  <main id="main-content" class="pegboard-page case-studies-main">
     <div class="container case-studies-container">
       <!-- Back Link -->
       <a href="/peg-board" class="back-link">
@@ -28,28 +29,33 @@ const description = 'Our case studies are coming soon.';
         </p>
       </div>
 
-      <!-- Illustrated Empty Hooks -->
+      <!-- Illustrated Empty Hooks with Dashed Tile Silhouettes -->
       <div class="empty-hooks-display" aria-hidden="true">
         <div class="empty-hook hook-1">
           <div class="drilled-hole"></div>
           <div class="empty-square-peg peg-orange"></div>
+          <div class="empty-dashed-silhouette">
+            <span class="silhouette-tag">Coming soon</span>
+          </div>
         </div>
         <div class="empty-hook hook-2">
           <div class="drilled-hole"></div>
-          <div class="empty-square-peg peg-red"></div>
+          <div class="empty-square-peg peg-dim"></div>
+          <div class="empty-dashed-silhouette"></div>
         </div>
         <div class="empty-hook hook-3">
           <div class="drilled-hole"></div>
-          <div class="empty-square-peg peg-blue"></div>
+          <div class="empty-square-peg peg-dim"></div>
+          <div class="empty-dashed-silhouette"></div>
         </div>
       </div>
 
       <!-- Actions -->
       <div class="case-studies-actions">
-        <a href="/peg-board" class="btn btn-secondary">
+        <a href="/peg-board" class="btn cs-browse-btn">
           <span>Browse the guides</span>
         </a>
-        <a href="/#contact" class="btn btn-primary">
+        <a href="/#contact" class="btn btn-primary cs-talk-btn">
           <span>Talk to us about your project</span>
           <Icon name="arrow-right" size={14} />
         </a>
@@ -69,7 +75,8 @@ const description = 'Our case studies are coming soon.';
     min-height: calc(100vh - 120px);
     padding-top: calc(72px + 3rem);
     padding-bottom: 5rem;
-    background-color: var(--color-bg);
+    background-color: var(--pb-page, #FFFFFF);
+    transition: background-color 0.25s ease;
   }
 
   .case-studies-container {
@@ -81,19 +88,33 @@ const description = 'Our case studies are coming soon.';
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
+    min-height: 44px;
     font-size: 0.875rem;
-    color: var(--color-text-secondary);
+    color: var(--pb-text-2, var(--color-text-secondary));
     text-decoration: none;
     margin-bottom: 2rem;
     transition: color 0.15s ease;
   }
 
   .back-link:hover {
-    color: var(--color-text-primary);
+    color: var(--pb-accent, #F7941D);
+  }
+
+  .back-link:focus-visible {
+    outline: 2px solid var(--pb-focus-ring);
+    outline-offset: 2px;
   }
 
   .case-studies-hero {
     margin-bottom: 3rem;
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--pb-accent, #F7941D);
+    text-transform: uppercase;
   }
 
   .page-heading {
@@ -102,13 +123,13 @@ const description = 'Our case studies are coming soon.';
     line-height: 1.15;
     letter-spacing: -0.02em;
     margin: 0.5rem 0 1rem;
-    color: var(--color-text-primary);
+    color: var(--pb-text, var(--color-text-primary));
   }
 
   .lead-p {
     font-size: 1.125rem;
     line-height: 1.6;
-    color: var(--color-text-secondary);
+    color: var(--pb-text-2, var(--color-text-secondary));
     max-width: 62ch;
     margin: 0;
   }
@@ -116,14 +137,15 @@ const description = 'Our case studies are coming soon.';
   /* Empty hooks illustration */
   .empty-hooks-display {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    gap: 3.5rem;
-    padding: 3.5rem 2rem;
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
+    gap: 2rem;
+    padding: 3rem 2rem;
+    background-color: var(--pb-panel, var(--color-surface));
+    border: 1px solid var(--pb-panel-edge, var(--color-border));
     border-radius: 20px;
     margin-bottom: 3rem;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
   }
 
   .empty-hook {
@@ -131,44 +153,116 @@ const description = 'Our case studies are coming soon.';
     flex-direction: column;
     align-items: center;
     position: relative;
+    width: 180px;
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    .empty-hook {
-      animation: gentleSway 3s ease-in-out infinite alternate;
+    .hook-1 {
+      animation: gentleSway 4.5s ease-in-out infinite;
+      transform-origin: 50% 0;
     }
-    .hook-2 { animation-delay: 0.5s; }
-    .hook-3 { animation-delay: 1s; }
   }
 
   @keyframes gentleSway {
-    0% { transform: rotate(-3deg); }
-    100% { transform: rotate(3deg); }
+    0% { transform: rotate(0deg); }
+    50% { transform: rotate(1.8deg); }
+    100% { transform: rotate(0deg); }
   }
 
   .drilled-hole {
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.15) 60%, transparent 75%);
-    margin-bottom: -7px;
+    background: radial-gradient(circle, var(--pb-hole, rgba(0, 0, 0, 0.45)) 0%, rgba(0, 0, 0, 0.15) 60%, transparent 75%);
+    margin-bottom: -5px;
+    z-index: 1;
   }
 
   .empty-square-peg {
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
     border-radius: 2px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+    z-index: 2;
+    margin-bottom: -4px;
   }
 
-  .peg-orange { background-color: #F7941D; }
-  .peg-red { background-color: #EE4B2B; }
-  .peg-blue { background-color: #1E4B8F; }
+  .peg-orange { background-color: var(--pb-accent, #F7941D); }
+  .peg-dim { background-color: var(--pb-line, #3A3025); }
+
+  .empty-dashed-silhouette {
+    width: 100%;
+    height: 130px;
+    border: 1.5px dashed var(--pb-line, var(--color-border));
+    border-radius: 16px;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .silhouette-tag {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--pb-text-3);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
 
   .case-studies-actions {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 1rem;
+  }
+
+  .cs-browse-btn {
+    min-height: 44px;
+    padding: 0.75rem 1.4rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    border-radius: 999px;
+    background-color: var(--pb-tile);
+    border: 1px solid var(--pb-line);
+    color: var(--pb-text);
+    text-decoration: none;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .cs-browse-btn:hover {
+    border-color: var(--pb-accent);
+    color: var(--pb-accent);
+  }
+
+  .cs-browse-btn:focus-visible {
+    outline: 2px solid var(--pb-focus-ring);
+    outline-offset: 2px;
+  }
+
+  .cs-talk-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 44px;
+    padding: 0.75rem 1.4rem;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    border-radius: 999px;
+    background-color: var(--pb-accent, #F7941D);
+    color: var(--pb-on-accent, #14110F);
+    border: 1px solid var(--pb-accent-lo, #B86200);
+    text-decoration: none;
+    box-shadow: 0 4px 14px var(--pb-glow);
+    transition: background-color 0.15s ease, transform 0.15s ease;
+  }
+
+  .cs-talk-btn:hover {
+    background-color: var(--pb-accent-hi, #FFAE4A);
+    transform: translateY(-1px);
+  }
+
+  .cs-talk-btn:focus-visible {
+    outline: 2px solid var(--pb-focus-ring);
+    outline-offset: 2px;
   }
 </style>

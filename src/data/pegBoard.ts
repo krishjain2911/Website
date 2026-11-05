@@ -1,5 +1,15 @@
 // Draft copy: founders to review before launch
 
+export const FEATURES = {
+  arrival: true,
+  tilt: true,
+  finder: true,
+  search: true,
+  quickTake: true,
+  emptySlots: true,
+  adapterMoment: true
+};
+
 export interface BoardZone {
   id: 'case-studies' | 'solutions' | 'resources';
   label: string;
@@ -55,6 +65,7 @@ export interface BoardTileItem {
   zoneId: 'case-studies' | 'solutions' | 'resources';
   title: string;
   description: string;
+  quickTake?: string;
   tag: string; // "Coming soon" | "Plan / Engineer / Gen-AI" | "Guide"
   href: string;
   iconName: IconName;
@@ -87,6 +98,7 @@ export interface ResourceGuide {
   slug: string;
   tileTitle: string;
   tileDescription: string;
+  quickTake: string;
   h1: string;
   summary: string;
   intro: string;
@@ -102,6 +114,63 @@ export interface ResourceGuide {
   seoDescription: string;
   // Founder review note (code comment only): confirm the hosting and architecture statements against current OutSystems documentation before launch.
 }
+
+export interface FinderQuestion {
+  id: 'speed' | 'custom' | 'data' | 'estate';
+  legend: string;
+  options: {
+    id: string;
+    label: string;
+    value: string;
+  }[];
+}
+
+export interface EmptySlot {
+  id: string;
+  title?: string;
+  hasSway: boolean;
+  pegColor: string;
+}
+
+export const emptySlots: EmptySlot[] = [
+  { id: 'cs-empty-1', title: 'Coming soon', hasSway: true, pegColor: '#F7941D' },
+  { id: 'cs-empty-2', hasSway: false, pegColor: '#EE4B2B' },
+  { id: 'cs-empty-3', hasSway: false, pegColor: '#1E4B8F' }
+];
+
+export const finderQuestions: FinderQuestion[] = [
+  {
+    id: 'speed',
+    legend: 'Timeline',
+    options: [
+      { id: 'speed-weeks', label: 'Weeks', value: 'weeks' },
+      { id: 'speed-months', label: 'Months', value: 'months' }
+    ]
+  },
+  {
+    id: 'custom',
+    legend: 'Experience & process',
+    options: [
+      { id: 'custom-standard', label: 'Standard-ish', value: 'standard-ish' },
+      { id: 'custom-unique', label: 'Very unique', value: 'very unique' }
+    ]
+  },
+  {
+    id: 'data',
+    legend: 'Data location',
+    options: [
+      { id: 'data-cloud', label: 'Cloud is fine', value: 'cloud is fine' },
+      { id: 'data-walls', label: 'Inside our walls', value: 'inside our walls' }
+    ]
+  },
+  {
+    id: 'estate',
+    legend: 'Existing stack',
+    options: [
+      { id: 'estate-o11', label: 'We already run OutSystems 11', value: 'o11' }
+    ]
+  }
+];
 
 export const zones: BoardZone[] = [
   {
@@ -169,12 +238,13 @@ export const tiles: BoardTileItem[] = [
     pegColor: '#EE4B2B'
   },
 
-  // Zone 3: Resources (4 tiles)
+  // Zone 3: Resources (4 tiles with quickTake)
   {
     slug: 'outsystems-vs-mern',
     zoneId: 'resources',
     title: 'OutSystems vs MERN',
     description: 'Two stacks, chosen per project.',
+    quickTake: 'Do you need a launch in weeks, or full control of the code?',
     tag: 'Guide',
     href: '/peg-board/outsystems-vs-mern',
     iconName: 'layers',
@@ -185,6 +255,7 @@ export const tiles: BoardTileItem[] = [
     zoneId: 'resources',
     title: 'O11 vs ODC',
     description: 'OutSystems 11 and OutSystems Developer Cloud.',
+    quickTake: 'Is this a new build, or an existing OutSystems estate?',
     tag: 'Guide',
     href: '/peg-board/o11-vs-odc',
     iconName: 'cloud',
@@ -195,6 +266,7 @@ export const tiles: BoardTileItem[] = [
     zoneId: 'resources',
     title: 'Cloud vs on-premises',
     description: 'Where your data and applications live.',
+    quickTake: 'Does your data need to stay inside your walls?',
     tag: 'Guide',
     href: '/peg-board/cloud-vs-on-premises',
     iconName: 'server',
@@ -205,6 +277,7 @@ export const tiles: BoardTileItem[] = [
     zoneId: 'resources',
     title: 'Low-code vs high-code vs hybrid',
     description: 'Three ways to build, one way to decide.',
+    quickTake: 'Is your process mostly standard, or mostly unique?',
     tag: 'Guide',
     href: '/peg-board/low-code-vs-high-code',
     iconName: 'code',
@@ -217,6 +290,7 @@ export const guides: Record<string, ResourceGuide> = {
     slug: 'outsystems-vs-mern',
     tileTitle: 'OutSystems vs MERN',
     tileDescription: 'Two stacks, chosen per project.',
+    quickTake: 'Do you need a launch in weeks, or full control of the code?',
     h1: 'OutSystems or MERN: choosing the stack',
     summary: 'We build on both. This is how we think about the choice.',
     intro: 'OutSystems is a low-code platform. MERN (MongoDB, Express, React, Node.js) is a high-code stack. Each is strong in different conditions, so we choose per project.',
@@ -315,6 +389,7 @@ export const guides: Record<string, ResourceGuide> = {
     slug: 'o11-vs-odc',
     tileTitle: 'O11 vs ODC',
     tileDescription: 'OutSystems 11 and OutSystems Developer Cloud.',
+    quickTake: 'Is this a new build, or an existing OutSystems estate?',
     h1: 'O11 or ODC: which OutSystems platform',
     summary: 'OutSystems 11 and OutSystems Developer Cloud serve different situations.',
     intro: 'OutSystems 11 (O11) is the long-established platform. OutSystems Developer Cloud (ODC) is the newer, cloud-native generation delivered as a managed service.',
@@ -406,6 +481,7 @@ export const guides: Record<string, ResourceGuide> = {
     slug: 'cloud-vs-on-premises',
     tileTitle: 'Cloud vs on-premises',
     tileDescription: 'Where your data and applications live.',
+    quickTake: 'Does your data need to stay inside your walls?',
     h1: 'Cloud or on-premises: where it runs',
     summary: 'A hosting choice with consequences for control, speed and operations.',
     intro: 'Both can be secure and compliant. The difference is who operates the infrastructure and how quickly you can begin.',
@@ -505,6 +581,7 @@ export const guides: Record<string, ResourceGuide> = {
     slug: 'low-code-vs-high-code',
     tileTitle: 'Low-code vs high-code vs hybrid',
     tileDescription: 'Three ways to build, one way to decide.',
+    quickTake: 'Is your process mostly standard, or mostly unique?',
     h1: 'Low-code, high-code or hybrid',
     summary: 'Three ways to build, and how we choose between them.',
     intro: 'Low-code uses a visual platform such as OutSystems. High-code uses a stack such as MERN. Hybrid combines them in one solution.',

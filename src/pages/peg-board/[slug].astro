@@ -5,6 +5,7 @@ import Footer from '../../components/Footer.astro';
 import Icon from '../../components/Icon.astro';
 import PegPicker from '../../components/pegboard/PegPicker.astro';
 import { guides, type ResourceGuide } from '../../data/pegBoard';
+import '../../styles/pegboard-tokens.css';
 
 export function getStaticPaths() {
   return Object.values(guides).map((guide) => ({
@@ -43,7 +44,7 @@ const articleSchema = {
 
   <Nav />
 
-  <main id="main-content" class="guide-page-main">
+  <main id="main-content" class="pegboard-page guide-page-main">
     <div class="container guide-page-container">
       <!-- Back Link -->
       <a href="/peg-board" class="back-link">
@@ -104,7 +105,7 @@ const articleSchema = {
                 {col.points.map((pt) => (
                   <li class="choose-point-item">
                     <span class="point-bullet" aria-hidden="true">✓</span>
-                    <span>{pt}</span>
+                    <span class="point-text">{pt}</span>
                   </li>
                 ))}
               </ul>
@@ -113,28 +114,32 @@ const articleSchema = {
         </div>
       </section>
 
-      <!-- Comparison Widget (PegPicker) -->
-      <PegPicker guideSlug={guide.slug} picker={guide.picker} />
+      <!-- Dynamic Priority Picker Component -->
+      {guide.picker && (
+        <PegPicker guideSlug={guide.slug} picker={guide.picker} />
+      )}
 
-      <!-- How We Decide Paragraph -->
+      <!-- How We Decide Section -->
       <section class="how-we-decide-section card-mastercard">
         <h2 class="decide-heading">How we decide</h2>
         <p class="decide-p">{guide.howWeDecide}</p>
       </section>
 
-      <!-- Footer CTA Card -->
+      <!-- Bottom Sticky / Clear CTA Block -->
       <section class="guide-cta-footer card-mastercard">
         <div class="cta-content-col">
-          <h2 class="cta-heading">Ready to talk through your stack?</h2>
+          <h3 class="cta-heading">Ready to talk through your architecture?</h3>
           <p class="cta-sub">
-            Our engineers can review your workflows and help map the architecture.
+            Let's discuss how this applies to your team, timeline, and existing systems.
           </p>
         </div>
+
         <div class="cta-actions-col">
           <a href="/#contact" class="btn btn-primary cta-talk-btn">
-            <span>Talk to us about your project</span>
+            <span>Talk to us</span>
             <Icon name="arrow-right" size={14} />
           </a>
+
           <button
             type="button"
             class="btn btn-secondary cta-pin-btn"
@@ -193,7 +198,8 @@ const articleSchema = {
     min-height: calc(100vh - 120px);
     padding-top: calc(72px + 2.5rem);
     padding-bottom: 5rem;
-    background-color: var(--color-bg);
+    background-color: var(--pb-page, #FFFFFF);
+    transition: background-color 0.25s ease;
   }
 
   .guide-page-container {
@@ -205,19 +211,33 @@ const articleSchema = {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
+    min-height: 44px;
     font-size: 0.875rem;
-    color: var(--color-text-secondary);
+    color: var(--pb-text-2, var(--color-text-secondary));
     text-decoration: none;
     margin-bottom: 1.75rem;
     transition: color 0.15s ease;
   }
 
   .back-link:hover {
-    color: var(--color-text-primary);
+    color: var(--pb-accent, #F7941D);
+  }
+
+  .back-link:focus-visible {
+    outline: 2px solid var(--pb-focus-ring);
+    outline-offset: 2px;
   }
 
   .guide-header {
     margin-bottom: 2rem;
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--pb-accent, #F7941D);
+    text-transform: uppercase;
   }
 
   .guide-h1 {
@@ -226,13 +246,13 @@ const articleSchema = {
     line-height: 1.15;
     letter-spacing: -0.02em;
     margin: 0.4rem 0 0.85rem;
-    color: var(--color-text-primary);
+    color: var(--pb-text, var(--color-text-primary));
   }
 
   .guide-summary {
     font-size: 1.15rem;
     line-height: 1.5;
-    color: var(--color-text-secondary);
+    color: var(--pb-text-2, var(--color-text-secondary));
     margin: 0;
   }
 
@@ -243,7 +263,7 @@ const articleSchema = {
   .intro-p {
     font-size: 1.05rem;
     line-height: 1.65;
-    color: var(--color-text-primary);
+    color: var(--pb-text, var(--color-text-primary));
     margin: 0;
   }
 
@@ -255,9 +275,9 @@ const articleSchema = {
   .table-scroll-wrapper {
     width: 100%;
     overflow-x: auto;
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--pb-line, var(--color-border));
     border-radius: 16px;
-    background-color: var(--color-surface);
+    background-color: var(--pb-tile, var(--color-surface));
   }
 
   .guide-comparison-table {
@@ -271,7 +291,7 @@ const articleSchema = {
   .guide-comparison-table th,
   .guide-comparison-table td {
     padding: 1.1rem 1.25rem;
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--pb-line, var(--color-border));
     vertical-align: top;
     line-height: 1.55;
   }
@@ -280,19 +300,23 @@ const articleSchema = {
     font-size: 0.875rem;
     font-weight: 700;
     letter-spacing: 0.05em;
-    color: var(--color-text-primary);
-    background-color: color-mix(in srgb, var(--color-text-primary) 3%, var(--color-surface));
-    border-bottom: 2px solid var(--color-border);
+    color: var(--pb-accent, #F7941D);
+    background-color: var(--pb-accent-wash, rgba(247, 148, 29, 0.12));
+    border-bottom: 2px solid var(--pb-line);
   }
 
   .topic-header-cell {
     font-weight: 600;
-    color: var(--color-text-primary);
+    color: var(--pb-text, var(--color-text-primary));
     width: 22%;
   }
 
   .guide-comparison-table td {
-    color: var(--color-text-secondary);
+    color: var(--pb-text-2, var(--color-text-secondary));
+  }
+
+  .guide-comparison-table tbody tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.025);
   }
 
   .guide-comparison-table tbody tr:last-child th,
@@ -303,7 +327,7 @@ const articleSchema = {
   .guide-table-note {
     font-size: 0.8125rem;
     line-height: 1.5;
-    color: var(--color-text-muted);
+    color: var(--pb-text-3, var(--color-text-muted));
     margin: 0.85rem 0 0;
     padding: 0 0.25rem;
   }
@@ -322,8 +346,8 @@ const articleSchema = {
   .choose-when-card {
     padding: 1.75rem;
     border-radius: 18px;
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
+    background-color: var(--pb-tile, var(--color-surface));
+    border: 1px solid var(--pb-line, var(--color-border));
   }
 
   .choose-col-title {
@@ -331,7 +355,7 @@ const articleSchema = {
     font-weight: 700;
     line-height: 1.25;
     margin: 0 0 1rem;
-    color: var(--color-text-primary);
+    color: var(--pb-text, var(--color-text-primary));
   }
 
   .choose-points-list {
@@ -349,11 +373,11 @@ const articleSchema = {
     gap: 0.6rem;
     font-size: 0.9375rem;
     line-height: 1.55;
-    color: var(--color-text-secondary);
+    color: var(--pb-text-2, var(--color-text-secondary));
   }
 
   .point-bullet {
-    color: var(--color-accent, #1E4B8F);
+    color: var(--pb-accent, #F7941D);
     font-weight: 700;
     font-size: 0.875rem;
     margin-top: 0.1rem;
@@ -363,8 +387,8 @@ const articleSchema = {
   .how-we-decide-section {
     padding: 2rem 2.25rem;
     border-radius: 20px;
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
+    background-color: var(--pb-tile, var(--color-surface));
+    border: 1px solid var(--pb-line, var(--color-border));
     margin-bottom: 3.5rem;
   }
 
@@ -372,13 +396,13 @@ const articleSchema = {
     font-size: 1.25rem;
     font-weight: 700;
     margin: 0 0 0.75rem;
-    color: var(--color-text-primary);
+    color: var(--pb-text, var(--color-text-primary));
   }
 
   .decide-p {
     font-size: 1rem;
     line-height: 1.65;
-    color: var(--color-text-secondary);
+    color: var(--pb-text-2, var(--color-text-secondary));
     margin: 0;
   }
 
@@ -391,8 +415,8 @@ const articleSchema = {
     gap: 1.5rem;
     padding: 2.25rem;
     border-radius: 22px;
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
+    background-color: var(--pb-tile, var(--color-surface));
+    border: 1px solid var(--pb-line, var(--color-border));
   }
 
   .cta-content-col {
@@ -403,13 +427,13 @@ const articleSchema = {
     font-size: 1.35rem;
     font-weight: 700;
     margin: 0 0 0.4rem;
-    color: var(--color-text-primary);
+    color: var(--pb-text, var(--color-text-primary));
   }
 
   .cta-sub {
     font-size: 0.9375rem;
     line-height: 1.5;
-    color: var(--color-text-secondary);
+    color: var(--pb-text-2, var(--color-text-secondary));
     margin: 0;
   }
 
@@ -424,25 +448,59 @@ const articleSchema = {
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
+    min-height: 44px;
     padding: 0.75rem 1.4rem;
     font-size: 0.9375rem;
-    font-weight: 600;
+    font-weight: 700;
     border-radius: 999px;
+    background-color: var(--pb-accent, #F7941D);
+    color: var(--pb-on-accent, #14110F);
+    border: 1px solid var(--pb-accent-lo, #B86200);
+    text-decoration: none;
+    box-shadow: 0 4px 14px var(--pb-glow);
+    transition: background-color 0.15s ease, transform 0.15s ease;
+  }
+
+  .cta-talk-btn:hover {
+    background-color: var(--pb-accent-hi, #FFAE4A);
+    transform: translateY(-1px);
+  }
+
+  .cta-talk-btn:focus-visible {
+    outline: 2px solid var(--pb-focus-ring);
+    outline-offset: 2px;
   }
 
   .cta-pin-btn {
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
+    min-height: 44px;
     padding: 0.75rem 1.25rem;
     font-size: 0.9375rem;
+    font-weight: 600;
     border-radius: 999px;
+    background-color: var(--pb-tile);
+    border: 1px solid var(--pb-line);
+    color: var(--pb-text);
     cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .cta-pin-btn:hover {
+    border-color: var(--pb-accent);
+    color: var(--pb-accent);
+  }
+
+  .cta-pin-btn:focus-visible {
+    outline: 2px solid var(--pb-focus-ring);
+    outline-offset: 2px;
   }
 
   .cta-pin-btn.is-pinned {
-    background-color: color-mix(in srgb, var(--color-text-primary) 10%, transparent);
-    color: var(--color-text-primary);
+    background-color: var(--pb-accent-wash);
+    border-color: var(--pb-accent);
+    color: var(--pb-accent);
   }
 
   .sr-only {

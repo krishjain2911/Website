@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
 import PegBoard from '../../components/pegboard/PegBoard.astro';
+import '../../styles/pegboard-tokens.css';
 
 const title = 'PEG Board | RHSP';
 const description = 'Guides, comparisons and our approach on one board. Pin what matters and talk it through with us.';
@@ -11,7 +12,7 @@ const description = 'Guides, comparisons and our approach on one board. Pin what
 <BaseLayout title={title} description={description}>
   <Nav />
 
-  <main id="main-content" class="peg-board-page-main">
+  <main id="main-content" class="pegboard-page peg-board-page-main">
     <div class="container peg-board-page-container">
       <PegBoard />
     </div>
@@ -29,7 +30,8 @@ const description = 'Guides, comparisons and our approach on one board. Pin what
     min-height: calc(100vh - 120px);
     padding-top: calc(72px + 2.5rem);
     padding-bottom: 4rem;
-    background-color: var(--color-bg);
+    background-color: var(--pb-page, #FFFFFF);
+    transition: background-color 0.25s ease;
   }
 
   .peg-board-page-container {

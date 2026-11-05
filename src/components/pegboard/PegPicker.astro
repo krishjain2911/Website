@@ -96,6 +96,10 @@ const { guideSlug, picker } = Astro.props;
 
     if (!container || !resultCard || !pegLabel || !reasonP) return;
 
+    const elContainer = container;
+    const elPegLabel = pegLabel;
+    const elReasonP = reasonP;
+
     const guideSlug = container.getAttribute('data-guide-slug') || '';
     let config: any = {};
     try {
@@ -104,92 +108,89 @@ const { guideSlug, picker } = Astro.props;
       config = {};
     }
 
-    const chips = Array.from(container.querySelectorAll<HTMLButtonElement>('.picker-chip'));
+    const { options = [], blendLabel = '', blendReason = '' } = config;
+    const selectedChips = new Set<string>();
 
-    function updateResult() {
-      const activeChips = chips.filter((c) => c.getAttribute('aria-pressed') === 'true');
-
-      if (activeChips.length === 0) {
-        if (pegLabel) pegLabel.textContent = 'Choose what matters to you.';
-        if (reasonP) reasonP.textContent = 'Select one or more priorities above to compare approaches against your project goals.';
+    // Calculate score
+    function recalculate() {
+      if (selectedChips.size === 0) {
+        elPegLabel.textContent = 'Choose what matters to you.';
+        elReasonP.textContent = 'Select one or more priorities above to compare approaches against your project goals.';
         return;
       }
 
-      // Calculate scores for each option
-      const scores: Record<string, number> = {};
-      activeChips.forEach((chip) => {
+      // Sum weights per option
+      const totals: Record<string, number> = {};
+      options.forEach((opt: any) => {
+        totals[opt.id] = 0;
+      });
+
+      selectedChips.forEach((chipId) => {
+        const btn = elContainer.querySelector(`[data-chip-id="${chipId}"]`);
+        if (!btn) return;
         try {
-          const w = JSON.parse(chip.getAttribute('data-chip-weights') || '{}');
-          Object.keys(w).forEach((optId) => {
-            scores[optId] = (scores[optId] || 0) + (w[optId] || 0);
+          const weights = JSON.parse(btn.getAttribute('data-chip-weights') || '{}');
+          Object.entries(weights).forEach(([optId, weight]) => {
+            totals[optId] = (totals[optId] || 0) + (weight as number);
           });
         } catch {}
       });
 
-      const options = config.options || [];
-      const scoreEntries = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+      // Find top score
+      const sorted = Object.entries(totals).sort((a, b) => b[1] - a[1]);
+      const topOption = sorted[0];
+      const runnerUp = sorted[1];
 
-      if (scoreEntries.length === 0) {
-        if (pegLabel) pegLabel.textContent = 'Choose what matters to you.';
-        if (reasonP) reasonP.textContent = 'Select one or more priorities above to compare approaches against your project goals.';
-        return;
-      }
+      // Check if tie or within 1 point
+      const isTieOrClose = runnerUp && Math.abs(topOption[1] - runnerUp[1]) <= 1 && topOption[1] > 0;
 
-      const topOptId = scoreEntries[0][0];
-      const topScore = scoreEntries[0][1];
-      const secondScore = scoreEntries[1] ? scoreEntries[1][1] : 0;
-
-      // Special rule for low-code-vs-high-code (3 options): Highest wins; ties go to Hybrid
-      if (guideSlug === 'low-code-vs-high-code') {
-        if (scoreEntries.length > 1 && topScore === secondScore) {
-          const hybridOpt = options.find((o: any) => o.id === 'hybrid');
-          if (pegLabel) pegLabel.textContent = `Suggested peg: ${hybridOpt?.label || 'Hybrid'}`;
-          if (reasonP) reasonP.textContent = hybridOpt?.reason || config.blendReason;
-          return;
+      if (isTieOrClose && blendLabel) {
+        elPegLabel.textContent = blendLabel;
+        elReasonP.textContent = blendReason;
+      } else if (topOption && topOption[1] > 0) {
+        const matchingOpt = options.find((o: any) => o.id === topOption[0]);
+        if (matchingOpt) {
+          elPegLabel.textContent = matchingOpt.name;
+          elReasonP.textContent = matchingOpt.reason;
         }
-        const winner = options.find((o: any) => o.id === topOptId);
-        if (pegLabel) pegLabel.textContent = `Suggested peg: ${winner?.label || topOptId}`;
-        if (reasonP) reasonP.textContent = winner?.reason || '';
-        return;
-      }
-
-      // If top two options are within 1 point (or only 1 chip selected), show blendLabel
-      const diff = Math.abs(topScore - secondScore);
-      if (diff <= 1 || activeChips.length <= 1) {
-        if (pegLabel) pegLabel.textContent = `Suggested peg: ${config.blendLabel}`;
-        if (reasonP) reasonP.textContent = config.blendReason;
-      } else {
-        const winner = options.find((o: any) => o.id === topOptId);
-        if (pegLabel) pegLabel.textContent = `Suggested peg: ${winner?.label || topOptId}`;
-        if (reasonP) reasonP.textContent = winner?.reason || '';
       }
     }
 
-    // Toggle chip handler
-    chips.forEach((chip) => {
-      chip.addEventListener('click', () => {
-        const pressed = chip.getAttribute('aria-pressed') === 'true';
-        chip.setAttribute('aria-pressed', pressed ? 'false' : 'true');
-        chip.classList.toggle('is-selected', !pressed);
-        updateResult();
+    // Chip click handler
+    container.querySelectorAll<HTMLButtonElement>('.picker-chip').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const chipId = btn.getAttribute('data-chip-id');
+        if (!chipId) return;
+
+        if (selectedChips.has(chipId)) {
+          selectedChips.delete(chipId);
+          btn.classList.remove('is-selected');
+          btn.setAttribute('aria-pressed', 'false');
+        } else {
+          selectedChips.add(chipId);
+          btn.classList.add('is-selected');
+          btn.setAttribute('aria-pressed', 'true');
+        }
+
+        recalculate();
       });
     });
 
-    // Pin guide button handler
+    // Pin button in picker
     function syncPinBtn() {
       if (!pinBtn || !pinBtnText) return;
-      const pinned = isPinned(guideSlug);
-      pinBtn.classList.toggle('is-pinned', pinned);
-      pinBtnText.textContent = pinned ? 'Pinned to my board' : 'Pin this guide';
+      const p = isPinned(guideSlug);
+      pinBtn.classList.toggle('is-pinned', p);
+      pinBtnText.textContent = p ? 'Pinned to my board' : 'Pin this guide';
     }
 
-    if (pinBtn) {
-      pinBtn.addEventListener('click', () => {
-        togglePin(guideSlug);
-        syncPinBtn();
-      });
+    pinBtn?.addEventListener('click', () => {
+      togglePin(guideSlug);
       syncPinBtn();
-    }
+    });
+
+    window.addEventListener('rhsp:pegboard:pins-changed', syncPinBtn);
+    syncPinBtn();
   }
 
   if (document.readyState === 'loading') {
@@ -204,8 +205,8 @@ const { guideSlug, picker } = Astro.props;
     margin: 3.5rem 0;
     padding: 2.25rem;
     border-radius: 22px;
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
+    background-color: var(--pb-tile, var(--color-surface));
+    border: 1px solid var(--pb-line, var(--color-border));
   }
 
   @media (max-width: 639px) {
@@ -219,17 +220,25 @@ const { guideSlug, picker } = Astro.props;
     margin-bottom: 1.5rem;
   }
 
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--pb-accent, #F7941D);
+    text-transform: uppercase;
+  }
+
   .picker-title {
     font-size: clamp(1.4rem, 2vw, 1.8rem);
     font-weight: 700;
     line-height: 1.2;
     margin: 0.35rem 0 0.5rem;
-    color: var(--color-text-primary);
+    color: var(--pb-text, var(--color-text-primary));
   }
 
   .picker-sub {
     font-size: 0.9375rem;
-    color: var(--color-text-secondary);
+    color: var(--pb-text-2, var(--color-text-secondary));
     line-height: 1.5;
     margin: 0;
   }
@@ -245,11 +254,12 @@ const { guideSlug, picker } = Astro.props;
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
+    min-height: 44px;
     padding: 0.5rem 0.95rem;
     border-radius: 999px;
-    background-color: var(--color-bg);
-    border: 1px solid var(--color-border);
-    color: var(--color-text-secondary);
+    background-color: var(--pb-tile, var(--color-bg));
+    border: 1px solid var(--pb-line, var(--color-border));
+    color: var(--pb-text-2, var(--color-text-secondary));
     font-size: 0.875rem;
     font-weight: 500;
     cursor: pointer;
@@ -257,9 +267,13 @@ const { guideSlug, picker } = Astro.props;
   }
 
   .picker-chip:hover {
-    color: var(--color-text-primary);
-    border-color: color-mix(in srgb, var(--color-text-primary) 30%, var(--color-border));
-    background-color: var(--color-surface-raised, rgba(0, 0, 0, 0.02));
+    color: var(--pb-text);
+    border-color: var(--pb-accent);
+  }
+
+  .picker-chip:focus-visible {
+    outline: 2px var(--pb-focus-ring) solid;
+    outline-offset: 2px;
   }
 
   .chip-check {
@@ -271,22 +285,25 @@ const { guideSlug, picker } = Astro.props;
   }
 
   .picker-chip.is-selected {
-    background-color: var(--color-text-primary);
-    color: var(--color-bg);
-    border-color: var(--color-text-primary);
+    background-color: var(--pb-accent-wash, rgba(247, 148, 29, 0.12));
+    color: var(--pb-accent, #F7941D);
+    border-color: var(--pb-accent, #F7941D);
   }
 
   .picker-chip.is-selected .chip-check {
     opacity: 1;
     transform: scale(1);
+    color: var(--pb-accent);
   }
 
   .picker-result-card {
     padding: 1.75rem;
     border-radius: 18px;
-    background-color: var(--color-bg);
-    border: 1px solid var(--color-border);
-    box-shadow: 0 4px 16px rgba(16, 24, 40, 0.04);
+    background-color: var(--pb-tile, var(--color-bg));
+    border: 1px solid var(--pb-line, var(--color-border));
+    border-left: 3px solid var(--pb-accent, #F7941D);
+    background-image: linear-gradient(to right, var(--pb-accent-wash, rgba(247, 148, 29, 0.08)) 0%, transparent 60%);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   }
 
   .result-badge-row {
@@ -300,13 +317,13 @@ const { guideSlug, picker } = Astro.props;
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.1em;
-    color: #F7941D;
+    color: var(--pb-accent, #F7941D);
   }
 
   .result-peg-name {
     font-size: 1.25rem;
     font-weight: 700;
-    color: var(--color-text-primary);
+    color: var(--pb-text, var(--color-text-primary));
     line-height: 1.3;
   }
 
@@ -317,13 +334,13 @@ const { guideSlug, picker } = Astro.props;
   .result-reason-p {
     font-size: 0.9375rem;
     line-height: 1.6;
-    color: var(--color-text-primary);
+    color: var(--pb-text, var(--color-text-primary));
     margin: 0 0 0.5rem;
   }
 
   .result-disclaimer {
     font-size: 0.8125rem;
-    color: var(--color-text-muted);
+    color: var(--pb-text-3, var(--color-text-muted));
     line-height: 1.4;
     margin: 0;
   }
@@ -339,23 +356,57 @@ const { guideSlug, picker } = Astro.props;
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
+    min-height: 44px;
     padding: 0.65rem 1.25rem;
     font-size: 0.875rem;
+    font-weight: 700;
     border-radius: 999px;
+    background-color: var(--pb-accent, #F7941D);
+    color: var(--pb-on-accent, #14110F);
+    border: 1px solid var(--pb-accent-lo, #B86200);
+    text-decoration: none;
+    transition: background-color 0.15s ease, transform 0.15s ease;
+  }
+
+  .result-cta-btn:hover {
+    background-color: var(--pb-accent-hi, #FFAE4A);
+    transform: translateY(-1px);
+  }
+
+  .result-cta-btn:focus-visible {
+    outline: 2px solid var(--pb-focus-ring);
+    outline-offset: 2px;
   }
 
   .result-pin-btn {
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
+    min-height: 44px;
     padding: 0.65rem 1.15rem;
     font-size: 0.875rem;
+    font-weight: 600;
     border-radius: 999px;
+    background-color: var(--pb-tile);
+    border: 1px solid var(--pb-line);
+    color: var(--pb-text);
     cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .result-pin-btn:hover {
+    border-color: var(--pb-accent);
+    color: var(--pb-accent);
+  }
+
+  .result-pin-btn:focus-visible {
+    outline: 2px solid var(--pb-focus-ring);
+    outline-offset: 2px;
   }
 
   .result-pin-btn.is-pinned {
-    background-color: color-mix(in srgb, var(--color-text-primary) 10%, transparent);
-    color: var(--color-text-primary);
+    background-color: var(--pb-accent-wash);
+    border-color: var(--pb-accent);
+    color: var(--pb-accent);
   }
 </style>

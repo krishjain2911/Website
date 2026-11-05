@@ -1,0 +1,319 @@
+---
+---
+
+<div class="adapter-inline-widget" id="adapter-widget">
+  <div class="adapter-status-row">
+    <span class="adapter-label" id="adapter-status-label">Try the adapter</span>
+  </div>
+
+  <div class="adapter-track" id="adapter-track" aria-hidden="false">
+    <!-- Round hole target on the right -->
+    <div class="adapter-hole-target" id="adapter-hole" aria-hidden="true">
+      <div class="adapter-hole-shadow"></div>
+      <div class="adapter-ring-overlay" id="adapter-ring-fade"></div>
+    </div>
+
+    <!-- Square peg draggable on the left -->
+    <div
+      class="adapter-square-peg"
+      id="adapter-peg"
+      tabindex="0"
+      role="slider"
+      aria-label="Square peg adapter. Use arrow keys to slide into round hole or drag with pointer."
+      aria-valuemin="0"
+      aria-valuemax="100"
+      aria-valuenow="0"
+    >
+      <div class="peg-core"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function initAdapterWidget() {
+    const widget = document.getElementById('adapter-widget');
+    const track = document.getElementById('adapter-track');
+    const peg = document.getElementById('adapter-peg');
+    const hole = document.getElementById('adapter-hole');
+    const ring = document.getElementById('adapter-ring-fade');
+    const label = document.getElementById('adapter-status-label');
+
+    if (!widget || !track || !peg || !hole || !ring || !label) return;
+
+    const elTrack = track;
+    const elPeg = peg;
+    const elRing = ring;
+    const elLabel = label;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let isDragging = false;
+    let startX = 0;
+    let currentX = 0;
+    let isEngaged = false;
+    let resetTimer: any = null;
+
+    // Helper: calculate zoom factor k
+    function getK(): number {
+      const rect = elTrack.getBoundingClientRect();
+      const offsetW = elTrack.offsetWidth || 1;
+      return rect.width / offsetW || 1;
+    }
+
+    function getMaxX(): number {
+      const trackW = elTrack.offsetWidth || 150;
+      const pegW = elPeg.offsetWidth || 22;
+      return Math.max(10, trackW - pegW - 6);
+    }
+
+    function updatePegPosition(x: number) {
+      const maxX = getMaxX();
+      const clampedX = Math.max(0, Math.min(maxX, x));
+      currentX = clampedX;
+      elPeg.style.transform = `translateX(${clampedX}px)`;
+      elPeg.setAttribute('aria-valuenow', Math.round((clampedX / maxX) * 100).toString());
+
+      // Distance to hole (hole is at maxX)
+      const ratio = clampedX / maxX;
+
+      // Orange adapter ring fades in as peg gets close (ratio > 0.4)
+      if (ratio > 0.35) {
+        const ringOpacity = Math.min(1, (ratio - 0.35) / 0.5);
+        elRing.style.opacity = ringOpacity.toFixed(2);
+      } else {
+        elRing.style.opacity = '0';
+      }
+
+      // Check engagement
+      if (ratio >= 0.88 && !isEngaged) {
+        engage();
+      }
+    }
+
+    function engage() {
+      if (isEngaged) return;
+      isEngaged = true;
+      const maxX = getMaxX();
+
+      if (reduceMotion) {
+        updatePegPosition(maxX);
+        elRing.style.opacity = '1';
+        elLabel.textContent = 'Every problem has an angle.';
+        elLabel.classList.add('is-solved');
+      } else {
+        elPeg.style.transition = 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)';
+        elPeg.style.transform = `translateX(${maxX}px)`;
+        elRing.style.opacity = '1';
+        elLabel.textContent = 'Every problem has an angle.';
+        elLabel.classList.add('is-solved');
+      }
+
+      clearTimeout(resetTimer);
+      resetTimer = setTimeout(() => {
+        reset();
+      }, 3000);
+    }
+
+    function reset() {
+      isEngaged = false;
+      elLabel.textContent = 'Try the adapter';
+      elLabel.classList.remove('is-solved');
+      elRing.style.opacity = '0';
+      if (reduceMotion) {
+        elPeg.style.transform = 'translateX(0px)';
+      } else {
+        elPeg.style.transition = 'transform 0.35s ease';
+        elPeg.style.transform = 'translateX(0px)';
+        setTimeout(() => {
+          elPeg.style.transition = '';
+        }, 350);
+      }
+      currentX = 0;
+      elPeg.setAttribute('aria-valuenow', '0');
+    }
+
+    // Pointer events (desktop drag & touch)
+    elPeg.addEventListener('pointerdown', (e) => {
+      if (isEngaged) return;
+      isDragging = true;
+      startX = e.clientX;
+      elPeg.style.transition = '';
+      elPeg.setPointerCapture(e.pointerId);
+
+      const onPointerMove = (moveEv: PointerEvent) => {
+        if (!isDragging) return;
+        const k = getK();
+        const delta = (moveEv.clientX - startX) / k;
+        updatePegPosition(currentX + delta);
+        startX = moveEv.clientX;
+      };
+
+      const onPointerUp = (upEv: PointerEvent) => {
+        isDragging = false;
+        try {
+          elPeg.releasePointerCapture(upEv.pointerId);
+        } catch {}
+        window.removeEventListener('pointermove', onPointerMove);
+        window.removeEventListener('pointerup', onPointerUp);
+
+        if (!isEngaged) {
+          elPeg.style.transition = 'transform 0.2s ease';
+          elPeg.style.transform = 'translateX(0px)';
+          currentX = 0;
+          elRing.style.opacity = '0';
+        }
+      };
+
+      window.addEventListener('pointermove', onPointerMove);
+      window.addEventListener('pointerup', onPointerUp);
+    });
+
+    // Keyboard controls (arrow keys & Enter)
+    elPeg.addEventListener('keydown', (e) => {
+      const maxX = getMaxX();
+      const step = maxX / 5;
+
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        updatePegPosition(currentX + step);
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        updatePegPosition(currentX - step);
+      } else if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        engage();
+      }
+    });
+
+    // Listen for global theme changes to redraw or sync if needed
+    window.addEventListener('rhsp-theme-change', () => {
+      // Re-read CSS variables if needed
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAdapterWidget);
+  } else {
+    initAdapterWidget();
+  }
+</script>
+
+<style>
+  .adapter-inline-widget {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    width: 164px;
+    padding: 0.4rem 0.6rem;
+    border-radius: 12px;
+    background-color: var(--pb-tile, var(--color-bg));
+    border: 1px solid var(--pb-line, var(--color-border));
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .adapter-status-row {
+    width: 100%;
+    margin-bottom: 0.35rem;
+    text-align: center;
+    min-height: 16px;
+  }
+
+  .adapter-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--pb-text-2, var(--color-text-secondary));
+    transition: color 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+  }
+
+  .adapter-label.is-solved {
+    color: var(--pb-accent, #F7941D);
+  }
+
+  .adapter-track {
+    position: relative;
+    width: 100%;
+    height: 28px;
+    background-color: var(--pb-panel, rgba(0, 0, 0, 0.03));
+    border-radius: 999px;
+    border: 1px solid var(--pb-line, var(--color-border));
+    display: flex;
+    align-items: center;
+    padding: 2px;
+    touch-action: none;
+  }
+
+  /* Hole target on right */
+  .adapter-hole-target {
+    position: absolute;
+    right: 4px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background-color: var(--pb-hole, #070605);
+    border: 1px solid var(--pb-panel-edge, rgba(0, 0, 0, 0.2));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  .adapter-hole-shadow {
+    position: absolute;
+    inset: 1px;
+    border-radius: 50%;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6);
+  }
+
+  /* Adapter orange ring that fades in */
+  .adapter-ring-overlay {
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    border: 2px solid var(--pb-accent, #F7941D);
+    box-shadow: 0 0 8px var(--pb-glow, rgba(247, 148, 29, 0.4));
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+
+  /* Square peg on left */
+  .adapter-square-peg {
+    position: absolute;
+    left: 4px;
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    background-color: var(--pb-accent, #F7941D);
+    border: 1px solid var(--pb-accent-lo, #B86200);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.35);
+    cursor: grab;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    touch-action: none;
+    outline: none;
+  }
+
+  .adapter-square-peg:active {
+    cursor: grabbing;
+  }
+
+  .adapter-square-peg:focus-visible {
+    outline: 2px solid var(--pb-focus-ring, #FFAE4A);
+    outline-offset: 2px;
+  }
+
+  .peg-core {
+    width: 6px;
+    height: 6px;
+    border-radius: 1px;
+    background-color: var(--pb-on-accent, #14110F);
+    opacity: 0.3;
+  }
+</style>

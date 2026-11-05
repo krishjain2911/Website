@@ -1,0 +1,85 @@
+/* PEG Board Design Tokens */
+
+.pegboard-page {
+  /* Light mode tokens (keep today's clean visual system) */
+  --pb-page: #FFFFFF;
+  --pb-panel: #F8F9FA;
+  --pb-panel-edge: var(--color-border, #E5E7EB);
+  --pb-hole: rgba(140, 150, 165, 0.35);
+  --pb-hole-highlight: transparent;
+  --pb-tile: #FFFFFF;
+  --pb-tile-raised: #FFFFFF;
+  --pb-line: var(--color-border, #E5E7EB);
+  --pb-text: var(--color-text-primary, #101828);
+  --pb-text-2: var(--color-text-secondary, #475467);
+  --pb-text-3: var(--color-text-muted, #8C96A5);
+  --pb-accent: #F7941D;
+  --pb-accent-hi: #FFAE4A;
+  --pb-accent-lo: #B86200;
+  --pb-accent-wash: rgba(247, 148, 29, 0.12);
+  --pb-glow: rgba(247, 148, 29, 0.25);
+  --pb-on-accent: #FFFFFF;
+  --pb-focus-ring: #F7941D;
+  --pb-ember-glow: rgba(247, 148, 29, 0.04);
+}
+
+/* Dark mode by user toggle */
+:root[data-theme="dark"] .pegboard-page {
+  color-scheme: dark;
+  --pb-page: #0B0A09;
+  --pb-panel: #14110F;
+  --pb-panel-edge: #2B231B;
+  --pb-hole: #070605;
+  --pb-hole-highlight: rgba(255, 170, 60, 0.10);
+  --pb-tile: #1C1814;
+  --pb-tile-raised: #241E18;
+  --pb-line: #3A3025;
+  --pb-text: #F6F1EA;
+  --pb-text-2: #BDB3A6;
+  --pb-text-3: #8E8478;
+  --pb-accent: #F7941D;
+  --pb-accent-hi: #FFAE4A;
+  --pb-accent-lo: #B86200;
+  --pb-accent-wash: rgba(247, 148, 29, 0.12);
+  --pb-glow: rgba(247, 148, 29, 0.35);
+  --pb-on-accent: #14110F;
+  --pb-focus-ring: #FFAE4A;
+  --pb-ember-glow: rgba(247, 148, 29, 0.10);
+}
+
+/* Dark mode by system preference (when no manual light preference is set) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .pegboard-page {
+    color-scheme: dark;
+    --pb-page: #0B0A09;
+    --pb-panel: #14110F;
+    --pb-panel-edge: #2B231B;
+    --pb-hole: #070605;
+    --pb-hole-highlight: rgba(255, 170, 60, 0.10);
+    --pb-tile: #1C1814;
+    --pb-tile-raised: #241E18;
+    --pb-line: #3A3025;
+    --pb-text: #F6F1EA;
+    --pb-text-2: #BDB3A6;
+    --pb-text-3: #8E8478;
+    --pb-accent: #F7941D;
+    --pb-accent-hi: #FFAE4A;
+    --pb-accent-lo: #B86200;
+    --pb-accent-wash: rgba(247, 148, 29, 0.12);
+    --pb-glow: rgba(247, 148, 29, 0.35);
+    --pb-on-accent: #14110F;
+    --pb-focus-ring: #FFAE4A;
+    --pb-ember-glow: rgba(247, 148, 29, 0.10);
+  }
+}
+
+/* Prevent white flash during view transitions */
+html:has(.pegboard-page),
+body:has(.pegboard-page) {
+  background-color: var(--pb-page);
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  /* Keep view-transition root coherent */
+}

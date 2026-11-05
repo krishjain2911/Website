@@ -2,14 +2,52 @@
 import Icon from '../Icon.astro';
 import BoardTile from './BoardTile.astro';
 import MyBoardDrawer from './MyBoardDrawer.astro';
-import { zones, tiles } from '../../data/pegBoard';
+import PegFinder from './PegFinder.astro';
+import AdapterWidget from './AdapterWidget.astro';
+import { zones, tiles, emptySlots, FEATURES } from '../../data/pegBoard';
 ---
 
 <div class="peg-board-component" id="peg-board-root">
+  <!-- Sticky Mini Bar (Desktop & Tablet only, sticks below nav on scroll) -->
+  <div class="peg-sticky-minibar" id="peg-sticky-minibar" aria-label="Quick board navigation">
+    <div class="minibar-inner">
+      <div class="minibar-chips" role="tablist" aria-label="Filter board by zone">
+        <button type="button" class="minibar-chip is-active" data-zone-filter="all">All</button>
+        <button type="button" class="minibar-chip" data-zone-filter="case-studies">Case studies</button>
+        <button type="button" class="minibar-chip" data-zone-filter="solutions">Solutions</button>
+        <button type="button" class="minibar-chip" data-zone-filter="resources">Resources</button>
+      </div>
+
+      <div class="minibar-search-wrap">
+        <Icon name="search" size={14} class="minibar-search-icon" />
+        <input
+          type="search"
+          class="minibar-search-input"
+          id="minibar-search-input"
+          placeholder="Search guides and topics"
+          aria-label="Search the board"
+          autocomplete="off"
+        />
+        <span class="sr-only" id="search-live-status" aria-live="polite">8 of 8 shown</span>
+      </div>
+
+      <button
+        type="button"
+        class="minibar-my-board-btn"
+        id="minibar-my-board-btn"
+        aria-label="Open saved topics drawer"
+      >
+        <Icon name="bookmark" size={14} />
+        <span id="minibar-my-board-label">My board (0)</span>
+      </button>
+    </div>
+  </div>
+
   <!-- Perforated Panel Container -->
   <section class="peg-board-panel" id="peg-board-panel" aria-label="PEG Board interactive panel">
     <!-- Holes overlay grid via CSS radial-gradient -->
     <div class="panel-holes-layer" aria-hidden="true"></div>
+    <div class="panel-grain-layer" aria-hidden="true"></div>
 
     <!-- Board Header Row -->
     <div class="board-header">
@@ -22,6 +60,13 @@ import { zones, tiles } from '../../data/pegBoard';
       </div>
 
       <div class="board-header-right">
+        <!-- Interactive Adapter Moment in Header -->
+        {FEATURES.adapterMoment && (
+          <div class="header-adapter-slot">
+            <AdapterWidget />
+          </div>
+        )}
+
         <!-- Explorer progress ring -->
         <div class="explorer-ring-widget" id="explorer-ring-widget" title="Explore pegs on the board">
           <svg class="explorer-svg" width="44" height="44" viewBox="0 0 44 44" aria-hidden="true">
@@ -81,66 +126,115 @@ import { zones, tiles } from '../../data/pegBoard';
       </div>
     </div>
 
+    <!-- Peg Finder Interactive Tool -->
+    {FEATURES.finder && (
+      <div class="board-finder-container">
+        <PegFinder />
+      </div>
+    )}
+
+    <!-- Inline Filter & Search Bar for Board (Primary controls) -->
+    {FEATURES.search && (
+      <div class="board-filter-bar" id="board-filter-bar">
+        <div class="board-zone-chips" role="tablist" aria-label="Zone filter">
+          <button type="button" class="zone-filter-chip is-active" data-zone-filter="all">All</button>
+          <button type="button" class="zone-filter-chip" data-zone-filter="case-studies">Case studies</button>
+          <button type="button" class="zone-filter-chip" data-zone-filter="solutions">Solutions</button>
+          <button type="button" class="zone-filter-chip" data-zone-filter="resources">Resources</button>
+        </div>
+
+        <div class="board-search-box">
+          <Icon name="search" size={15} class="board-search-icon" />
+          <input
+            type="search"
+            class="board-search-input"
+            id="board-search-input"
+            placeholder="Search guides and topics"
+            aria-label="Search the board"
+            autocomplete="off"
+          />
+          <button
+            type="button"
+            class="board-search-clear-btn"
+            id="board-search-clear-btn"
+            aria-label="Clear search"
+            style="display: none;"
+          >
+            ✕
+          </button>
+        </div>
+      </div>
+    )}
+
+    <!-- Empty Search State -->
+    <div class="board-search-empty-state" id="board-search-empty" style="display: none;">
+      <p class="empty-state-p">No pegs match. Try another word.</p>
+      <button type="button" class="btn btn-secondary btn-sm" id="empty-state-clear-btn">
+        Clear search
+      </button>
+    </div>
+
     <!-- Board Zones Container -->
     <div class="board-zones-container">
       {zones.map((zone) => {
         const zoneTiles = tiles.filter((t) => t.zoneId === zone.id);
+        const isCaseStudies = zone.id === 'case-studies';
         return (
-          <div class="board-zone-band" data-zone-id={zone.id}>
-            <!-- Zone Plaque -->
+          <section class="board-zone-band" data-zone-id={zone.id} id={`zone-band-${zone.id}`}>
+            <!-- Zone Plaque with Engraved Shelf Line -->
             <div class="zone-plaque-row">
               <span class={`zone-plaque ${zone.accentClass}`} style={`--zone-accent: ${zone.accentColor};`}>
                 <span class="plaque-dot" aria-hidden="true"></span>
                 <span>{zone.label}</span>
               </span>
+              <div class="zone-shelf-line" aria-hidden="true"></div>
             </div>
 
-            <!-- Tile Slots Track (Snap columns) -->
+            <!-- Tile Slots Track (Snap columns / Mobile swipe rail) -->
             <div class="zone-tiles-track" id={`zone-track-${zone.id}`} data-zone-id={zone.id}>
               {zoneTiles.map((tile, idx) => (
                 <BoardTile tile={tile} index={idx} />
               ))}
+
+              <!-- Empty Hook Silhouettes (Case studies zone) -->
+              {isCaseStudies && FEATURES.emptySlots && emptySlots.map((slot, sIdx) => (
+                <div class="empty-silhouette-wrapper" aria-hidden="true" data-empty-index={sIdx}>
+                  <div class="tile-peg-assembly">
+                    <div class="peg-hole-shadow"></div>
+                    <div class="tile-square-peg" style={`--peg-color: ${slot.pegColor};`}></div>
+                  </div>
+                  <div class="empty-silhouette-card">
+                    {slot.title && <span class="empty-silhouette-label">{slot.title}</span>}
+                  </div>
+                </div>
+              ))}
             </div>
-          </div>
+
+            <!-- Rail Dots for Mobile (<640px) -->
+            <div class="zone-rail-dots" data-zone-dots={zone.id} aria-hidden="true">
+              {Array.from({ length: isCaseStudies && FEATURES.emptySlots ? zoneTiles.length + emptySlots.length : zoneTiles.length }).map((_, dIdx) => (
+                <button
+                  type="button"
+                  class={`rail-dot ${dIdx === 0 ? 'is-active' : ''}`}
+                  data-dot-index={dIdx}
+                  aria-label={`Go to item ${dIdx + 1}`}
+                ></button>
+              ))}
+            </div>
+          </section>
         );
       })}
     </div>
-
-    <!-- Optional Easter Egg adapter trigger in bottom-right corner -->
-    <button
-      type="button"
-      class="board-easter-egg-btn"
-      id="board-easter-egg-trigger"
-      title="Try the adapter"
-      aria-label="Try the adapter mini-game"
-    >
-      <span class="egg-peg-icon" aria-hidden="true"></span>
-    </button>
   </section>
 
   <!-- My Board Pinned Items Drawer -->
   <MyBoardDrawer />
 
-  <!-- Mini-game Modal (Easter Egg) -->
-  <div id="adapter-game-modal" class="adapter-game-overlay" aria-hidden="true">
-    <div class="adapter-game-card card-mastercard" role="dialog" aria-modal="true" aria-labelledby="game-title">
-      <div class="game-header">
-        <h3 id="game-title" class="game-heading">RHSP Adapter</h3>
-        <button type="button" class="game-close-btn" id="game-close-btn" aria-label="Close game">
-          <Icon name="x" size={16} />
-        </button>
-      </div>
-      <p class="game-instructions">Guide the square peg through the adapter into the round hole.</p>
-      <div class="game-canvas-area" id="game-canvas">
-        <div class="game-target-hole" id="game-target-hole" aria-hidden="true">
-          <div class="game-adapter-ring"></div>
-        </div>
-        <div class="game-movable-peg" id="game-movable-peg" aria-hidden="true"></div>
-      </div>
-      <div class="game-footer">
-        <span id="game-status-text" class="game-status">Move pointer to guide peg</span>
-        <button type="button" class="btn btn-secondary btn-sm" id="game-replay-btn">Replay</button>
-      </div>
+  <!-- Unpin Undo Toast Notification -->
+  <div id="pb-toast-container" class="pb-toast-container" aria-live="polite">
+    <div id="pb-toast" class="pb-toast" role="status" style="display: none;">
+      <span class="toast-message">Removed from your board.</span>
+      <button type="button" class="toast-undo-btn" id="toast-undo-btn">Undo</button>
     </div>
   </div>
 </div>
@@ -153,9 +247,11 @@ import { zones, tiles } from '../../data/pegBoard';
     markExplored,
     getSavedTileOrder,
     saveTileOrder,
-    resetTileOrder
+    resetTileOrder,
+    setArrivalVisited,
+    hasVisitedArrival
   } from '../../scripts/pegBoardState';
-  import { tiles } from '../../data/pegBoard';
+  import { tiles, FEATURES } from '../../data/pegBoard';
 
   function initPegBoard() {
     const board = document.getElementById('peg-board-panel');
@@ -169,13 +265,16 @@ import { zones, tiles } from '../../data/pegBoard';
       return rect.width / offsetW || 1;
     }
 
-    // 1. PIN FUNCTIONALITY & DRAWER
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // 1. PIN FUNCTIONALITY & DRAWER & UNDO TOAST
     const drawerOverlay = document.getElementById('my-board-drawer');
-    // drawer panel
     const drawerBackdrop = document.getElementById('my-board-backdrop');
     const drawerCloseBtn = document.getElementById('my-board-close-btn');
     const drawerOpenBtn = document.getElementById('my-board-open-btn');
+    const minibarMyBoardBtn = document.getElementById('minibar-my-board-btn');
     const myBoardBtnLabel = document.getElementById('my-board-btn-label');
+    const minibarMyBoardLabel = document.getElementById('minibar-my-board-label');
     const pinnedListEl = document.getElementById('pinned-tiles-list');
     const emptyStateEl = document.getElementById('pinned-empty-state');
     const discussBtn = document.getElementById('discuss-board-btn') as HTMLAnchorElement | null;
@@ -183,20 +282,50 @@ import { zones, tiles } from '../../data/pegBoard';
     const copyEmailFeedback = document.getElementById('copy-email-feedback');
     const selectableEmail = document.getElementById('selectable-contact-email');
 
+    // Toast element
+    const toastEl = document.getElementById('pb-toast');
+    const toastUndoBtn = document.getElementById('toast-undo-btn');
+    let toastTimeout: any = null;
+    let lastUnpinnedSlug: string | null = null;
+
+    function showUnpinToast(slug: string) {
+      if (!toastEl) return;
+      lastUnpinnedSlug = slug;
+      toastEl.style.display = 'flex';
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        if (toastEl) toastEl.style.display = 'none';
+        lastUnpinnedSlug = null;
+      }, 6000);
+    }
+
+    toastUndoBtn?.addEventListener('click', () => {
+      if (lastUnpinnedSlug) {
+        togglePin(lastUnpinnedSlug, 'undo-toast');
+        if (toastEl) toastEl.style.display = 'none';
+        lastUnpinnedSlug = null;
+        syncPinsUI();
+      }
+    });
+
     function syncPinsUI() {
       const pinnedSlugs = getPinnedSlugs();
 
-      // Update tile pin buttons on the board
-      document.querySelectorAll<HTMLButtonElement>('[data-pin-btn]').forEach((btn) => {
-        const slug = btn.getAttribute('data-pin-btn') || '';
+      // Update tile pin buttons and card state on the board
+      document.querySelectorAll<HTMLElement>('.board-tile-wrapper').forEach((wrapper) => {
+        const slug = wrapper.getAttribute('data-tile-slug') || '';
         const isP = pinnedSlugs.includes(slug);
-        btn.setAttribute('aria-pressed', isP ? 'true' : 'false');
+        wrapper.setAttribute('data-pinned', isP ? 'true' : 'false');
+        const pinBtn = wrapper.querySelector<HTMLButtonElement>('[data-pin-btn]');
+        if (pinBtn) {
+          pinBtn.setAttribute('aria-pressed', isP ? 'true' : 'false');
+        }
       });
 
       // Update header button count
-      if (myBoardBtnLabel) {
-        myBoardBtnLabel.textContent = `My board (${pinnedSlugs.length})`;
-      }
+      const countLabel = `My board (${pinnedSlugs.length})`;
+      if (myBoardBtnLabel) myBoardBtnLabel.textContent = countLabel;
+      if (minibarMyBoardLabel) minibarMyBoardLabel.textContent = countLabel;
 
       // Render drawer items
       if (pinnedListEl && emptyStateEl) {
@@ -228,7 +357,10 @@ import { zones, tiles } from '../../data/pegBoard';
             btn.addEventListener('click', () => {
               const slug = btn.getAttribute('data-remove-slug');
               if (slug) {
-                togglePin(slug);
+                const res = togglePin(slug, 'drawer');
+                if (!res.pinned) {
+                  showUnpinToast(slug);
+                }
                 syncPinsUI();
               }
             });
@@ -261,7 +393,10 @@ import { zones, tiles } from '../../data/pegBoard';
         e.stopPropagation();
         const slug = pinBtn.getAttribute('data-pin-btn');
         if (slug) {
-          togglePin(slug);
+          const res = togglePin(slug, 'tile');
+          if (!res.pinned) {
+            showUnpinToast(slug);
+          }
           syncPinsUI();
         }
       }
@@ -287,6 +422,7 @@ import { zones, tiles } from '../../data/pegBoard';
     }
 
     drawerOpenBtn?.addEventListener('click', openDrawer);
+    minibarMyBoardBtn?.addEventListener('click', openDrawer);
     drawerCloseBtn?.addEventListener('click', closeDrawer);
     drawerBackdrop?.addEventListener('click', closeDrawer);
 
@@ -307,9 +443,7 @@ import { zones, tiles } from '../../data/pegBoard';
             copyEmailFeedback.textContent = 'Copy';
           }, 2000);
         }
-      } catch {
-        // fallback
-      }
+      } catch {}
     });
 
     // 2. EXPLORER PROGRESS
@@ -329,12 +463,24 @@ import { zones, tiles } from '../../data/pegBoard';
       if (progressCircle) {
         const offset = CIRCUMFERENCE * (1 - count / TOTAL_PEGS);
         progressCircle.style.strokeDashoffset = `${offset}`;
-        if (count === TOTAL_PEGS) {
-          progressCircle.style.stroke = '#F7941D';
-        } else {
-          progressCircle.style.stroke = 'var(--color-accent, #1E4B8F)';
-        }
+        progressCircle.style.stroke = 'var(--pb-accent, #F7941D)';
       }
+
+      // Update explored tag & halo on tiles
+      document.querySelectorAll<HTMLElement>('.board-tile-wrapper').forEach((wrapper) => {
+        const slug = wrapper.getAttribute('data-tile-slug') || '';
+        const isExplored = explored.includes(slug);
+        wrapper.setAttribute('data-explored', isExplored ? 'true' : 'false');
+        const tagEl = wrapper.querySelector<HTMLElement>('[data-tile-tag]');
+        if (tagEl) {
+          const orig = tagEl.getAttribute('data-original-tag') || '';
+          if (isExplored && orig !== 'Coming soon') {
+            tagEl.textContent = 'Explored';
+          } else {
+            tagEl.textContent = orig;
+          }
+        }
+      });
 
       if (completedPill) {
         completedPill.style.display = count >= TOTAL_PEGS ? 'inline-flex' : 'none';
@@ -349,7 +495,6 @@ import { zones, tiles } from '../../data/pegBoard';
           markExplored(slug);
           syncExploredUI();
 
-          // Lift card animation
           const card = link.closest('.board-tile-card');
           if (card) {
             card.classList.add('is-lifting');
@@ -358,7 +503,296 @@ import { zones, tiles } from '../../data/pegBoard';
       });
     });
 
-    // 3. DESKTOP DRAGGABLE TILES WITH ZOOM FACTOR K (>= 900px only)
+    // 3. ARRIVAL MOMENT (Staggered 60ms 12px drop with settle on first session visit)
+    if (FEATURES.arrival && !prefersReducedMotion && !hasVisitedArrival()) {
+      const allTileWrappers = Array.from(document.querySelectorAll<HTMLElement>('.board-tile-wrapper'));
+      allTileWrappers.forEach((wrapper, index) => {
+        wrapper.style.opacity = '0';
+        wrapper.style.transform = 'translateY(-12px) rotate(1.5deg)';
+        wrapper.style.transition = 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease';
+
+        setTimeout(() => {
+          wrapper.style.opacity = '1';
+          wrapper.style.transform = 'translateY(0) rotate(0deg)';
+        }, index * 60);
+      });
+
+      setTimeout(() => {
+        allTileWrappers.forEach((w) => {
+          w.style.transform = '';
+          w.style.transition = '';
+        });
+        setArrivalVisited();
+      }, allTileWrappers.length * 60 + 500);
+    }
+
+    // 4. LIVING TILES: POINTER TILT & SHEEN (Mouse fine pointer only)
+    if (FEATURES.tilt && !prefersReducedMotion) {
+      const isFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+      if (isFinePointer) {
+        const wrappers = document.querySelectorAll<HTMLElement>('.board-tile-wrapper');
+        wrappers.forEach((wrapper) => {
+          const card = wrapper.querySelector<HTMLElement>('.board-tile-card');
+          const sheen = wrapper.querySelector<HTMLElement>('.tile-sheen-layer');
+          if (!card) return;
+
+          let rafId: number | null = null;
+
+          wrapper.addEventListener('pointerenter', () => {
+            wrapper.classList.add('is-tilting');
+            if (sheen) sheen.style.opacity = '0.12';
+          });
+
+          wrapper.addEventListener('pointermove', (e) => {
+            if (wrapper.classList.contains('is-dragging')) return;
+            const rect = card.getBoundingClientRect();
+            const k = getZoomK();
+            const x = (e.clientX - rect.left) / k;
+            const y = (e.clientY - rect.top) / k;
+            const centerX = rect.width / (2 * k);
+            const centerY = rect.height / (2 * k);
+
+            const dx = (x - centerX) / centerX;
+            const dy = (y - centerY) / centerY;
+
+            const tiltY = Math.max(-4, Math.min(4, dx * 4));
+            const tiltX = Math.max(-4, Math.min(4, -dy * 4));
+
+            if (rafId) cancelAnimationFrame(rafId);
+            rafId = requestAnimationFrame(() => {
+              card.style.transform = `perspective(600px) rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg)`;
+              if (sheen) {
+                const percX = Math.round((x / (rect.width / k)) * 100);
+                const percY = Math.round((y / (rect.height / k)) * 100);
+                sheen.style.background = `radial-gradient(circle at ${percX}% ${percY}%, rgba(255, 255, 255, 0.28) 0%, transparent 60%)`;
+              }
+            });
+          });
+
+          wrapper.addEventListener('pointerleave', () => {
+            if (rafId) cancelAnimationFrame(rafId);
+            card.style.transform = '';
+            if (sheen) sheen.style.opacity = '0';
+            setTimeout(() => {
+              wrapper.classList.remove('is-tilting');
+            }, 100);
+          });
+        });
+      }
+    }
+
+    // 5. TOUCH LONG-PRESS FOR QUICK TAKE (500ms on touch)
+    if (FEATURES.quickTake) {
+      const resourceWrappers = document.querySelectorAll<HTMLElement>('.board-tile-wrapper[data-has-quicktake="true"]');
+      resourceWrappers.forEach((wrapper) => {
+        let pressTimer: any = null;
+
+        wrapper.addEventListener('touchstart', () => {
+          pressTimer = setTimeout(() => {
+            wrapper.classList.toggle('is-expanded');
+          }, 500);
+        }, { passive: true });
+
+        wrapper.addEventListener('touchmove', () => {
+          if (pressTimer) clearTimeout(pressTimer);
+        }, { passive: true });
+
+        wrapper.addEventListener('touchend', () => {
+          if (pressTimer) clearTimeout(pressTimer);
+        });
+      });
+    }
+
+    // 6. SEARCH & ZONE FILTERING
+    if (FEATURES.search) {
+      const searchInputs = [
+        document.getElementById('board-search-input') as HTMLInputElement | null,
+        document.getElementById('minibar-search-input') as HTMLInputElement | null
+      ].filter(Boolean) as HTMLInputElement[];
+
+      const searchClearBtn = document.getElementById('board-search-clear-btn');
+      const searchEmptyEl = document.getElementById('board-search-empty');
+      const emptyStateClearBtn = document.getElementById('empty-state-clear-btn');
+      const liveStatus = document.getElementById('search-live-status');
+
+      let currentSearchQuery = '';
+      let activeZoneFilter = 'all';
+
+      function applyFilters() {
+        const query = currentSearchQuery.trim().toLowerCase();
+        let matchCount = 0;
+
+        document.querySelectorAll<HTMLElement>('.board-tile-wrapper').forEach((wrapper) => {
+          const slug = wrapper.getAttribute('data-tile-slug') || '';
+          const zoneId = wrapper.getAttribute('data-zone-id') || '';
+          const tile = tiles.find((t) => t.slug === slug);
+          if (!tile) return;
+
+          const matchesZone = activeZoneFilter === 'all' || zoneId === activeZoneFilter;
+          const textCorpus = `${tile.title} ${tile.description} ${tile.quickTake || ''} ${tile.tag}`.toLowerCase();
+          const matchesQuery = !query || textCorpus.includes(query);
+
+          const isMatch = matchesZone && matchesQuery;
+          const hitLink = wrapper.querySelector<HTMLAnchorElement>('.tile-hit-link');
+          const pinBtn = wrapper.querySelector<HTMLButtonElement>('.tile-pin-btn');
+
+          if (isMatch) {
+            matchCount++;
+            wrapper.classList.remove('is-dimmed');
+            wrapper.style.display = '';
+            hitLink?.removeAttribute('tabindex');
+            pinBtn?.removeAttribute('inert');
+          } else {
+            wrapper.classList.add('is-dimmed');
+            hitLink?.setAttribute('tabindex', '-1');
+            pinBtn?.setAttribute('inert', '');
+          }
+        });
+
+        // Update live status text
+        if (liveStatus) {
+          liveStatus.textContent = `${matchCount} of ${TOTAL_PEGS} shown`;
+        }
+
+        // Show/hide empty state
+        if (searchEmptyEl) {
+          searchEmptyEl.style.display = matchCount === 0 ? 'flex' : 'none';
+        }
+
+        // Show/hide clear button
+        if (searchClearBtn) {
+          searchClearBtn.style.display = query.length > 0 ? 'inline-flex' : 'none';
+        }
+
+        // Sync inputs
+        searchInputs.forEach((inp) => {
+          if (inp.value !== currentSearchQuery) inp.value = currentSearchQuery;
+        });
+      }
+
+      searchInputs.forEach((inp) => {
+        inp.addEventListener('input', (e) => {
+          currentSearchQuery = (e.target as HTMLInputElement).value;
+          applyFilters();
+        });
+
+        inp.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') {
+            currentSearchQuery = '';
+            inp.value = '';
+            applyFilters();
+          }
+        });
+      });
+
+      searchClearBtn?.addEventListener('click', () => {
+        currentSearchQuery = '';
+        applyFilters();
+        searchInputs[0]?.focus();
+      });
+
+      emptyStateClearBtn?.addEventListener('click', () => {
+        currentSearchQuery = '';
+        activeZoneFilter = 'all';
+        syncZoneFilterButtons();
+        applyFilters();
+      });
+
+      // Zone Filter Chips
+      function syncZoneFilterButtons() {
+        document.querySelectorAll<HTMLButtonElement>('[data-zone-filter]').forEach((chip) => {
+          const zf = chip.getAttribute('data-zone-filter');
+          const isActive = zf === activeZoneFilter;
+          chip.classList.toggle('is-active', isActive);
+          chip.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        });
+      }
+
+      document.querySelectorAll<HTMLButtonElement>('[data-zone-filter]').forEach((chip) => {
+        chip.addEventListener('click', () => {
+          const zf = chip.getAttribute('data-zone-filter') || 'all';
+          activeZoneFilter = zf;
+          syncZoneFilterButtons();
+          applyFilters();
+
+          // Smooth scroll to zone plaque and brief highlight
+          if (zf !== 'all') {
+            const zoneBand = document.getElementById(`zone-band-${zf}`);
+            if (zoneBand) {
+              const k = getZoomK();
+              const rect = zoneBand.getBoundingClientRect();
+              const targetY = window.scrollY + rect.top * k - 120;
+              window.scrollTo({ top: targetY, behavior: 'smooth' });
+
+              const plaque = zoneBand.querySelector('.zone-plaque');
+              if (plaque) {
+                plaque.classList.add('is-highlighted');
+                setTimeout(() => plaque.classList.remove('is-highlighted'), 1500);
+              }
+            }
+          }
+        });
+      });
+    }
+
+    // 7. STICKY MINI BAR VISIBILITY ON SCROLL
+    const minibar = document.getElementById('peg-sticky-minibar');
+    const headerEl = document.querySelector<HTMLElement>('.board-header');
+
+    if (minibar && headerEl) {
+      const onScroll = () => {
+        if (window.innerWidth < 640) {
+          minibar.classList.remove('is-visible');
+          return;
+        }
+        const rect = headerEl.getBoundingClientRect();
+        if (rect.bottom < 60) {
+          minibar.classList.add('is-visible');
+        } else {
+          minibar.classList.remove('is-visible');
+        }
+      };
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll, { passive: true });
+    }
+
+    // 8. MOBILE HORIZONTAL RAILS (<640px) & DOTS
+    function initMobileRails() {
+      const tracks = document.querySelectorAll<HTMLElement>('.zone-tiles-track');
+      tracks.forEach((track) => {
+        const zoneId = track.getAttribute('data-zone-id');
+        const dotsContainer = document.querySelector<HTMLElement>(`[data-zone-dots="${zoneId}"]`);
+        if (!dotsContainer) return;
+
+        const dots = Array.from(dotsContainer.querySelectorAll<HTMLButtonElement>('.rail-dot'));
+        const items = Array.from(track.children) as HTMLElement[];
+
+        // Sync active dot on rail scroll
+        track.addEventListener('scroll', () => {
+          const scrollLeft = track.scrollLeft;
+          const trackW = track.offsetWidth;
+          const activeIndex = Math.min(dots.length - 1, Math.round(scrollLeft / (trackW * 0.78)));
+
+          dots.forEach((dot, idx) => {
+            dot.classList.toggle('is-active', idx === activeIndex);
+          });
+        }, { passive: true });
+
+        // Dot click scrolls to item
+        dots.forEach((dot, idx) => {
+          dot.addEventListener('click', () => {
+            const item = items[idx];
+            if (item) {
+              item.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
+          });
+        });
+      });
+    }
+    initMobileRails();
+
+    // 9. DESKTOP DRAGGABLE TILES WITH ZOOM FACTOR K (>= 900px only)
     const resetOrderBtn = document.getElementById('reset-board-btn');
 
     function initTileDragging() {
@@ -390,8 +824,8 @@ import { zones, tiles } from '../../data/pegBoard';
         let hasMovedFar = false;
 
         track.addEventListener('pointerdown', (e) => {
-          // Ignore clicks on pin buttons or links directly
           if ((e.target as HTMLElement).closest('.tile-pin-btn')) return;
+          if ((e.target as HTMLElement).closest('.tile-hit-link') && e.button !== 0) return;
 
           const tileWrapper = (e.target as HTMLElement).closest<HTMLElement>('.board-tile-wrapper');
           if (!tileWrapper) return;
@@ -416,7 +850,6 @@ import { zones, tiles } from '../../data/pegBoard';
             if (hasMovedFar) {
               draggingEl.style.transform = `translate(${dx}px, ${dy}px)`;
 
-              // Live reorder detection with siblings
               const siblings = Array.from(track.querySelectorAll<HTMLElement>('.board-tile-wrapper'));
               const dragRect = draggingEl.getBoundingClientRect();
               const dragCenterX = dragRect.left + dragRect.width / 2;
@@ -446,7 +879,6 @@ import { zones, tiles } from '../../data/pegBoard';
                   draggingEl.releasePointerCapture(upEv.pointerId);
                 } catch {}
 
-                // Soft magnetic snap ease
                 draggingEl.style.transition = 'transform 150ms ease';
                 draggingEl.style.transform = 'translate(0px, 0px)';
                 setTimeout(() => {
@@ -457,7 +889,6 @@ import { zones, tiles } from '../../data/pegBoard';
                   }
                 }, 150);
 
-                // Save new zone order
                 const currentOrder = getSavedTileOrder() || {};
                 const currentSlugs = Array.from(track.querySelectorAll('.board-tile-wrapper')).map(
                   (el) => el.getAttribute('data-tile-slug') || ''
@@ -483,70 +914,18 @@ import { zones, tiles } from '../../data/pegBoard';
       window.location.reload();
     });
 
-    // 4. EASTER EGG MINI-GAME ("Try the adapter")
-    const eggTrigger = document.getElementById('board-easter-egg-trigger');
-    const gameModal = document.getElementById('adapter-game-modal');
-    const gameCloseBtn = document.getElementById('game-close-btn');
-    const gameReplayBtn = document.getElementById('game-replay-btn');
-    const gameCanvas = document.getElementById('game-canvas');
-    const gamePeg = document.getElementById('game-movable-peg');
-    const gameHole = document.getElementById('game-target-hole');
-    const gameStatus = document.getElementById('game-status-text');
-
-    function openGame() {
-      if (!gameModal) return;
-      gameModal.classList.add('is-open');
-      gameModal.setAttribute('aria-hidden', 'false');
-      resetGame();
-    }
-
-    function closeGame() {
-      if (!gameModal) return;
-      gameModal.classList.remove('is-open');
-      gameModal.setAttribute('aria-hidden', 'true');
-    }
-
-    function resetGame() {
-      if (!gamePeg || !gameStatus) return;
-      gamePeg.style.left = '30px';
-      gamePeg.style.top = '60px';
-      gameStatus.textContent = 'Move pointer to guide peg into the adapter';
-      gameStatus.style.color = 'var(--color-text-secondary)';
-    }
-
-    eggTrigger?.addEventListener('click', openGame);
-    gameCloseBtn?.addEventListener('click', closeGame);
-    gameReplayBtn?.addEventListener('click', resetGame);
-
-    gameCanvas?.addEventListener('pointermove', (e) => {
-      if (!gamePeg || !gameHole || !gameStatus || !gameCanvas) return;
-      const rect = gameCanvas.getBoundingClientRect();
-      const k = rect.width / (gameCanvas.offsetWidth || 1);
-      const x = Math.max(10, Math.min(rect.width / k - 40, (e.clientX - rect.left) / k - 15));
-      const y = Math.max(10, Math.min(rect.height / k - 40, (e.clientY - rect.top) / k - 15));
-      gamePeg.style.left = `${x}px`;
-      gamePeg.style.top = `${y}px`;
-
-      // Check collision with hole center
-      const holeRect = gameHole.getBoundingClientRect();
-      const holeCenterX = (holeRect.left + holeRect.width / 2 - rect.left) / k;
-      const holeCenterY = (holeRect.top + holeRect.height / 2 - rect.top) / k;
-      const dist = Math.hypot(x + 15 - holeCenterX, y + 15 - holeCenterY);
-
-      if (dist < 22) {
-        gameStatus.textContent = 'Adapter engaged! Zero compromise.';
-        gameStatus.style.color = '#F7941D';
-      }
-    });
-
-    // Initial sync
+    // Initial UI synchronization
     syncPinsUI();
     syncExploredUI();
     initTileDragging();
 
-    // Listen for custom storage events
+    // Re-sync on custom storage and theme change events
     window.addEventListener('rhsp:pegboard:pins-changed', syncPinsUI);
     window.addEventListener('rhsp:pegboard:explored-changed', syncExploredUI);
+    window.addEventListener('rhsp-theme-change', () => {
+      syncExploredUI();
+      syncPinsUI();
+    });
   }
 
   if (document.readyState === 'loading') {
@@ -559,28 +938,150 @@ import { zones, tiles } from '../../data/pegBoard';
 <style>
   .peg-board-component {
     width: 100%;
-    margin-bottom: 5rem;
+    margin-bottom: 4rem;
+    position: relative;
+  }
+
+  /* Sticky Mini Bar */
+  .peg-sticky-minibar {
+    position: fixed;
+    top: 72px;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: var(--pb-tile-raised, #FFFFFF);
+    border-bottom: 1px solid var(--pb-line, var(--color-border));
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    transform: translateY(-100%);
+    opacity: 0;
+    visibility: hidden;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, visibility 0.25s;
+  }
+
+  .peg-sticky-minibar.is-visible {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .minibar-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0.65rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .minibar-chips {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .minibar-chip {
+    padding: 0.35rem 0.85rem;
+    border-radius: 999px;
+    border: 1px solid var(--pb-line);
+    background: transparent;
+    color: var(--pb-text-2);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .minibar-chip:hover {
+    color: var(--pb-text);
+    border-color: var(--pb-accent);
+  }
+
+  .minibar-chip.is-active {
+    background-color: var(--pb-accent-wash);
+    border-color: var(--pb-accent);
+    color: var(--pb-accent);
+  }
+
+  .minibar-search-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 1;
+    max-width: 320px;
+  }
+
+  .minibar-search-icon {
+    position: absolute;
+    left: 0.75rem;
+    color: var(--pb-text-3);
+    pointer-events: none;
+  }
+
+  .minibar-search-input {
+    width: 100%;
+    padding: 0.4rem 0.75rem 0.4rem 2.2rem;
+    font-size: 13px;
+    border-radius: 999px;
+    border: 1px solid var(--pb-line);
+    background: var(--pb-panel);
+    color: var(--pb-text);
+    caret-color: var(--pb-accent);
+    outline: none;
+  }
+
+  .minibar-search-input:focus {
+    border-color: var(--pb-accent);
+    box-shadow: 0 0 0 2px var(--pb-focus-ring);
+  }
+
+  .minibar-my-board-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    background: var(--pb-accent-wash);
+    border: 1px solid var(--pb-accent);
+    color: var(--pb-accent);
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  @media (max-width: 639px) {
+    .peg-sticky-minibar {
+      display: none !important;
+    }
   }
 
   /* Perforated Panel Container */
   .peg-board-panel {
     position: relative;
     width: 100%;
-    background-color: #F8F9FA;
-    border: 1px solid var(--color-border);
+    background-color: var(--pb-panel, #F8F9FA);
+    border: 1px solid var(--pb-panel-edge, var(--color-border));
     border-radius: 24px;
-    padding: clamp(1.75rem, 3.5vw, 3rem);
-    box-shadow: inset 0 2px 10px rgba(16, 24, 40, 0.04), 0 8px 28px rgba(16, 24, 40, 0.03);
+    padding: clamp(1.5rem, 3.5vw, 3rem);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 30px 80px -20px rgba(0, 0, 0, 0.35);
     overflow: hidden;
   }
 
-  :global(.dark) .peg-board-panel {
-    background-color: #161A22;
-    border-color: rgba(255, 255, 255, 0.08);
-    box-shadow: inset 0 2px 12px rgba(0, 0, 0, 0.5), 0 8px 32px rgba(0, 0, 0, 0.3);
+  /* Soft ember glow behind top edge */
+  .peg-board-panel::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 140px;
+    background: radial-gradient(ellipse at center, var(--pb-ember-glow, rgba(247, 148, 29, 0.08)) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
   }
 
-  /* CSS radial-gradient grid holes (drilled look) */
+  /* Drilled holes grid with lower-edge highlight */
   .panel-holes-layer {
     position: absolute;
     top: 0;
@@ -588,15 +1089,25 @@ import { zones, tiles } from '../../data/pegBoard';
     width: 100%;
     height: 100%;
     pointer-events: none;
-    background-image: radial-gradient(circle at 14px 14px, rgba(140, 150, 165, 0.35) 2.5px, transparent 3px);
+    background-image:
+      radial-gradient(circle at 14px 14px, var(--pb-hole, rgba(140, 150, 165, 0.35)) 2.5px, transparent 3px),
+      radial-gradient(circle at 14px 15px, var(--pb-hole-highlight, transparent) 2.5px, transparent 3px);
     background-size: 28px 28px;
-    opacity: 0.75;
+    opacity: 0.85;
     z-index: 0;
   }
 
-  :global(.dark) .panel-holes-layer {
-    background-image: radial-gradient(circle at 14px 14px, rgba(0, 0, 0, 0.7) 2.5px, transparent 3px);
-    opacity: 0.9;
+  /* Subtle workshop panel grain */
+  .panel-grain-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.015) 0%, rgba(0, 0, 0, 0.02) 100%);
+    opacity: 0.04;
+    z-index: 0;
   }
 
   /* Header Row */
@@ -607,14 +1118,14 @@ import { zones, tiles } from '../../data/pegBoard';
     align-items: flex-start;
     justify-content: space-between;
     gap: 1.5rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid color-mix(in srgb, var(--color-border) 60%, transparent);
-    margin-bottom: 2.25rem;
-    z-index: 1;
+    padding-bottom: 1.75rem;
+    border-bottom: 1px solid var(--pb-line, rgba(0, 0, 0, 0.08));
+    margin-bottom: 1.75rem;
+    z-index: 2;
   }
 
   .board-header-left {
-    max-width: 580px;
+    max-width: 540px;
     display: flex;
     flex-direction: column;
     gap: 0.35rem;
@@ -624,14 +1135,14 @@ import { zones, tiles } from '../../data/pegBoard';
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.12em;
-    color: var(--color-accent, #1E4B8F);
+    color: var(--pb-accent, #F7941D);
   }
 
   .board-heading {
     font-size: clamp(1.8rem, 2.8vw, 2.4rem);
     font-weight: 700;
     line-height: 1.15;
-    color: var(--color-text-primary);
+    color: var(--pb-text, var(--color-text-primary));
     margin: 0;
     letter-spacing: -0.02em;
   }
@@ -639,7 +1150,7 @@ import { zones, tiles } from '../../data/pegBoard';
   .board-subline {
     font-size: 1rem;
     line-height: 1.5;
-    color: var(--color-text-secondary);
+    color: var(--pb-text-2, var(--color-text-secondary));
     margin: 0;
   }
 
@@ -647,7 +1158,18 @@ import { zones, tiles } from '../../data/pegBoard';
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 1rem;
+    gap: 0.85rem;
+  }
+
+  .header-adapter-slot {
+    display: flex;
+    align-items: center;
+  }
+
+  @media (max-width: 639px) {
+    .header-adapter-slot {
+      display: none;
+    }
   }
 
   /* Explorer Ring Widget */
@@ -656,22 +1178,18 @@ import { zones, tiles } from '../../data/pegBoard';
     align-items: center;
     gap: 0.75rem;
     padding: 0.35rem 0.75rem;
-    background-color: var(--color-bg);
-    border: 1px solid var(--color-border);
+    background-color: var(--pb-tile, var(--color-bg));
+    border: 1px solid var(--pb-line, var(--color-border));
     border-radius: 999px;
   }
 
-  .explorer-svg {
-    transform: rotate(0deg);
-  }
-
   .ring-bg {
-    stroke: var(--color-border);
+    stroke: var(--pb-panel-edge, var(--color-border));
   }
 
   .ring-progress {
-    stroke: var(--color-accent, #1E4B8F);
-    transition: stroke-dashoffset 0.4s ease, stroke 0.4s ease;
+    stroke: var(--pb-accent, #F7941D);
+    transition: stroke-dashoffset 0.4s ease;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -689,12 +1207,12 @@ import { zones, tiles } from '../../data/pegBoard';
   .explorer-num {
     font-size: 12px;
     font-weight: 700;
-    color: var(--color-text-primary);
+    color: var(--pb-text);
   }
 
   .explorer-label {
     font-size: 10px;
-    color: var(--color-text-muted);
+    color: var(--pb-text-3);
   }
 
   .explorer-completed-pill {
@@ -703,242 +1221,465 @@ import { zones, tiles } from '../../data/pegBoard';
     gap: 0.4rem;
     padding: 0.45rem 0.85rem;
     border-radius: 999px;
-    background-color: rgba(247, 148, 29, 0.12);
-    border: 1px solid rgba(247, 148, 29, 0.3);
-    color: #F7941D;
+    background-color: var(--pb-accent, #F7941D);
+    color: var(--pb-on-accent, #14110F);
     font-size: 11.5px;
     font-weight: 700;
     text-decoration: none;
+    box-shadow: 0 4px 14px var(--pb-glow);
     transition: transform 0.2s ease;
   }
 
   .explorer-completed-pill:hover {
     transform: translateY(-1px);
+    background-color: var(--pb-accent-hi);
   }
 
   .my-board-trigger-btn {
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
+    min-height: 44px;
     padding: 0.55rem 1.15rem;
     font-size: 0.875rem;
     font-weight: 600;
     border-radius: 999px;
     cursor: pointer;
+    background-color: var(--pb-tile, transparent);
+    border: 1px solid var(--pb-line);
+    color: var(--pb-text);
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+  }
+
+  .my-board-trigger-btn:hover {
+    border-color: var(--pb-accent);
+    color: var(--pb-text);
+  }
+
+  .my-board-trigger-btn:focus-visible {
+    outline: 2px solid var(--pb-focus-ring);
+    outline-offset: 2px;
   }
 
   .reset-board-btn {
     background: transparent;
     border: none;
-    color: var(--color-text-muted);
+    color: var(--pb-text-3);
     font-size: 11.5px;
     text-decoration: underline;
     cursor: pointer;
     padding: 0.25rem 0.5rem;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
   }
 
   .reset-board-btn:hover {
-    color: var(--color-text-primary);
+    color: var(--pb-text);
   }
 
-  /* Board Zones */
+  /* Peg Finder placement */
+  .board-finder-container {
+    position: relative;
+    z-index: 2;
+    margin-bottom: 2rem;
+  }
+
+  /* Inline Filter & Search Bar */
+  .board-filter-bar {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 2.25rem;
+    z-index: 2;
+  }
+
+  .board-zone-chips {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .zone-filter-chip {
+    min-height: 44px;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    border: 1px solid var(--pb-line);
+    background-color: var(--pb-tile);
+    color: var(--pb-text-2);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s ease;
+  }
+
+  .zone-filter-chip:hover {
+    color: var(--pb-text);
+    border-color: var(--pb-accent);
+  }
+
+  .zone-filter-chip.is-active {
+    background-color: var(--pb-accent-wash);
+    border-color: var(--pb-accent);
+    color: var(--pb-accent);
+  }
+
+  .zone-filter-chip:focus-visible {
+    outline: 2px solid var(--pb-focus-ring);
+    outline-offset: 2px;
+  }
+
+  .board-search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-width: 260px;
+    max-width: 340px;
+    flex: 1;
+  }
+
+  .board-search-icon {
+    position: absolute;
+    left: 0.85rem;
+    color: var(--pb-text-3);
+    pointer-events: none;
+  }
+
+  .board-search-input {
+    width: 100%;
+    min-height: 44px;
+    padding: 0.5rem 2rem 0.5rem 2.4rem;
+    border-radius: 999px;
+    border: 1px solid var(--pb-line);
+    background-color: var(--pb-tile);
+    color: var(--pb-text);
+    caret-color: var(--pb-accent);
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  .board-search-input:focus {
+    border-color: var(--pb-accent);
+    box-shadow: 0 0 0 2px var(--pb-focus-ring);
+  }
+
+  .board-search-input::placeholder {
+    color: var(--pb-text-3);
+  }
+
+  .board-search-clear-btn {
+    position: absolute;
+    right: 0.65rem;
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    color: var(--pb-text-3);
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+  }
+
+  .board-search-clear-btn:hover {
+    color: var(--pb-text);
+    background-color: var(--pb-accent-wash);
+  }
+
+  /* Empty Search State */
+  .board-search-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.85rem;
+    padding: 3rem 1.5rem;
+    background: var(--pb-tile);
+    border: 1px dashed var(--pb-line);
+    border-radius: 18px;
+    margin-bottom: 2rem;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .empty-state-p {
+    font-size: 0.9375rem;
+    color: var(--pb-text-2);
+    margin: 0;
+  }
+
+  /* Board Zones Container */
   .board-zones-container {
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 2.75rem;
+    gap: 64px;
     z-index: 1;
+  }
+
+  @media (max-width: 639px) {
+    .board-zones-container {
+      gap: 40px;
+    }
   }
 
   .board-zone-band {
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
+    gap: 24px;
   }
 
+  /* Zone Plaque with Engraved Shelf Line */
   .zone-plaque-row {
     display: flex;
     align-items: center;
+    gap: 1rem;
   }
 
-  /* Engraved zone plaque label */
   .zone-plaque {
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
-    padding: 0.3rem 0.75rem;
+    padding: 0.35rem 0.85rem;
     border-radius: 999px;
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    background-color: var(--color-bg);
-    border: 1px solid var(--color-border);
-    color: var(--zone-accent, currentColor);
-    box-shadow: inset 0 1px 2px rgba(16, 24, 40, 0.05);
+    background-color: var(--pb-accent-wash);
+    border: 1px solid var(--pb-accent-lo);
+    color: var(--pb-accent);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    flex-shrink: 0;
+  }
+
+  .zone-plaque.is-highlighted {
+    border-color: var(--pb-accent);
+    box-shadow: 0 0 12px var(--pb-glow);
   }
 
   .plaque-dot {
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background-color: var(--zone-accent, currentColor);
+    background-color: var(--pb-accent);
   }
 
-  .zone-orange { --zone-accent: #F7941D; }
-  .zone-red { --zone-accent: #EE4B2B; }
-  .zone-blue { --zone-accent: #1E4B8F; }
+  .zone-shelf-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--pb-accent-lo, var(--pb-line)) 0%, transparent 95%);
+    opacity: 0.6;
+  }
 
-  /* Tiles track row / grid */
+  /* Tiles track row (Desktop & Tablet: 40px gap) */
   .zone-tiles-track {
     display: flex;
     flex-wrap: wrap;
-    gap: 1.5rem;
+    gap: 40px;
     align-items: flex-start;
   }
 
-  @media (max-width: 639px) {
-    .zone-tiles-track {
-      flex-direction: column;
-      align-items: center;
+  /* Empty Hook Silhouettes */
+  .empty-silhouette-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 220px;
+    height: 172px;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  .empty-silhouette-card {
+    position: relative;
+    width: 100%;
+    height: 158px;
+    border: 1.5px dashed var(--pb-line);
+    border-radius: 18px;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform-origin: 50% 0;
+  }
+
+  .empty-silhouette-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--pb-text-3);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  @keyframes silhouetteSway {
+    0% { transform: rotate(0deg); }
+    50% { transform: rotate(1.8deg); }
+    100% { transform: rotate(0deg); }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .empty-silhouette-wrapper[data-empty-index="0"] .empty-silhouette-card {
+      animation: silhouetteSway 4.5s ease-in-out infinite;
     }
   }
 
-  /* Easter Egg Button */
-  .board-easter-egg-btn {
-    position: absolute;
-    bottom: 1.25rem;
-    right: 1.25rem;
-    width: 28px;
-    height: 28px;
-    border-radius: 6px;
-    border: 1px dashed var(--color-border);
-    background: transparent;
-    display: flex;
+  /* Rail dots (Hidden on desktop) */
+  .zone-rail-dots {
+    display: none;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    opacity: 0.45;
-    transition: opacity 0.2s ease, transform 0.2s ease;
-    z-index: 2;
+    gap: 8px;
+    margin-top: 4px;
   }
 
-  .board-easter-egg-btn:hover {
-    opacity: 1;
-    transform: scale(1.1);
-  }
-
-  .egg-peg-icon {
-    width: 8px;
-    height: 8px;
-    background-color: #F7941D;
-    border-radius: 2px;
-  }
-
-  /* Easter Egg Modal */
-  .adapter-game-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100dvh;
-    background-color: rgba(16, 24, 40, 0.5);
-    z-index: 4000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.25s ease;
-  }
-
-  .adapter-game-overlay.is-open {
-    opacity: 1;
-    visibility: visible;
-  }
-
-  .adapter-game-card {
-    width: 90%;
-    max-width: 460px;
-    padding: 1.5rem;
-    border-radius: 20px;
-    background: var(--color-bg);
-  }
-
-  .game-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 0.5rem;
-  }
-
-  .game-heading {
-    margin: 0;
-    font-size: 1.2rem;
-  }
-
-  .game-close-btn {
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    color: var(--color-text-secondary);
-  }
-
-  .game-instructions {
-    font-size: 0.875rem;
-    color: var(--color-text-secondary);
-    margin: 0 0 1rem;
-  }
-
-  .game-canvas-area {
-    position: relative;
-    width: 100%;
-    height: 160px;
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 12px;
-    overflow: hidden;
-    touch-action: none;
-  }
-
-  .game-target-hole {
-    position: absolute;
-    right: 40px;
-    top: 50px;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    border: 2px solid #1E4B8F;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .game-adapter-ring {
+  .rail-dot {
     width: 44px;
     height: 44px;
-    border-radius: 50%;
-    border: 1.5px dashed #F7941D;
-  }
-
-  .game-movable-peg {
-    position: absolute;
-    width: 30px;
-    height: 30px;
-    background-color: #EE4B2B;
-    border-radius: 4px;
-    cursor: grab;
-  }
-
-  .game-footer {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    justify-content: space-between;
-    margin-top: 1rem;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
   }
 
-  .game-status {
-    font-size: 0.8125rem;
-    font-weight: 600;
+  .rail-dot::after {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: var(--pb-line);
+    transition: background-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .rail-dot.is-active::after {
+    background-color: var(--pb-accent);
+    transform: scale(1.3);
+  }
+
+  /* Mobile Rail Layout (< 640px) */
+  @media (max-width: 639px) {
+    .board-header {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .board-header-right {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .zone-tiles-track {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      gap: 16px;
+      padding-bottom: 8px;
+      padding-left: 2px;
+      padding-right: 2px;
+      scrollbar-width: none;
+    }
+
+    .zone-tiles-track::-webkit-scrollbar {
+      display: none;
+    }
+
+    .zone-tiles-track .board-tile-wrapper,
+    .zone-tiles-track .empty-silhouette-wrapper {
+      flex: 0 0 78vw;
+      width: 78vw;
+      max-width: 320px;
+      scroll-snap-align: center;
+    }
+
+    .zone-rail-dots {
+      display: flex;
+    }
+  }
+
+  /* Undo Toast Container */
+  .pb-toast-container {
+    position: fixed;
+    bottom: max(1.5rem, env(safe-area-inset-bottom, 1.5rem));
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5000;
+    pointer-events: none;
+  }
+
+  .pb-toast {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 0.75rem 1.25rem;
+    border-radius: 999px;
+    background-color: var(--pb-tile-raised, #241E18);
+    border: 1px solid var(--pb-line, #3A3025);
+    color: var(--pb-text, #F6F1EA);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    pointer-events: auto;
+    font-size: 0.875rem;
+    font-weight: 500;
+    animation: toastPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes toastPop {
+    from {
+      opacity: 0;
+      transform: translateY(12px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .toast-undo-btn {
+    border: none;
+    background: transparent;
+    color: var(--pb-accent, #F7941D);
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .toast-undo-btn:hover {
+    text-decoration: underline;
+  }
+
+  .toast-undo-btn:focus-visible {
+    outline: 2px solid var(--pb-focus-ring);
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 </style>
