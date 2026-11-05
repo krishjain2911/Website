@@ -581,10 +581,7 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
   /* Mobile Drawer Menu */
   .mobile-drawer {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100dvh;
+    inset: 0;
     background-color: var(--color-bg);
     z-index: 2000;
     display: flex;
@@ -767,11 +764,14 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
     const drawer = document.getElementById('mobile-menu-drawer');
     const drawerLinks = drawer?.querySelectorAll('a');
 
+    let navPrevOverflow = '';
     function openDrawer() {
       if (!drawer) return;
       drawer.classList.add('is-open');
       drawer.setAttribute('aria-hidden', 'false');
       openBtn?.setAttribute('aria-expanded', 'true');
+      navPrevOverflow = document.documentElement.style.overflow;
+      document.documentElement.style.overflow = 'hidden';
       document.body.style.overflow = 'hidden';
       closeBtn?.focus();
     }
@@ -781,6 +781,7 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
       drawer.classList.remove('is-open');
       drawer.setAttribute('aria-hidden', 'true');
       openBtn?.setAttribute('aria-expanded', 'false');
+      document.documentElement.style.overflow = navPrevOverflow;
       document.body.style.overflow = '';
       openBtn?.focus();
     }

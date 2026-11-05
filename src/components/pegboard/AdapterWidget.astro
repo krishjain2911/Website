@@ -81,9 +81,14 @@ import Icon from '../Icon.astro';
     let isEngaged = false;
     let resetTimer: any = null;
 
+    let previousOverflow = '';
+    let lastActiveElement: HTMLElement | null = null;
     function openModal() {
+      lastActiveElement = document.activeElement as HTMLElement | null;
       elModalDialog.classList.add('is-open');
       elModalDialog.setAttribute('aria-hidden', 'false');
+      previousOverflow = document.documentElement.style.overflow;
+      document.documentElement.style.overflow = 'hidden';
       document.body.style.overflow = 'hidden';
       elPeg.focus();
     }
@@ -91,7 +96,9 @@ import Icon from '../Icon.astro';
     function closeModal() {
       elModalDialog.classList.remove('is-open');
       elModalDialog.setAttribute('aria-hidden', 'true');
+      document.documentElement.style.overflow = previousOverflow;
       document.body.style.overflow = '';
+      lastActiveElement?.focus();
     }
 
     document.addEventListener('click', (e) => {
@@ -254,10 +261,7 @@ import Icon from '../Icon.astro';
 <style>
   .adapter-modal-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100dvh;
+    inset: 0;
     z-index: 3500;
     display: flex;
     align-items: center;
@@ -265,6 +269,8 @@ import Icon from '../Icon.astro';
     opacity: 0;
     visibility: hidden;
     padding: 1.5rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
     transition: opacity 0.25s ease, visibility 0.25s;
   }
 
@@ -275,10 +281,7 @@ import Icon from '../Icon.astro';
 
   .adapter-modal-backdrop {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    inset: 0;
     background: rgba(0, 0, 0, 0.75);
   }
 

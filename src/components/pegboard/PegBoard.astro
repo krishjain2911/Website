@@ -357,12 +357,17 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
     });
 
     // Drawer open / close
+    let drawerPrevOverflow = '';
+    let drawerLastActive: HTMLElement | null = null;
     function openDrawer() {
       if (!drawerOverlay) return;
+      drawerLastActive = document.activeElement as HTMLElement | null;
       drawerOverlay.classList.add('is-open');
       drawerOverlay.setAttribute('aria-hidden', 'false');
       drawerOpenBtn?.setAttribute('aria-expanded', 'true');
       drawerCloseBtn?.focus();
+      drawerPrevOverflow = document.documentElement.style.overflow;
+      document.documentElement.style.overflow = 'hidden';
       document.body.style.overflow = 'hidden';
     }
 
@@ -371,8 +376,9 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
       drawerOverlay.classList.remove('is-open');
       drawerOverlay.setAttribute('aria-hidden', 'true');
       drawerOpenBtn?.setAttribute('aria-expanded', 'false');
-      drawerOpenBtn?.focus();
+      document.documentElement.style.overflow = drawerPrevOverflow;
       document.body.style.overflow = '';
+      (drawerLastActive || drawerOpenBtn)?.focus();
     }
 
     drawerOpenBtn?.addEventListener('click', openDrawer);
