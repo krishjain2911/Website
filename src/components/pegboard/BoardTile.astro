@@ -105,6 +105,15 @@ const tileAriaLabel = tile.quickTake
     outline: none;
   }
 
+  :global([data-mode="free"]) .pb-tile,
+  :global(.pb-canvas) .pb-tile {
+    position: absolute;
+    width: 224px;
+    height: 192px;
+    min-height: 0;
+    margin: 0;
+  }
+
   /* Pre-rendered glow layer */
   .tile-glow-layer {
     position: absolute;

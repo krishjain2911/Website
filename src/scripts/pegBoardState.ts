@@ -123,6 +123,38 @@ export function resetTileOrder(): void {
   }
 }
 
+const LAYOUT_KEY = 'rhsp.pegboard.v3.layout';
+export type Layout = { tiles: Record<string, [number, number]>; plaques: Record<string, number> };
+
+export function getLayout(): Layout | null {
+  try {
+    if (typeof window === 'undefined' || !window.localStorage) return null;
+    const raw = window.localStorage.getItem(LAYOUT_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+export function saveLayout(l: Layout): void {
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      window.localStorage.setItem(LAYOUT_KEY, JSON.stringify(l));
+    }
+  } catch {}
+}
+
+export function clearLayout(): void {
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      window.localStorage.removeItem(LAYOUT_KEY);
+    }
+  } catch {}
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('rhsp:pegboard:layout-reset'));
+  }
+}
+
 export function hasArrivalPlayed(): boolean {
   try {
     if (typeof window === 'undefined' || !window.sessionStorage) return true;

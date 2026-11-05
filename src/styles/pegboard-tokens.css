@@ -286,56 +286,142 @@ body:has(.pegboard-page) {
   box-shadow: 0 0 8px rgba(247, 148, 29, 0.2);
 }
 
-/* Dragging styling: Desktop only */
+/* free mode canvas = the hole grid. Holes are centred at 16 + 32n, so the background starts at 0 0 */
+.pb-canvas {
+  position: relative;
+  width: 100%;
+  min-height: 480px;
+  background-image: radial-gradient(circle at center, var(--pb-hole) 0 var(--pb-hole-r), transparent calc(var(--pb-hole-r) + 0.5px));
+  background-size: 32px 32px;
+  background-position: 0 0;
+}
+.pb-canvas[hidden] {
+  display: none;
+}
+[data-mode="free"] .board-zones-container,
+.board-zones-container[hidden] {
+  display: none !important;
+}
+/* the board panel keeps its colour but no longer paints its own holes in free mode */
+[data-mode="free"].pb-board,
+[data-mode="free"] .pb-board {
+  background-image: none;
+}
+
+/* tiles: absolute, positioned with the individual translate property so tilt/swing (transform) never conflicts */
+[data-mode="free"] .pb-tile,
+.pb-canvas .pb-tile {
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  width: 224px !important;
+  height: 192px !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  translate: var(--x, 0) var(--y, 0);
+  transition: translate 0.24s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.2s, box-shadow 0.2s, opacity 0.25s;
+}
+[data-mode="free"] .pb-tile .tile-description {
+  -webkit-line-clamp: 3;
+}
+[data-mode="free"] .pb-plaque-row,
+[data-mode="free"] [data-plaque] {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  translate: 0 var(--y, 0);
+  height: 96px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
 @media (hover: hover) and (pointer: fine) and (min-width: 900px) {
-  .drag-enabled .pb-tile,
-  .drag-enabled .pb-tile * {
+  [data-mode="free"] .pb-tile {
     cursor: grab;
     touch-action: none;
     user-select: none;
     -webkit-user-drag: none;
   }
 }
-
 .pb-tile.is-dragging {
-  position: fixed !important;
-  margin: 0 !important;
   z-index: 60 !important;
-  width: auto; /* inline width from JS wins */
-  transition: none !important;
-  pointer-events: none;
   cursor: grabbing !important;
-  transform-origin: 50% 0;
-  will-change: transform;
-  box-shadow: 0 28px 56px -14px #000000, 0 0 44px -6px rgba(247, 148, 29, 0.55) !important;
+  transition: none !important;
+  will-change: transform, translate;
+  box-shadow: 0 28px 56px -14px #000, 0 0 44px -6px rgba(247, 148, 29, 0.55) !important;
 }
-
 .pb-tile.is-dragging::before,
 .pb-tile.is-dragging::after {
-  opacity: 0; /* hide cord+peg while lifted */
+  opacity: 0;
 }
-
 html.pb-is-dragging,
 html.pb-is-dragging * {
   cursor: grabbing !important;
   user-select: none !important;
 }
-
 html.pb-is-dragging .pb-tile:not(.is-dragging) {
-  transform: none !important; /* no hover tilt on others */
+  transform: none !important;
 }
 
-.pb-tile-ph {
+/* ghost = where it will land; it lights the real holes under the footprint */
+.pb-ghost {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 224px;
+  height: 192px;
   border-radius: 16px;
-  border: 1.5px dashed rgba(247, 148, 29, 0.45);
-  background: rgba(247, 148, 29, 0.05);
-  box-shadow: inset 0 0 24px rgba(247, 148, 29, 0.08);
-  min-height: 168px;
+  pointer-events: none;
+  z-index: 5;
+  translate: var(--x, 0) var(--y, 0);
+  border: 1.5px dashed rgba(247, 148, 29, 0.6);
+  background-color: rgba(247, 148, 29, 0.06);
+  box-shadow: inset 0 0 28px rgba(247, 148, 29, 0.12), 0 0 24px -6px rgba(247, 148, 29, 0.5);
+  transition: translate 0.12s ease-out;
 }
-
-/* Performance hygiene: containment and content-visibility */
-.pb-tile:not(.is-dragging) {
-  contain: layout paint;
+.pb-ghost::before {
+  content: "";
+  position: absolute;
+  inset: -22px -16px -16px -16px;
+  border-radius: 20px;
+  pointer-events: none;
+  background-image: radial-gradient(circle at center, #F7941D 0 2.4px, transparent 3px);
+  background-size: 32px 32px;
+  background-position: center;
+  opacity: 0.85;
+  filter: drop-shadow(0 0 4px rgba(247, 148, 29, 0.8));
+  -webkit-mask: linear-gradient(#000, #000);
+}
+.pb-ghost.is-nudged {
+  border-color: rgba(255, 255, 255, 0.35);
+}
+.pb-hole-origin {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  pointer-events: none;
+  translate: var(--x, 0) var(--y, 0);
+  box-shadow: 0 0 0 2px rgba(247, 148, 29, 0.7), 0 0 18px rgba(247, 148, 29, 0.6);
+  opacity: 0.9;
+}
+:root[data-theme="light"] .pb-ghost,
+:root:not([data-theme="dark"]) .pb-ghost {
+  background-color: rgba(238, 75, 43, 0.05);
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-mode="free"] .pb-tile,
+  .pb-ghost {
+    transition: none;
+  }
+}
+@media (max-width: 899px), (hover: none) {
+  .pb-canvas {
+    display: none;
+  }
 }
 
 .board-zone-band:not(:first-child) {
@@ -343,8 +429,33 @@ html.pb-is-dragging .pb-tile:not(.is-dragging) {
   contain-intrinsic-size: auto 520px;
 }
 
-.board-zone-band {
+.board-zone-band,
+[data-mode="free"] [data-plaque] {
   scroll-margin-top: calc(var(--nav-height, 72px) + 64px);
+}
+
+.board-reset-layout-btn {
+  background: transparent;
+  border: none;
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--pb-muted);
+  cursor: pointer;
+  padding: 0.35rem 0.65rem;
+  border-radius: 9999px;
+  transition: color 0.15s, background-color 0.15s;
+  white-space: nowrap;
+  margin-left: auto;
+}
+.board-reset-layout-btn:hover {
+  color: var(--pb-ink);
+  background-color: var(--pb-chip-bg);
+}
+@media (max-width: 899px), (hover: none) {
+  .board-reset-layout-btn {
+    display: none;
+  }
 }
 
 /* Damped swing (1.2s ±1.5deg) on drop or pin */
@@ -388,8 +499,5 @@ html.pb-is-dragging .pb-tile:not(.is-dragging) {
   .pb-tile {
     cursor: pointer;
     touch-action: auto;
-  }
-  .pb-tile-ph {
-    display: none;
   }
 }
