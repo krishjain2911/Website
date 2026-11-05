@@ -388,7 +388,8 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
     // Reset board from inside drawer
     drawerResetBtn?.addEventListener('click', () => {
       resetTileOrder();
-      window.location.reload();
+      clearLayout();
+      closeDrawer();
     });
 
     // Copy email handler

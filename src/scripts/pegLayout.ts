@@ -1,17 +1,10 @@
-import { getLayout, saveLayout, type Layout } from './pegBoardState';
 import { ZONE_ORDER } from '../data/pegBoard';
 
 const MQ = '(hover: hover) and (pointer: fine) and (min-width: 900px)';
-const P = 32;
-const HALF = 16;
-const TW = 224;
-const CORD = 22;
-const LEFT = 3;
-const RIGHT = 4;
-const FH = 8;
-const PLAQ_ROWS = 3; // footprint: cols c-3..c+4, rows r..r+7
-type Rect = { x0: number; x1: number; y0: number; y1: number };
+const P = 32, HALF = 16, TW = 208, CORD = 22; // tile art 208 wide = 6.5 holes, leaves a 16px gap at stride 7
+const LEFT = 3, RIGHT = 3, FH = 8, PLAQ_ROWS = 3; // footprint cols c-3..c+3 (7), rows r..r+7
 type Slot = [number, number];
+const clamp = (val: number, min: number, max: number) => Math.min(Math.max(val, min), max);
 
 export function initPegLayout(board: HTMLElement) {
   const canvas = board.querySelector<HTMLElement>('#pb-canvas')!;
@@ -27,51 +20,53 @@ export function initPegLayout(board: HTMLElement) {
   const home = new Map<string, { parent: HTMLElement; next: Node | null }>();
   const pos = new Map<string, Slot>();
   const plaques = new Map<string, number>();
-  let drag: null | {
-    id: string;
-    el: HTMLElement;
-    pid: number;
-    sx: number;
-    sy: number;
-    gx: number;
-    gy: number;
-    k: number;
-    started: boolean;
-    from: Slot;
-    to: Slot;
-    raf: number;
-    ex: number;
-    ey: number;
-  } = null;
 
-  const rectOf = (c: number, r: number): Rect => ({ x0: c - LEFT, x1: c + RIGHT, y0: r, y1: r + FH - 1 });
-  const hit = (a: Rect, b: Rect) => a.x0 <= b.x1 && a.x1 >= b.x0 && a.y0 <= b.y1 && a.y1 >= b.y0;
-  const plaqueRects = (): Rect[] =>
-    [...plaques.values()].map((y) => ({ x0: 0, x1: cols - 1, y0: y, y1: y + PLAQ_ROWS - 1 }));
-
-  function isFree(c: number, r: number, ignore?: string) {
-    if (c - LEFT < 0 || c + RIGHT >= cols || r < 0) return false;
-    const me = rectOf(c, r);
-    for (const [id, s] of pos) if (id !== ignore && hit(me, rectOf(s[0], s[1]))) return false;
-    return !plaqueRects().some((p) => hit(me, p));
+  let occ = new Uint8Array(0), occRows = 0;
+  function buildOcc(ignore?: string) {
+    let maxRow = 0;
+    pos.forEach(([, r]) => (maxRow = Math.max(maxRow, r + FH)));
+    occRows = maxRow + 80;
+    occ = new Uint8Array(cols * occRows);
+    const mark = (x0: number, x1: number, y0: number, y1: number) => {
+      for (let y = Math.max(0, y0); y <= Math.min(occRows - 1, y1); y++)
+        for (let x = Math.max(0, x0); x <= Math.min(cols - 1, x1); x++) occ[y * cols + x] = 1;
+    };
+    pos.forEach(([c, r], id) => {
+      if (id !== ignore) mark(c - LEFT, c + RIGHT, r, r + FH - 1);
+    });
+    plaques.forEach((y) => mark(0, cols - 1, y, y + PLAQ_ROWS - 1));
   }
 
-  function nearest(c: number, r: number, ignore?: string): Slot {
-    // spiral outwards by Manhattan distance
-    for (let d = 0; d < 200; d++) {
+  function isFree(c: number, r: number): boolean {
+    if (c - LEFT < 0 || c + RIGHT >= cols || r < 0) return false; // rows below the grid are always free
+    for (let y = r; y <= Math.min(occRows - 1, r + FH - 1); y++)
+      for (let x = c - LEFT; x <= c + RIGHT; x++) if (occ[y * cols + x]) return false;
+    return true;
+  }
+
+  function nearest(c: number, r: number): Slot { // ring search, closest first, prefers same row
+    if (isFree(c, r)) return [c, r];
+    for (let d = 1; d <= 60; d++) {
+      let best: Slot | null = null, bestCost = 1e9;
       for (let dy = -d; dy <= d; dy++) {
         const rem = d - Math.abs(dy);
         for (const dx of rem === 0 ? [0] : [-rem, rem]) {
-          if (isFree(c + dx, r + dy, ignore)) return [c + dx, r + dy];
+          if (!isFree(c + dx, r + dy)) continue;
+          const cost = dx * dx + dy * dy * 1.4; // slightly prefer sideways moves
+          if (cost < bestCost) {
+            bestCost = cost;
+            best = [c + dx, r + dy];
+          }
         }
       }
+      if (best) return best;
     }
     return [c, r];
   }
 
   // ---------- default arrangement (same order as the flow layout) ----------
   function seed(missingOnly: boolean) {
-    const perRow = Math.max(1, Math.floor(cols / (LEFT + RIGHT + 1)));
+    const perRow = Math.max(1, Math.floor(cols / 7));
     let row = 0;
     for (const z of ZONE_ORDER) {
       const ids = [...tiles.values()]
@@ -81,8 +76,13 @@ export function initPegLayout(board: HTMLElement) {
       row = (plaques.get(z) ?? row) + PLAQ_ROWS + 1;
       ids.forEach((id, i) => {
         if (missingOnly && pos.has(id)) return;
-        const want: Slot = [LEFT + (LEFT + RIGHT + 1) * (i % perRow), row + FH * Math.floor(i / perRow)];
-        pos.set(id, missingOnly ? nearest(want[0], want[1], id) : want);
+        const want: Slot = [LEFT + 7 * (i % perRow), row + FH * Math.floor(i / perRow)];
+        if (missingOnly) {
+          buildOcc(id);
+          pos.set(id, nearest(want[0], want[1]));
+        } else {
+          pos.set(id, want);
+        }
       });
       row += FH * Math.ceil(Math.max(ids.length, 1) / perRow) + 1;
     }
@@ -98,6 +98,7 @@ export function initPegLayout(board: HTMLElement) {
       const [x, y] = xy([c, r]);
       el.style.setProperty('--x', `${x}px`);
       el.style.setProperty('--y', `${y}px`);
+      el.style.translate = ''; // Ensure individual style.translate does not mask --x/--y
       maxRow = Math.max(maxRow, r + FH);
     });
     canvas.querySelectorAll<HTMLElement>('[data-plaque]').forEach((p) => {
@@ -107,12 +108,12 @@ export function initPegLayout(board: HTMLElement) {
     });
     canvas.style.height = `${(maxRow + 6) * P}px`; // board always has room below
   }
-  const persist = () => saveLayout({ tiles: Object.fromEntries(pos), plaques: Object.fromEntries(plaques) } as Layout);
 
   // ---------- enter / leave free mode ----------
   function measure() {
     cols = Math.floor(canvas.clientWidth / P);
   }
+
   function enter() {
     if (free) return;
     free = true;
@@ -126,19 +127,12 @@ export function initPegLayout(board: HTMLElement) {
       canvas.appendChild(el); // keeps all listeners, pins, view-transition name
     });
     measure();
-    const saved = getLayout();
     pos.clear();
     plaques.clear();
-    if (saved) {
-      Object.entries(saved.tiles).forEach(([id, s]) => tiles.has(id) && pos.set(id, s));
-      Object.entries(saved.plaques).forEach(([z, y]) => plaques.set(z, y));
-      seed(true); // add tiles that are new
-      relayout(); // fix anything out of bounds
-    } else {
-      seed(false);
-    }
+    seed(false);
     paint();
   }
+
   function leave() {
     if (!free) return;
     free = false;
@@ -150,17 +144,21 @@ export function initPegLayout(board: HTMLElement) {
       }
       el.style.removeProperty('--x');
       el.style.removeProperty('--y');
+      el.style.translate = '';
     });
     canvas.hidden = true;
     flow.hidden = false;
     delete board.dataset.mode;
   }
+
   function relayout() {
-    // after width change or reset
+    // after width change
     pos.forEach(([c, r], id) => {
-      if (!isFree(c, r, id)) pos.set(id, nearest(c, r, id));
+      buildOcc(id);
+      if (!isFree(c, r)) pos.set(id, nearest(c, r));
     });
   }
+
   const apply = () => (mq.matches ? enter() : leave());
   mq.addEventListener('change', apply);
   new ResizeObserver(() => {
@@ -170,9 +168,9 @@ export function initPegLayout(board: HTMLElement) {
     if (cols !== old) {
       relayout();
       paint();
-      persist();
     }
   }).observe(canvas);
+
   window.addEventListener('rhsp:pegboard:layout-reset', () => {
     if (!free) return;
     pos.clear();
@@ -182,10 +180,25 @@ export function initPegLayout(board: HTMLElement) {
   });
 
   // ---------- drag ----------
-  const toBoard = (e: { clientX: number; clientY: number }, k: number) => {
-    const r = canvas.getBoundingClientRect();
-    return [(e.clientX - r.left) / k, (e.clientY - r.top) / k] as const;
-  };
+  let drag: null | {
+    id: string;
+    el: HTMLElement;
+    pid: number;
+    sx: number;
+    sy: number;
+    gx: number;
+    gy: number;
+    k: number;
+    started: boolean;
+    from: Slot;
+    to: Slot;
+    raf: number;
+    ex: number;
+    ey: number;
+    canvasRect: DOMRect;
+  } = null;
+  let curH = 0;
+  let lastC = NaN, lastR = NaN;
 
   board.addEventListener('pointerdown', (e) => {
     if (!free || drag || e.button !== 0) return;
@@ -194,7 +207,9 @@ export function initPegLayout(board: HTMLElement) {
     if (!el || t.closest('button,input,[data-nodrag],.tile-pin-btn')) return;
     const r = el.getBoundingClientRect();
     const k = r.width / el.offsetWidth || 1;
-    const [bx, by] = toBoard(e, k);
+    const canvasRect = canvas.getBoundingClientRect();
+    const bx = (e.clientX - canvasRect.left) / k;
+    const by = (e.clientY - canvasRect.top) / k;
     const id = el.dataset.id!;
     const from = pos.get(id);
     if (!from) return;
@@ -213,7 +228,8 @@ export function initPegLayout(board: HTMLElement) {
       to: from,
       raf: 0,
       ex: e.clientX,
-      ey: e.clientY
+      ey: e.clientY,
+      canvasRect
     };
   });
 
@@ -230,10 +246,13 @@ export function initPegLayout(board: HTMLElement) {
       drag.el.classList.add('is-dragging');
       drag.el.dataset.noclick = '1';
       document.documentElement.classList.add('pb-is-dragging');
+      buildOcc(drag.id); // built once per drag
+      curH = canvas.offsetHeight;
+      lastC = NaN;
+      lastR = NaN;
       const [ox, oy] = xy(drag.from); // mark the hole it left
       origin.hidden = false;
-      origin.style.setProperty('--x', `${ox + TW / 2 - HALF}px`);
-      origin.style.setProperty('--y', `${oy - CORD - HALF}px`);
+      origin.style.translate = `${ox + TW / 2 - HALF}px ${oy - CORD - HALF}px`;
       ghost.hidden = false;
     }
     if (!drag.raf) drag.raf = requestAnimationFrame(tick);
@@ -242,32 +261,34 @@ export function initPegLayout(board: HTMLElement) {
   function tick() {
     if (!drag) return;
     drag.raf = 0;
-    const [bx, by] = toBoard({ clientX: drag.ex, clientY: drag.ey }, drag.k);
-    const x = bx - drag.gx;
-    const y = by - drag.gy; // tile top-left in board px
-    drag.el.style.setProperty('--x', `${x}px`);
-    drag.el.style.setProperty('--y', `${y}px`);
-    const rot = reduce() ? 0 : Math.max(-3, Math.min(3, (drag.ex - drag.sx) / drag.k / 60));
-    drag.el.style.transform = `rotate(${rot}deg) scale(1.02)`;
+    drag.canvasRect = canvas.getBoundingClientRect(); // read once per frame before any writes
+    const cr = drag.canvasRect;
+    const x = (drag.ex - cr.left) / drag.k - drag.gx;
+    const y = (drag.ey - cr.top) / drag.k - drag.gy;
+    drag.el.style.translate = `${x}px ${y}px`; // direct, no CSS variable lookup
+    drag.el.style.transform = reduce()
+      ? ''
+      : `rotate(${clamp((drag.ex - drag.sx) / drag.k / 60, -3, 3)}deg) scale(1.02)`;
     const c = Math.round((x + TW / 2 - HALF) / P);
-    const r = Math.round((y - CORD - HALF) / P);
-    drag.to = nearest(c, Math.max(0, r), drag.id); // where it WILL land
-    const [gx, gy] = xy(drag.to);
-    ghost.style.setProperty('--x', `${gx}px`);
-    ghost.style.setProperty('--y', `${gy}px`);
-    ghost.classList.toggle('is-nudged', drag.to[0] !== c || drag.to[1] !== r);
-    const curH = parseFloat(canvas.style.height) || 0;
-    canvas.style.height = `${Math.max(curH, (drag.to[1] + FH + 6) * P)}px`; // grow downwards
-
-    // edge auto-scroll
-    const vy = drag.ey / drag.k;
-    const vh = window.innerHeight;
-    if (vy < 90) {
-      window.scrollBy(0, -14);
-    } else if (vy > vh - 90) {
-      window.scrollBy(0, 14);
+    const r = Math.max(0, Math.round((y - CORD - HALF) / P));
+    if (c !== lastC || r !== lastR) {
+      lastC = c;
+      lastR = r;
+      const cand = nearest(c, r);
+      if (Math.abs(cand[0] - c) + Math.abs(cand[1] - r) <= 6) drag.to = cand;
+      const [gx, gy] = xy(drag.to);
+      ghost.style.translate = `${gx}px ${gy}px`;
+      ghost.classList.toggle('is-nudged', drag.to[0] !== c || drag.to[1] !== r);
+      const need = (drag.to[1] + FH + 6) * P;
+      if (need > curH) {
+        curH = need;
+        canvas.style.height = `${need}px`;
+      }
     }
-    if (vy < 90 || vy > vh - 90) {
+    const vy = drag.ey / drag.k;
+    if (vy < 90) window.scrollBy(0, -14);
+    else if (vy > window.innerHeight - 90) window.scrollBy(0, 14);
+    if (vy < 90 || vy > window.innerHeight - 90) {
       drag.raf = requestAnimationFrame(tick);
     }
   }
@@ -277,7 +298,6 @@ export function initPegLayout(board: HTMLElement) {
     const d = drag;
     if (d.started) {
       pos.set(d.id, d.to);
-      persist();
       setTimeout(() => delete d.el.dataset.noclick, 50);
     }
     cleanup();
@@ -300,6 +320,7 @@ export function initPegLayout(board: HTMLElement) {
     cancelAnimationFrame(drag.raf);
     drag.el.classList.remove('is-dragging');
     drag.el.style.transform = '';
+    drag.el.style.translate = '';
     try {
       drag.el.releasePointerCapture(drag.pid);
     } catch {}
@@ -338,10 +359,10 @@ export function initPegLayout(board: HTMLElement) {
       r + (e.key === 'ArrowDown' ? s : e.key === 'ArrowUp' ? -s : 0)
     ];
     e.preventDefault();
-    if (!isFree(nc, nr, id)) return;
+    buildOcc(id);
+    if (!isFree(nc, nr)) return;
     pos.set(id, [nc, nr]);
     paint();
-    persist();
     const live = document.getElementById('search-live-status');
     if (live) {
       live.textContent = `Moved ${el.querySelector('.tile-title')?.textContent ?? id} to column ${nc + 1}, row ${nr + 1}.`;
@@ -354,6 +375,11 @@ export function initPegLayout(board: HTMLElement) {
     const z = ev.detail?.zone as string;
     const target = free ? canvas.querySelector(`[data-plaque="${z}"]`) : flow.querySelector(`#zone-band-${z}`);
     target?.scrollIntoView({ block: 'start', behavior: reduce() ? 'auto' : 'smooth' });
+    const plaque = target?.querySelector('.zone-plaque') ?? (target?.classList.contains('zone-plaque') ? target : null);
+    if (plaque) {
+      plaque.classList.add('is-highlighted');
+      setTimeout(() => plaque.classList.remove('is-highlighted'), 1500);
+    }
   }) as EventListener);
 
   apply();

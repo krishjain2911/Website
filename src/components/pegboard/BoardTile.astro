@@ -108,10 +108,25 @@ const tileAriaLabel = tile.quickTake
   :global([data-mode="free"]) .pb-tile,
   :global(.pb-canvas) .pb-tile {
     position: absolute;
-    width: 224px;
+    width: 208px;
     height: 192px;
     min-height: 0;
     margin: 0;
+  }
+
+  :global([data-mode="free"]) .tile-hit-link,
+  :global(.pb-canvas) .tile-hit-link {
+    padding: 12px 14px 10px;
+  }
+
+  :global([data-mode="free"]) .tile-header-row,
+  :global(.pb-canvas) .tile-header-row {
+    margin-bottom: 0.35rem;
+  }
+
+  :global([data-mode="free"]) .tile-footer-row,
+  :global(.pb-canvas) .tile-footer-row {
+    padding-top: 0.35rem;
   }
 
   /* Pre-rendered glow layer */

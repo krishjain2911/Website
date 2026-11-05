@@ -123,31 +123,17 @@ export function resetTileOrder(): void {
   }
 }
 
-const LAYOUT_KEY = 'rhsp.pegboard.v3.layout';
-export type Layout = { tiles: Record<string, [number, number]>; plaques: Record<string, number> };
-
-export function getLayout(): Layout | null {
-  try {
-    if (typeof window === 'undefined' || !window.localStorage) return null;
-    const raw = window.localStorage.getItem(LAYOUT_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
+// Clear any previously saved v3 layout so visitors start with the default arrangement
+try {
+  if (typeof window !== 'undefined' && window.localStorage) {
+    localStorage.removeItem('rhsp.pegboard.v3.layout');
   }
-}
-
-export function saveLayout(l: Layout): void {
-  try {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      window.localStorage.setItem(LAYOUT_KEY, JSON.stringify(l));
-    }
-  } catch {}
-}
+} catch {}
 
 export function clearLayout(): void {
   try {
     if (typeof window !== 'undefined' && window.localStorage) {
-      window.localStorage.removeItem(LAYOUT_KEY);
+      localStorage.removeItem('rhsp.pegboard.v3.layout');
     }
   } catch {}
   if (typeof window !== 'undefined') {

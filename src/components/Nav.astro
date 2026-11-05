@@ -26,7 +26,18 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
     <!-- Center: Main Nav Links -->
     <nav class="desktop-nav" aria-label="Main Navigation">
       <ul class="nav-links">
-        <!-- 1. Solutions Dropdown (Non-clickable trigger button) -->
+        <!-- 1. About Us -->
+        <li>
+          <a
+            href="/about"
+            class={`nav-link ${isAboutActive ? 'is-active' : ''}`}
+            aria-current={isAboutActive ? 'page' : undefined}
+          >
+            About Us
+          </a>
+        </li>
+
+        <!-- 2. Solutions Dropdown (Non-clickable trigger button) -->
         <li class="nav-item-dropdown" id="solutions-dropdown-item">
           <button
             type="button"
@@ -48,7 +59,7 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
             aria-label="Solutions Catalog"
             hidden
           >
-            <div class="container solutions-dropdown-inner">
+            <div class="solutions-dropdown-inner">
               <div class="solutions-flat-grid" role="menu">
                 {sortedProducts.map((proj) => {
                   const assetKey = proj.data.image || proj.data.imageKey || `product-${proj.slug}`;
@@ -60,7 +71,7 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
                       data-solution-card
                     >
                       <div class="sol-card-thumb">
-                        <MediaAsset assetKey={assetKey} alt={proj.data.shortTitle || proj.data.title} aspectRatio="16/10" />
+                        <MediaAsset assetKey={assetKey} alt={proj.data.shortTitle || proj.data.title} aspectRatio="16/9" />
                       </div>
                       <div class="sol-card-info">
                         <div class="sol-card-top">
@@ -75,17 +86,6 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
               </div>
             </div>
           </div>
-        </li>
-
-        <!-- 2. About Us -->
-        <li>
-          <a
-            href="/about"
-            class={`nav-link ${isAboutActive ? 'is-active' : ''}`}
-            aria-current={isAboutActive ? 'page' : undefined}
-          >
-            About Us
-          </a>
         </li>
 
         <!-- 3. PEG Board -->
@@ -147,7 +147,22 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
     <div class="mobile-drawer-body">
       <!-- Mobile Navigation Sections -->
       <div class="mobile-nav-sections">
-        <!-- 0. Solutions (Expandable Accordion) -->
+        <!-- 1. About Us -->
+        <div class="mobile-section">
+          <span class="eyebrow">ABOUT US</span>
+          <div class="mobile-links-grid">
+            <a href="/about" class="mobile-nav-link">
+              <strong>About RHSP</strong>
+              <span>Our story &amp; mission</span>
+            </a>
+            <a href="/about#team" class="mobile-nav-link">
+              <strong>Founders &amp; Team</strong>
+              <span>Subramaniam Iyer &amp; Abhishek Bagwe</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- 2. Solutions (Expandable Accordion) -->
         <details class="mobile-section mobile-accordion" open={isSolutionsActive}>
           <summary class="mobile-accordion-summary">
             <span class="eyebrow">SOLUTIONS ({sortedProducts.length})</span>
@@ -164,22 +179,7 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
           </div>
         </details>
 
-        <!-- 1. About Us -->
-        <div class="mobile-section">
-          <span class="eyebrow">ABOUT US</span>
-          <div class="mobile-links-grid">
-            <a href="/about" class="mobile-nav-link">
-              <strong>About RHSP</strong>
-              <span>Our story &amp; mission</span>
-            </a>
-            <a href="/about#team" class="mobile-nav-link">
-              <strong>Founders &amp; Team</strong>
-              <span>Subramaniam Iyer &amp; Abhishek Bagwe</span>
-            </a>
-          </div>
-        </div>
-
-        <!-- 2. PEG Board -->
+        <!-- 3. PEG Board -->
         <div class="mobile-section">
           <span class="eyebrow">PEG BOARD</span>
           <div class="mobile-links-grid">
@@ -190,7 +190,7 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
           </div>
         </div>
 
-        <!-- 3. Contact -->
+        <!-- 4. Contact -->
         <div class="mobile-section">
           <span class="eyebrow">CONTACT</span>
           <div class="mobile-links-grid">
@@ -364,37 +364,42 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
   .solutions-dropdown-panel {
     position: absolute;
     top: calc(100% + 12px);
-    left: -20px;
-    width: 820px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-6px);
+    width: min(840px, calc(100vw - 32px));
+    max-height: calc(100vh - 90px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
     background: var(--color-surface, #ffffff);
     border: 1px solid var(--color-border);
     border-radius: 16px;
     box-shadow: 0 20px 48px -8px rgba(0, 0, 0, 0.16);
     z-index: 1050;
-    padding: 1.5rem;
+    padding: 1rem 1.15rem;
     box-sizing: border-box;
     opacity: 0;
     visibility: hidden;
-    transform: translateY(-6px);
     transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
   }
 
   :global([data-theme="dark"]) .solutions-dropdown-panel {
-    background: #14171d;
-    box-shadow: 0 24px 56px -8px rgba(0, 0, 0, 0.5);
+    background: #0d121c;
+    border-color: rgba(91, 143, 224, 0.22);
+    box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.7);
   }
 
   .solutions-dropdown-panel.is-open {
     opacity: 1;
     visibility: visible;
-    transform: translateY(0);
+    transform: translateX(-50%) translateY(0);
     display: block !important;
   }
 
   .solutions-flat-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
+    gap: 0.75rem;
   }
 
   .solutions-card-link {
@@ -403,7 +408,7 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
     text-decoration: none;
     color: inherit;
     border-radius: 10px;
-    padding: 0.75rem;
+    padding: 0.6rem 0.65rem;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
@@ -417,19 +422,50 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
     outline: none;
   }
 
+  :global([data-theme="dark"]) .solutions-card-link {
+    background: rgba(18, 25, 38, 0.75);
+    border-color: rgba(255, 255, 255, 0.08);
+    color: #F3F5F9;
+  }
+
+  :global([data-theme="dark"]) .solutions-card-link:hover,
+  :global([data-theme="dark"]) .solutions-card-link:focus-visible {
+    background: rgba(24, 34, 52, 0.95);
+    border-color: #F7941D;
+    box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.5), 0 0 16px -2px rgba(247, 148, 29, 0.25);
+  }
+
   .sol-card-thumb {
     width: 100%;
-    aspect-ratio: 16/10;
+    aspect-ratio: 16/9;
+    max-height: 100px;
     border-radius: 6px;
     overflow: hidden;
-    margin-bottom: 0.6rem;
+    margin-bottom: 0.45rem;
     background: var(--color-surface-hover);
+    flex-shrink: 0;
+  }
+
+  :global([data-theme="dark"]) .sol-card-thumb {
+    background: #182234;
+  }
+
+  .sol-card-thumb :global(.media-asset-container) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .sol-card-thumb :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .sol-card-info {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.2rem;
+    flex-grow: 1;
   }
 
   .sol-card-badge {
@@ -447,15 +483,19 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
 
   .sol-card-title {
     font-family: var(--font-heading);
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     font-weight: 700;
     color: var(--color-text-primary);
     margin: 0;
     line-height: 1.25;
   }
 
+  :global([data-theme="dark"]) .sol-card-title {
+    color: #FFFFFF;
+  }
+
   .sol-card-desc {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     line-height: 1.35;
     color: var(--color-text-secondary);
     margin: 0;
@@ -463,6 +503,10 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+
+  :global([data-theme="dark"]) .sol-card-desc {
+    color: #94A3B8;
   }
 
   /* Right Header Actions */
@@ -753,12 +797,30 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
 
     let closeTimer: ReturnType<typeof setTimeout> | null = null;
 
+    function alignDropdown() {
+      if (!panel || !panel.classList.contains('is-open')) return;
+      panel.style.transform = 'translateX(-50%) translateY(0)';
+      const rect = panel.getBoundingClientRect();
+      const pad = 16;
+      const vw = window.innerWidth;
+      let shiftX = 0;
+      if (rect.right > vw - pad) {
+        shiftX = (vw - pad) - rect.right;
+      } else if (rect.left < pad) {
+        shiftX = pad - rect.left;
+      }
+      if (shiftX !== 0) {
+        panel.style.transform = `translateX(calc(-50% + ${Math.round(shiftX)}px)) translateY(0)`;
+      }
+    }
+
     function openDropdown() {
       if (closeTimer) clearTimeout(closeTimer);
       if (!panel || !trigger) return;
       panel.removeAttribute('hidden');
       panel.classList.add('is-open');
       trigger.setAttribute('aria-expanded', 'true');
+      alignDropdown();
     }
 
     function closeDropdown(returnFocus = false) {
@@ -766,6 +828,7 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
       if (!panel || !trigger) return;
       panel.classList.remove('is-open');
       panel.setAttribute('hidden', '');
+      panel.style.transform = '';
       trigger.setAttribute('aria-expanded', 'false');
       if (returnFocus) trigger.focus();
     }
@@ -823,6 +886,9 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
           closeDropdown();
         }
       });
+
+      // Window resize adjusts alignment
+      window.addEventListener('resize', alignDropdown, { passive: true });
     }
 
     // 3. Scroll Progress Indicator & Header Scroll Hide
