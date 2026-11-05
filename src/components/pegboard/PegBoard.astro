@@ -71,6 +71,9 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
       </div>
     </header>
 
+    <!-- Sentinel to detect when sticky bar is stuck -->
+    <div id="board-filter-sentinel" class="board-filter-sentinel" aria-hidden="true"></div>
+
     <!-- Single Sticky Filter Row (Ledge under header, hidden on mobile <640px) -->
     {FEATURES.search && (
       <div class="board-filter-ledge" id="board-filter-bar">
@@ -129,6 +132,12 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
                 <span class="plaque-dot" aria-hidden="true"></span>
                 <span>{zone.label}</span>
               </span>
+              <span class="zone-count-chip">
+                {zoneTiles.length} {zone.id === 'solutions' ? 'solutions' : zone.id === 'resources' ? 'guides' : zone.id === 'case-studies' ? 'case studies' : 'tools'}
+              </span>
+              <span class="zone-reorder-hint" aria-hidden="true">
+                Drag or Alt+arrows to reorder
+              </span>
               <div class="zone-shelf-line" aria-hidden="true"></div>
             </div>
 
@@ -183,20 +192,12 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
     setArrivalVisited,
     hasVisitedArrival
   } from '../../scripts/pegBoardState';
-  import { initPegDrag } from '../../scripts/pegDrag';
+  import { initPegDrag, triggerTileSwing } from '../../scripts/pegDrag';
   import { tiles, FEATURES } from '../../data/pegBoard';
 
   function initPegBoard() {
     const board = document.getElementById('peg-board-panel');
     if (!board) return;
-
-    // Helper: calculate zoom factor k
-    function getZoomK(): number {
-      if (!board) return 1;
-      const rect = board.getBoundingClientRect();
-      const offsetW = board.offsetWidth || 1;
-      return rect.width / offsetW || 1;
-    }
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -325,6 +326,12 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
         const slug = pinBtn.getAttribute('data-pin-btn');
         if (slug) {
           const res = togglePin(slug, 'tile');
+          const tileCard = pinBtn.closest<HTMLElement>('.pb-tile');
+          if (tileCard && res.pinned) {
+            tileCard.classList.add('is-peg-pulsing');
+            setTimeout(() => tileCard.classList.remove('is-peg-pulsing'), 350);
+            triggerTileSwing(tileCard);
+          }
           if (!res.pinned) {
             showUnpinToast(slug);
           }
@@ -425,27 +432,33 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
       });
     });
 
-    // 3. ARRIVAL MOMENT (200ms drop, 40ms stagger per session)
+    // 3. ARRIVAL MOMENT (first viewport only, 160ms drop, 30ms stagger per session)
     if (FEATURES.arrival && !prefersReducedMotion && !hasVisitedArrival()) {
+      const vh = window.innerHeight;
       const allTileWrappers = Array.from(document.querySelectorAll<HTMLElement>('.board-tile-wrapper'));
-      allTileWrappers.forEach((wrapper, index) => {
+      const firstViewportTiles = allTileWrappers.filter((w) => {
+        const r = w.getBoundingClientRect();
+        return r.top < vh + 100;
+      });
+
+      firstViewportTiles.forEach((wrapper, index) => {
         wrapper.style.opacity = '0';
-        wrapper.style.transform = 'translateY(-14px)';
-        wrapper.style.transition = 'transform 200ms cubic-bezier(0.16, 1, 0.3, 1), opacity 200ms ease';
+        wrapper.style.transform = 'translateY(-12px)';
+        wrapper.style.transition = 'transform 160ms cubic-bezier(0.16, 1, 0.3, 1), opacity 160ms ease';
 
         setTimeout(() => {
           wrapper.style.opacity = '1';
           wrapper.style.transform = 'translateY(0)';
-        }, index * 40);
+        }, index * 30);
       });
 
       setTimeout(() => {
-        allTileWrappers.forEach((w) => {
+        firstViewportTiles.forEach((w) => {
           w.style.transform = '';
           w.style.transition = '';
         });
         setArrivalVisited();
-      }, allTileWrappers.length * 40 + 300);
+      }, firstViewportTiles.length * 30 + 200);
     }
 
     // 4. SEARCH & ZONE FILTERING
@@ -542,6 +555,19 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
         });
       }
 
+      // Sticky filter bar sentinel observer (toggles .is-stuck for bottom border & shadow)
+      const sentinel = document.getElementById('board-filter-sentinel');
+      const filterBar = document.getElementById('board-filter-bar');
+      if (sentinel && filterBar && window.IntersectionObserver) {
+        const observer = new IntersectionObserver(
+          ([entry]) => {
+            filterBar.classList.toggle('is-stuck', !entry.isIntersecting);
+          },
+          { threshold: [0] }
+        );
+        observer.observe(sentinel);
+      }
+
       document.querySelectorAll<HTMLButtonElement>('[data-zone-filter]').forEach((chip) => {
         chip.addEventListener('click', () => {
           const zf = chip.getAttribute('data-zone-filter') || 'all';
@@ -549,14 +575,11 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
           syncZoneFilterButtons();
           applyFilters();
 
-          // Scroll to zone plaque and brief highlight
+          // Scroll to zone plaque (lands below sticky bar via scroll-margin-top)
           if (zf !== 'all') {
             const zoneBand = document.getElementById(`zone-band-${zf}`);
             if (zoneBand) {
-              const k = getZoomK();
-              const rect = zoneBand.getBoundingClientRect();
-              const targetY = window.scrollY + rect.top * k - 130;
-              window.scrollTo({ top: targetY, behavior: 'smooth' });
+              zoneBand.scrollIntoView({ block: 'start', behavior: 'smooth' });
 
               const plaque = zoneBand.querySelector('.zone-plaque');
               if (plaque) {
@@ -569,9 +592,14 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
       });
     }
 
-    // 5. MOBILE HORIZONTAL RAILS (<640px) & DOTS
+    // 5. MOBILE HORIZONTAL RAILS (<640px) & DOTS WITH RESIZEOBSERVER
     function initMobileRails() {
       const tracks = document.querySelectorAll<HTMLElement>('.zone-tiles-track');
+      if (window.ResizeObserver) {
+        const ro = new ResizeObserver(() => {});
+        tracks.forEach((track) => ro.observe(track));
+      }
+
       tracks.forEach((track) => {
         const zoneId = track.getAttribute('data-zone-id');
         const dotsContainer = document.querySelector<HTMLElement>(`[data-zone-dots="${zoneId}"]`);
@@ -619,6 +647,80 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
     }
 
     initPegDrag(board);
+
+    // 7. DELEGATED TILT & HOVER OPTIMIZATION (runs on single board listener via rAF)
+    if (window.matchMedia('(hover: hover)').matches) {
+      let hoveredTile: HTMLElement | null = null;
+      let tiltRaf = 0;
+      let mouseX = 0;
+      let mouseY = 0;
+
+      board.addEventListener('pointerleave', () => {
+        if (hoveredTile) {
+          hoveredTile.classList.remove('is-hovered');
+          hoveredTile.style.transform = '';
+          hoveredTile = null;
+        }
+      });
+
+      board.addEventListener('pointermove', (e) => {
+        if (document.documentElement.classList.contains('pb-is-dragging')) return;
+        const target = (e.target as HTMLElement).closest<HTMLElement>('.pb-tile');
+
+        if (hoveredTile && hoveredTile !== target) {
+          hoveredTile.classList.remove('is-hovered');
+          hoveredTile.style.transform = '';
+          hoveredTile = null;
+        }
+
+        if (!target || target.classList.contains('is-dragging')) return;
+
+        if (!hoveredTile) {
+          hoveredTile = target;
+          hoveredTile.classList.add('is-hovered');
+        }
+
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+
+        if (!tiltRaf) {
+          tiltRaf = requestAnimationFrame(() => {
+            tiltRaf = 0;
+            if (!hoveredTile || document.documentElement.classList.contains('pb-is-dragging')) return;
+            const rect = hoveredTile.getBoundingClientRect();
+            const relX = (mouseX - rect.left) / (rect.width || 1);
+            const relY = (mouseY - rect.top) / (rect.height || 1);
+            const tiltY = (relX - 0.5) * 3;
+            const tiltX = (0.5 - relY) * 2.5;
+            hoveredTile.style.transform = `perspective(800px) rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg)`;
+          });
+        }
+      });
+    }
+
+    // 8. DESKTOP DRAG HINT TOAST (shown once on first visit, never on touch)
+    const isDesktopFine = window.matchMedia('(hover: hover) and (pointer: fine) and (min-width: 900px)').matches;
+    if (isDesktopFine && typeof window !== 'undefined' && window.localStorage) {
+      const hintShown = window.localStorage.getItem('rhsp.pegboard.drag-hint-shown');
+      if (!hintShown) {
+        window.localStorage.setItem('rhsp.pegboard.drag-hint-shown', 'true');
+        setTimeout(() => {
+          const toastMsg = document.querySelector<HTMLElement>('#pb-toast .toast-message');
+          const toastBtn = document.getElementById('toast-undo-btn');
+          if (toastEl && toastMsg) {
+            const originalText = toastMsg.textContent;
+            toastMsg.textContent = 'Drag to reorder, Alt+arrows on keyboard';
+            if (toastBtn) toastBtn.style.display = 'none';
+            toastEl.style.display = 'flex';
+            setTimeout(() => {
+              if (toastEl) toastEl.style.display = 'none';
+              if (toastBtn) toastBtn.style.display = '';
+              if (originalText) toastMsg.textContent = originalText;
+            }, 5000);
+          }
+        }, 1200);
+      }
+    }
 
     // Initial UI synchronization
     syncPinsUI();
@@ -952,6 +1054,13 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
     }
   }
 
+  .board-filter-sentinel {
+    height: 1px;
+    margin-top: -1px;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
   .board-zone-band {
     display: flex;
     flex-direction: column;
@@ -962,7 +1071,44 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
   .zone-plaque-row {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+  }
+
+  .zone-count-chip {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    background: var(--pb-accent-wash, rgba(247, 148, 29, 0.12));
+    color: var(--pb-text-2, #55555E);
+    border: 1px solid var(--pb-tile-line, rgba(20, 20, 24, 0.1));
+    white-space: nowrap;
+  }
+
+  .zone-reorder-hint {
+    display: none;
+    font-size: 11px;
+    color: var(--pb-text-3, #8C96A5);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  @media (hover: hover) and (pointer: fine) and (min-width: 900px) {
+    .zone-reorder-hint {
+      display: inline-block;
+    }
+  }
+
+  :root[data-theme="dark"] .zone-count-chip,
+  :root:not([data-theme="light"]) .zone-count-chip {
+    color: #C9C1B6;
+    background: rgba(247, 148, 29, 0.10);
+    border-color: rgba(247, 148, 29, 0.25);
+  }
+
+  :global(.pb-tile.is-hovered) {
+    will-change: transform;
   }
 
   .zone-plaque {

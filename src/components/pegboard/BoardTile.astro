@@ -8,6 +8,7 @@ interface Props {
 }
 
 const { tile } = Astro.props;
+const isPlayground = tile.zoneId === 'playground';
 const tileTooltip = tile.quickTake
   ? `${tile.title}: ${tile.quickTake}`
   : `${tile.title}: ${tile.description}`;
@@ -17,7 +18,10 @@ const tileAriaLabel = tile.quickTake
 ---
 
 <article
-  class="pb-tile board-tile-card board-tile-wrapper"
+  class:list={[
+    'pb-tile board-tile-card board-tile-wrapper',
+    { 'pb-tile--playground': isPlayground }
+  ]}
   data-id={tile.slug}
   data-tile-slug={tile.slug}
   data-zone={tile.zoneId}
@@ -26,6 +30,9 @@ const tileAriaLabel = tile.quickTake
   tabindex="0"
   style={`view-transition-name: tile-${tile.slug};`}
 >
+  <!-- Pre-rendered glow layer (opacity animated for 60fps) -->
+  <div class="tile-glow-layer" aria-hidden="true"></div>
+
   <!-- Start here pointer badge when recommended by Finder -->
   <span class="peg-start-ribbon" data-start-ribbon aria-hidden="true">Start here</span>
 
@@ -36,6 +43,7 @@ const tileAriaLabel = tile.quickTake
     data-action={tile.action}
     title={tileTooltip}
     aria-label={tileAriaLabel}
+    aria-describedby={tile.quickTake ? `qt-${tile.slug}` : undefined}
     draggable="false"
   >
     <div class="tile-header-row">
@@ -47,6 +55,11 @@ const tileAriaLabel = tile.quickTake
     <div class="tile-body">
       <h3 class="tile-title pb-title">{tile.title}</h3>
       <p class="tile-description">{tile.description}</p>
+      {tile.quickTake && (
+        <span id={`qt-${tile.slug}`} class="sr-only">
+          {tile.quickTake}
+        </span>
+      )}
     </div>
 
     <div class="tile-footer-row">
@@ -54,7 +67,7 @@ const tileAriaLabel = tile.quickTake
         class={`tile-tag ${tile.tag === 'Coming soon' ? 'tile-tag--soon' : ''}`}
         data-tile-tag
       >
-        {tile.tag}
+        {isPlayground ? 'Try it' : tile.tag}
       </span>
     </div>
   </a>
@@ -77,20 +90,38 @@ const tileAriaLabel = tile.quickTake
   .pb-tile {
     background: var(--pb-tile);
     border: 1px solid var(--pb-tile-line);
-    box-shadow: var(--pb-shadow);
     color: var(--pb-text);
     border-radius: 16px;
     position: relative;
     width: 100%;
-    min-height: 148px;
+    min-height: 168px;
     transform-origin: 50% -22px;
     display: flex;
     flex-direction: column;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.25s ease, opacity 0.25s ease;
+    transition: border-color 0.2s ease, transform 0.25s ease, opacity 0.25s ease;
     z-index: 2;
     user-select: none;
     -webkit-user-select: none;
     outline: none;
+  }
+
+  /* Pre-rendered glow layer */
+  .tile-glow-layer {
+    position: absolute;
+    inset: -1px;
+    border-radius: 16px;
+    box-shadow: 0 0 26px -6px var(--pb-glow, rgba(247, 148, 29, 0.45));
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: -1;
+  }
+
+  .pb-tile:hover:not(.is-dragging) .tile-glow-layer,
+  .pb-tile.is-hovered:not(.is-dragging) .tile-glow-layer,
+  .pb-tile[data-pinned="true"] .tile-glow-layer,
+  .pb-tile.is-pinned .tile-glow-layer {
+    opacity: 1;
   }
 
   .pb-tile:focus-visible {
@@ -98,7 +129,7 @@ const tileAriaLabel = tile.quickTake
     outline-offset: 3px;
   }
 
-  /* Cord: 1.5px wide, 22px long */
+  /* Cord: 1.5px wide, 22px long, stretches to 26px on hover */
   .pb-tile::before {
     content: "";
     position: absolute;
@@ -108,7 +139,14 @@ const tileAriaLabel = tile.quickTake
     height: 22px;
     background: var(--pb-cord);
     transform: translateX(-50%);
+    transform-origin: top center;
+    transition: transform 0.25s ease;
     pointer-events: none;
+  }
+
+  .pb-tile:hover:not(.is-dragging)::before,
+  .pb-tile.is-hovered:not(.is-dragging)::before {
+    transform: translateX(-50%) scaleY(1.18);
   }
 
   /* Orange Peg: 10px circular peg sitting in the hole */
@@ -125,6 +163,17 @@ const tileAriaLabel = tile.quickTake
     box-shadow: 0 0 12px var(--pb-glow);
     pointer-events: none;
     transition: box-shadow 0.25s ease, background-color 0.25s ease;
+  }
+
+  /* Peg click pulse on pin */
+  @keyframes pegClickPulse {
+    0% { transform: translateX(-50%) scale(1); }
+    50% { transform: translateX(-50%) scale(1.4); }
+    100% { transform: translateX(-50%) scale(1); }
+  }
+
+  .pb-tile.is-peg-pulsing::after {
+    animation: pegClickPulse 0.35s ease-out;
   }
 
   /* Start here ribbon placed above peg */
@@ -176,23 +225,6 @@ const tileAriaLabel = tile.quickTake
     }
   }
 
-  /* Hover swing ±2deg once (when not dragging) */
-  @keyframes tileHangingSwing {
-    0% { transform: rotate(0deg); }
-    25% { transform: rotate(-2deg); }
-    60% { transform: rotate(2deg); }
-    85% { transform: rotate(-0.8deg); }
-    100% { transform: rotate(0deg); }
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    .pb-tile:hover:not(.is-dragging),
-    .pb-tile:focus-within:not(.is-dragging) {
-      animation: tileHangingSwing 0.7s ease-in-out 1;
-      border-color: var(--pb-peg);
-    }
-  }
-
   /* Pinned peg state: solid orange with stronger glow */
   .pb-tile[data-pinned="true"]::after,
   .pb-tile[aria-pressed="true"]::after,
@@ -203,7 +235,6 @@ const tileAriaLabel = tile.quickTake
   .pb-tile[data-pinned="true"],
   .pb-tile.is-pinned {
     border-color: var(--pb-peg);
-    box-shadow: 0 0 0 1px var(--pb-peg), var(--pb-shadow);
   }
 
   /* Explored peg state: peg ring */
@@ -212,7 +243,7 @@ const tileAriaLabel = tile.quickTake
     box-shadow: 0 0 0 2px var(--pb-board), 0 0 0 4px var(--pb-peg), 0 0 12px var(--pb-glow);
   }
 
-  /* Hit link */
+  /* Hit link covers whole tile for keyboard focus */
   .tile-hit-link {
     display: flex;
     flex-direction: column;
@@ -223,11 +254,20 @@ const tileAriaLabel = tile.quickTake
     outline: none;
     border-radius: 15px;
     cursor: pointer;
+    position: relative;
   }
 
-  .tile-hit-link:focus-visible {
+  .tile-hit-link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    z-index: 1;
+  }
+
+  .tile-hit-link:focus-visible::after {
     outline: 2px solid var(--pb-focus-ring, var(--pb-peg));
-    outline-offset: -2px;
+    outline-offset: 2px;
   }
 
   .tile-header-row {
@@ -267,11 +307,11 @@ const tileAriaLabel = tile.quickTake
 
   .tile-description {
     font-size: 0.8125rem;
-    line-height: 1.4;
+    line-height: 1.45;
     color: var(--pb-text-2, #55555E);
     margin: 0;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
