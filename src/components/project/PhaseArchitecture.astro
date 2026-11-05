@@ -440,10 +440,6 @@ const isVernacularPage = !!architectureData?.guardRails?.length;
     box-sizing: border-box;
   }
 
-  :global(.dark) .project-chapter-section {
-    background-color: var(--color-surface-raised);
-  }
-
   .project-chapter-section::before {
     content: "";
     position: absolute;
@@ -453,10 +449,6 @@ const isVernacularPage = !!architectureData?.guardRails?.length;
     height: 4px;
     background-color: #1E4B8F;
     z-index: 2;
-  }
-
-  :global(.dark) .project-chapter-section::before {
-    background-color: #5B8FE0;
   }
 
   @media (max-width: 768px) {
@@ -694,12 +686,6 @@ const isVernacularPage = !!architectureData?.guardRails?.length;
     font-weight: 600;
   }
 
-  :global(.dark) .admin-chip {
-    background-color: rgba(247, 148, 29, 0.12);
-    border-color: rgba(247, 148, 29, 0.3);
-    color: #F7941D;
-  }
-
   .volume-bullets-list,
   .guard-rails-list,
   .arch-bullets-list {
@@ -813,10 +799,6 @@ const isVernacularPage = !!architectureData?.guardRails?.length;
     color: #1E4B8F;
   }
 
-  :global(.dark) .sheet-salutation {
-    color: #60a5fa;
-  }
-
   .sheet-body-text {
     font-size: 1.05rem;
     line-height: 1.8;
@@ -836,12 +818,6 @@ const isVernacularPage = !!architectureData?.guardRails?.length;
     background-color: rgba(30, 75, 143, 0.12);
     color: #1E4B8F;
     border: 1px solid rgba(30, 75, 143, 0.25);
-  }
-
-  :global(.dark) :global(.tok-blue) {
-    background-color: rgba(96, 165, 250, 0.15);
-    color: #60a5fa;
-    border-color: rgba(96, 165, 250, 0.3);
   }
 
   :global(.tok-orange) {
@@ -971,12 +947,6 @@ const isVernacularPage = !!architectureData?.guardRails?.length;
     background-color: rgba(30, 75, 143, 0.08);
     border: 1px solid rgba(30, 75, 143, 0.2);
     color: #1E4B8F;
-  }
-
-  :global(.dark) .tech-chip {
-    background-color: rgba(96, 165, 250, 0.12);
-    border-color: rgba(96, 165, 250, 0.3);
-    color: #60a5fa;
   }
 
   .stage-media-wrapper {

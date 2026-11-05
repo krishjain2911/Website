@@ -211,10 +211,6 @@ const primaryMedia = rolloutData?.media && rolloutData.media.length > 0 ? rollou
     box-sizing: border-box;
   }
 
-  :global(.dark) .project-chapter-section {
-    background-color: var(--color-surface-raised);
-  }
-
   .project-chapter-section::before {
     content: "";
     position: absolute;
@@ -224,10 +220,6 @@ const primaryMedia = rolloutData?.media && rolloutData.media.length > 0 ? rollou
     height: 4px;
     background-color: #1E4B8F;
     z-index: 2;
-  }
-
-  :global(.dark) .project-chapter-section::before {
-    background-color: #5B8FE0;
   }
 
   @media (max-width: 768px) {

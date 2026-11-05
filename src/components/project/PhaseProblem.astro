@@ -182,10 +182,6 @@ const primaryMedia = problemData?.media && problemData.media.length > 0 ? proble
     box-sizing: border-box;
   }
 
-  :global(.dark) .project-chapter-section {
-    background-color: var(--color-surface-raised);
-  }
-
   .project-chapter-section::before {
     content: "";
     position: absolute;
@@ -195,10 +191,6 @@ const primaryMedia = problemData?.media && problemData.media.length > 0 ? proble
     height: 4px;
     background-color: #1E4B8F;
     z-index: 2;
-  }
-
-  :global(.dark) .project-chapter-section::before {
-    background-color: #5B8FE0;
   }
 
   @media (max-width: 768px) {
@@ -365,12 +357,6 @@ const primaryMedia = problemData?.media && problemData.media.length > 0 ? proble
     border-color: rgba(30, 75, 143, 0.25);
     color: #1E4B8F;
     font-weight: 600;
-  }
-
-  :global(.dark) .lang-chip {
-    background-color: rgba(96, 165, 250, 0.12);
-    border-color: rgba(96, 165, 250, 0.3);
-    color: #60a5fa;
   }
 
   .problem-process-block {

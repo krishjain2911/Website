@@ -109,12 +109,6 @@ const { stages = DEFAULT_STAGES, mobileOnly = false, desktopOnly = false } = Ast
     box-shadow: 0 0 0 4px rgba(30, 75, 143, 0.22);
   }
 
-  :global(.dark) .is-active .node-marker {
-    background-color: #3b82f6;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
-  }
-
   /* Passed: Circle turns into a filled orange SQUARE (the peg has entered the hole) */
   .is-passed .node-marker {
     background-color: #F7941D;
@@ -135,11 +129,6 @@ const { stages = DEFAULT_STAGES, mobileOnly = false, desktopOnly = false } = Ast
     padding: 0.6rem 1rem;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
     display: block;
-  }
-
-  :global(.dark) .stage-rail-mobile {
-    background-color: var(--color-surface-raised, #0f172a);
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
   }
 
   .mobile-rail-inner {
@@ -220,12 +209,6 @@ const { stages = DEFAULT_STAGES, mobileOnly = false, desktopOnly = false } = Ast
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
     }
 
-    :global(.dark) .desktop-rail-card {
-      background-color: var(--color-surface-raised, #0f172a);
-      border-color: var(--color-border, #1e293b);
-      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
-    }
-
     .rail-header-title {
       font-size: 0.72rem;
       font-weight: 700;
@@ -254,10 +237,6 @@ const { stages = DEFAULT_STAGES, mobileOnly = false, desktopOnly = false } = Ast
       width: 2px;
       background-color: var(--color-border, #e2e8f0);
       z-index: 0;
-    }
-
-    :global(.dark) .rail-nodes-list::before {
-      background-color: var(--color-border, #1e293b);
     }
 
     .stage-node-link {
@@ -310,16 +289,8 @@ const { stages = DEFAULT_STAGES, mobileOnly = false, desktopOnly = false } = Ast
       transition: color 0.2s ease;
     }
 
-    :global(.dark) .stage-step-title {
-      color: #94a3b8;
-    }
-
     .stage-node-link:hover .stage-step-title {
       color: var(--color-text-primary, #0f172a);
-    }
-
-    :global(.dark) .stage-node-link:hover .stage-step-title {
-      color: #f8fafc;
     }
 
     /* Active chapter glow on StageRail (mirrors approach journey) */
@@ -327,12 +298,6 @@ const { stages = DEFAULT_STAGES, mobileOnly = false, desktopOnly = false } = Ast
       background-color: rgba(30, 75, 143, 0.05);
       box-shadow: 0 0 0 1px rgba(30, 75, 143, 0.25), 0 4px 16px rgba(30, 75, 143, 0.15);
       animation: railActivePulse 3s ease-in-out infinite alternate;
-    }
-
-    :global(.dark) .stage-node-link.is-active {
-      background-color: rgba(59, 130, 246, 0.1);
-      box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.35), 0 6px 20px rgba(59, 130, 246, 0.2);
-      animation: railActivePulseDark 3s ease-in-out infinite alternate;
     }
 
     @keyframes railActivePulse {
@@ -343,11 +308,6 @@ const { stages = DEFAULT_STAGES, mobileOnly = false, desktopOnly = false } = Ast
         box-shadow: 0 0 0 1.5px rgba(30, 75, 143, 0.35), 0 6px 22px rgba(30, 75, 143, 0.22);
       }
     }
-
-    @keyframes railActivePulseDark {
-      0% {
-        box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.25), 0 4px 16px rgba(59, 130, 246, 0.15);
-      }
       100% {
         box-shadow: 0 0 0 1.5px rgba(59, 130, 246, 0.45), 0 8px 24px rgba(59, 130, 246, 0.25);
       }
@@ -359,17 +319,9 @@ const { stages = DEFAULT_STAGES, mobileOnly = false, desktopOnly = false } = Ast
       font-weight: 700;
     }
 
-    :global(.dark) .stage-node-link.is-active .stage-step-num {
-      color: #60a5fa;
-    }
-
     .stage-node-link.is-active .stage-step-title {
       color: var(--color-text-primary, #0f172a);
       font-weight: 700;
-    }
-
-    :global(.dark) .stage-node-link.is-active .stage-step-title {
-      color: #f8fafc;
     }
 
     /* Passed styling */

@@ -1,4 +1,5 @@
 ---
+import '../../styles/solution-dark.css';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
@@ -63,26 +64,38 @@ const pageDescription: string = (p.seoDescription as string | undefined) || p.on
   <Nav />
 
   <main id="main-content" tabindex="-1">
-    <!-- Top Adjacent Solutions Navigation directly under header, spanning container -->
-    <div class="solution-nav-wrapper">
-      <nav class="solution-top-nav container" aria-label="Adjacent solutions">
-        <a href={`/solutions/${prevProduct.slug}`} class="solution-nav-btn prev-btn">
-          <Icon name="arrow-left" size={16} class="nav-arrow" />
-          <div class="nav-text-col">
-            <span class="nav-label">Previous solution</span>
-            <span class="nav-sub">{prevProduct.data.shortTitle || prevProduct.data.title}</span>
-          </div>
+    <!-- Adjacent Solutions Floating Sticky Navigation (Sticky throughout entire scroll, docked near page ends) -->
+    <aside class="solution-nav-wrapper" aria-label="Adjacent solutions navigation">
+      <nav class="solution-adjacent-nav" aria-label="Adjacent solutions">
+        <a
+          href={`/solutions/${prevProduct.slug}`}
+          class="solution-nav-btn prev-btn"
+          title={`Previous solution: ${prevProduct.data.shortTitle || prevProduct.data.title}`}
+          aria-label={`Previous solution: ${prevProduct.data.shortTitle || prevProduct.data.title}`}
+        >
+          <span class="nav-arrow-wrap" aria-hidden="true">
+            <Icon name="arrow-left" size={13} class="nav-arrow" />
+          </span>
+          <span class="nav-prefix">Prev</span>
+          <span class="nav-sep" aria-hidden="true">/</span>
+          <span class="nav-title">{prevProduct.data.shortTitle || prevProduct.data.title}</span>
         </a>
 
-        <a href={`/solutions/${nextProduct.slug}`} class="solution-nav-btn next-btn">
-          <div class="nav-text-col align-right">
-            <span class="nav-label">Next solution</span>
-            <span class="nav-sub">{nextProduct.data.shortTitle || nextProduct.data.title}</span>
-          </div>
-          <Icon name="arrow-right" size={16} class="nav-arrow" />
+        <a
+          href={`/solutions/${nextProduct.slug}`}
+          class="solution-nav-btn next-btn"
+          title={`Next solution: ${nextProduct.data.shortTitle || nextProduct.data.title}`}
+          aria-label={`Next solution: ${nextProduct.data.shortTitle || nextProduct.data.title}`}
+        >
+          <span class="nav-title">{nextProduct.data.shortTitle || nextProduct.data.title}</span>
+          <span class="nav-sep" aria-hidden="true">/</span>
+          <span class="nav-prefix">Next</span>
+          <span class="nav-arrow-wrap" aria-hidden="true">
+            <Icon name="arrow-right" size={13} class="nav-arrow" />
+          </span>
         </a>
       </nav>
-    </div>
+    </aside>
 
     <!-- 1. Hero Section with Media Frame, Hero Facts, and Flow Strip -->
     <ProjectHero product={product} />
@@ -139,124 +152,172 @@ const pageDescription: string = (p.seoDescription as string | undefined) || p.on
 </BaseLayout>
 
 <style>
-  /* Solution Top Navigation */
+  /* Adjacent Solutions Floating Sticky Navigation (docked near bottom/ends of page) */
   .solution-nav-wrapper {
+    position: fixed;
+    bottom: clamp(1rem, 2.5vw, 1.75rem);
+    left: 0;
+    right: 0;
+    z-index: 85;
+    pointer-events: none;
+    display: flex;
+    justify-content: center;
+  }
+
+  .solution-adjacent-nav {
     width: 100%;
-    border-bottom: 1px solid var(--color-border);
-    background-color: var(--color-bg);
-  }
-
-  :global(.dark) .solution-nav-wrapper {
-    background-color: var(--color-surface);
-  }
-
-  .solution-top-nav {
+    padding: 0 clamp(1rem, 3vw, 2.5rem);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1rem;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-    width: 100%;
     box-sizing: border-box;
+    pointer-events: none;
   }
 
   .solution-nav-btn {
+    pointer-events: auto;
     display: inline-flex;
     align-items: center;
-    gap: 0.65rem;
-    padding: 10px 16px;
+    gap: 0.45rem;
+    height: 36px;
+    padding: 0 14px;
     border: 1px solid var(--color-border);
-    border-radius: 999px;
-    background: var(--color-surface);
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
     color: var(--color-text-primary);
     text-decoration: none;
-    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
-    max-width: 48%;
-    min-width: 0;
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    max-width: clamp(150px, 28vw, 240px);
     box-sizing: border-box;
   }
 
+  .solution-nav-btn.prev-btn {
+    padding-left: 10px;
+  }
+
+  .solution-nav-btn.next-btn {
+    padding-right: 10px;
+  }
+
   .solution-nav-btn:hover {
-    background-color: rgba(30, 75, 143, 0.08);
-    border-color: rgba(30, 75, 143, 0.35);
-    color: #1E4B8F;
-    transform: translateY(-1px);
+    background: rgba(255, 255, 255, 0.98);
+    border-color: rgba(247, 148, 29, 0.55);
+    box-shadow: 0 6px 20px -4px rgba(247, 148, 29, 0.25), 0 2px 6px rgba(0, 0, 0, 0.06);
+    color: #141413;
   }
 
-  :global(.dark) .solution-nav-btn {
-    background: var(--color-surface-raised);
+  .solution-nav-btn.prev-btn:hover {
+    transform: translateX(-3px);
   }
 
-  :global(.dark) .solution-nav-btn:hover {
-    background-color: rgba(91, 143, 224, 0.14);
-    border-color: rgba(91, 143, 224, 0.45);
-    color: #5B8FE0;
+  .solution-nav-btn.next-btn:hover {
+    transform: translateX(3px);
   }
 
   .solution-nav-btn:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px #F7941D;
+    box-shadow: 0 0 0 2px #F7941D, 0 4px 16px rgba(247, 148, 29, 0.3);
   }
 
-  .nav-arrow {
-    flex-shrink: 0;
-    color: currentColor;
-  }
-
-  .nav-text-col {
+  .nav-arrow-wrap {
     display: flex;
-    flex-direction: column;
-    min-width: 0;
-    overflow: hidden;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: rgba(30, 75, 143, 0.08);
+    color: #1E4B8F;
+    flex-shrink: 0;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
   }
 
-  .nav-text-col.align-right {
-    align-items: flex-end;
-    text-align: right;
+  .solution-nav-btn:hover .nav-arrow-wrap {
+    background-color: rgba(247, 148, 29, 0.15);
+    color: #F7941D;
   }
 
-  .nav-label {
-    font-size: 11.5px;
+  .nav-prefix {
+    font-size: 10.5px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    line-height: 1.2;
-    white-space: nowrap;
+    color: #1E4B8F;
+    flex-shrink: 0;
+    line-height: 1;
+    transition: color 0.2s ease;
   }
 
-  .nav-sub {
+  .solution-nav-btn:hover .nav-prefix {
+    color: #F7941D;
+  }
+
+  .nav-sep {
+    font-size: 10px;
+    color: var(--color-border-hover, #94a3b8);
+    flex-shrink: 0;
+    line-height: 1;
+    opacity: 0.7;
+  }
+
+  .nav-title {
     font-size: 11.5px;
-    color: var(--color-text-muted);
-    line-height: 1.2;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    line-height: 1;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 100%;
   }
 
-  @media (max-width: 600px) {
-    .solution-top-nav {
-      gap: 0.5rem;
-      padding-top: 0.75rem;
-      padding-bottom: 0.75rem;
+  @media (max-width: 640px) {
+    .solution-adjacent-nav {
+      padding: 0 0.85rem;
     }
     .solution-nav-btn {
-      padding: 8px 12px;
-      gap: 0.4rem;
+      height: 33px;
+      padding: 0 10px;
+      gap: 0.35rem;
+      max-width: 145px;
     }
-    .nav-label {
-      font-size: 10px;
+    .solution-nav-btn.prev-btn {
+      padding-left: 8px;
     }
-    .nav-sub {
-      font-size: 10px;
-      max-width: 110px;
+    .solution-nav-btn.next-btn {
+      padding-right: 8px;
+    }
+    .nav-prefix, .nav-sep {
+      display: none;
+    }
+    .nav-title {
+      font-size: 11px;
+    }
+    .nav-arrow-wrap {
+      width: 18px;
+      height: 18px;
     }
   }
 
-  /* 6-Stage Journey Layout: Full container width, 24px gap */
+  @media (prefers-reduced-motion: reduce) {
+    .solution-nav-btn {
+      transition: none !important;
+      transform: none !important;
+    }
+  }
+
+  /* 6-Stage Journey Layout: Narrowed by 10% (1116px = 1240 x 0.9) */
+  :global(.project-hero-container.container),
+  .project-journey-container.container {
+    --solution-max: 1116px; /* 1240 x 0.9 */
+    max-width: var(--solution-max);
+  }
+
   .project-journey-container {
-    max-width: var(--max-w-content);
+    --solution-max: 1116px; /* 1240 x 0.9 */
+    max-width: var(--solution-max);
     margin: 0 auto;
     position: relative;
     padding-top: clamp(2rem, 4vw, 3rem);
