@@ -20,11 +20,13 @@ const {
   class: className = ''
 } = Astro.props;
 
-const mp4Path = path.resolve(`public/images/solutions/${slug}/loops/${name}.mp4`);
-const gifPath = path.resolve(`public/images/solutions/${slug}/loops/${name}.gif`);
-const webpPath = path.resolve(`public/images/solutions/${slug}/loops/${name}.webp`);
-
-const hasMp4 = fs.existsSync(mp4Path);
+const base = `public/images/solutions/${slug}/loops/${name}`;
+const hasMp4 = fs.existsSync(path.resolve(`${base}.mp4`));
+const hasWebm = fs.existsSync(path.resolve(`${base}.webm`));
+const hasPoster = fs.existsSync(path.resolve(`${base}.jpg`));
+const url = `/images/solutions/${slug}/loops/${name}`;
+const gifPath = path.resolve(`${base}.gif`);
+const webpPath = path.resolve(`${base}.webp`);
 const hasGif = fs.existsSync(gifPath);
 const hasWebp = fs.existsSync(webpPath);
 ---
@@ -39,10 +41,23 @@ const hasWebp = fs.existsSync(webpPath);
         muted
         playsinline
         preload="metadata"
-        title={alt}
+        disablepictureinpicture
+        disableRemotePlayback
+        aria-label={alt}
+        poster={hasPoster ? `${url}.jpg` : undefined}
       >
-        <source src={`/images/solutions/${slug}/loops/${name}.mp4`} type="video/mp4" />
+        {hasWebm && <source src={`${url}.webm`} type="video/webm" />}
+        <source src={`${url}.mp4`} type="video/mp4" />
       </video>
+      <button
+        type="button"
+        class="media-loop-toggle js-loop-toggle"
+        aria-label="Pause animation"
+        aria-pressed="false"
+      >
+        <svg class="icon-pause" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+        <svg class="icon-play" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+      </button>
     </div>
   ) : hasGif || hasWebp ? (
     <div class="media-loop-wrapper" style={`aspect-ratio: ${aspectRatio};`}>
@@ -70,43 +85,29 @@ const hasWebp = fs.existsSync(webpPath);
 </figure>
 
 <script>
-  // Pause video when off screen or when user prefers reduced motion
   function initMediaLoops() {
-    const videos = document.querySelectorAll<HTMLVideoElement>('.js-media-loop');
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    if (prefersReducedMotion) {
-      videos.forEach((video) => {
-        video.pause();
-        video.currentTime = 0;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const io = 'IntersectionObserver' in window
+      ? new IntersectionObserver((entries) => entries.forEach((e) => {
+          const v = e.target as HTMLVideoElement;
+          if (v.dataset.userPaused === '1' || reduce) return;
+          e.isIntersecting ? v.play().catch(() => {}) : v.pause();
+        }), { threshold: 0.25 })
+      : null;
+    document.querySelectorAll<HTMLVideoElement>('.js-media-loop:not([data-loop-init])').forEach((v) => {
+      v.dataset.loopInit = '1'; v.muted = true; v.defaultMuted = true;
+      const btn = v.parentElement?.querySelector<HTMLButtonElement>('.js-loop-toggle');
+      const sync = () => { const paused = v.paused; btn?.setAttribute('aria-pressed', String(paused));
+        btn?.setAttribute('aria-label', paused ? 'Play animation' : 'Pause animation'); btn?.classList.toggle('is-paused', paused); };
+      if (reduce) { v.pause(); v.currentTime = 0; v.dataset.userPaused = '1'; }
+      v.addEventListener('play', sync); v.addEventListener('pause', sync); sync();
+      btn?.addEventListener('click', () => {
+        if (v.paused) { v.dataset.userPaused = '0'; v.play().catch(() => {}); } else { v.dataset.userPaused = '1'; v.pause(); }
       });
-      return;
-    }
-
-    if (!('IntersectionObserver' in window)) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const video = entry.target as HTMLVideoElement;
-          if (entry.isIntersecting) {
-            video.play().catch(() => {});
-          } else {
-            video.pause();
-          }
-        });
-      },
-      { threshold: 0.25 }
-    );
-
-    videos.forEach((video) => observer.observe(video));
+      io?.observe(v);
+    });
   }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initMediaLoops);
-  } else {
-    initMediaLoops();
-  }
+  document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', initMediaLoops) : initMediaLoops();
   document.addEventListener('astro:page-load', initMediaLoops);
 </script>
 
@@ -120,6 +121,7 @@ const hasWebp = fs.existsSync(webpPath);
   }
 
   .media-loop-wrapper {
+    position: relative;
     width: 100%;
     border-radius: 12px;
     border: 1px solid var(--color-border);
@@ -128,12 +130,71 @@ const hasWebp = fs.existsSync(webpPath);
     background: var(--color-surface);
   }
 
-  .media-loop-video,
+  .media-loop-toggle {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 0;
+    display: grid;
+    place-items: center;
+    background: rgba(10, 12, 18, 0.62);
+    color: #fff;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    backdrop-filter: blur(4px);
+    z-index: 2;
+  }
+
+  .media-loop-wrapper:hover .media-loop-toggle,
+  .media-loop-toggle:focus-visible,
+  .media-loop-toggle.is-paused {
+    opacity: 1;
+  }
+
+  @media (hover: none) {
+    .media-loop-toggle {
+      opacity: 0.85;
+    }
+  }
+
+  .media-loop-toggle .icon-play {
+    display: none;
+  }
+
+  .media-loop-toggle.is-paused .icon-play {
+    display: block;
+  }
+
+  .media-loop-toggle.is-paused .icon-pause {
+    display: none;
+  }
+
+  .media-loop-toggle:focus-visible {
+    outline: 2px solid #F7941D;
+    outline-offset: 2px;
+  }
+
+  .media-loop-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
   .media-loop-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
+  }
+
+  :global(.is-portrait) .media-loop-wrapper {
+    max-width: 360px;
+    margin-inline: auto;
   }
 
   .media-loop-placeholder {

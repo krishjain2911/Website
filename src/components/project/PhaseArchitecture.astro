@@ -236,11 +236,12 @@ const isVernacularPage = !!architectureData?.guardRails?.length;
           />
         </div>
         {stage3.loop && (
-          <div class="stage3-media-item">
+          <div class="stage3-media-item" style={slug === 'sonakshi' ? 'order:-1' : undefined}>
             <MediaLoop
               slug={slug || ''}
               name={stage3.loop.name}
               caption={stage3.loop.caption}
+              aspectRatio="1280 / 720"
             />
           </div>
         )}

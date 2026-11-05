@@ -93,6 +93,51 @@ const isVernacularStage = tagline === 'Every request, accounted for.';
           <li>{res}</li>
         ))}
       </ul>
+
+      {slug === 'sonakshi' && (
+        <>
+          <div class="sonakshi-admin-rows card-mastercard" style="margin-top: 1.5rem;">
+            <div class="admin-rows-list">
+              <div class="admin-upload-row">
+                <div class="admin-row-meta">
+                  <h3 class="admin-row-label">Excel master price list</h3>
+                  <p class="admin-row-desc">Upload pricing, model numbers, categories, and custom specs (.xlsx, .xls)</p>
+                </div>
+                <button type="button" class="btn btn-secondary admin-upload-btn" disabled>
+                  <span>Upload Excel</span>
+                </button>
+              </div>
+              <div class="admin-upload-row">
+                <div class="admin-row-meta">
+                  <h3 class="admin-row-label">PDF product brochures</h3>
+                  <p class="admin-row-desc">Extract deep specifications, dimensions, features, and energy ratings via Gemini (up to 100 MB, .pdf)</p>
+                </div>
+                <button type="button" class="btn btn-secondary admin-upload-btn" disabled>
+                  <span>Upload PDF</span>
+                </button>
+              </div>
+              <div class="admin-upload-row">
+                <div class="admin-row-meta">
+                  <h3 class="admin-row-label">Catalogue page screenshots</h3>
+                  <p class="admin-row-desc">Drag-and-drop, browse, or press Ctrl+V to paste full-page screenshots (PNG, JPEG, WebP, max 20)</p>
+                </div>
+                <button type="button" class="btn btn-secondary admin-upload-btn" disabled>
+                  <span>Upload images</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 1.5rem;">
+            <MediaLoop
+              slug="sonakshi"
+              name="sonakshi-admin-upload"
+              caption="Upload a brand catalogue PDF from the admin panel."
+              aspectRatio="1280 / 720"
+            />
+          </div>
+        </>
+      )}
     </div>
   ) : !hasContent ? (
     <StageComingSoon stageNumber="06" stageTitle="Enable and monitor" color="#EE4B2B" />
@@ -273,7 +318,8 @@ const isVernacularStage = tagline === 'Every request, accounted for.';
           <MediaLoop
             slug="sonakshi"
             name="sonakshi-admin-upload"
-            caption="Upload a price sheet and a catalogue from the admin panel."
+            caption="Upload a brand catalogue PDF from the admin panel."
+            aspectRatio="1280 / 720"
           />
         </div>
       )}

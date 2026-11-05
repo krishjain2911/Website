@@ -176,26 +176,26 @@ export const zones: BoardZone[] = [
   {
     id: 'solutions',
     label: 'Solutions',
-    accentColor: '#EE4B2B', // red-orange
-    accentClass: 'zone-red'
+    accentColor: '#F7941D', // orange
+    accentClass: 'zone-orange'
   },
   {
     id: 'case-studies',
     label: 'Case studies',
-    accentColor: '#F7941D', // orange
-    accentClass: 'zone-orange'
+    accentColor: '#1E4B8F', // blue (lightened to #5B8FE0 in dark mode)
+    accentClass: 'zone-blue'
   },
   {
     id: 'resources',
     label: 'Resources',
-    accentColor: '#1E4B8F', // blue
-    accentClass: 'zone-blue'
+    accentColor: '#F7941D', // orange
+    accentClass: 'zone-orange'
   },
   {
     id: 'playground',
     label: 'Playground',
-    accentColor: '#F7941D', // orange
-    accentClass: 'zone-orange'
+    accentColor: '#1E4B8F', // blue (lightened to #5B8FE0 in dark mode)
+    accentClass: 'zone-blue'
   }
 ];
 

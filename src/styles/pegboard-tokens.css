@@ -12,6 +12,7 @@
   --pb-peg: #F7941D;
   --pb-cord: rgba(20, 20, 24, 0.28);
   --pb-shadow: 0 10px 24px -12px rgba(20, 20, 24, 0.28);
+  --pb-shadow-hover: 0 14px 30px -10px rgba(20, 20, 24, 0.22);
   --pb-glow: rgba(247, 148, 29, 0);
 
   /* Functional Tokens */
@@ -25,24 +26,34 @@
   --pb-line: rgba(20, 20, 24, 0.10);
   --pb-panel-edge: rgba(20, 20, 24, 0.12);
   --pb-page: #F7F7F8;
+  --pb-blue: #1E4B8F;
+  --pb-blue-deep: #1E4B8F;
+  --pb-blue-wash: rgba(30, 75, 143, 0.08);
+  --pb-hole-alt: rgba(30, 75, 143, 0.14);
 }
 
 /* Dark mode: apply to BOTH [data-theme="dark"] and the unset + prefers-dark block */
 :root[data-theme="dark"] .pegboard-page {
-  --pb-board: #050506;
-  --pb-hole: rgba(247, 148, 29, 0.16);
+  --pb-page: #04060A;                       /* outside the board */
+  --pb-board: #0B1018;                      /* the board panel: lighter than the page */
+  --pb-tile: #131A26;                       /* tiles: clearly lighter than the board */
+  --pb-tile-raised: #19222F;                /* drawer, popups, hovered tile */
+  --pb-tile-line: rgba(255, 255, 255, 0.07); /* neutral hairline; orange/blue accents are added on top */
+  --pb-line: rgba(255, 255, 255, 0.09);
+  --pb-panel-edge: rgba(91, 143, 224, 0.22);
+  --pb-text: #F5F7FB;
+  --pb-text-2: #BAC3D2;
+  --pb-text-3: #8A95A8;                     /* >= 4.5:1 on --pb-tile */
+  --pb-blue: #5B8FE0;                       /* logo light blue: links, info, ambient */
+  --pb-blue-deep: #1E4B8F;                  /* logo navy: fills and rails */
+  --pb-blue-wash: rgba(91, 143, 224, 0.14);
+  --pb-accent-wash: rgba(247, 148, 29, 0.14);
+  --pb-hole: rgba(247, 148, 29, 0.16);      /* keep: subtle holes */
+  --pb-hole-alt: rgba(91, 143, 224, 0.18);  /* every 4th hole */
+  --pb-cord: rgba(140, 170, 225, 0.55);     /* cords pick up the blue, pegs stay orange */
   --pb-hole-r: 1.6px;
   --pb-hole-ring: rgba(255, 255, 255, 0.035);
-  --pb-tile: #0D0C0B;
-  --pb-tile-line: rgba(247, 148, 29, 0.28);
-  --pb-tile-glow: 0 0 0 1px rgba(247, 148, 29, 0.10), 0 0 26px -8px rgba(247, 148, 29, 0.35), 0 16px 32px -16px #000;
-  --pb-text: #FFFFFF;
-  --pb-text-2: #C9C1B6;
-  --pb-text-3: #8E8478;
-  --pb-text-glow: 0 0 14px rgba(255, 255, 255, 0.18);
   --pb-peg: #F7941D;
-  --pb-cord: rgba(247, 148, 29, 0.55);
-  --pb-shadow: 0 14px 30px -14px #000000;
   --pb-glow: rgba(247, 148, 29, 0.55);
 
   --pb-on-accent: #14110F;
@@ -50,29 +61,43 @@
   --pb-accent: #F7941D;
   --pb-accent-hi: #FFAE4A;
   --pb-accent-lo: #B86200;
-  --pb-accent-wash: rgba(247, 148, 29, 0.12);
-  --pb-tile-raised: #141312;
-  --pb-line: rgba(247, 148, 29, 0.28);
-  --pb-panel-edge: rgba(247, 148, 29, 0.25);
-  --pb-page: #050506;
+
+  --pb-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 2px 4px rgba(0, 0, 0, 0.55),
+    0 18px 28px -14px rgba(0, 0, 0, 0.85),
+    0 26px 44px -22px rgba(30, 75, 143, 0.45);
+  --pb-tile-glow: var(--pb-shadow);
+  --pb-shadow-hover:
+    0 1px 0 rgba(255, 255, 255, 0.08) inset,
+    0 0 0 1px rgba(247, 148, 29, 0.55),
+    0 0 34px -8px rgba(247, 148, 29, 0.45),
+    0 22px 34px -14px rgba(0, 0, 0, 0.9);
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .pegboard-page {
-    --pb-board: #050506;
-    --pb-hole: rgba(247, 148, 29, 0.16);
+    --pb-page: #04060A;                       /* outside the board */
+    --pb-board: #0B1018;                      /* the board panel: lighter than the page */
+    --pb-tile: #131A26;                       /* tiles: clearly lighter than the board */
+    --pb-tile-raised: #19222F;                /* drawer, popups, hovered tile */
+    --pb-tile-line: rgba(255, 255, 255, 0.07); /* neutral hairline; orange/blue accents are added on top */
+    --pb-line: rgba(255, 255, 255, 0.09);
+    --pb-panel-edge: rgba(91, 143, 224, 0.22);
+    --pb-text: #F5F7FB;
+    --pb-text-2: #BAC3D2;
+    --pb-text-3: #8A95A8;                     /* >= 4.5:1 on --pb-tile */
+    --pb-blue: #5B8FE0;                       /* logo light blue: links, info, ambient */
+    --pb-blue-deep: #1E4B8F;                  /* logo navy: fills and rails */
+    --pb-blue-wash: rgba(91, 143, 224, 0.14);
+    --pb-accent-wash: rgba(247, 148, 29, 0.14);
+    --pb-hole: rgba(247, 148, 29, 0.16);      /* keep: subtle holes */
+    --pb-hole-alt: rgba(91, 143, 224, 0.18);  /* every 4th hole */
+    --pb-cord: rgba(140, 170, 225, 0.55);     /* cords pick up the blue, pegs stay orange */
     --pb-hole-r: 1.6px;
     --pb-hole-ring: rgba(255, 255, 255, 0.035);
-    --pb-tile: #0D0C0B;
-    --pb-tile-line: rgba(247, 148, 29, 0.28);
-    --pb-tile-glow: 0 0 0 1px rgba(247, 148, 29, 0.10), 0 0 26px -8px rgba(247, 148, 29, 0.35), 0 16px 32px -16px #000;
-    --pb-text: #FFFFFF;
-    --pb-text-2: #C9C1B6;
-    --pb-text-3: #8E8478;
-    --pb-text-glow: 0 0 14px rgba(255, 255, 255, 0.18);
     --pb-peg: #F7941D;
-    --pb-cord: rgba(247, 148, 29, 0.55);
-    --pb-shadow: 0 14px 30px -14px #000000;
     --pb-glow: rgba(247, 148, 29, 0.55);
 
     --pb-on-accent: #14110F;
@@ -80,11 +105,19 @@
     --pb-accent: #F7941D;
     --pb-accent-hi: #FFAE4A;
     --pb-accent-lo: #B86200;
-    --pb-accent-wash: rgba(247, 148, 29, 0.12);
-    --pb-tile-raised: #141312;
-    --pb-line: rgba(247, 148, 29, 0.28);
-    --pb-panel-edge: rgba(247, 148, 29, 0.25);
-    --pb-page: #050506;
+
+    --pb-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.06) inset,
+      0 0 0 1px rgba(255, 255, 255, 0.05),
+      0 2px 4px rgba(0, 0, 0, 0.55),
+      0 18px 28px -14px rgba(0, 0, 0, 0.85),
+      0 26px 44px -22px rgba(30, 75, 143, 0.45);
+    --pb-tile-glow: var(--pb-shadow);
+    --pb-shadow-hover:
+      0 1px 0 rgba(255, 255, 255, 0.08) inset,
+      0 0 0 1px rgba(247, 148, 29, 0.55),
+      0 0 34px -8px rgba(247, 148, 29, 0.45),
+      0 22px 34px -14px rgba(0, 0, 0, 0.9);
   }
 }
 
@@ -99,7 +132,7 @@ body:has(.pegboard-page) {
 :root[data-theme="dark"] body:has(.pegboard-page),
 :root[data-theme="dark"] .peg-board-page-main,
 :root[data-theme="dark"] .pegboard-page {
-  background-color: #050506 !important;
+  background-color: var(--pb-page, #04060A) !important;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -107,7 +140,7 @@ body:has(.pegboard-page) {
   :root:not([data-theme="light"]) body:has(.pegboard-page),
   :root:not([data-theme="light"]) .peg-board-page-main,
   :root:not([data-theme="light"]) .pegboard-page {
-    background-color: #050506 !important;
+    background-color: var(--pb-page, #04060A) !important;
   }
 }
 
@@ -119,29 +152,35 @@ body:has(.pegboard-page) {
   background-position: 16px 16px;
 }
 
-/* Dark mode board background: holes subtle with quiet ring + ambient top glow */
-:root[data-theme="dark"] .pb-board {
+/* Dark mode board background: ambience top-wash + every 4th hole blue + subtle orange holes */
+:root[data-theme="dark"] .pb-board,
+:root:not([data-theme="light"]) .pb-board {
   background-color: var(--pb-board);
   background-image:
+    radial-gradient(ellipse 60% 35% at 12% 0%, rgba(30, 75, 143, 0.28), transparent 70%),
+    radial-gradient(ellipse 40% 25% at 100% 0%, rgba(247, 148, 29, 0.07), transparent 70%),
+    radial-gradient(circle at center, var(--pb-hole-alt) 0 var(--pb-hole-r), transparent calc(var(--pb-hole-r) + 0.5px)),
     radial-gradient(circle at center, var(--pb-hole) 0 var(--pb-hole-r), transparent calc(var(--pb-hole-r) + 0.5px)),
-    radial-gradient(circle at center, var(--pb-hole-ring) 0 4px, transparent 4.5px),
-    radial-gradient(ellipse 70% 40% at 50% 0%, rgba(247, 148, 29, 0.06), transparent 70%);
-  background-size: 32px 32px, 32px 32px, 100% 100%;
-  background-position: 16px 16px, 16px 16px, 0 0;
+    radial-gradient(circle at center, var(--pb-hole-ring) 0 4px, transparent 4.5px);
+  background-size:
+    100% 100%,
+    100% 100%,
+    128px 128px,
+    32px 32px,
+    32px 32px;
+  background-position:
+    0 0,
+    0 0,
+    16px 16px,
+    16px 16px,
+    16px 16px;
+  background-repeat:
+    no-repeat,
+    no-repeat,
+    repeat,
+    repeat,
+    repeat;
   background-blend-mode: normal;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .pb-board {
-    background-color: var(--pb-board);
-    background-image:
-      radial-gradient(circle at center, var(--pb-hole) 0 var(--pb-hole-r), transparent calc(var(--pb-hole-r) + 0.5px)),
-      radial-gradient(circle at center, var(--pb-hole-ring) 0 4px, transparent 4.5px),
-      radial-gradient(ellipse 70% 40% at 50% 0%, rgba(247, 148, 29, 0.06), transparent 70%);
-    background-size: 32px 32px, 32px 32px, 100% 100%;
-    background-position: 16px 16px, 16px 16px, 0 0;
-    background-blend-mode: normal;
-  }
 }
 
 @media (max-width: 640px) {
@@ -151,8 +190,18 @@ body:has(.pegboard-page) {
   }
   :root[data-theme="dark"] .pb-board,
   :root:not([data-theme="light"]) .pb-board {
-    background-size: 24px 24px, 24px 24px, 100% 100%;
-    background-position: 12px 12px, 12px 12px, 0 0;
+    background-size:
+      100% 100%,
+      100% 100%,
+      96px 96px,
+      24px 24px,
+      24px 24px;
+    background-position:
+      0 0,
+      0 0,
+      12px 12px,
+      12px 12px,
+      12px 12px;
   }
 }
 
@@ -191,7 +240,9 @@ body:has(.pegboard-page) {
   box-shadow: 0 0 12px var(--pb-glow);
 }
 
-.pb-tile:hover {
+.pb-tile:hover,
+.pb-tile:focus-within {
+  box-shadow: var(--pb-shadow-hover);
   border-color: var(--pb-peg);
 }
 
@@ -200,16 +251,19 @@ body:has(.pegboard-page) {
   box-shadow: 0 0 18px 2px var(--pb-glow);
 }
 
-/* Dark mode glow so tiles and controls stand out softly */
+/* Dark mode tiles at rest: no orange glow, only depth (surface step + blue floor glow) */
 :root[data-theme="dark"] .pb-tile,
 :root:not([data-theme="light"]) .pb-tile {
-  box-shadow: var(--pb-tile-glow);
+  box-shadow: var(--pb-shadow);
+  border-color: var(--pb-tile-line);
 }
 
 :root[data-theme="dark"] .pb-tile:hover,
-:root:not([data-theme="light"]) .pb-tile:hover {
+:root[data-theme="dark"] .pb-tile:focus-within,
+:root:not([data-theme="light"]) .pb-tile:hover,
+:root:not([data-theme="light"]) .pb-tile:focus-within {
   border-color: var(--pb-peg);
-  box-shadow: 0 0 0 1px rgba(247, 148, 29, 0.4), 0 0 36px -6px rgba(247, 148, 29, 0.55), 0 18px 36px -16px #000000;
+  box-shadow: var(--pb-shadow-hover);
 }
 
 :root[data-theme="dark"] .pb-tile h3,
@@ -223,7 +277,6 @@ body:has(.pegboard-page) {
 :root:not([data-theme="light"]) .board-heading,
 :root:not([data-theme="light"]) .pb-board h1 {
   color: var(--pb-text);
-  text-shadow: var(--pb-text-glow);
 }
 
 :root[data-theme="dark"] .pb-tile::after,
@@ -231,59 +284,126 @@ body:has(.pegboard-page) {
   box-shadow: 0 0 14px 2px var(--pb-glow);
 }
 
+/* Pinned tiles remain quieter than hover */
 :root[data-theme="dark"] .pb-tile.is-pinned,
 :root[data-theme="dark"] .pb-tile[data-pinned="true"],
 :root[data-theme="dark"] .board-tile-wrapper[data-pinned="true"],
 :root:not([data-theme="light"]) .pb-tile.is-pinned,
 :root:not([data-theme="light"]) .pb-tile[data-pinned="true"],
 :root:not([data-theme="light"]) .board-tile-wrapper[data-pinned="true"] {
-  border-color: var(--pb-peg);
-  box-shadow: 0 0 0 1px rgba(247, 148, 29, 0.5), 0 0 40px -4px rgba(247, 148, 29, 0.6);
+  border-color: rgba(247, 148, 29, 0.45);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 0 0 1px rgba(247, 148, 29, 0.45),
+    0 2px 4px rgba(0, 0, 0, 0.55),
+    0 18px 28px -14px rgba(0, 0, 0, 0.85),
+    0 26px 44px -22px rgba(30, 75, 143, 0.45);
 }
 
+/* Filter chips */
 :root[data-theme="dark"] .pb-chip,
 :root[data-theme="dark"] .zone-filter-chip,
-:root[data-theme="dark"] .pb-plaque,
-:root[data-theme="dark"] .zone-plaque,
 :root:not([data-theme="light"]) .pb-chip,
-:root:not([data-theme="light"]) .zone-filter-chip,
-:root:not([data-theme="light"]) .pb-plaque,
-:root:not([data-theme="light"]) .zone-plaque {
-  background: #12100E;
-  border: 1px solid rgba(247, 148, 29, 0.35);
-  color: #FFD9A8;
-  box-shadow: 0 0 18px -8px rgba(247, 148, 29, 0.6);
+:root:not([data-theme="light"]) .zone-filter-chip {
+  background: var(--pb-tile);
+  border: 1px solid var(--pb-line);
+  color: var(--pb-text-2);
+  box-shadow: none;
+}
+
+:root[data-theme="dark"] .pb-chip:hover,
+:root[data-theme="dark"] .zone-filter-chip:hover,
+:root:not([data-theme="light"]) .pb-chip:hover,
+:root:not([data-theme="light"]) .zone-filter-chip:hover {
+  background: var(--pb-tile-raised);
+  color: var(--pb-text);
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
 :root[data-theme="dark"] .pb-chip.is-active,
 :root[data-theme="dark"] .zone-filter-chip.is-active,
 :root:not([data-theme="light"]) .pb-chip.is-active,
 :root:not([data-theme="light"]) .zone-filter-chip.is-active {
-  background: rgba(247, 148, 29, 0.16);
+  background: var(--pb-accent-wash, rgba(247, 148, 29, 0.14));
+  border-color: var(--pb-peg, #F7941D);
   color: #FFFFFF;
-  box-shadow: 0 0 20px -4px rgba(247, 148, 29, 0.7);
+  box-shadow: 0 0 16px -4px rgba(247, 148, 29, 0.5);
 }
 
+/* Zone plaques: Solutions orange, Case studies blue (#5B8FE0), Resources orange, Playground blue */
+:root[data-theme="dark"] .zone-plaque.zone-blue,
+:root:not([data-theme="light"]) .zone-plaque.zone-blue,
+:root[data-theme="dark"] .zone-plaque-row:has(.zone-blue),
+:root:not([data-theme="light"]) .zone-plaque-row:has(.zone-blue),
+:root[data-theme="dark"] .pb-plaque-row:has(.zone-blue),
+:root:not([data-theme="light"]) .pb-plaque-row:has(.zone-blue) {
+  --zone-accent: var(--pb-blue, #5B8FE0);
+}
+
+:root[data-theme="dark"] .zone-plaque.zone-orange,
+:root:not([data-theme="light"]) .zone-plaque.zone-orange,
+:root[data-theme="dark"] .zone-plaque-row:has(.zone-orange),
+:root:not([data-theme="light"]) .zone-plaque-row:has(.zone-orange),
+:root[data-theme="dark"] .pb-plaque-row:has(.zone-orange),
+:root:not([data-theme="light"]) .pb-plaque-row:has(.zone-orange) {
+  --zone-accent: var(--pb-peg, #F7941D);
+}
+
+:root[data-theme="dark"] .zone-plaque.zone-blue,
+:root:not([data-theme="light"]) .zone-plaque.zone-blue {
+  background: rgba(91, 143, 224, 0.12);
+  border: 1px solid rgba(91, 143, 224, 0.35);
+  color: #9DBBF0;
+  box-shadow: 0 0 16px -6px rgba(91, 143, 224, 0.4);
+}
+:root[data-theme="dark"] .zone-plaque.zone-blue .plaque-dot,
+:root:not([data-theme="light"]) .zone-plaque.zone-blue .plaque-dot {
+  background-color: var(--pb-blue, #5B8FE0);
+}
+
+:root[data-theme="dark"] .zone-plaque.zone-orange,
+:root:not([data-theme="light"]) .zone-plaque.zone-orange {
+  background: rgba(247, 148, 29, 0.12);
+  border: 1px solid rgba(247, 148, 29, 0.35);
+  color: #FFD9A8;
+  box-shadow: 0 0 16px -6px rgba(247, 148, 29, 0.4);
+}
+:root[data-theme="dark"] .zone-plaque.zone-orange .plaque-dot,
+:root:not([data-theme="light"]) .zone-plaque.zone-orange .plaque-dot {
+  background-color: var(--pb-peg, #F7941D);
+}
+
+/* Search input with blue focus ring */
 :root[data-theme="dark"] .pb-search,
 :root[data-theme="dark"] .board-search-input,
 :root:not([data-theme="light"]) .pb-search,
 :root:not([data-theme="light"]) .board-search-input {
-  background: #0B0A09;
-  border: 1px solid rgba(247, 148, 29, 0.25);
+  background: var(--pb-board, #0B1018);
+  border: 1px solid var(--pb-line, rgba(255, 255, 255, 0.09));
+  color: var(--pb-text, #F5F7FB);
 }
 
 :root[data-theme="dark"] .board-search-box:focus-within .board-search-input,
 :root[data-theme="dark"] .pb-search:focus-within,
 :root:not([data-theme="light"]) .board-search-box:focus-within .board-search-input,
 :root:not([data-theme="light"]) .pb-search:focus-within {
-  border-color: var(--pb-peg);
-  box-shadow: 0 0 0 3px rgba(247, 148, 29, 0.18), 0 0 24px -6px rgba(247, 148, 29, 0.5);
+  border-color: var(--pb-blue, #5B8FE0);
+  box-shadow: 0 0 0 3px rgba(91, 143, 224, 0.25);
+}
+
+/* Zone shelf rails */
+.zone-shelf-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--zone-accent, var(--pb-accent-lo)) 0%, transparent 95%);
+  opacity: 0.6;
 }
 
 :root[data-theme="dark"] .zone-shelf-line,
 :root:not([data-theme="light"]) .zone-shelf-line {
-  background: linear-gradient(to right, rgba(247, 148, 29, 0.35) 0%, transparent 95%);
-  box-shadow: 0 0 8px rgba(247, 148, 29, 0.2);
+  background: linear-gradient(to right, var(--zone-accent, rgba(247, 148, 29, 0.35)) 0%, transparent 95%);
+  box-shadow: 0 0 8px var(--zone-accent, rgba(247, 148, 29, 0.2));
+  opacity: 0.7;
 }
 
 /* free mode canvas = the hole grid. Holes are centred at 16 + 32n, so the background starts at 0 0 */
@@ -295,6 +415,26 @@ body:has(.pegboard-page) {
   background-size: 32px 32px;
   background-position: 0 0;
 }
+
+:root[data-theme="dark"] .pb-canvas,
+:root:not([data-theme="light"]) .pb-canvas {
+  background-image:
+    radial-gradient(circle at center, var(--pb-hole-alt) 0 var(--pb-hole-r), transparent calc(var(--pb-hole-r) + 0.5px)),
+    radial-gradient(circle at center, var(--pb-hole) 0 var(--pb-hole-r), transparent calc(var(--pb-hole-r) + 0.5px)),
+    radial-gradient(circle at center, var(--pb-hole-ring) 0 4px, transparent 4.5px);
+  background-size:
+    128px 128px,
+    32px 32px,
+    32px 32px;
+  background-position:
+    0 0,
+    0 0,
+    0 0;
+  background-repeat:
+    repeat,
+    repeat,
+    repeat;
+}
 .pb-canvas[hidden] {
   display: none;
 }
@@ -305,7 +445,11 @@ body:has(.pegboard-page) {
 /* the board panel keeps its colour but no longer paints its own holes in free mode */
 [data-mode="free"].pb-board,
 [data-mode="free"] .pb-board {
-  background-image: none;
+  background-image:
+    radial-gradient(ellipse 60% 35% at 12% 0%, rgba(30, 75, 143, 0.28), transparent 70%),
+    radial-gradient(ellipse 40% 25% at 100% 0%, rgba(247, 148, 29, 0.07), transparent 70%);
+  background-size: 100% 100%, 100% 100%;
+  background-position: 0 0, 0 0;
 }
 
 /* tiles: absolute, positioned with the individual translate property so tilt/swing (transform) never conflicts */
@@ -350,8 +494,8 @@ body:has(.pegboard-page) {
   transition: none !important;
   will-change: translate, transform;
   backface-visibility: hidden;
-  box-shadow: 0 16px 28px -10px rgba(0, 0, 0, 0.45) !important;
-  outline: 1.5px solid rgba(247, 148, 29, 0.7);
+  box-shadow: 0 28px 48px -12px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(247, 148, 29, 0.6) !important;
+  outline: none !important;
 }
 .pb-tile.is-dragging::before,
 .pb-tile.is-dragging::after {
@@ -481,7 +625,7 @@ html.pb-is-dragging .pb-tile:not(.is-dragging) {
   color: var(--pb-peg, #F7941D);
 }
 
-/* Sticky filter bar stuck shadow & border */
+/* Sticky filter bar stuck shadow & border (Item 6: blue bottom hairline) */
 .board-filter-ledge.is-stuck {
   border-bottom: 1px solid var(--pb-line);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
@@ -489,8 +633,24 @@ html.pb-is-dragging .pb-tile:not(.is-dragging) {
 
 :root[data-theme="dark"] .board-filter-ledge.is-stuck,
 :root:not([data-theme="light"]) .board-filter-ledge.is-stuck {
-  border-bottom: 1px solid rgba(247, 148, 29, 0.2);
+  border-bottom: 1px solid rgba(91, 143, 224, 0.25);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Progress ring track: blue wash with orange progress arc (Item 6) */
+:root[data-theme="dark"] .ring-bg,
+:root:not([data-theme="light"]) .ring-bg {
+  stroke: var(--pb-blue-wash, rgba(91, 143, 224, 0.14));
+}
+
+/* Links inside guide pages use --pb-blue (Item 6) */
+:root[data-theme="dark"] .guide-page-main a:not(.btn):not(.cta-pin-btn),
+:root:not([data-theme="light"]) .guide-page-main a:not(.btn):not(.cta-pin-btn) {
+  color: var(--pb-blue, #5B8FE0);
+}
+:root[data-theme="dark"] .guide-page-main a:not(.btn):not(.cta-pin-btn):hover,
+:root:not([data-theme="light"]) .guide-page-main a:not(.btn):not(.cta-pin-btn):hover {
+  color: #8CBAF5;
 }
 
 @media (max-width: 899px), (hover: none) {

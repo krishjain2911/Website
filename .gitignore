@@ -12,3 +12,8 @@ scratch-screenshots/
 
 before-screenshots/
 after-screenshots/
+
+# Raw media videos (heavy, not committed to git)
+public/media/raw/*.mp4
+public/media/raw/*.mov
+public/media/raw/*.webm
