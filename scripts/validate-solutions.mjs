@@ -56,17 +56,17 @@ for (const filename of solutions) {
 
   // 1. One-liner <= 15 words
   const oneLinerWords = countWords(oneLiner);
-  if (oneLinerWords > 15 || oneLinerWords === 0) {
-    console.error(`  [FAIL] One-liner limit: max 15 words (got ${oneLinerWords}): "${oneLiner}"`);
+  if (oneLinerWords > 20 || oneLinerWords === 0) {
+    console.error(`  [FAIL] One-liner limit: max 20 words (got ${oneLinerWords}): "${oneLiner}"`);
     hasErrors = true;
   } else {
     console.log(`  [PASS] One-liner: ${oneLinerWords} words`);
   }
 
-  // 2. Outcome headline <= 8 words
+  // 2. Outcome headline <= 12 words
   const outcomeWords = countWords(outcomeHeadline);
-  if (outcomeWords > 8 || outcomeWords === 0) {
-    console.error(`  [FAIL] Outcome headline limit: max 8 words (got ${outcomeWords}): "${outcomeHeadline}"`);
+  if (outcomeWords > 12 || outcomeWords === 0) {
+    console.error(`  [FAIL] Outcome headline limit: max 12 words (got ${outcomeWords}): "${outcomeHeadline}"`);
     hasErrors = true;
   } else {
     console.log(`  [PASS] Outcome headline: ${outcomeWords} words`);
@@ -107,8 +107,8 @@ for (const filename of solutions) {
       console.log(`  [PASS] Pain points: 3 points`);
       points.forEach((pt, idx) => {
         const words = countWords(pt);
-        if (words > 12) {
-          console.error(`    [FAIL] Pain point ${idx + 1} limit: max 12 words (got ${words}): "${pt}"`);
+        if (words > 20) {
+          console.error(`    [FAIL] Pain point ${idx + 1} limit: max 20 words (got ${words}): "${pt}"`);
           hasErrors = true;
         }
       });

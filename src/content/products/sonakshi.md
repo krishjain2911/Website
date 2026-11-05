@@ -1,5 +1,5 @@
 ---
-title: "Sonakshi – AI Voice Agent"
+title: "Sonakshi – AI Voice Assistant"
 shortTitle: "Sonakshi"
 code: "01 / VOICE"
 order: 1
@@ -10,7 +10,8 @@ buildTag: "High-code (MERN)"
 seoTitle: "Sonakshi | AI Voice Agent | RHSP"
 seoDescription: "Sonakshi is a press-to-talk AI voice agent for retail showrooms. Shoppers ask in their language, see product cards and take a QR cart to billing."
 oneLiner: "Voice assistant that answers shoppers' product questions in their own language."
-outcomeHeadline: "Every walk-in gets an answer."
+outcomeHeadline: "Turn floor wanderers into cart wonders."
+
 
 stage1:
   tagline: "Where walk-ins wait."

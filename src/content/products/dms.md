@@ -23,7 +23,7 @@ hero:
   type: "image"
   src: "/media/projects/dms/hero.webp"
   alt: "Document Management System intake and classification console"
-  caption: "Representative interface"
+  caption: ""
   frame: "browser"
 phases:
   problem:
