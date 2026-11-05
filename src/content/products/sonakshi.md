@@ -1,55 +1,56 @@
 ---
-title: "Sonakshi - AI Voice Assistant for Retail"
+title: "Sonakshi – AI Voice Agent"
 shortTitle: "Sonakshi"
 code: "01 / VOICE"
 order: 1
 pillar: "Gen-AI"
 badge: "High-code (MERN)"
-statusTag: "Deployed for Retail Store"
+statusTag: "Deployed for a retail store"
 buildTag: "High-code (MERN)"
-seoTitle: "Sonakshi | Push-to-Talk AI Voice Agent for Retail | RHSP"
-seoDescription: "Sonakshi is a push-to-talk AI voice assistant for retail showrooms. Shoppers ask product questions in native languages, view visual specs, and transfer temporary carts to billing via QR code."
-oneLiner: "A voice-first, native-language AI virtual assistant that guides retail shoppers from floor inquiry to billing handoff."
-outcomeHeadline: "Turn floor wanderers into cart wonders"
+seoTitle: "Sonakshi | AI Voice Agent | RHSP"
+seoDescription: "Sonakshi is a press-to-talk AI voice agent for retail showrooms. Shoppers ask in their language, see product cards and take a QR cart to billing."
+oneLiner: "Voice assistant that answers shoppers' product questions in their own language."
+outcomeHeadline: "Every walk-in gets an answer."
 
 stage1:
-  tagline: "Unattended walk-ins cost sales."
-  problem: "Showroom staff cannot cover every aisle simultaneously, and shoppers speak many languages. Open-mic voice AI fails on loud shop floors, while staff cannot be trained with every new inventory or product data update."
+  tagline: "Where walk-ins wait."
+  problem: "Showroom staff cannot be at every aisle, and customers speak many languages. A shop floor is loud, so an always-listening microphone would not work."
   painPoints:
-    - "Shoppers wait for available staff to answer product specs, pricing, and availability."
-    - "Sales teams cannot keep up with training on every new inventory item or product data update."
-    - "Critical inventory data remains buried in scattered PDF catalogues and Excel price lists."
-    - "Customer interest drops before reaching the checkout counter due to friction in manual cart creation."
+    - "Customers wait for staff to answer product questions."
+    - "Specs and prices sit in catalogues and spreadsheets."
+    - "Interest rarely reaches billing as a complete list."
 
 stage2:
-  tagline: "Turn floor inquiries into complete carts."
-  intro: "Bridge native-language shopper interaction with physical point-of-sale execution."
+  tagline: "Every walk-in, captured."
+  intro: "The value sat in unanswered questions."
   points:
-    - "Initiate trackable sessions via customer mobile numbers to capture leads and consent right at entry."
-    - "Deliver instant, noise-isolated product guidance in native Indian languages via push-to-talk voice."
-    - "Generate temporary digital carts that hand off directly to existing POS counters via scannable QR codes."
+    - "Every walk-in can get an answer, in their language."
+    - "Customer details and consent captured at session start."
+    - "Shoppers' selections reach billing as a complete cart."
 
 stage3:
-  tagline: "Grounded AI built for noisy shop floors."
+  tagline: "Grounded, never guessing."
   features:
-    - title: "Push-to-Talk Noise Isolation"
-      description: "Press-and-hold activation filters ambient shop floor noise, allowing shoppers to query in their native language and instantly interrupt AI voice playback for quick follow-ups."
-    - title: "Catalogue-Grounded RAG"
-      description: "Product answers and pricing stay strictly accurate, sourced directly from store PDFs, Excel price sheets, and centralized knowledge bases."
-    - title: "Generative UI Product Cards"
-      description: "Dynamic visual cards display high-res images, key specifications, and pricing side-by-side with real-time voice answers."
-    - title: "Session-Tied Temporary Cart"
-      description: "Shoppers select products via voice or visual cards to build an itemized temporary cart tied to their session."
-    - title: "QR-Based POS Handoff"
-      description: "Generates a scannable QR code at session end, presenting a read-only manifest for cashiers to instantly load into existing POS software."
-    - title: "No-Code Knowledge Pipeline"
-      description: "Store managers easily update price lists, catalog PDFs, and visual assets without technical support."
+    - title: "Press-to-talk voice."
+      description: "Customers ask in their language, and the agent listens only on press."
+    - title: "Catalogue-grounded answers."
+      description: "Specs come from the store's PDFs and prices from its Excel sheet."
+    - title: "Product cards."
+      description: "Images, key specs, MRP and store price appear beside the voice answer."
+    - title: "Temporary cart."
+      description: "Customers add items by touch or voice during the session."
+    - title: "QR to billing."
+      description: "Counter staff scan the cart and bill in the existing POS."
+    - title: "Admin uploads."
+      description: "Managers add catalogues, price sheets and images without a developer."
   builtWith:
-  
+    - "MongoDB"
     - "Express"
     - "React"
-    - "Node.js (MERN)"
-    - "AWS"
+    - "Node.js"
+    - "Sarvam AI voice"
+    - "Gemini File Search"
+    - "WebSocket live updates"
   screenshot:
     file: "sonakshi-admin-dashboard.png"
     alt: "Sonakshi admin dashboard showing catalogue metrics, active products and ingestion controls."
@@ -59,19 +60,19 @@ stage3:
     caption: "A shopper asks, and product cards appear beside the answer."
 
 stage4:
-  tagline: "See Sonakshi in action on the shop floor."
-  intro: "Watch how a shopper asks product queries in their native language, builds a visual cart, and checks out using a QR code at the register."
+  tagline: "Tested on the shop floor."
+  intro: "Watch a shopper ask, see products and leave with a QR cart."
   videoId: ""
 
 stage5:
-  tagline: "Deploy to your store floor."
-  makeItYours: "Customizable for your inventory catalogues, price sheets, native language requirements, and store branding—with zero modifications required for your current POS system."
+  tagline: "Your store, your angle."
+  makeItYours: "Your catalogues, price sheet, languages and store branding. Billing stays in your existing POS."
 
 stage6:
-  tagline: "Measurable floor efficiency."
-  resultsHeadline: "Faster inquiries, seamless billing, higher conversion."
+  tagline: "Always on. Always improving."
+  resultsHeadline: "Shoppers get answers, billing gets carts."
   results:
-    - "Shoppers get immediate, native-language product answers without waiting for floor staff."
-    - "Customer details and session context are verified and captured at initiation."
-    - "Billing counters receive complete, structured carts via QR code, reducing cashier entry time."
+    - "Customers ask questions without waiting for staff."
+    - "Name, number and consent are captured at session start."
+    - "The counter receives a complete cart as a QR code."
 ---
