@@ -81,8 +81,8 @@ const articleSchema = {
               {guide.tableRows.map((row) => (
                 <tr>
                   <th scope="row" class="topic-header-cell">{row.topic}</th>
-                  {row.columns.map((col) => (
-                    <td>{col}</td>
+                  {row.columns.map((col, i) => (
+                    <td data-label={guide.tableHeaders[i + 1]}>{col}</td>
                   ))}
                 </tr>
               ))}
@@ -501,6 +501,83 @@ const articleSchema = {
     background-color: var(--pb-accent-wash);
     border-color: var(--pb-accent);
     color: var(--pb-accent);
+  }
+
+  /* Phones: each table row becomes a stacked card with labelled values,
+     so there is no sideways scrolling and nothing is cut off. */
+  @media (max-width: 639px) {
+    .table-scroll-wrapper {
+      overflow: visible;
+      border: none;
+      background: transparent;
+      border-radius: 0;
+    }
+
+    .guide-comparison-table {
+      min-width: 0;
+      display: block;
+    }
+
+    .guide-comparison-table thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+    }
+
+    .guide-comparison-table tbody,
+    .guide-comparison-table tr,
+    .guide-comparison-table th,
+    .guide-comparison-table td {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .guide-comparison-table tbody tr {
+      margin-bottom: 1rem;
+      border: 1px solid var(--pb-line, var(--color-border));
+      border-radius: 14px;
+      background-color: var(--pb-tile, var(--color-surface));
+      overflow: hidden;
+    }
+
+    .guide-comparison-table tbody tr:nth-child(even) {
+      background-color: var(--pb-tile, var(--color-surface));
+    }
+
+    .guide-comparison-table th.topic-header-cell {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      background-color: var(--pb-accent-wash, rgba(247, 148, 29, 0.12));
+      border-bottom: 1px solid var(--pb-line, var(--color-border));
+    }
+
+    .guide-comparison-table td {
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid var(--pb-line, var(--color-border));
+    }
+
+    .guide-comparison-table td::before {
+      content: attr(data-label);
+      display: block;
+      margin-bottom: 0.2rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--pb-accent, #F7941D);
+    }
+
+    .guide-comparison-table tbody tr:last-child th,
+    .guide-comparison-table tbody tr:last-child td {
+      border-bottom: 1px solid var(--pb-line, var(--color-border));
+    }
+
+    .guide-comparison-table tbody tr td:last-child {
+      border-bottom: none;
+    }
   }
 
   .sr-only {

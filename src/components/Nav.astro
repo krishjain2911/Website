@@ -580,8 +580,15 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
 
   /* Mobile Drawer Menu */
   .mobile-drawer {
+    /* The header's backdrop-filter makes it the containing block for fixed
+       children, so `inset: 0` shrank the drawer to the header's height.
+       An explicit viewport size keeps it full screen. */
     position: fixed;
-    inset: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
     background-color: var(--color-bg);
     z-index: 2000;
     display: flex;

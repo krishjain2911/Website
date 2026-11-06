@@ -1190,27 +1190,19 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
       justify-content: space-between;
     }
 
+    /* Phones: one tile per row, no sideways swiping */
     .zone-tiles-track {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
-      gap: 16px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      column-gap: 0;
+      row-gap: 40px;
       padding-top: 28px;
       padding-bottom: 8px;
-      padding-left: 2px;
-      padding-right: 2px;
-      scrollbar-width: none;
-    }
-
-    .zone-tiles-track::-webkit-scrollbar {
-      display: none;
+      overflow: visible;
     }
 
     .zone-rail-dots {
-      display: flex;
+      display: none;
     }
   }
 

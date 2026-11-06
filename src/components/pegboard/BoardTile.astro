@@ -428,12 +428,11 @@ const tileAriaLabel = tile.quickTake
     pointer-events: none;
   }
 
-  /* Mobile horizontal swipe rail styling */
+  /* Phones: tiles fill the column (no sideways swipe rail) */
   @media (max-width: 639px) {
     .pb-tile {
-      width: 250px;
-      flex-shrink: 0;
-      scroll-snap-align: start;
+      width: 100%;
+      min-width: 0;
     }
   }
 </style>

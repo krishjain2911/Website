@@ -354,6 +354,58 @@ const { hero } = siteConfig;
     height: 100%;
   }
 
+  /* Phones: the pinned 100vh hero is shorter than its content, which clipped
+     the headline under the nav and cut the cube. Compact it so it always fits. */
+  @media (max-width: 767px) {
+    .hero-chips,
+    .hero-scroll-cue,
+    :global(.hero-curved-arc) {
+      display: none;
+    }
+
+    .hero-container {
+      gap: 1rem;
+    }
+
+    .hero-subline {
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-cta-group {
+      flex-wrap: nowrap;
+      gap: 0.6rem;
+      margin-bottom: 0;
+    }
+
+    .hero-cta-group .btn {
+      flex: 1 1 0;
+      min-width: 0;
+      padding: 0 1rem;
+      justify-content: center;
+    }
+
+    .hero-visual-stage {
+      min-height: 0;
+    }
+
+    .hero-sequence-wrapper {
+      max-width: min(78vw, 36svh);
+    }
+  }
+
+  /* Added by the fitHero() script when the content is taller than the screen
+     (short or zoomed browser windows, landscape phones): let the hero scroll
+     like a normal section instead of pinning and clipping it. */
+  .hero-scroll-track.hero-static {
+    min-height: auto;
+  }
+
+  .hero-scroll-track.hero-static .hero-pinned-viewport {
+    position: relative;
+    height: auto;
+    padding: 2.5rem 0 3rem;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .hero-scroll-track {
       min-height: auto;
@@ -448,4 +500,24 @@ const { hero } = siteConfig;
   document.addEventListener('astro:after-swap', scheduleHeroSetup);
 </script>
 
+<script>
+  // If the hero content is taller than the visible screen, switch the hero to
+  // a normal scrolling section so nothing is clipped under the header.
+  function fitHero() {
+    const track = document.getElementById('hero-scroll-wrapper');
+    const hero = document.getElementById('hero');
+    const inner = hero ? (hero.querySelector('.hero-container') as HTMLElement | null) : null;
+    if (!track || !hero || !inner) return;
+    track.classList.remove('hero-static');
+    if (inner.offsetHeight + 24 > hero.clientHeight) {
+      track.classList.add('hero-static');
+    }
+  }
 
+  fitHero();
+  window.addEventListener('resize', fitHero);
+  window.addEventListener('orientationchange', fitHero);
+  window.addEventListener('load', fitHero);
+  document.addEventListener('astro:after-swap', fitHero);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitHero);
+</script>

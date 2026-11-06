@@ -1207,9 +1207,34 @@ const governBlocks = [
     }
   }
 
+  /* Phones: no sideways swiping. Solution cards stack vertically so every
+     card is fully visible; the arrows and dots are not needed. */
   @media (max-width: 767px) {
     .projects-rail-track {
-      grid-auto-columns: 100%;
+      grid-auto-flow: row;
+      grid-auto-columns: auto;
+      grid-template-columns: minmax(0, 1fr);
+      overflow: visible;
+      scroll-snap-type: none;
+      cursor: auto;
+      user-select: auto;
+    }
+
+    .projects-rail-section .rail-nav-controls,
+    .projects-rail-section .rail-dots-row {
+      display: none !important;
+    }
+
+    /* Higher specificity + !important: later breakpoint rules pin cards to 240-280px */
+    .projects-rail-track .project-rail-card {
+      width: 100% !important;
+      max-width: 100% !important;
+      flex: 1 1 auto !important;
+      height: auto;
+    }
+
+    .projects-rail-track .rail-card-media {
+      max-height: none;
     }
   }
 

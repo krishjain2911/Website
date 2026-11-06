@@ -105,4 +105,17 @@ const { size = 'md', showText = true, class: className = '' } = Astro.props;
   :global([data-theme="dark"]) .rhsp-full-logo-img {
     filter: brightness(1.3) contrast(1.15) drop-shadow(0 0 1px rgba(255, 255, 255, 0.75)) drop-shadow(0 1px 6px rgba(255, 255, 255, 0.15));
   }
+
+  /* Phones, dark mode: the dark-blue wordmark disappears on the dark header,
+     so put the logo on a light plate (and make it a little bigger). */
+  @media (max-width: 767px) {
+    :global([data-theme="dark"]) .rhsp-full-logo-img,
+    :global([data-theme="dark"]) [data-size="md"] .rhsp-full-logo-img {
+      filter: none;
+      height: 40px;
+      background: #fff;
+      padding: 3px 8px;
+      border-radius: 10px;
+    }
+  }
 </style>
