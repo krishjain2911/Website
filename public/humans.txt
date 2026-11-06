@@ -1,7 +1,7 @@
 /* TEAM */
-Developer: Krish Jain
+Developer: Krish S Jain
 LinkedIn: https://www.linkedin.com/in/thekrishjain/
-Role: Frontend Engineer & Creative Technologist
+Role: Junior Full Stack Builder
 
 /* THANKS */
 Round Hole Square Peg (RHSP) Team
@@ -13,5 +13,5 @@ Software: Developed by Krish Jain for Round Hole Square Peg
 Website: https://roundholesquarepeg.com
 Language: English
 Doctype: HTML5
-Last Updated: 2026-11-02
+Last Updated: 07-11-2026
 
