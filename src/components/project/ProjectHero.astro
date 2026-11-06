@@ -13,6 +13,7 @@ const p = product.data;
 const isRebuilt = !!p.stage1;
 const outcomes = !isRebuilt && p.outcomes && p.outcomes.length > 0 ? p.outcomes.slice(0, 3) : [];
 const flowStrip = !isRebuilt && p.flowStrip && p.flowStrip.length > 0 ? p.flowStrip : [];
+const showHeroMedia = product.slug === 'sonakshi';
 ---
 
 <header class="project-hero-section" aria-labelledby="project-hero-title">
@@ -29,7 +30,7 @@ const flowStrip = !isRebuilt && p.flowStrip && p.flowStrip.length > 0 ? p.flowSt
       <span class="nav-current" aria-current="page">{p.shortTitle || p.title}</span>
     </nav>
 
-    <div class="project-hero-grid">
+  <div class:list={['project-hero-grid', { 'no-hero-media': !showHeroMedia }]}>
       <!-- Left: Title, Metadata Chips, Subline, Hero Facts, Flow Strip, CTAs -->
       <div class="project-hero-left">
         <!-- Status, Client, Stack Badges -->
@@ -127,6 +128,7 @@ const flowStrip = !isRebuilt && p.flowStrip && p.flowStrip.length > 0 ? p.flowSt
       </div>
 
       <!-- Right: Hero Media -->
+      {showHeroMedia && (
       <div class="project-hero-right">
         {isRebuilt ? (
           <div class="hero-browser-window card-mastercard">
@@ -140,6 +142,7 @@ const flowStrip = !isRebuilt && p.flowStrip && p.flowStrip.length > 0 ? p.flowSt
                 <span class="browser-address">enterprise.rhsp.io</span>
               </div>
             </div>
+
             <div class="browser-content-wrap">
               {product.slug === 'clm' ? (
                 <MediaPicture
@@ -181,6 +184,7 @@ const flowStrip = !isRebuilt && p.flowStrip && p.flowStrip.length > 0 ? p.flowSt
           />
         )}
       </div>
+      )}
     </div>
   </div>
 </header>
@@ -286,7 +290,9 @@ const flowStrip = !isRebuilt && p.flowStrip && p.flowStrip.length > 0 ? p.flowSt
     border: 1px solid var(--color-border);
     color: var(--color-text-secondary);
   }
-
+.project-hero-grid.no-hero-media {
+  grid-template-columns: minmax(0, 1fr);
+}
   .status-tag-chip {
     color: #10B981;
     border-color: rgba(16, 185, 129, 0.3);
