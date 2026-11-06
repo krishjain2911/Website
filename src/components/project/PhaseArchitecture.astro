@@ -56,6 +56,7 @@ interface Props {
 const { slug, stage3, architectureData } = Astro.props;
 const tagline = stage3?.tagline || Astro.props.tagline || architectureData?.tagline;
 const story = architectureData?.story;
+const hideScreenshot = slug === 'clm' || slug === 'vernacular-documents';
 const hasContent = !!(
   stage3 ||
   (architectureData &&
@@ -226,16 +227,17 @@ const isVernacularPage = !!architectureData?.guardRails?.length;
       )}
 
       <!-- Media: Screenshot and optional loop clip beside it -->
-      <div class="stage3-media-grid">
-        <div class="stage3-media-item">
-          <MediaPicture
-            slug={slug || ''}
-            file={stage3.screenshot.file}
-            alt={stage3.screenshot.alt}
-            caption={stage3.screenshot.caption}
-          />
-        </div>
-        {stage3.loop && (
+{!hideScreenshot && (
+  <div class="stage3-media-item">
+    <MediaPicture
+      slug={slug || ''}
+      file={stage3.screenshot.file}
+      alt={stage3.screenshot.alt}
+      caption={stage3.screenshot.caption}
+    />
+  </div>
+)}
+        {stage3.loop && !hideScreenshot && (
           <div class="stage3-media-item" style={slug === 'sonakshi' ? 'order:-1' : undefined}>
             <MediaLoop
               slug={slug || ''}
