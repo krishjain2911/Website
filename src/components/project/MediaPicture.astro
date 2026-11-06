@@ -8,6 +8,7 @@ interface Props {
   alt: string;
   caption?: string;
   isHero?: boolean;
+  src?: string;
   width?: number;
   height?: number;
   class?: string;
@@ -19,6 +20,7 @@ const {
   alt,
   caption,
   isHero = false,
+  src,
   width: propWidth,
   height: propHeight,
   class: className = ''
@@ -57,19 +59,23 @@ const height = propHeight || dimensions.h;
 // Check if image exists in public/images/solutions/<slug>/
 const webpPath = path.resolve(`public/images/solutions/${slug}/${baseName}.webp`);
 const pngPath = path.resolve(`public/images/solutions/${slug}/${baseName}.png`);
-const exists = fs.existsSync(webpPath) || fs.existsSync(pngPath);
+  const exists = !!src || fs.existsSync(webpPath) || fs.existsSync(pngPath);
+  const has2xWebp = fs.existsSync(path.resolve(`public/images/solutions/${slug}/${baseName}@2x.webp`));
+  const has2xPng = fs.existsSync(path.resolve(`public/images/solutions/${slug}/${baseName}@2x.png`));
 ---
 
 {exists ? (
   <figure class={`solution-media-figure ${className}`}>
     <picture class="solution-media-picture">
-      <source
-        srcset={`/images/solutions/${slug}/${baseName}.webp${isHero ? `, /images/solutions/${slug}/${baseName}@2x.webp 2x` : ''}`}
-        type="image/webp"
-      />
-      <img
-        src={`/images/solutions/${slug}/${baseName}.png`}
-        srcset={isHero ? `/images/solutions/${slug}/${baseName}@2x.png 2x` : undefined}
+        {!src && fs.existsSync(webpPath) && (
+    <source
+      srcset={`/images/solutions/${slug}/${baseName}.webp${isHero && has2xWebp ? `, /images/solutions/${slug}/${baseName}@2x.webp 2x` : ''}`}
+      type="image/webp"
+    />
+  )}
+  <img
+    src={src || `/images/solutions/${slug}/${baseName}.png`}
+    srcset={!src && isHero && has2xPng ? `/images/solutions/${slug}/${baseName}@2x.png 2x` : undefined}
         alt={alt}
         width={width}
         height={height}
@@ -82,7 +88,7 @@ const exists = fs.existsSync(webpPath) || fs.existsSync(pngPath);
   </figure>
 ) : (
   <figure class={`solution-media-figure is-placeholder ${className}`}>
-    <Fragment set:html={`<!-- TODO(media): ${file} -->`} />
+    
     <div class="solution-media-placeholder" style={`aspect-ratio: ${width} / ${height};`}>
       <div class="placeholder-icon">
         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">

@@ -6,14 +6,17 @@ interface Props {
 }
 
 const { id, pageName, class: className = '' } = Astro.props;
-const hasVideo = id && id.trim().length > 0 && id !== 'TODO';
+  const raw = (id || '').trim();
+  const match = raw.match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{11})/);
+  const videoId = match ? match[1] : /^[\w-]{11}$/.test(raw) ? raw : '';
+  const hasVideo = videoId.length === 11;
 ---
 
 <div class:list={['video-embed-container', className]}>
   {hasVideo ? (
     <div class="video-embed-aspect">
       <iframe
-        src={`https://www.youtube-nocookie.com/embed/${id}`}
+        src={`https://www.youtube-nocookie.com/embed/${videoId}`}
         title={`${pageName} demo`}
         loading="lazy"
         allowfullscreen
@@ -22,7 +25,7 @@ const hasVideo = id && id.trim().length > 0 && id !== 'TODO';
     </div>
   ) : (
     <div class="video-embed-aspect video-placeholder-frame">
-      <Fragment set:html="<!-- TODO(media): Add confirmed YouTube demo video ID -->" />
+      
       <div class="placeholder-icon-wrap" aria-hidden="true">
         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
           <polygon points="5 3 19 12 5 21 5 3" fill="currentColor" opacity="0.25" />

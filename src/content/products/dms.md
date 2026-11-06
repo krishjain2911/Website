@@ -54,15 +54,7 @@ phases:
       - "Unified intake from network scanners, uploads, and email"
       - "Automated optical and metadata categorization"
       - "Policy-driven archival and statutory disposal rules"
-    metrics:
-      - label: "Search resolution"
-        before: "Hours across folders"
-        after: "Instant full-text query"
-        note: "OCR and metadata indexing"
-      - label: "Retention tracking"
-        before: "Manual reminders"
-        after: "Automated schedule rules"
-        note: "Statutory compliance schedules"
+    
     levers:
       - "Full-text OCR and metadata indexing"
       - "Check-in and check-out version controls"

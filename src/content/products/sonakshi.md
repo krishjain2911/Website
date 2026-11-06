@@ -63,7 +63,7 @@ stage3:
 stage4:
   tagline: "Tested on the shop floor."
   intro: "Watch a shopper ask, see products and leave with a QR cart."
-  videoId: "wait"
+  videoId: ""
 
 stage5:
   tagline: "Your store, your angle."

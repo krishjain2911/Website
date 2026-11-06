@@ -54,15 +54,7 @@ phases:
       - "Real-time updates pushed directly to verified WhatsApp numbers"
       - "Interactive quick-reply buttons and rich media confirmations"
       - "Smooth handoff to live customer service agents when needed"
-    metrics:
-      - label: "Message engagement"
-        before: "Low email open rates"
-        after: "Immediate mobile delivery"
-        note: "Official Meta WhatsApp Cloud API"
-      - label: "Routine status queries"
-        before: "Phone queue backlog"
-        after: "Automated instant replies"
-        note: "Self-service conversational flows"
+ 
     levers:
       - "Official Meta Cloud API gateway"
       - "Automated OutSystems conversational logic"
