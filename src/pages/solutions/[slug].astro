@@ -44,8 +44,6 @@ const phases = p.phases;
 
 // Check before/after interactive asset if applicable
 let beforeAfterId: 'clm' | 'dms' | 'whatsapp' | undefined;
-if (product.slug === 'dms') beforeAfterId = 'dms';
-else if (product.slug === 'whatsapp-journeys') beforeAfterId = 'whatsapp';
 
 const pageTitle: string = (p.seoTitle as string | undefined) || `${p.title} | RHSP`;
 const pageDescription: string = (p.seoDescription as string | undefined) || p.oneLiner;

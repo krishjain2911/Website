@@ -1,0 +1,37 @@
+---
+import LegalPage from '../components/LegalPage.astro';
+const sections = [
+  { id: 'site', title: 'This website' },
+  { id: 'report', title: 'Reporting a vulnerability' },
+  { id: 'clients', title: 'Client engagements' },
+];
+---
+
+<LegalPage
+  title="Security | RHSP"
+  description="How RHSP approaches security, and how to report a vulnerability."
+  eyebrow="Security"
+  heading="Built carefully. Reported openly."
+  intro="We build software for enterprises, so we take the security of this website and of client work seriously."
+  updated="6 November 2026"
+  sections={sections}
+>
+  <section id="site" class="legal-section">
+    <h2>This website</h2>
+    <ul>
+      <li>The site is served over HTTPS only.</li>
+      <li>It has no accounts, no login and no forms, and it does not store personal data. See our <a href="/privacy">Privacy Policy</a>.</li>
+    </ul>
+  </section>
+
+  <section id="report" class="legal-section">
+    <h2>Reporting a vulnerability</h2>
+    <p>If you believe you have found a security issue on this website, email <a href="mailto:letstalk@rhsp.solutions">letstalk@rhsp.solutions</a> with the subject <strong>Security report</strong> and the steps to reproduce it.</p>
+    <p>Please give us reasonable time to fix it before sharing it publicly, and do not access or change data that is not yours. We will acknowledge your report and keep you updated.</p>
+  </section>
+
+  <section id="clients" class="legal-section">
+    <h2>Client engagements</h2>
+    <p>Security terms for client projects, such as data handling, access control and hosting, are agreed per project. Contact us to discuss your requirements.</p>
+  </section>
+</LegalPage>
