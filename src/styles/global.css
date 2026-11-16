@@ -29,6 +29,8 @@
   /* Brand Core */
   --rhsp-navy: #1E4B8F;
   --brand-blue-text: #1E4B8F;
+  --scrollbar-blue: #1E4B8F;
+  --scrollbar-glow: none;
   --rhsp-hole: #0F2A4A;
   --rhsp-peg-start: #F7941D;
   --rhsp-peg-end: #EE4B2B;
@@ -44,6 +46,8 @@
   --color-border: #E6E6E3;
   --color-border-subtle: #ECECE9;
   --color-border-focus: #141413;
+  --scrollbar-blue: #1E4B8F;
+  --scrollbar-glow: none;
 
   --color-text-primary: #141413;
   --color-text-secondary: #575757;
@@ -126,6 +130,8 @@
     --text-tertiary: #92929B;
     --brand-blue-on-dark: #6FA3F5;
     --brand-blue-text: #5B93EA;
+    --scrollbar-blue: #5B93EA;
+    --scrollbar-glow: 0 0 6px rgba(247, 148, 29, 0.25);
 
     --color-text-primary: var(--text);
     --color-text-secondary: var(--text-secondary);
@@ -178,6 +184,8 @@ html[data-theme="dark"],
   --text-tertiary: #92929B;
   --brand-blue-on-dark: #6FA3F5;
   --brand-blue-text: #5B93EA;
+  --scrollbar-blue: #5B93EA;
+  --scrollbar-glow: 0 0 6px rgba(247, 148, 29, 0.25);
 
   --color-text-primary: var(--text);
   --color-text-secondary: var(--text-secondary);
@@ -213,6 +221,8 @@ html[data-theme="dark"],
   --color-border: #E6E6E3;
   --color-border-subtle: #ECECE9;
   --color-border-focus: #141413;
+  --scrollbar-blue: #1E4B8F;
+  --scrollbar-glow: none;
 
   --color-text-primary: #141413;
   --color-text-secondary: #5B5B5B;
@@ -231,6 +241,108 @@ html[data-theme="dark"],
 /* ==========================================================================
    CSS RESET & BASE DEFAULTS
    ========================================================================== */
+
+/* ==========================================================================
+   CUSTOM BRAND SCROLLBAR
+   Thin colourful line in brand colours (#F7941D -> #EE4B2B -> blue).
+   5px wide at rest, 8px on hover/active, transparent track, no arrows.
+   Works site-wide across light and dark modes with Firefox fallback.
+   ========================================================================== */
+
+/* Standard & Firefox scrollbar: thin orange line over transparent track */
+html,
+body,
+.mobile-drawer-body,
+.solutions-dropdown-panel,
+.search-dialog-body,
+.search-results-list,
+.peg-finder-body,
+.my-board-drawer-body,
+.drawer-body,
+pre,
+code,
+.table-container,
+.overflow-x-auto,
+.overflow-y-auto,
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #F7941D transparent;
+}
+
+/* Chromium / Safari / WebKit scrollbar geometry */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+/* Hide scrollbar arrows/buttons completely */
+::-webkit-scrollbar-button {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Transparent track and corner */
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+  background: transparent !important;
+}
+
+/* Thumb at rest: 1.5px transparent border + background-clip makes it 5px wide */
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #F7941D 0%, #EE4B2B 50%, var(--scrollbar-blue, #1E4B8F) 100%);
+  background-clip: padding-box;
+  border: 1.5px solid transparent;
+  border-radius: 9999px;
+  min-height: 48px;
+  box-shadow: var(--scrollbar-glow, none);
+  transition: border-width 0.2s ease, filter 0.2s ease, opacity 0.2s ease;
+}
+
+/* Horizontal scrollbar thumb */
+::-webkit-scrollbar-thumb:horizontal {
+  background: linear-gradient(90deg, #F7941D 0%, #EE4B2B 50%, var(--scrollbar-blue, #1E4B8F) 100%);
+  background-clip: padding-box;
+  border: 1.5px solid transparent;
+  border-radius: 9999px;
+  min-width: 48px;
+}
+
+/* Hover and active states: widens to 8px and brightens slightly */
+::-webkit-scrollbar-thumb:hover,
+::-webkit-scrollbar-thumb:active {
+  border-width: 0 !important;
+  filter: brightness(1.15);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::-webkit-scrollbar-thumb {
+    transition: none !important;
+  }
+}
+
+/* Hide scrollbars completely on horizontal rails and carousels */
+#rail-track-engineer,
+#rail-track-genai,
+.projects-rail-track,
+.carousel-track-wrapper,
+.project-rail-card-track,
+.no-scrollbar {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+#rail-track-engineer::-webkit-scrollbar,
+#rail-track-genai::-webkit-scrollbar,
+.projects-rail-track::-webkit-scrollbar,
+.carousel-track-wrapper::-webkit-scrollbar,
+.project-rail-card-track::-webkit-scrollbar,
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+}
 
 *, *::before, *::after {
   box-sizing: border-box;
