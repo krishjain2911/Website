@@ -9,9 +9,9 @@
 
 /* tokens (dark only) */
 :root[data-theme="dark"] {
-  --sd-page: #17181B;
-  --sd-card: linear-gradient(180deg, #202125 0%, #1B1C20 100%);
-  --sd-card-line: rgba(255, 255, 255, 0.08);
+  --sd-page: #0F1012;
+  --sd-card: linear-gradient(180deg, #1F2025 0%, #17181C 100%);
+  --sd-card-line: rgba(255, 255, 255, 0.09);
   --sd-text: #ECECEF;
   --sd-text-2: #B4B4BC;
   --sd-text-3: #92929B;
@@ -24,16 +24,16 @@
   --sd-blue-deep: #1E4B8F;
   --sd-orange: #F7941D;
   --sd-red: #EE4B2B;
-  --sd-inner: #1B1C20;
-  --sd-inner-line: rgba(255, 255, 255, 0.08);
-  --sd-glow: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 18px 48px -18px rgba(0, 0, 0, 0.6);
+  --sd-inner: #131417;
+  --sd-inner-line: rgba(255, 255, 255, 0.09);
+  --sd-glow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 0 0 1px rgba(255, 255, 255, 0.09), 0 18px 48px -18px rgba(0, 0, 0, 0.7);
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --sd-page: #17181B;
-    --sd-card: linear-gradient(180deg, #202125 0%, #1B1C20 100%);
-    --sd-card-line: rgba(255, 255, 255, 0.08);
+    --sd-page: #0F1012;
+    --sd-card: linear-gradient(180deg, #1F2025 0%, #17181C 100%);
+    --sd-card-line: rgba(255, 255, 255, 0.09);
     --sd-text: #ECECEF;
     --sd-text-2: #B4B4BC;
     --sd-text-3: #92929B;
@@ -46,9 +46,9 @@
     --sd-blue-deep: #1E4B8F;
     --sd-orange: #F7941D;
     --sd-red: #EE4B2B;
-    --sd-inner: #1B1C20;
-    --sd-inner-line: rgba(255, 255, 255, 0.08);
-    --sd-glow: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 18px 48px -18px rgba(0, 0, 0, 0.6);
+    --sd-inner: #131417;
+    --sd-inner-line: rgba(255, 255, 255, 0.09);
+    --sd-glow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 0 0 1px rgba(255, 255, 255, 0.09), 0 18px 48px -18px rgba(0, 0, 0, 0.7);
   }
 }
 

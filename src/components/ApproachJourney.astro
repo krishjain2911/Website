@@ -952,25 +952,32 @@ const headlineWords = approach.headline.split(' ');
     line-height: 1.6 !important;
   }
 
-  :global(html[data-theme="dark"]) .card-stage-eyebrow[style*="#1E4B8F"],
-  :global(html[data-theme="dark"]) .card-stage-eyebrow[style*="#27599D"] {
-    color: var(--brand-blue-on-dark, #6FA3F5) !important;
+  :global(html[data-theme="dark"]) .card-stage-eyebrow[style*="#1E4B8F"]:not([style*="background"]),
+  :global(html[data-theme="dark"]) .card-stage-eyebrow[style*="#27599D"]:not([style*="background"]) {
+    color: var(--brand-blue-text, #5B93EA) !important;
   }
 
   :global(html[data-theme="dark"]) .card-stage-eyebrow[style*="#EE4B2B"] {
     color: #FF6644 !important;
   }
 
-  :global(html[data-theme="dark"]) .journey-stop[style*="#1E4B8F"] .pin-num,
-  :global(html[data-theme="dark"]) .journey-stop[style*="#27599D"] .pin-num,
-  :global(html[data-theme="dark"]) .journey-stop[style*="#1E4B8F"] .pin-glyph,
-  :global(html[data-theme="dark"]) .journey-stop[style*="#27599D"] .pin-glyph {
-    color: var(--brand-blue-on-dark, #6FA3F5) !important;
+  :global(html[data-theme="dark"]) .journey-stop[style*="#1E4B8F"]:not(.is-active) .pin-num,
+  :global(html[data-theme="dark"]) .journey-stop[style*="#27599D"]:not(.is-active) .pin-num,
+  :global(html[data-theme="dark"]) .journey-stop[style*="#1E4B8F"]:not(.is-active) .pin-glyph,
+  :global(html[data-theme="dark"]) .journey-stop[style*="#27599D"]:not(.is-active) .pin-glyph {
+    color: var(--brand-blue-text, #5B93EA) !important;
   }
 
-  :global(html[data-theme="dark"]) .journey-stop[style*="#1E4B8F"] .pin-inner-badge,
-  :global(html[data-theme="dark"]) .journey-stop[style*="#27599D"] .pin-inner-badge {
-    border-color: var(--brand-blue-on-dark, #6FA3F5) !important;
+  :global(html[data-theme="dark"]) .journey-stop[style*="#1E4B8F"]:not(.is-active) .pin-inner-badge,
+  :global(html[data-theme="dark"]) .journey-stop[style*="#27599D"]:not(.is-active) .pin-inner-badge {
+    border-color: var(--brand-blue-text, #5B93EA) !important;
+  }
+
+  :global(html[data-theme="dark"]) .journey-stop[style*="#1E4B8F"].is-active .pin-num,
+  :global(html[data-theme="dark"]) .journey-stop[style*="#27599D"].is-active .pin-num,
+  :global(html[data-theme="dark"]) .journey-stop[style*="#1E4B8F"].is-active .pin-glyph,
+  :global(html[data-theme="dark"]) .journey-stop[style*="#27599D"].is-active .pin-glyph {
+    color: #FFFFFF !important;
   }
 
   .journey-stop.is-passed .pin-inner-badge {
@@ -1044,20 +1051,37 @@ const headlineWords = approach.headline.split(' ');
 
   .journey-stop.is-upcoming { opacity: 0.5; }
 
-  /* Pins: solid stage colour when reached, white ring to lift them off the road */
+  :global(html[data-theme="dark"]) .journey-stop.is-upcoming {
+    opacity: 0.78;
+  }
+
+  :global(html[data-theme="dark"]) .journey-stop.is-upcoming .card-copy {
+    color: var(--text-secondary, #B4B4BC);
+  }
+
+  /* Pins: solid stage colour when active, white ring to lift them off the road; outlined for passed/upcoming */
   .pin-inner-badge {
     box-shadow: 0 0 0 5px var(--color-bg, #fff), 0 6px 16px rgba(16, 24, 40, 0.14);
   }
-  .journey-stop.is-active .pin-inner-badge,
-  .journey-stop.is-passed .pin-inner-badge {
+  .journey-stop.is-active .pin-inner-badge {
     background-color: var(--step-accent);
     border-color: var(--step-accent);
   }
   .journey-stop.is-active .pin-num,
-  .journey-stop.is-active .pin-glyph,
+  .journey-stop.is-active .pin-glyph {
+    color: #FFFFFF !important;
+  }
+
+  .journey-stop.is-passed .pin-inner-badge,
+  .journey-stop.is-upcoming .pin-inner-badge {
+    background-color: var(--color-surface, #FFFFFF);
+    border-color: var(--step-accent);
+  }
   .journey-stop.is-passed .pin-num,
-  .journey-stop.is-passed .pin-glyph {
-    color: #fff;
+  .journey-stop.is-passed .pin-glyph,
+  .journey-stop.is-upcoming .pin-num,
+  .journey-stop.is-upcoming .pin-glyph {
+    color: var(--step-accent);
   }
 
   /* Road: softer base and a quieter centre line */

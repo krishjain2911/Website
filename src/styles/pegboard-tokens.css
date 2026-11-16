@@ -34,17 +34,17 @@
 
 /* Dark mode: apply to BOTH [data-theme="dark"] and the unset + prefers-dark block */
 :root[data-theme="dark"] .pegboard-page {
-  --pb-page: #17181B;
+  --pb-page: #0F1012;
   /* outside the board */
-  --pb-board: #1B1C20;
+  --pb-board: #131417;
   /* the board panel: lighter than the page */
-  --pb-tile: #202125;
+  --pb-tile: #1A1B20;
   /* tiles: clearly lighter than the board */
-  --pb-tile-raised: #292A30;
+  --pb-tile-raised: #22232A;
   /* drawer, popups, hovered tile */
-  --pb-tile-line: rgba(255, 255, 255, 0.08);
+  --pb-tile-line: rgba(255, 255, 255, 0.09);
   /* neutral hairline; orange/blue accents are added on top */
-  --pb-line: rgba(255, 255, 255, 0.08);
+  --pb-line: rgba(255, 255, 255, 0.09);
   --pb-panel-edge: rgba(91, 143, 224, 0.22);
   --pb-text: #ECECEF;
   --pb-text-2: #B4B4BC;
@@ -89,17 +89,17 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .pegboard-page {
-    --pb-page: #17181B;
+    --pb-page: #0F1012;
     /* outside the board */
-    --pb-board: #1B1C20;
+    --pb-board: #131417;
     /* the board panel: lighter than the page */
-    --pb-tile: #202125;
+    --pb-tile: #1A1B20;
     /* tiles: clearly lighter than the board */
-    --pb-tile-raised: #292A30;
+    --pb-tile-raised: #22232A;
     /* drawer, popups, hovered tile */
-    --pb-tile-line: rgba(255, 255, 255, 0.08);
+    --pb-tile-line: rgba(255, 255, 255, 0.09);
     /* neutral hairline; orange/blue accents are added on top */
-    --pb-line: rgba(255, 255, 255, 0.08);
+    --pb-line: rgba(255, 255, 255, 0.09);
     --pb-panel-edge: rgba(91, 143, 224, 0.22);
     --pb-text: #ECECEF;
     --pb-text-2: #B4B4BC;

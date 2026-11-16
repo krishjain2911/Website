@@ -41,7 +41,7 @@ export function initHeroScrollSequence(opts: HeroScrollOptions) {
   const getThemeBgColor = (): string => {
     const computed = getComputedStyle(document.documentElement).getPropertyValue('--color-bg').trim();
     if (computed) return computed;
-    return currentTheme === 'dark' ? '#17181B' : '#FFFFFF';
+    return currentTheme === 'dark' ? '#0F1012' : '#FFFFFF';
   };
 
   const getIsMobile = (): boolean => window.innerWidth < 768;
