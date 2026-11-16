@@ -130,93 +130,55 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
     </div>
   </div>
 
-  <!-- Mobile Full-Screen Drawer Menu -->
-  <div id="mobile-menu-drawer" class="mobile-drawer" aria-hidden="true">
-    <div class="mobile-drawer-header">
-      <LogoMark size="md" showText={true} />
-      <button
-        type="button"
-        id="mobile-menu-close-btn"
-        class="mobile-close-btn"
-        aria-label="Close menu"
-      >
-        <Icon name="x" size={24} />
-      </button>
-    </div>
-
-    <div class="mobile-drawer-body">
-      <!-- Mobile Navigation Sections -->
-      <div class="mobile-nav-sections">
-        <!-- 1. About Us -->
-        <div class="mobile-section">
-          <span class="eyebrow">ABOUT US</span>
-          <div class="mobile-links-grid">
-            <a href="/about" class="mobile-nav-link">
-              <strong>About RHSP</strong>
-              <span>Our story &amp; mission</span>
-            </a>
-            <a href="/about#team" class="mobile-nav-link">
-              <strong>Founders &amp; Team</strong>
-              <span>Subramaniam Iyer &amp; Abhishek Bagwe</span>
-            </a>
-          </div>
-        </div>
-
-        <!-- 2. Solutions (Expandable Accordion) -->
-        <details class="mobile-section mobile-accordion" open={isSolutionsActive}>
-          <summary class="mobile-accordion-summary">
-            <span class="eyebrow">SOLUTIONS ({sortedProducts.length})</span>
-            <Icon name="chevron-down" size={16} class="accordion-chevron" />
-          </summary>
-          <div class="mobile-links-grid mobile-solutions-column">
-            {sortedProducts.map((proj) => (
-              <a href={`/solutions/${proj.slug}`} class="mobile-nav-link">
-                <span class="mobile-sol-badge">{proj.data.badge}</span>
-                <strong>{proj.data.title}</strong>
-                <span>{proj.data.oneLiner.replace(/^\[PLACEHOLDER\]\s*/i, '')}</span>
-              </a>
-            ))}
-          </div>
-        </details>
-
-        <!-- 3. PEG Board -->
-        <div class="mobile-section">
-          <span class="eyebrow">PEG BOARD</span>
-          <div class="mobile-links-grid">
-            <a href="/peg-board" class="mobile-nav-link">
-              <strong>PEG Board</strong>
-              <span>Guides, comparisons and our approach on one board</span>
-            </a>
-          </div>
-        </div>
-
-        <!-- 4. Contact -->
-        <div class="mobile-section">
-          <span class="eyebrow">CONTACT</span>
-          <div class="mobile-links-grid">
-            <a href="/#contact" class="mobile-nav-link">
-              <strong>Get in Touch</strong>
-              <span>Start a conversation with our technology architects</span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="mobile-drawer-footer">
-      <div class="mobile-theme-row">
-        <span>Dark Mode</span>
-        <ThemeToggle />
-      </div>
-      <a href={nav.cta.href} class="btn btn-primary mobile-cta-pill" id="mobile-cta-btn">
-        {nav.cta.label}
-      </a>
-    </div>
-  </div>
-
   <!-- Thin Scroll Progress Line -->
   <div id="scroll-progress-line" class="scroll-progress-bar" aria-hidden="true"></div>
 </header>
+
+<!-- Mobile Full-Screen Drawer Menu (rendered outside header so header transforms/filters don't contain it) -->
+<div id="mobile-menu-drawer" class="mobile-drawer" aria-hidden="true">
+  <div class="mobile-drawer-header">
+    <LogoMark size="md" showText={true} />
+    <button
+      type="button"
+      id="mobile-menu-close-btn"
+      class="mobile-close-btn"
+      aria-label="Close menu"
+    >
+      <Icon name="x" size={24} />
+    </button>
+  </div>
+
+  <nav class="mobile-drawer-body" aria-label="Mobile navigation">
+    <ul class="mobile-nav-list">
+      <li class="mobile-nav-item">
+        <a href="/about" class="mobile-nav-link">About Us</a>
+      </li>
+      <li class="mobile-nav-item">
+        <details class="mobile-nav-accordion" open={isSolutionsActive}>
+          <summary class="mobile-nav-summary">
+            <span>Solutions</span>
+            <Icon name="chevron-down" size={18} class="accordion-chevron" />
+          </summary>
+          <ul class="mobile-sublinks-list">
+            {sortedProducts.map((proj) => (
+              <li>
+                <a href={`/solutions/${proj.slug}`} class="mobile-sublink">
+                  {proj.data.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </details>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="/peg-board" class="mobile-nav-link">PEG Board</a>
+      </li>
+      <li class="mobile-nav-item">
+        <a href="/#contact" class="mobile-nav-link">Contact</a>
+      </li>
+    </ul>
+  </nav>
+</div>
 
 <style>
   .site-header {
@@ -581,30 +543,31 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
 
   /* Mobile Drawer Menu */
   .mobile-drawer {
-    /* The header's backdrop-filter makes it the containing block for fixed
-       children, so `inset: 0` shrank the drawer to the header's height.
-       An explicit viewport size keeps it full screen. */
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
+    width: 100vw;
+    width: 100dvw;
     height: 100vh;
     height: 100dvh;
     background-color: var(--color-bg);
-    z-index: 2000;
+    z-index: 9999;
     display: flex;
     flex-direction: column;
     opacity: 0;
     visibility: hidden;
-    transform: translateY(-20px);
-    transition: opacity 0.35s var(--ease-out-expo),
-                transform 0.35s var(--ease-out-expo),
-                visibility 0.35s;
+    pointer-events: none;
+    transform: translateY(-16px);
+    transition: opacity 0.25s var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1)),
+                transform 0.25s var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1)),
+                visibility 0.25s;
+    touch-action: pan-y;
   }
 
   .mobile-drawer.is-open {
     opacity: 1;
     visibility: visible;
+    pointer-events: auto;
     transform: translateY(0);
   }
 
@@ -612,8 +575,10 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: max(1.25rem, env(safe-area-inset-top)) 1.5rem 1.25rem;
+    padding: max(1.15rem, env(safe-area-inset-top)) 1.5rem 1.15rem;
     border-bottom: 1px solid var(--color-border);
+    flex-shrink: 0;
+    background-color: var(--color-bg);
   }
 
   .mobile-close-btn {
@@ -625,41 +590,81 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
     color: var(--color-text-primary);
     cursor: pointer;
     padding: 0.5rem;
+    border-radius: var(--radius-sm, 6px);
+  }
+
+  .mobile-close-btn:hover,
+  .mobile-close-btn:focus-visible {
+    color: #F7941D;
+    outline: none;
   }
 
   .mobile-drawer-body {
     flex: 1;
+    min-height: 0;
+    height: 100%;
     overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
     padding: 1.5rem;
   }
 
-  .mobile-nav-sections {
+  .mobile-nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
   }
 
-  .mobile-section {
+  .mobile-nav-item {
+    border-bottom: 1px solid color-mix(in srgb, var(--color-border) 60%, transparent);
+  }
+
+  .mobile-nav-item:last-child {
+    border-bottom: none;
+  }
+
+  .mobile-nav-link {
     display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+    align-items: center;
+    min-height: 52px;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    text-decoration: none;
+    transition: color 0.15s ease;
   }
 
-  .mobile-accordion {
-    border-bottom: 1px solid var(--color-border);
-    padding-bottom: 1rem;
+  .mobile-nav-link:hover,
+  .mobile-nav-link:active {
+    color: #F7941D;
   }
 
-  .mobile-accordion-summary {
+  .mobile-nav-accordion {
+    padding: 0;
+  }
+
+  .mobile-nav-summary {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    min-height: 52px;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
     cursor: pointer;
     list-style: none;
+    user-select: none;
   }
 
-  .mobile-accordion-summary::-webkit-details-marker {
+  .mobile-nav-summary::-webkit-details-marker {
     display: none;
+  }
+
+  .mobile-nav-summary:hover,
+  .mobile-nav-summary:active {
+    color: #F7941D;
   }
 
   .accordion-chevron {
@@ -667,136 +672,106 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
     transition: transform 0.2s ease;
   }
 
-  .mobile-accordion[open] .accordion-chevron {
+  .mobile-nav-accordion[open] .accordion-chevron {
     transform: rotate(180deg);
   }
 
-  .mobile-solutions-column {
+  .mobile-sublinks-list {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0.85rem 0.75rem;
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
-    margin-top: 0.75rem;
+    gap: 0.15rem;
   }
 
-  .mobile-sol-badge {
-    font-family: var(--font-mono, monospace);
-    font-size: 0.65rem;
-    color: var(--color-primary);
-  }
-
-  .eyebrow {
-    font-family: var(--font-sans);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--color-text-muted);
-  }
-
-  .mobile-links-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .mobile-nav-link {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    padding: 0.85rem 1rem;
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    text-decoration: none;
-    color: inherit;
-    transition: background-color 0.15s ease, border-color 0.15s ease;
-  }
-
-  .mobile-nav-link:hover,
-  .mobile-nav-link:active {
-    background-color: var(--color-surface-hover);
-    border-color: #F7941D;
-  }
-
-  .mobile-nav-link strong {
-    font-size: var(--fs-body);
-    font-weight: 600;
-    color: var(--color-text-primary);
-  }
-
-  .mobile-nav-link span {
-    font-size: var(--fs-xs);
-    color: var(--color-text-secondary);
-    line-height: 1.4;
-  }
-
-  .mobile-nav-link--disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-
-  .mobile-drawer-footer {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-    padding: 1.25rem 1.5rem max(1.25rem, env(safe-area-inset-bottom));
-    border-top: 1px solid var(--color-border);
-    background-color: var(--color-surface);
-  }
-
-  .mobile-theme-row {
+  .mobile-sublink {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    font-size: var(--fs-sm);
+    min-height: 44px;
+    font-size: 0.95rem;
     font-weight: 500;
     color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color 0.15s ease, transform 0.15s ease;
   }
 
-  .mobile-cta-pill {
-    width: 100%;
-    height: 48px;
-    font-size: var(--fs-body);
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+  .mobile-sublink:hover,
+  .mobile-sublink:active {
+    color: #F7941D;
+    transform: translateX(3px);
   }
 </style>
 
 <script>
   function setupNavHandlers() {
     // 1. Mobile Menu Drawer
+    const header = document.getElementById('main-nav-header');
     const openBtn = document.getElementById('mobile-menu-open-btn');
     const closeBtn = document.getElementById('mobile-menu-close-btn');
     const drawer = document.getElementById('mobile-menu-drawer');
     const drawerLinks = drawer?.querySelectorAll('a');
 
-    let navPrevOverflow = '';
+    let isDrawerOpen = false;
+    let savedScrollY = 0;
+    let prevHtmlOverflow = '';
+    let prevBodyOverflow = '';
+    let prevBodyTouchAction = '';
+
     function openDrawer() {
-      if (!drawer) return;
+      if (!drawer || isDrawerOpen) return;
+      isDrawerOpen = true;
+      savedScrollY = window.scrollY;
       drawer.classList.add('is-open');
       drawer.setAttribute('aria-hidden', 'false');
       openBtn?.setAttribute('aria-expanded', 'true');
-      navPrevOverflow = document.documentElement.style.overflow;
+
+      // Keep header visible and avoid transform conflicts
+      header?.classList.remove('is-hidden');
+
+      prevHtmlOverflow = document.documentElement.style.overflow;
+      prevBodyOverflow = document.body.style.overflow;
+      prevBodyTouchAction = document.body.style.touchAction;
+
       document.documentElement.style.overflow = 'hidden';
       document.body.style.overflow = 'hidden';
-      closeBtn?.focus();
+      document.body.style.touchAction = 'none';
+
+      closeBtn?.focus({ preventScroll: true });
     }
 
     function closeDrawer() {
-      if (!drawer) return;
+      if (!drawer || !isDrawerOpen) return;
+      isDrawerOpen = false;
       drawer.classList.remove('is-open');
       drawer.setAttribute('aria-hidden', 'true');
       openBtn?.setAttribute('aria-expanded', 'false');
-      document.documentElement.style.overflow = navPrevOverflow;
-      document.body.style.overflow = '';
-      openBtn?.focus();
+
+      document.documentElement.style.overflow = prevHtmlOverflow;
+      document.body.style.overflow = prevBodyOverflow;
+      document.body.style.touchAction = prevBodyTouchAction;
+
+      // Restore exact scroll position
+      window.scrollTo({ top: savedScrollY, behavior: 'instant' as ScrollBehavior });
+
+      openBtn?.focus({ preventScroll: true });
     }
 
     openBtn?.addEventListener('click', openDrawer);
     closeBtn?.addEventListener('click', closeDrawer);
     drawerLinks?.forEach(link => link.addEventListener('click', closeDrawer));
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && isDrawerOpen) {
+        closeDrawer();
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 1100 && isDrawerOpen) {
+        closeDrawer();
+      }
+    }, { passive: true });
 
     // 2. Solutions Dropdown Hover, Click & Keyboard Navigation
     const dropdownItem = document.getElementById('solutions-dropdown-item');
@@ -901,11 +876,11 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
     }
 
     // 3. Scroll Progress Indicator & Header Scroll Hide
-    const header = document.getElementById('main-nav-header');
     const progressBar = document.getElementById('scroll-progress-line');
     let lastScrollY = window.scrollY;
 
     function handleScroll() {
+      if (isDrawerOpen) return;
       const currentScrollY = window.scrollY;
       const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
 
@@ -922,7 +897,7 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
         }
 
         if (window.innerWidth < 1100) {
-          if (currentScrollY > lastScrollY && currentScrollY > 120) {
+          if (!isDrawerOpen && currentScrollY > lastScrollY && currentScrollY > 120) {
             header.classList.add('is-hidden');
           } else {
             header.classList.remove('is-hidden');
@@ -937,5 +912,10 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
   }
 
   setupNavHandlers();
-  document.addEventListener('astro:after-swap', setupNavHandlers);
+  document.addEventListener('astro:after-swap', () => {
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
+    document.body.style.touchAction = '';
+    setupNavHandlers();
+  });
 </script>

@@ -53,10 +53,10 @@ const governBlocks = [
       <!-- 0. Phase 0 Intro Header (Center-aligned above the cube in Phase 0) -->
       <div class="stage-intro-header" id="stage-intro-header" data-layout="intro-text" aria-hidden="false">
         <span class="eyebrow intro-eyebrow">HOW WE THINK</span>
-        <h2 class="intro-headline staged-word-heading" id="intro-headline">
-          <span class="staged-word color-word-plan" style="--word-idx: 0;">Plan.</span>
-          <span class="staged-word color-word-engineer" style="--word-idx: 1;">Engineer.</span>
-          <span class="staged-word color-word-genai" style="--word-idx: 2;">Govern.</span>
+        <h2 class="intro-headline" id="intro-headline">
+          <span class="color-word-plan">Plan.</span>
+          <span class="color-word-engineer">Engineer.</span>
+          <span class="color-word-genai">Govern.</span>
         </h2>
         <p class="intro-subline">Three disciplines. One accountable team.</p>
       </div>
@@ -194,11 +194,10 @@ const governBlocks = [
           >
             <!-- Fixed Slot 1: Header -->
             <div class="panel-header">
-              <h2 class="panel-title staged-word-heading">
+              <h2 class="panel-title">
                 <span class="pillar-indicator" style="background-color: #1E4B8F;" aria-hidden="true">P</span>
-                <strong class="highlight-plan staged-word" style="--word-idx: 0;">Plan</strong>
-                <span class="staged-word" style="--word-idx: 1;">with</span>
-                <span class="staged-word" style="--word-idx: 2;">foresight.</span>
+                <strong class="highlight-plan">Plan</strong>
+                <span>with foresight.</span>
               </h2>
               <p class="panel-desc">
                 Objective platform selection, architecture blueprints, and founder-led advisory before writing code.
@@ -269,11 +268,10 @@ const governBlocks = [
           >
             <!-- Fixed Slot 1: Header -->
             <div class="panel-header">
-              <h2 class="panel-title staged-word-heading">
+              <h2 class="panel-title">
                 <span class="pillar-indicator" style="background-color: #F7941D;" aria-hidden="true">E</span>
-                <strong class="highlight-engineer staged-word" style="--word-idx: 0;">Engineer</strong>
-                <span class="staged-word" style="--word-idx: 1;">with</span>
-                <span class="staged-word" style="--word-idx: 2;">precision.</span>
+                <strong class="highlight-engineer">Engineer</strong>
+                <span>with precision.</span>
               </h2>
               <p class="panel-desc">
                 OutSystems speed or custom MERN engineering, built around enterprise workflows.
@@ -359,11 +357,10 @@ const governBlocks = [
           >
             <!-- Fixed Slot 1: Header (Identical positioning & height) -->
             <div class="panel-header">
-              <h2 class="panel-title staged-word-heading">
+              <h2 class="panel-title">
                 <span class="pillar-indicator" style="background-color: #EE4B2B;" aria-hidden="true">G</span>
-                <strong class="highlight-genai staged-word" style="--word-idx: 0;">Govern</strong>
-                <span class="staged-word" style="--word-idx: 1;">to</span>
-                <span class="staged-word" style="--word-idx: 2;">scale.</span>
+                <strong class="highlight-genai">Govern</strong>
+                <span>to scale.</span>
               </h2>
               <p class="panel-desc">
                 Proactive governance is key to scaling any platform / application at the pace of business.
@@ -555,27 +552,7 @@ const governBlocks = [
     color: #EE4B2B;
   }
 
-  /* Staggered word reveal animation */
-  .staged-word-heading {
-    display: inline-flex;
-    flex-wrap: wrap;
-    column-gap: 0.3em;
-    row-gap: 0.15em;
-  }
 
-  .staged-word-heading .staged-word {
-    display: inline-block;
-    opacity: 0;
-    transform: translateY(8px);
-    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-    transition-delay: calc(var(--word-idx, 0) * 80ms);
-  }
-
-  .staged-word-heading.is-revealed .staged-word,
-  .stage-panel.is-active .staged-word {
-    opacity: 1;
-    transform: translateY(0);
-  }
 
   /* -------------------------------------------------------------
      Stage Container Grid
@@ -1015,6 +992,8 @@ const governBlocks = [
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+    column-gap: 0.35rem;
+    row-gap: 0.15rem;
     font-size: clamp(1.3rem, 2.3vw, 1.85rem);
     font-weight: 800;
     line-height: 1.15;
@@ -2086,7 +2065,6 @@ const governBlocks = [
     let trackTop = 0;
     let trackHeight = 0;
     let centerOffset = 0;
-    let introRevealed = false;
 
     const atmosphereTint = document.getElementById('pillar-atmosphere-tint');
     const cubeGlow = document.getElementById('cube-ambient-glow');
@@ -2156,16 +2134,6 @@ const governBlocks = [
         const currentScroll = vp.scrollY - trackTop;
         // Intro only: push the centred cube down so it clears the 3-line intro header
         const introLiftY = clamp(44, Math.round(vp.viewportHeight * 0.08), 72);
-
-        // Intro headline staggered word reveal
-        if (!introRevealed && introHeader) {
-          const iRect = introHeader.getBoundingClientRect();
-          if (iRect.top < vp.viewportHeight * 0.9) {
-            const headlineEl = document.getElementById('intro-headline');
-            if (headlineEl) headlineEl.classList.add('is-revealed');
-            introRevealed = true;
-          }
-        }
 
         // --- PHASE 0: Intro only (cube centred) ---
         if (currentScroll <= introDist * 0.35) {
