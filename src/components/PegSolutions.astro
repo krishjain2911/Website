@@ -420,7 +420,7 @@ const governBlocks = [
     background: radial-gradient(circle at 65% 50%, #EE4B2B 0%, transparent 70%);
   }
 
-  :global(.dark) .pillar-atmosphere-tint {
+  :global(html[data-theme="dark"]) .pillar-atmosphere-tint {
     opacity: 0.07;
   }
 
@@ -494,6 +494,10 @@ const governBlocks = [
     margin-bottom: 0.5rem;
   }
 
+  :global(html[data-theme="dark"]) .intro-eyebrow {
+    color: var(--text-secondary, #A3A3A3) !important;
+  }
+
   .intro-headline {
     font-size: clamp(2.2rem, 4.5vw, 3.5rem);
     font-weight: 800;
@@ -518,7 +522,8 @@ const governBlocks = [
 
   /* Staged Word Highlight Colors */
   .color-word-plan { color: #1E4B8F; }
-  :global(.dark) .color-word-plan { color: #5B8FE0; }
+  :global(html[data-theme="dark"]) .color-word-plan,
+  :global([data-theme="dark"]) .color-word-plan { color: var(--brand-blue-on-dark, #6FA3F5); }
   .color-word-engineer { color: #F7941D; }
   .color-word-genai { color: #EE4B2B; }
 
@@ -631,7 +636,7 @@ const governBlocks = [
   .cube-ambient-glow[data-pillar="engineer"] { background: #F7941D; }
   .cube-ambient-glow[data-pillar="genai"] { background: #EE4B2B; }
 
-  :global(.dark) .cube-ambient-glow {
+  :global(html[data-theme="dark"]) .cube-ambient-glow {
     opacity: 0.28;
   }
 
@@ -694,6 +699,16 @@ const governBlocks = [
     transform: translateZ(var(--half-face));
     background: linear-gradient(135deg, #1E4B8F 0%, #0F2A4A 100%);
     box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.2);
+  }
+
+  :global(html[data-theme="dark"]) .face-front,
+  :global([data-theme="dark"]) .face-front {
+    background: #103675;
+  }
+
+  :global(html[data-theme="dark"]) .cube-ambient-glow[data-pillar="plan"],
+  :global([data-theme="dark"]) .cube-ambient-glow[data-pillar="plan"] {
+    background: #103675;
   }
 
   /* Right Face: E - Engineer (Orange) */
@@ -783,7 +798,7 @@ const governBlocks = [
     z-index: 10;
   }
 
-  :global(.dark) .stage-pill-tabs {
+  :global(html[data-theme="dark"]) .stage-pill-tabs {
     background: var(--color-surface-raised);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
   }
@@ -821,8 +836,21 @@ const governBlocks = [
   }
 
   .plan-badge { background-color: #1E4B8F; }
-  .engineer-badge { background-color: #F7941D; }
-  .genai-badge { background-color: #EE4B2B; }
+  .engineer-badge { background-color: #F7941D; color: #17181B; }
+  .genai-badge { background-color: #EE4B2B; color: #17181B; }
+
+  :global(html[data-theme="dark"]) .plan-badge {
+    background-color: var(--brand-blue-on-dark, #6FA3F5);
+    color: var(--color-text-inverse, #17181B);
+  }
+  :global(html[data-theme="dark"]) .engineer-badge {
+    background-color: #F7941D;
+    color: var(--color-text-inverse, #17181B);
+  }
+  :global(html[data-theme="dark"]) .genai-badge {
+    background-color: #EE4B2B;
+    color: var(--color-text-inverse, #17181B);
+  }
 
   .peg-tab-btn.is-active {
     background: var(--color-bg);
@@ -830,7 +858,7 @@ const governBlocks = [
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
 
-  :global(.dark) .peg-tab-btn.is-active {
+  :global(html[data-theme="dark"]) .peg-tab-btn.is-active {
     background: rgba(255, 255, 255, 0.1);
   }
 
@@ -846,6 +874,10 @@ const governBlocks = [
     transition: opacity 0.3s ease;
     text-transform: uppercase;
     letter-spacing: 0.08em;
+  }
+
+  :global(html[data-theme="dark"]) .cue-text {
+    color: var(--text-secondary, #A3A3A3) !important;
   }
 
   .cue-arrow {
@@ -924,7 +956,8 @@ const governBlocks = [
   }
 
   .highlight-plan { color: #1E4B8F; }
-  :global(.dark) .highlight-plan { color: #5B8FE0; }
+  :global(html[data-theme="dark"]) .highlight-plan,
+  :global([data-theme="dark"]) .highlight-plan { color: var(--brand-blue-on-dark, #6FA3F5); }
   .highlight-engineer { color: #F7941D; }
   .highlight-genai { color: #EE4B2B; }
 
@@ -955,7 +988,7 @@ const governBlocks = [
     border-radius: var(--radius-md);
   }
 
-  :global(.dark) .stacks-strip {
+  :global(html[data-theme="dark"]) .stacks-strip {
     background: var(--color-surface-raised);
   }
 
@@ -987,18 +1020,19 @@ const governBlocks = [
     color: #B86200;
   }
 
-  :global(.dark) .badge-outsystems {
+  :global(html[data-theme="dark"]) .badge-outsystems {
     color: #F7941D;
   }
 
   .badge-mern {
     background: rgba(30, 75, 143, 0.08);
     border-color: rgba(30, 75, 143, 0.25);
-    color: #1E4B8F;
+    color: var(--brand-blue-text, #1E4B8F);
   }
 
-  :global(.dark) .badge-mern {
-    color: #5B8FE0;
+  :global(html[data-theme="dark"]) .badge-mern {
+    color: var(--brand-blue-on-dark, #6FA3F5);
+    border-color: rgba(111, 163, 245, 0.35);
   }
 
   /* -------------------------------------------------------------
@@ -1044,12 +1078,15 @@ const governBlocks = [
     border-color: var(--color-border-strong);
   }
 
-  :global(.dark) .stage-card {
-    background: var(--color-surface-raised);
+  :global(html[data-theme="dark"]) .stage-card {
+    background: var(--color-surface);
+    border-color: var(--color-border);
   }
 
-  :global(.dark) .stage-card:hover {
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  :global(html[data-theme="dark"]) .stage-card:hover {
+    background: var(--color-surface-hover);
+    border-color: var(--color-border-hover);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
   }
 
   .card-top-icon {
@@ -1087,7 +1124,7 @@ const governBlocks = [
     color: var(--color-text-secondary);
   }
 
-  :global(.dark) .stage-tag {
+  :global(html[data-theme="dark"]) .stage-tag {
     background: rgba(255, 255, 255, 0.05);
   }
 
@@ -1350,7 +1387,7 @@ const governBlocks = [
     transition: transform 0.2s ease, color 0.2s ease;
   }
 
-  :global(.dark) .rail-card-link {
+  :global(html[data-theme="dark"]) .rail-card-link {
     color: #F7941D;
   }
 
@@ -1358,7 +1395,7 @@ const governBlocks = [
     color: #B82810;
   }
 
-  :global(.dark) #stage-panel-genai .rail-card-link {
+  :global(html[data-theme="dark"]) #stage-panel-genai .rail-card-link {
     color: #EE4B2B;
   }
 
@@ -2259,6 +2296,13 @@ const governBlocks = [
         }
 
         const nextPillar = pillarOrder[currentIdx];
+        const ang = pillarAngles[nextPillar];
+        cubeAssembly.style.transform = `rotateX(${ang.x}deg) rotateY(${ang.y}deg)`;
+        if (window.innerWidth < 900 || window.innerHeight < 640) {
+          setPanelActive(nextPillar); // stacked layout: swap panel and cube face, don't scroll
+          return;
+        }
+
         const introDist = clamp(180, Math.round(window.innerHeight * 0.25), 260);
         const stopDist = clamp(220, Math.round(window.innerHeight * 0.28), 300);
         let targetScroll = trackTop + introDist + stopDist * 0.4;

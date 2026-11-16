@@ -1,0 +1,684 @@
+﻿=== grep -rn "rhsp-full-logo-img\|brand-logo-link" src public ===
+src/components/brand/LogoMark.astro:17:        class="rhsp-full-logo-img logo-theme-light"
+src/components/brand/LogoMark.astro:24:        class="rhsp-full-logo-img logo-theme-dark"
+src/components/brand/LogoMark.astro:50:  .rhsp-full-logo-img {
+src/components/brand/LogoMark.astro:59:  [data-size="sm"] .rhsp-full-logo-img {
+src/components/brand/LogoMark.astro:63:  [data-size="md"] .rhsp-full-logo-img {
+src/components/brand/LogoMark.astro:67:  [data-size="lg"] .rhsp-full-logo-img {
+src/components/brand/LogoMark.astro:72:    .rhsp-full-logo-img,
+src/components/brand/LogoMark.astro:73:    [data-size="sm"] .rhsp-full-logo-img,
+src/components/brand/LogoMark.astro:74:    [data-size="md"] .rhsp-full-logo-img,
+src/components/brand/LogoMark.astro:75:    [data-size="lg"] .rhsp-full-logo-img {
+src/components/brand/LogoMark.astro:80:  .rhsp-logo-wrapper:hover .rhsp-full-logo-img,
+src/components/Nav.astro:22:    <a href="/" class="brand-logo-link" aria-label="RHSP - Return to homepage">
+src/components/Nav.astro:264:  .site-header.is-scrolled :global(.rhsp-full-logo-img) {
+src/components/Nav.astro:278:  .brand-logo-link {
+
+=== grep -rn "data-theme" src ===
+src/components/AgileApproachFlow.astro:368:  :global([data-theme="dark"]) .tab-num {
+src/components/AgileApproachFlow.astro:538:  :global([data-theme="dark"]) .check-icon-wrap {
+src/components/ApproachJourney.astro:330:  :global(html[data-theme="dark"]) .layer-aperture {
+src/components/ApproachJourney.astro:344:  :global(html[data-theme="dark"]) .layer-isometric-square {
+src/components/ApproachJourney.astro:611:  :global(html[data-theme="dark"]) .socket-outer-rim {
+src/components/ApproachJourney.astro:618:  :global(html[data-theme="dark"]) .socket-inner-hole {
+src/components/ApproachJourney.astro:643:  :global(html[data-theme="dark"]) .road-bg-track {
+src/components/ApproachJourney.astro:670:  :global(html[data-theme="dark"]) .connector-line {
+src/components/ApproachJourney.astro:697:  :global(html[data-theme="dark"]) .journey-guide-cube {
+src/components/ApproachJourney.astro:870:  :global(html[data-theme="dark"]) .journey-stop.is-active .stop-content-card {
+src/components/ApproachJourney.astro:937:  :global(html[data-theme="dark"]) .journey-stop.is-passed .stop-content-card {
+src/components/ApproachJourney.astro:945:  :global(html[data-theme="dark"]) .rail-indicator {
+src/components/ApproachJourney.astro:949:  :global(html[data-theme="dark"]) .card-detail {
+src/components/ApproachJourney.astro:955:  :global(html[data-theme="dark"]) .card-stage-eyebrow[style*="#1E4B8F"],
+src/components/ApproachJourney.astro:956:  :global(html[data-theme="dark"]) .card-stage-eyebrow[style*="#27599D"] {
+src/components/ApproachJourney.astro:960:  :global(html[data-theme="dark"]) .journey-stop[style*="#1E4B8F"] .pin-num,
+src/components/ApproachJourney.astro:961:  :global(html[data-theme="dark"]) .journey-stop[style*="#27599D"] .pin-num,
+src/components/ApproachJourney.astro:962:  :global(html[data-theme="dark"]) .journey-stop[style*="#1E4B8F"] .pin-glyph,
+src/components/ApproachJourney.astro:963:  :global(html[data-theme="dark"]) .journey-stop[style*="#27599D"] .pin-glyph {
+src/components/ApproachJourney.astro:967:  :global(html[data-theme="dark"]) .journey-stop[style*="#1E4B8F"] .pin-inner-badge,
+src/components/ApproachJourney.astro:968:  :global(html[data-theme="dark"]) .journey-stop[style*="#27599D"] .pin-inner-badge {
+src/components/brand/LogoMark.astro:124:  :global(html[data-theme="dark"]) .logo-theme-light,
+src/components/brand/LogoMark.astro:125:  :global([data-theme="dark"]) .logo-theme-light {
+src/components/brand/LogoMark.astro:129:  :global(html[data-theme="dark"]) .logo-theme-dark,
+src/components/brand/LogoMark.astro:130:  :global([data-theme="dark"]) .logo-theme-dark {
+src/components/brand/LogoMark.astro:135:    :global(:root:not([data-theme="light"])) .logo-theme-light {
+src/components/brand/LogoMark.astro:138:    :global(:root:not([data-theme="light"])) .logo-theme-dark {
+src/components/ContactSection.astro:311:  :global([data-theme="dark"]) .contact-cube-floating {
+src/components/ContactSection.astro:360:  :global([data-theme="dark"]) .contact-cube-shadow {
+src/components/Hero.astro:318:  :global(:root[data-theme="dark"]) .hero-frame1--dark {
+src/components/Hero.astro:322:  :global(:root[data-theme="dark"]) .hero-frame1--light {
+src/components/HowWeWork.astro:460:  :global([data-theme="dark"]) .result-card-black {
+src/components/HowWeWork.astro:483:  :global([data-theme="dark"]) .result-eyebrow {
+src/components/HowWeWork.astro:499:  :global([data-theme="dark"]) .result-pill-badge {
+src/components/HowWeWork.astro:520:  :global([data-theme="dark"]) .result-approach-desc {
+src/components/HowWeWork.astro:554:  :global([data-theme="dark"]) .result-cta-btn:hover {
+src/components/JourneyProgressPill.astro:183:  :global(:root[data-theme="dark"]) .marker-peg .rail-dot.is-upcoming .dot-passed {
+src/components/MediaAsset.astro:321:  :global([data-theme="dark"]) .placeholder-gradient-panel.theme-warm {
+src/components/MediaAsset.astro:325:  :global([data-theme="dark"]) .placeholder-gradient-panel.theme-navy {
+src/components/Nav.astro:239:  :global([data-theme="dark"]) .site-header {
+src/components/Nav.astro:337:  :global([data-theme="dark"]) .nav-link:hover,
+src/components/Nav.astro:338:  :global([data-theme="dark"]) .nav-link:focus-visible {
+src/components/Nav.astro:386:  :global([data-theme="dark"]) .solutions-dropdown-panel {
+src/components/Nav.astro:425:  :global([data-theme="dark"]) .solutions-card-link {
+src/components/Nav.astro:431:  :global([data-theme="dark"]) .solutions-card-link:hover,
+src/components/Nav.astro:432:  :global([data-theme="dark"]) .solutions-card-link:focus-visible {
+src/components/Nav.astro:449:  :global([data-theme="dark"]) .sol-card-thumb {
+src/components/Nav.astro:493:  :global([data-theme="dark"]) .sol-card-title {
+src/components/Nav.astro:508:  :global([data-theme="dark"]) .sol-card-desc {
+src/components/OriginVisual.astro:223:  :global([data-theme="dark"]) .origin-visual-card {
+src/components/OriginVisual.astro:256:  :global([data-theme="dark"]) .step-badge-pill strong {
+src/components/OriginVisual.astro:310:  :global([data-theme="dark"]) .origin-guideline {
+src/components/OriginVisual.astro:322:  :global([data-theme="dark"]) .hole-outer-ring {
+src/components/OriginVisual.astro:330:  :global([data-theme="dark"]) .hole-interior {
+src/components/OriginVisual.astro:370:  :global([data-theme="dark"]) .check-bg-circle {
+src/components/OriginVisual.astro:393:  :global([data-theme="dark"]) .adapter-sleeve-body {
+src/components/pegboard/AdapterWidget.astro:75:      const t = document.documentElement.getAttribute('data-theme');
+src/components/pegboard/PegBoard.astro:1110:  :root[data-theme="dark"] .zone-count-chip,
+src/components/pegboard/PegBoard.astro:1111:  :root:not([data-theme="light"]) .zone-count-chip {
+src/components/PegCardEngineer.astro:121:  :global([data-theme="dark"]) .peg-card-engineer {
+src/components/PegCardEngineer.astro:220:  :global([data-theme="dark"]) .central-app-node {
+src/components/PegCardEngineer.astro:249:  :global([data-theme="dark"]) .spoke-node-badge {
+src/components/PegCardEngineer.astro:298:  :global([data-theme="dark"]) .engineer-chips-bar {
+src/components/PegCardEngineer.astro:311:  :global([data-theme="dark"]) .quality-chip {
+src/components/PegCardGenAI.astro:103:  :global([data-theme="dark"]) .peg-card-genai {
+src/components/PegCardGenAI.astro:151:  :global([data-theme="dark"]) .genai-perimeter-box {
+src/components/PegCardGenAI.astro:212:  :global([data-theme="dark"]) .capability-node-card {
+src/components/PegCardGenAI.astro:233:  :global([data-theme="dark"]) .cap-icon-circle {
+src/components/PegCardGenAI.astro:262:  :global([data-theme="dark"]) .cap-desc {
+src/components/PegCardGenAI.astro:276:  :global([data-theme="dark"]) .genai-chips-bar {
+src/components/PegCardGenAI.astro:289:  :global([data-theme="dark"]) .quality-chip {
+src/components/PegCardPlan.astro:113:  :global([data-theme="dark"]) .peg-card-plan {
+src/components/PegCardPlan.astro:181:  :global([data-theme="dark"]) .plan-chip-btn {
+src/components/PegCardPlan.astro:187:  :global([data-theme="dark"]) .plan-chip-btn:hover {
+src/components/PegCardPlan.astro:192:  :global([data-theme="dark"]) .plan-chip-btn.is-active {
+src/components/PegCardPlan.astro:221:  :global([data-theme="dark"]) .roadmap-track-bg {
+src/components/PegCardPlan.astro:267:  :global([data-theme="dark"]) .roadmap-step-box {
+src/components/PegCardPlan.astro:290:  :global([data-theme="dark"]) .step-phase-badge {
+src/components/PegCardPlan.astro:300:  :global([data-theme="dark"]) .step-num-mono {
+src/components/PegCardPlan.astro:314:  :global([data-theme="dark"]) .later-check-badge {
+src/components/PegCardPlan.astro:322:  :global([data-theme="dark"]) .navy-check-icon {
+src/components/PegCardPlan.astro:335:  :global([data-theme="dark"]) .step-outcome-text {
+src/components/PegSolutions.astro:423:  :global(html[data-theme="dark"]) .pillar-atmosphere-tint {
+src/components/PegSolutions.astro:497:  :global(html[data-theme="dark"]) .intro-eyebrow {
+src/components/PegSolutions.astro:525:  :global(html[data-theme="dark"]) .color-word-plan,
+src/components/PegSolutions.astro:526:  :global([data-theme="dark"]) .color-word-plan { color: var(--brand-blue-on-dark, #6FA3F5); }
+src/components/PegSolutions.astro:639:  :global(html[data-theme="dark"]) .cube-ambient-glow {
+src/components/PegSolutions.astro:791:  :global(html[data-theme="dark"]) .stage-pill-tabs {
+src/components/PegSolutions.astro:832:  :global(html[data-theme="dark"]) .plan-badge {
+src/components/PegSolutions.astro:836:  :global(html[data-theme="dark"]) .engineer-badge {
+src/components/PegSolutions.astro:840:  :global(html[data-theme="dark"]) .genai-badge {
+src/components/PegSolutions.astro:851:  :global(html[data-theme="dark"]) .peg-tab-btn.is-active {
+src/components/PegSolutions.astro:869:  :global(html[data-theme="dark"]) .cue-text {
+src/components/PegSolutions.astro:949:  :global(html[data-theme="dark"]) .highlight-plan,
+src/components/PegSolutions.astro:950:  :global([data-theme="dark"]) .highlight-plan { color: var(--brand-blue-on-dark, #6FA3F5); }
+src/components/PegSolutions.astro:981:  :global(html[data-theme="dark"]) .stacks-strip {
+src/components/PegSolutions.astro:1013:  :global(html[data-theme="dark"]) .badge-outsystems {
+src/components/PegSolutions.astro:1023:  :global(html[data-theme="dark"]) .badge-mern {
+src/components/PegSolutions.astro:1071:  :global(html[data-theme="dark"]) .stage-card {
+src/components/PegSolutions.astro:1076:  :global(html[data-theme="dark"]) .stage-card:hover {
+src/components/PegSolutions.astro:1117:  :global(html[data-theme="dark"]) .stage-tag {
+src/components/PegSolutions.astro:1380:  :global(html[data-theme="dark"]) .rail-card-link {
+src/components/PegSolutions.astro:1388:  :global(html[data-theme="dark"]) #stage-panel-genai .rail-card-link {
+src/components/project/VideoEmbed.astro:75:  :global([data-theme="dark"]) .video-placeholder-frame {
+src/components/project/VideoEmbed.astro:91:  :global([data-theme="dark"]) .placeholder-icon-wrap {
+src/components/ThemeToggle.astro:100:  :global([data-theme="dark"]) .toggle-thumb {
+src/components/ThemeToggle.astro:106:  :global([data-theme="dark"]) .slot-sun {
+src/components/ThemeToggle.astro:110:  :global([data-theme="dark"]) .slot-moon {
+src/components/ThemeToggle.astro:140:          const currentTheme = document.documentElement.getAttribute('data-theme') || 
+src/components/ThemeToggle.astro:144:          document.documentElement.setAttribute('data-theme', nextTheme);
+src/layouts/BaseLayout.astro:95:            document.documentElement.setAttribute('data-theme', urlTheme);
+src/layouts/BaseLayout.astro:100:            document.documentElement.setAttribute('data-theme', stored);
+src/layouts/BaseLayout.astro:102:            document.documentElement.setAttribute('data-theme', 'dark');
+src/layouts/BaseLayout.astro:104:            document.documentElement.setAttribute('data-theme', 'light');
+src/pages/about.astro:362:  :global(html[data-theme="dark"]) .subnav-pill-container {
+src/pages/about.astro:415:  :global(html[data-theme="dark"]) .unified-theory-container {
+src/pages/about.astro:483:  :global(html[data-theme="dark"]) .rhsp-expandable-pill {
+src/pages/about.astro:517:  :global(html[data-theme="dark"]) .letter-r,
+src/pages/about.astro:518:  :global(html[data-theme="dark"]) .letter-h {
+src/pages/about.astro:582:  :global(html[data-theme="dark"]) .theory-row-card {
+src/pages/about.astro:706:  :global(html[data-theme="dark"]) .circle-blue {
+src/pages/about.astro:710:  :global(html[data-theme="dark"]) .circle-orange {
+src/pages/about.astro:713:  :global(html[data-theme="dark"]) .circle-red {
+src/pages/about.astro:742:  :global(html[data-theme="dark"]) .fact-chip {
+src/pages/about.astro:778:  :global(html[data-theme="dark"]) .diagram-surface {
+src/pages/about.astro:806:  :global(html[data-theme="dark"]) .beat-pill {
+src/pages/about.astro:831:  :global(html[data-theme="dark"]) .diagram-surface[data-beat="1"] .beat-pill[data-beat-target="1"] { color: var(--brand-blue-on-dark, #6FA3F5); }
+src/pages/about.astro:832:  :global(html[data-theme="dark"]) .diagram-surface[data-beat="2"] .beat-pill[data-beat-target="2"] { color: #F7941D; }
+src/pages/about.astro:833:  :global(html[data-theme="dark"]) .diagram-surface[data-beat="3"] .beat-pill[data-beat-target="3"] { color: #EE4B2B; }
+src/pages/about.astro:874:  :global(html[data-theme="dark"]) .label-hole-title { fill: var(--brand-blue-on-dark, #6FA3F5); }
+src/pages/about.astro:888:  :global(html[data-theme="dark"]) .d-hole-ring, :global(html[data-theme="dark"]) .d-hole-inner { stroke: var(--brand-blue-on-dark, #6FA3F5); }
+src/pages/about.astro:901:  :global(html[data-theme="dark"]) .d-label-hole { fill: var(--brand-blue-on-dark, #6FA3F5); }
+src/pages/about.astro:928:  :global(html[data-theme="dark"]) .diagram-caption-footer {
+src/pages/about.astro:998:  :global(html[data-theme="dark"]) .mandate-card {
+src/pages/about.astro:1003:  :global(html[data-theme="dark"]) .theory-card-step[style*="#1E4B8F"],
+src/pages/about.astro:1004:  :global(html[data-theme="dark"]) .theory-card-link-btn[style*="#1E4B8F"],
+src/pages/about.astro:1005:  :global(html[data-theme="dark"]) .mandate-card-step[style*="#1E4B8F"] {
+src/scripts/HeroScrollSequence.ts:38:    return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+src/scripts/HeroScrollSequence.ts:343:      if (m.attributeName === 'data-theme') {
+src/scripts/HeroScrollSequence.ts:350:  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+src/styles/global.css:102:  :root:not([data-theme="light"]) {
+src/styles/global.css:145:/* Explicit Dark Theme Override: html[data-theme="dark"] */
+src/styles/global.css:146:html[data-theme="dark"],
+src/styles/global.css:147:[data-theme="dark"] {
+src/styles/global.css:192:[data-theme="light"] {
+src/styles/global.css:515:html[data-theme="dark"] body {
+src/styles/global.css:521:html[data-theme="dark"] p {
+src/styles/global.css:528:html[data-theme="dark"] .section-alt,
+src/styles/global.css:529:html[data-theme="dark"] section:nth-of-type(even) {
+src/styles/global.css:534:html[data-theme="dark"] .card-mastercard,
+src/styles/global.css:535:html[data-theme="dark"] .stop-content-card,
+src/styles/global.css:536:html[data-theme="dark"] .stage-card,
+src/styles/global.css:537:html[data-theme="dark"] .theory-row-card,
+src/styles/global.css:538:html[data-theme="dark"] .mandate-card,
+src/styles/global.css:539:html[data-theme="dark"] .search-dialog-inner {
+src/styles/global.css:545:html[data-theme="dark"] .card-mastercard:hover,
+src/styles/global.css:546:html[data-theme="dark"] .stop-content-card:hover,
+src/styles/global.css:547:html[data-theme="dark"] .stage-card:hover,
+src/styles/global.css:548:html[data-theme="dark"] .theory-row-card:hover,
+src/styles/global.css:549:html[data-theme="dark"] .mandate-card:hover {
+src/styles/global.css:555:html[data-theme="dark"] .btn-secondary {
+src/styles/global.css:561:html[data-theme="dark"] .btn-secondary:hover {
+src/styles/global.css:567:html[data-theme="dark"] .hero-chip,
+src/styles/global.css:568:html[data-theme="dark"] .quality-chip,
+src/styles/global.css:569:html[data-theme="dark"] .badge-company,
+src/styles/global.css:570:html[data-theme="dark"] .fact-chip,
+src/styles/global.css:571:html[data-theme="dark"] :is(.admin-chip, .tech-chip, .lang-chip, .stack-chip) {
+src/styles/global.css:578:html[data-theme="dark"] :focus-visible {
+src/styles/global.css:584:html[data-theme="dark"] input,
+src/styles/global.css:585:html[data-theme="dark"] textarea,
+src/styles/global.css:586:html[data-theme="dark"] select {
+src/styles/global.css:591:html[data-theme="dark"] input::placeholder,
+src/styles/global.css:592:html[data-theme="dark"] textarea::placeholder {
+src/styles/global.css:598:html[data-theme="dark"] .eyebrow,
+src/styles/global.css:599:html[data-theme="dark"] .rail-indicator,
+src/styles/global.css:600:html[data-theme="dark"] .card-detail,
+src/styles/global.css:601:html[data-theme="dark"] .intro-eyebrow,
+src/styles/global.css:602:html[data-theme="dark"] .cue-text,
+src/styles/global.css:603:html[data-theme="dark"] .chapter-story,
+src/styles/global.css:604:html[data-theme="dark"] .nav-pillar,
+src/styles/global.css:605:html[data-theme="dark"] .built-with-label,
+src/styles/global.css:606:html[data-theme="dark"] .placeholder-sub {
+src/styles/global.css:610:html[data-theme="dark"] .hero-subline,
+src/styles/global.css:611:html[data-theme="dark"] .card-detail,
+src/styles/global.css:612:html[data-theme="dark"] .sol-card-desc,
+src/styles/global.css:613:html[data-theme="dark"] .approach-subline,
+src/styles/global.css:614:html[data-theme="dark"] .stage-desc {
+src/styles/global.css:621:html[data-theme="dark"] .color-word-plan,
+src/styles/global.css:622:html[data-theme="dark"] .staged-word.color-word-plan,
+src/styles/global.css:623:html[data-theme="dark"] .pin-num,
+src/styles/global.css:624:html[data-theme="dark"] .highlight-plan,
+src/styles/global.css:625:html[data-theme="dark"] .chunk-letter.letter-r,
+src/styles/global.css:626:html[data-theme="dark"] .chunk-letter.letter-h,
+src/styles/global.css:627:html[data-theme="dark"] .theory-card-step,
+src/styles/global.css:628:html[data-theme="dark"] .theory-card-link-btn,
+src/styles/global.css:629:html[data-theme="dark"] .mandate-card-step,
+src/styles/global.css:630:html[data-theme="dark"] .badge-engineer,
+src/styles/global.css:631:html[data-theme="dark"] .step-phase-badge,
+src/styles/global.css:632:html[data-theme="dark"] .navy-check-icon,
+src/styles/global.css:633:html[data-theme="dark"] .card-top-icon[style*="#1E4B8F"],
+src/styles/global.css:634:html[data-theme="dark"] .card-stage-eyebrow[style*="#1E4B8F"],
+src/styles/global.css:635:html[data-theme="dark"] .card-stage-eyebrow[style*="#27599D"],
+src/styles/global.css:636:html[data-theme="dark"] [style*="color: #1E4B8F"],
+src/styles/global.css:637:html[data-theme="dark"] [style*="color: rgb(30, 75, 143)"],
+src/styles/global.css:638:html[data-theme="dark"] [style*="color: #27599D"],
+src/styles/global.css:639:html[data-theme="dark"] [style*="color: rgb(39, 89, 157)"] {
+src/styles/global.css:644:html[data-theme="dark"] .tab-badge.plan-badge,
+src/styles/global.css:645:html[data-theme="dark"] .pillar-indicator[style*="#1E4B8F"],
+src/styles/global.css:646:html[data-theme="dark"] .group-badge[style*="#1E4B8F"] {
+src/styles/global.css:662:html[data-theme="dark"] .tab-badge.engineer-badge,
+src/styles/global.css:663:html[data-theme="dark"] .tab-badge.genai-badge,
+src/styles/global.css:664:html[data-theme="dark"] .engineer-badge,
+src/styles/global.css:665:html[data-theme="dark"] .apollo-step-num.circle-orange,
+src/styles/global.css:666:html[data-theme="dark"] .apollo-step-num.circle-red,
+src/styles/global.css:667:html[data-theme="dark"] .pillar-indicator[style*="#F7941D"],
+src/styles/global.css:668:html[data-theme="dark"] .group-badge[style*="#F7941D"] {
+src/styles/global.css:673:html[data-theme="dark"] a:hover:not(.btn-primary):not([class*="badge"]),
+src/styles/global.css:674:html[data-theme="dark"] .footer-link:hover,
+src/styles/global.css:675:html[data-theme="dark"] .footer-bottom-link:hover,
+src/styles/global.css:676:html[data-theme="dark"] .footer-address-link:hover {
+src/styles/pegboard-tokens.css:35:/* Dark mode: apply to BOTH [data-theme="dark"] and the unset + prefers-dark block */
+src/styles/pegboard-tokens.css:36::root[data-theme="dark"] .pegboard-page {
+src/styles/pegboard-tokens.css:91:  :root:not([data-theme="light"]) .pegboard-page {
+src/styles/pegboard-tokens.css:153::root[data-theme="dark"] html:has(.pegboard-page),
+src/styles/pegboard-tokens.css:154::root[data-theme="dark"] body:has(.pegboard-page),
+src/styles/pegboard-tokens.css:155::root[data-theme="dark"] .peg-board-page-main,
+src/styles/pegboard-tokens.css:156::root[data-theme="dark"] .pegboard-page {
+src/styles/pegboard-tokens.css:162:  :root:not([data-theme="light"]) html:has(.pegboard-page),
+src/styles/pegboard-tokens.css:163:  :root:not([data-theme="light"]) body:has(.pegboard-page),
+src/styles/pegboard-tokens.css:164:  :root:not([data-theme="light"]) .peg-board-page-main,
+src/styles/pegboard-tokens.css:165:  :root:not([data-theme="light"]) .pegboard-page {
+src/styles/pegboard-tokens.css:179::root[data-theme="dark"] .pb-board,
+src/styles/pegboard-tokens.css:180::root:not([data-theme="light"]) .pb-board {
+src/styles/pegboard-tokens.css:215:  :root[data-theme="dark"] .pb-board,
+src/styles/pegboard-tokens.css:216:  :root:not([data-theme="light"]) .pb-board {
+src/styles/pegboard-tokens.css:279::root[data-theme="dark"] .pb-tile,
+src/styles/pegboard-tokens.css:280::root:not([data-theme="light"]) .pb-tile {
+src/styles/pegboard-tokens.css:285::root[data-theme="dark"] .pb-tile:hover,
+src/styles/pegboard-tokens.css:286::root[data-theme="dark"] .pb-tile:focus-within,
+src/styles/pegboard-tokens.css:287::root:not([data-theme="light"]) .pb-tile:hover,
+src/styles/pegboard-tokens.css:288::root:not([data-theme="light"]) .pb-tile:focus-within {
+src/styles/pegboard-tokens.css:293::root[data-theme="dark"] .pb-tile h3,
+src/styles/pegboard-tokens.css:294::root[data-theme="dark"] .tile-title,
+src/styles/pegboard-tokens.css:295::root[data-theme="dark"] .pb-title,
+src/styles/pegboard-tokens.css:296::root[data-theme="dark"] .board-heading,
+src/styles/pegboard-tokens.css:297::root[data-theme="dark"] .pb-board h1,
+src/styles/pegboard-tokens.css:298::root:not([data-theme="light"]) .pb-tile h3,
+src/styles/pegboard-tokens.css:299::root:not([data-theme="light"]) .tile-title,
+src/styles/pegboard-tokens.css:300::root:not([data-theme="light"]) .pb-title,
+src/styles/pegboard-tokens.css:301::root:not([data-theme="light"]) .board-heading,
+src/styles/pegboard-tokens.css:302::root:not([data-theme="light"]) .pb-board h1 {
+src/styles/pegboard-tokens.css:306::root[data-theme="dark"] .pb-tile::after,
+src/styles/pegboard-tokens.css:307::root:not([data-theme="light"]) .pb-tile::after {
+src/styles/pegboard-tokens.css:312::root[data-theme="dark"] .pb-tile.is-pinned,
+src/styles/pegboard-tokens.css:313::root[data-theme="dark"] .pb-tile[data-pinned="true"],
+src/styles/pegboard-tokens.css:314::root[data-theme="dark"] .board-tile-wrapper[data-pinned="true"],
+src/styles/pegboard-tokens.css:315::root:not([data-theme="light"]) .pb-tile.is-pinned,
+src/styles/pegboard-tokens.css:316::root:not([data-theme="light"]) .pb-tile[data-pinned="true"],
+src/styles/pegboard-tokens.css:317::root:not([data-theme="light"]) .board-tile-wrapper[data-pinned="true"] {
+src/styles/pegboard-tokens.css:328::root[data-theme="dark"] .pb-chip,
+src/styles/pegboard-tokens.css:329::root[data-theme="dark"] .zone-filter-chip,
+src/styles/pegboard-tokens.css:330::root:not([data-theme="light"]) .pb-chip,
+src/styles/pegboard-tokens.css:331::root:not([data-theme="light"]) .zone-filter-chip {
+src/styles/pegboard-tokens.css:338::root[data-theme="dark"] .pb-chip:hover,
+src/styles/pegboard-tokens.css:339::root[data-theme="dark"] .zone-filter-chip:hover,
+src/styles/pegboard-tokens.css:340::root:not([data-theme="light"]) .pb-chip:hover,
+src/styles/pegboard-tokens.css:341::root:not([data-theme="light"]) .zone-filter-chip:hover {
+src/styles/pegboard-tokens.css:347::root[data-theme="dark"] .pb-chip.is-active,
+src/styles/pegboard-tokens.css:348::root[data-theme="dark"] .zone-filter-chip.is-active,
+src/styles/pegboard-tokens.css:349::root:not([data-theme="light"]) .pb-chip.is-active,
+src/styles/pegboard-tokens.css:350::root:not([data-theme="light"]) .zone-filter-chip.is-active {
+src/styles/pegboard-tokens.css:358::root[data-theme="dark"] .zone-plaque.zone-blue,
+src/styles/pegboard-tokens.css:359::root:not([data-theme="light"]) .zone-plaque.zone-blue,
+src/styles/pegboard-tokens.css:360::root[data-theme="dark"] .zone-plaque-row:has(.zone-blue),
+src/styles/pegboard-tokens.css:361::root:not([data-theme="light"]) .zone-plaque-row:has(.zone-blue),
+src/styles/pegboard-tokens.css:362::root[data-theme="dark"] .pb-plaque-row:has(.zone-blue),
+src/styles/pegboard-tokens.css:363::root:not([data-theme="light"]) .pb-plaque-row:has(.zone-blue) {
+src/styles/pegboard-tokens.css:367::root[data-theme="dark"] .zone-plaque.zone-orange,
+src/styles/pegboard-tokens.css:368::root:not([data-theme="light"]) .zone-plaque.zone-orange,
+src/styles/pegboard-tokens.css:369::root[data-theme="dark"] .zone-plaque-row:has(.zone-orange),
+src/styles/pegboard-tokens.css:370::root:not([data-theme="light"]) .zone-plaque-row:has(.zone-orange),
+src/styles/pegboard-tokens.css:371::root[data-theme="dark"] .pb-plaque-row:has(.zone-orange),
+src/styles/pegboard-tokens.css:372::root:not([data-theme="light"]) .pb-plaque-row:has(.zone-orange) {
+src/styles/pegboard-tokens.css:376::root[data-theme="dark"] .zone-plaque.zone-blue,
+src/styles/pegboard-tokens.css:377::root:not([data-theme="light"]) .zone-plaque.zone-blue {
+src/styles/pegboard-tokens.css:384::root[data-theme="dark"] .zone-plaque.zone-blue .plaque-dot,
+src/styles/pegboard-tokens.css:385::root:not([data-theme="light"]) .zone-plaque.zone-blue .plaque-dot {
+src/styles/pegboard-tokens.css:389::root[data-theme="dark"] .zone-plaque.zone-orange,
+src/styles/pegboard-tokens.css:390::root:not([data-theme="light"]) .zone-plaque.zone-orange {
+src/styles/pegboard-tokens.css:397::root[data-theme="dark"] .zone-plaque.zone-orange .plaque-dot,
+src/styles/pegboard-tokens.css:398::root:not([data-theme="light"]) .zone-plaque.zone-orange .plaque-dot {
+src/styles/pegboard-tokens.css:403::root[data-theme="dark"] .pb-search,
+src/styles/pegboard-tokens.css:404::root[data-theme="dark"] .board-search-input,
+src/styles/pegboard-tokens.css:405::root:not([data-theme="light"]) .pb-search,
+src/styles/pegboard-tokens.css:406::root:not([data-theme="light"]) .board-search-input {
+src/styles/pegboard-tokens.css:412::root[data-theme="dark"] .board-search-box:focus-within .board-search-input,
+src/styles/pegboard-tokens.css:413::root[data-theme="dark"] .pb-search:focus-within,
+src/styles/pegboard-tokens.css:414::root:not([data-theme="light"]) .board-search-box:focus-within .board-search-input,
+src/styles/pegboard-tokens.css:415::root:not([data-theme="light"]) .pb-search:focus-within {
+src/styles/pegboard-tokens.css:428::root[data-theme="dark"] .zone-shelf-line,
+src/styles/pegboard-tokens.css:429::root:not([data-theme="light"]) .zone-shelf-line {
+src/styles/pegboard-tokens.css:448::root[data-theme="dark"] .pb-canvas,
+src/styles/pegboard-tokens.css:449::root:not([data-theme="light"]) .pb-canvas {
+src/styles/pegboard-tokens.css:480::root[data-theme="dark"] [data-mode="free"].pb-board,
+src/styles/pegboard-tokens.css:481::root[data-theme="dark"] [data-mode="free"] .pb-board,
+src/styles/pegboard-tokens.css:482::root:not([data-theme="light"]) [data-mode="free"].pb-board,
+src/styles/pegboard-tokens.css:483::root:not([data-theme="light"]) [data-mode="free"] .pb-board {
+src/styles/pegboard-tokens.css:600::root[data-theme="light"] .pb-ghost,
+src/styles/pegboard-tokens.css:601::root:not([data-theme="dark"]) .pb-ghost {
+src/styles/pegboard-tokens.css:714::root[data-theme="dark"] .board-filter-ledge.is-stuck,
+src/styles/pegboard-tokens.css:715::root:not([data-theme="light"]) .board-filter-ledge.is-stuck {
+src/styles/pegboard-tokens.css:721::root[data-theme="dark"] .ring-bg,
+src/styles/pegboard-tokens.css:722::root:not([data-theme="light"]) .ring-bg {
+src/styles/pegboard-tokens.css:727::root[data-theme="dark"] .guide-page-main a:not(.btn):not(.cta-pin-btn),
+src/styles/pegboard-tokens.css:728::root:not([data-theme="light"]) .guide-page-main a:not(.btn):not(.cta-pin-btn) {
+src/styles/pegboard-tokens.css:732::root[data-theme="dark"] .guide-page-main a:not(.btn):not(.cta-pin-btn):hover,
+src/styles/pegboard-tokens.css:733::root:not([data-theme="light"]) .guide-page-main a:not(.btn):not(.cta-pin-btn):hover {
+src/styles/solution-dark.css:11::root[data-theme="dark"] {
+src/styles/solution-dark.css:33:  :root:not([data-theme="light"]) {
+src/styles/solution-dark.css:56:   1. Explicit Theme: :root[data-theme="dark"]
+src/styles/solution-dark.css:58::root[data-theme="dark"] body:has(.project-journey-container),
+src/styles/solution-dark.css:59::root[data-theme="dark"] html:has(.project-journey-container) {
+src/styles/solution-dark.css:63::root[data-theme="dark"] .project-chapter-section {
+src/styles/solution-dark.css:71::root[data-theme="dark"] .project-chapter-section::before {
+src/styles/solution-dark.css:77::root[data-theme="dark"] #stage-01 { --stage-glow: rgba(91, 143, 224, 0.6); }
+src/styles/solution-dark.css:78::root[data-theme="dark"] #stage-02 { --stage-glow: rgba(91, 143, 224, 0.6); }
+src/styles/solution-dark.css:79::root[data-theme="dark"] #stage-03 { --stage-glow: rgba(0, 114, 206, 0.6); }
+src/styles/solution-dark.css:80::root[data-theme="dark"] #stage-04 { --stage-glow: rgba(247, 148, 29, 0.6); }
+src/styles/solution-dark.css:81::root[data-theme="dark"] #stage-05 { --stage-glow: rgba(242, 95, 34, 0.6); }
+src/styles/solution-dark.css:82::root[data-theme="dark"] #stage-06 { --stage-glow: rgba(238, 75, 43, 0.6); }
+src/styles/solution-dark.css:85::root[data-theme="dark"] .nav-pillar,
+src/styles/solution-dark.css:86::root[data-theme="dark"] .built-with-label,
+src/styles/solution-dark.css:87::root[data-theme="dark"] .placeholder-sub {
+src/styles/solution-dark.css:91::root[data-theme="dark"] .chapter-heading { color: var(--sd-text); }
+src/styles/solution-dark.css:92::root[data-theme="dark"] .chapter-eyebrow,
+src/styles/solution-dark.css:93::root[data-theme="dark"] .chapter-eyebrow[style] { color: var(--sd-orange) !important; letter-spacing: 0.14em; }
+src/styles/solution-dark.css:94::root[data-theme="dark"] .chapter-tagline,
+src/styles/solution-dark.css:95::root[data-theme="dark"] .chapter-tagline[style] { color: #8DB4F0 !important; }
+src/styles/solution-dark.css:96::root[data-theme="dark"] .chapter-story,
+src/styles/solution-dark.css:97::root[data-theme="dark"] .project-chapter-section p,
+src/styles/solution-dark.css:98::root[data-theme="dark"] .project-chapter-section li { color: var(--sd-text-2); }
+src/styles/solution-dark.css:99::root[data-theme="dark"] .project-chapter-section li::marker { color: var(--sd-orange); }
+src/styles/solution-dark.css:100::root[data-theme="dark"] .project-chapter-section strong { color: var(--sd-text); }
+src/styles/solution-dark.css:103::root[data-theme="dark"] :is(.admin-chip, .tech-chip, .lang-chip, .stack-chip) {
+src/styles/solution-dark.css:108::root[data-theme="dark"] .project-chapter-section :is(table, .live-action-hint, .flow-note-banner, .coming-soon-media-placeholder, .feature-card, .vernacular-sheet-card, .pilot-phase-card, .block-inner-card, .coded-mockup-frame) {
+src/styles/solution-dark.css:113::root[data-theme="dark"] .project-chapter-section :is(th, td) {
+src/styles/solution-dark.css:116::root[data-theme="dark"] .project-chapter-section img,
+src/styles/solution-dark.css:117::root[data-theme="dark"] .project-chapter-section video {
+src/styles/solution-dark.css:123::root[data-theme="dark"] .outcome-val {
+src/styles/solution-dark.css:129::root[data-theme="dark"] .flow-track-container {
+src/styles/solution-dark.css:133::root[data-theme="dark"] .hole-socket {
+src/styles/solution-dark.css:138::root[data-theme="dark"] .flow-note-banner {
+src/styles/solution-dark.css:142::root[data-theme="dark"] .station-name {
+src/styles/solution-dark.css:145::root[data-theme="dark"] .flow-station-btn:hover .station-name,
+src/styles/solution-dark.css:146::root[data-theme="dark"] .flow-station-btn.is-active .station-name {
+src/styles/solution-dark.css:152:  :root[data-theme="dark"] .project-chapter-section:hover {
+src/styles/solution-dark.css:157:  :root[data-theme="dark"] .project-chapter-section {
+src/styles/solution-dark.css:163::root[data-theme="dark"] .solution-nav-wrapper {
+src/styles/solution-dark.css:168::root[data-theme="dark"] .solution-nav-btn {
+src/styles/solution-dark.css:176::root[data-theme="dark"] .solution-nav-btn:hover {
+src/styles/solution-dark.css:182::root[data-theme="dark"] .nav-arrow-wrap {
+src/styles/solution-dark.css:186::root[data-theme="dark"] .solution-nav-btn:hover .nav-arrow-wrap {
+src/styles/solution-dark.css:190::root[data-theme="dark"] .nav-prefix {
+src/styles/solution-dark.css:193::root[data-theme="dark"] .solution-nav-btn:hover .nav-prefix {
+src/styles/solution-dark.css:196::root[data-theme="dark"] .nav-sep {
+src/styles/solution-dark.css:199::root[data-theme="dark"] .nav-title {
+src/styles/solution-dark.css:204::root[data-theme="dark"] #journey-progress-rail,
+src/styles/solution-dark.css:205::root[data-theme="dark"] .journey-progress-pill {
+src/styles/solution-dark.css:208::root[data-theme="dark"] .journey-progress-rail .rail-indicator,
+src/styles/solution-dark.css:209::root[data-theme="dark"] .journey-progress-rail .rail-dots-track {
+src/styles/solution-dark.css:215::root[data-theme="dark"] .journey-progress-rail .rail-indicator {
+src/styles/solution-dark.css:218::root[data-theme="dark"] .journey-progress-rail .rail-connecting-line {
+src/styles/solution-dark.css:221::root[data-theme="dark"] .rail-dot.is-upcoming :is(.dot-inner, .dot-passed) {
+src/styles/solution-dark.css:224::root[data-theme="dark"] .rail-dot.is-passed :is(.dot-inner, .dot-passed) {
+src/styles/solution-dark.css:228::root[data-theme="dark"] :is(.peg-marker-cube, .rail-cube) {
+src/styles/solution-dark.css:231::root[data-theme="dark"] :is(.stage-label, .rail-label) {
+src/styles/solution-dark.css:238::root[data-theme="dark"] .stage-rail-mobile {
+src/styles/solution-dark.css:243::root[data-theme="dark"] .desktop-rail-card {
+src/styles/solution-dark.css:249::root[data-theme="dark"] .rail-header-title {
+src/styles/solution-dark.css:253::root[data-theme="dark"] .rail-nodes-list::before {
+src/styles/solution-dark.css:256::root[data-theme="dark"] .stage-step-title {
+src/styles/solution-dark.css:259::root[data-theme="dark"] .stage-node-link:hover .stage-step-title {
+src/styles/solution-dark.css:262::root[data-theme="dark"] .stage-node-link.is-active {
+src/styles/solution-dark.css:266::root[data-theme="dark"] .stage-node-link.is-active .stage-step-num {
+src/styles/solution-dark.css:269::root[data-theme="dark"] .stage-node-link.is-active .stage-step-title {
+src/styles/solution-dark.css:272::root[data-theme="dark"] .stage-node-link.is-passed .stage-step-num {
+src/styles/solution-dark.css:275::root[data-theme="dark"] .stage-rail-mobile .stage-mobile-num {
+src/styles/solution-dark.css:278::root[data-theme="dark"] .stage-rail-mobile .stage-mobile-title {
+src/styles/solution-dark.css:284:      applies to :root:not([data-theme="light"])
+src/styles/solution-dark.css:287:  :root:not([data-theme="light"]) body:has(.project-journey-container),
+src/styles/solution-dark.css:288:  :root:not([data-theme="light"]) html:has(.project-journey-container) {
+src/styles/solution-dark.css:292:  :root:not([data-theme="light"]) .project-chapter-section {
+src/styles/solution-dark.css:300:  :root:not([data-theme="light"]) .project-chapter-section::before {
+src/styles/solution-dark.css:306:  :root:not([data-theme="light"]) #stage-01 { --stage-glow: rgba(91, 143, 224, 0.6); }
+src/styles/solution-dark.css:307:  :root:not([data-theme="light"]) #stage-02 { --stage-glow: rgba(91, 143, 224, 0.6); }
+src/styles/solution-dark.css:308:  :root:not([data-theme="light"]) #stage-03 { --stage-glow: rgba(0, 114, 206, 0.6); }
+src/styles/solution-dark.css:309:  :root:not([data-theme="light"]) #stage-04 { --stage-glow: rgba(247, 148, 29, 0.6); }
+src/styles/solution-dark.css:310:  :root:not([data-theme="light"]) #stage-05 { --stage-glow: rgba(242, 95, 34, 0.6); }
+src/styles/solution-dark.css:311:  :root:not([data-theme="light"]) #stage-06 { --stage-glow: rgba(238, 75, 43, 0.6); }
+src/styles/solution-dark.css:314:  :root:not([data-theme="light"]) .chapter-heading { color: var(--sd-text); }
+src/styles/solution-dark.css:315:  :root:not([data-theme="light"]) .chapter-eyebrow,
+src/styles/solution-dark.css:316:  :root:not([data-theme="light"]) .chapter-eyebrow[style] { color: var(--sd-orange) !important; letter-spacing: 0.14em; }
+src/styles/solution-dark.css:317:  :root:not([data-theme="light"]) .chapter-tagline,
+src/styles/solution-dark.css:318:  :root:not([data-theme="light"]) .chapter-tagline[style] { color: #8DB4F0 !important; }
+src/styles/solution-dark.css:319:  :root:not([data-theme="light"]) .chapter-story,
+src/styles/solution-dark.css:320:  :root:not([data-theme="light"]) .project-chapter-section p,
+src/styles/solution-dark.css:321:  :root:not([data-theme="light"]) .project-chapter-section li { color: var(--sd-text-2); }
+src/styles/solution-dark.css:322:  :root:not([data-theme="light"]) .project-chapter-section li::marker { color: var(--sd-orange); }
+src/styles/solution-dark.css:323:  :root:not([data-theme="light"]) .project-chapter-section strong { color: var(--sd-text); }
+src/styles/solution-dark.css:326:  :root:not([data-theme="light"]) :is(.admin-chip, .tech-chip, .lang-chip, .stack-chip) {
+src/styles/solution-dark.css:331:  :root:not([data-theme="light"]) .project-chapter-section :is(table, .live-action-hint, .flow-note-banner, .coming-soon-media-placeholder, .feature-card, .vernacular-sheet-card, .pilot-phase-card, .block-inner-card, .coded-mockup-frame) {
+src/styles/solution-dark.css:336:  :root:not([data-theme="light"]) .project-chapter-section :is(th, td) {
+src/styles/solution-dark.css:339:  :root:not([data-theme="light"]) .project-chapter-section img,
+src/styles/solution-dark.css:340:  :root:not([data-theme="light"]) .project-chapter-section video {
+src/styles/solution-dark.css:346:  :root:not([data-theme="light"]) .outcome-val {
+src/styles/solution-dark.css:352:  :root:not([data-theme="light"]) .flow-track-container {
+src/styles/solution-dark.css:356:  :root:not([data-theme="light"]) .hole-socket {
+src/styles/solution-dark.css:361:  :root:not([data-theme="light"]) .flow-note-banner {
+src/styles/solution-dark.css:365:  :root:not([data-theme="light"]) .station-name {
+src/styles/solution-dark.css:368:  :root:not([data-theme="light"]) .flow-station-btn:hover .station-name,
+src/styles/solution-dark.css:369:  :root:not([data-theme="light"]) .flow-station-btn.is-active .station-name {
+src/styles/solution-dark.css:374:    :root:not([data-theme="light"]) .project-chapter-section:hover {
+src/styles/solution-dark.css:379:    :root:not([data-theme="light"]) .project-chapter-section {
+src/styles/solution-dark.css:385:  :root:not([data-theme="light"]) .solution-nav-wrapper {
+src/styles/solution-dark.css:390:  :root:not([data-theme="light"]) .solution-nav-btn {
+src/styles/solution-dark.css:398:  :root:not([data-theme="light"]) .solution-nav-btn:hover {
+src/styles/solution-dark.css:404:  :root:not([data-theme="light"]) .nav-arrow-wrap {
+src/styles/solution-dark.css:408:  :root:not([data-theme="light"]) .solution-nav-btn:hover .nav-arrow-wrap {
+src/styles/solution-dark.css:412:  :root:not([data-theme="light"]) .nav-prefix {
+src/styles/solution-dark.css:415:  :root:not([data-theme="light"]) .solution-nav-btn:hover .nav-prefix {
+src/styles/solution-dark.css:418:  :root:not([data-theme="light"]) .nav-sep {
+src/styles/solution-dark.css:421:  :root:not([data-theme="light"]) .nav-title {
+src/styles/solution-dark.css:426:  :root:not([data-theme="light"]) .journey-progress-rail .rail-indicator,
+src/styles/solution-dark.css:427:  :root:not([data-theme="light"]) .journey-progress-rail .rail-dots-track {
+src/styles/solution-dark.css:433:  :root:not([data-theme="light"]) .journey-progress-rail .rail-indicator {
+src/styles/solution-dark.css:436:  :root:not([data-theme="light"]) .journey-progress-rail .rail-connecting-line {
+src/styles/solution-dark.css:439:  :root:not([data-theme="light"]) .rail-dot.is-upcoming :is(.dot-inner, .dot-passed) {
+src/styles/solution-dark.css:442:  :root:not([data-theme="light"]) .rail-dot.is-passed :is(.dot-inner, .dot-passed) {
+src/styles/solution-dark.css:446:  :root:not([data-theme="light"]) :is(.peg-marker-cube, .rail-cube) {
+src/styles/solution-dark.css:449:  :root:not([data-theme="light"]) :is(.stage-label, .rail-label) {
+src/styles/solution-dark.css:456:  :root:not([data-theme="light"]) .stage-rail-mobile {
+src/styles/solution-dark.css:461:  :root:not([data-theme="light"]) .desktop-rail-card {
+src/styles/solution-dark.css:467:  :root:not([data-theme="light"]) .rail-header-title {
+src/styles/solution-dark.css:471:  :root:not([data-theme="light"]) .rail-nodes-list::before {
+src/styles/solution-dark.css:474:  :root:not([data-theme="light"]) .stage-step-title {
+src/styles/solution-dark.css:477:  :root:not([data-theme="light"]) .stage-node-link:hover .stage-step-title {
+src/styles/solution-dark.css:480:  :root:not([data-theme="light"]) .stage-node-link.is-active {
+src/styles/solution-dark.css:484:  :root:not([data-theme="light"]) .stage-node-link.is-active .stage-step-num {
+src/styles/solution-dark.css:487:  :root:not([data-theme="light"]) .stage-node-link.is-active .stage-step-title {
+src/styles/solution-dark.css:490:  :root:not([data-theme="light"]) .stage-node-link.is-passed .stage-step-num {
+src/styles/solution-dark.css:493:  :root:not([data-theme="light"]) .stage-rail-mobile .stage-mobile-num {
+src/styles/solution-dark.css:496:  :root:not([data-theme="light"]) .stage-rail-mobile .stage-mobile-title {
+
+=== grep -rnE "#737373|#1E4B8F|#27599D|--color-bg" src ===
+src/components/AgileApproachFlow.astro:247:    background-color: var(--color-bg);
+src/components/AgileApproachFlow.astro:332:    background: var(--color-bg);
+src/components/AgileApproachFlow.astro:352:    background-color: var(--color-bg-alt);
+src/components/AgileApproachFlow.astro:428:    background: var(--color-bg);
+src/components/AgileApproachFlow.astro:448:    background: var(--color-bg-alt);
+src/components/AgileApproachFlow.astro:489:    background-color: var(--color-bg-alt);
+src/components/AgileApproachFlow.astro:545:    background: var(--color-bg-alt);
+src/components/AgileApproachFlow.astro:600:    background: var(--color-bg);
+src/components/AgileApproachFlow.astro:628:    background: var(--color-bg);
+src/components/ApproachJourney.astro:73:              <stop offset="0%" stop-color="#1E4B8F" />
+src/components/ApproachJourney.astro:146:              <stop offset="0%" stop-color="#1E4B8F" />
+src/components/ApproachJourney.astro:299:    background-color: var(--color-bg);
+src/components/ApproachJourney.astro:756:    border: 2px solid var(--step-accent, #1E4B8F);
+src/components/ApproachJourney.astro:769:    color: var(--step-accent, #1E4B8F);
+src/components/ApproachJourney.astro:773:    color: var(--step-accent, #1E4B8F);
+src/components/ApproachJourney.astro:782:    border: 2px solid var(--step-accent, #1E4B8F);
+src/components/ApproachJourney.astro:955:  :global(html[data-theme="dark"]) .card-stage-eyebrow[style*="#1E4B8F"],
+src/components/ApproachJourney.astro:956:  :global(html[data-theme="dark"]) .card-stage-eyebrow[style*="#27599D"] {
+src/components/ApproachJourney.astro:960:  :global(html[data-theme="dark"]) .journey-stop[style*="#1E4B8F"] .pin-num,
+src/components/ApproachJourney.astro:961:  :global(html[data-theme="dark"]) .journey-stop[style*="#27599D"] .pin-num,
+src/components/ApproachJourney.astro:962:  :global(html[data-theme="dark"]) .journey-stop[style*="#1E4B8F"] .pin-glyph,
+src/components/ApproachJourney.astro:963:  :global(html[data-theme="dark"]) .journey-stop[style*="#27599D"] .pin-glyph {
+src/components/ApproachJourney.astro:967:  :global(html[data-theme="dark"]) .journey-stop[style*="#1E4B8F"] .pin-inner-badge,
+src/components/ApproachJourney.astro:968:  :global(html[data-theme="dark"]) .journey-stop[style*="#27599D"] .pin-inner-badge {
+src/components/ApproachJourney.astro:1045:    box-shadow: 0 0 0 5px var(--color-bg, #fff), 0 6px 16px rgba(16, 24, 40, 0.14);
+src/components/BeforeAfterSlider.astro:278:    background-color: var(--color-bg);
+src/components/BeforeAfterSlider.astro:439:    background-color: var(--color-bg);
+src/components/BeforeAfterSlider.astro:512:    background-color: var(--color-bg);
+src/components/BeforeAfterSlider.astro:547:    background-color: var(--color-bg);
+src/components/BeforeAfterSlider.astro:603:    background-color: var(--color-bg);
+src/components/BeforeAfterSlider.astro:633:    background-color: var(--color-bg);
+src/components/BeforeAfterSlider.astro:674:    background-color: var(--color-bg);
+src/components/BeforeAfterSlider.astro:708:    background-color: var(--color-bg);
+src/components/BuildYourWay.astro:157:    background-color: var(--color-bg);
+src/components/ContactSection.astro:178:    background-color: var(--color-bg);
+src/components/FeaturedCarousel.astro:84:    background-color: var(--color-bg);
+src/components/Footer.astro:129:    background-color: var(--color-bg);
+src/components/Hero.astro:115:    background-color: var(--color-bg);
+src/components/HowWeWork.astro:197:    background-color: var(--color-bg);
+src/components/JourneyProgressPill.astro:196:    background-color: var(--dot-color, #1E4B8F);
+src/components/JourneyProgressPill.astro:197:    box-shadow: 0 0 6px var(--dot-color, #1E4B8F);
+src/components/JourneyThread.astro:10:        <stop offset="0%" stop-color="#1E4B8F" />
+src/components/LeadershipTeaser.astro:58:    background-color: var(--color-bg);
+src/components/LearnMore.astro:77:    color: var(--color-bg);
+src/components/LegalPage.astro:51:  .legal-main { background: var(--color-bg); font-family: var(--font-sans); }
+src/components/LegalPage.astro:56:    background: linear-gradient(180deg, var(--color-bg-alt) 0%, var(--color-bg) 100%);
+src/components/LegalPage.astro:184:    background: var(--color-bg-alt);
+src/components/MediaAsset.astro:199:          <ellipse cx="35" cy="77" rx="26" ry="6" stroke="#1E4B8F" stroke-width="1" stroke-dasharray="2 3" opacity="0.5" />
+src/components/Nav.astro:592:    background-color: var(--color-bg);
+src/components/OriginVisual.astro:252:    color: #1E4B8F;
+src/components/OriginVisual.astro:281:    outline: 2px solid #1E4B8F;
+src/components/OriginVisual.astro:316:    stroke: #1E4B8F;
+src/components/OriginVisual.astro:336:    stroke: #1E4B8F;
+src/components/OriginVisual.astro:367:    fill: #1E4B8F;
+src/components/OriginVisual.astro:423:    stroke: #1E4B8F;
+src/components/pegboard/AdapterWidget.astro:166:      const blue = isDark() ? '#5B8FE0' : '#1E4B8F';
+src/components/pegboard/PegPicker.astro:260:    background-color: var(--pb-tile, var(--color-bg));
+src/components/pegboard/PegPicker.astro:302:    background-color: var(--pb-tile, var(--color-bg));
+src/components/PegCardPlan.astro:136:    background-color: #1E4B8F;
+src/components/PegCardPlan.astro:172:    border-color: #1E4B8F;
+src/components/PegCardPlan.astro:176:    background-color: #1E4B8F;
+src/components/PegCardPlan.astro:177:    border-color: #1E4B8F;
+src/components/PegCardPlan.astro:193:    background-color: #1E4B8F;
+src/components/PegCardPlan.astro:194:    border-color: #1E4B8F;
+src/components/PegCardPlan.astro:199:    outline: 2px solid #1E4B8F;
+src/components/PegCardPlan.astro:228:    background-color: #1E4B8F;
+src/components/PegCardPlan.astro:273:    border-color: #1E4B8F;
+src/components/PegCardPlan.astro:286:    color: #1E4B8F;
+src/components/PegCardPlan.astro:319:    color: #1E4B8F;
+src/components/PegCube.astro:293:    background-color: var(--color-bg-alt);
+src/components/PegCube.astro:406:    background: linear-gradient(135deg, #1E4B8F 0%, #0F2A4A 100%);
+src/components/PegCube.astro:487:    background: radial-gradient(ellipse at center, #0F2A4A 0%, #1E4B8F 60%, rgba(30, 75, 143, 0) 72%);
+src/components/PegSolutions.astro:198:                <span class="pillar-indicator" style="background-color: #1E4B8F;" aria-hidden="true">P</span>
+src/components/PegSolutions.astro:211:                <div class="card-top-icon" style="color: #1E4B8F;">
+src/components/PegSolutions.astro:225:                <div class="card-top-icon" style="color: #1E4B8F;">
+src/components/PegSolutions.astro:239:                <div class="card-top-icon" style="color: #1E4B8F;">
+src/components/PegSolutions.astro:412:    background: radial-gradient(circle at 65% 50%, #1E4B8F 0%, transparent 70%);
+src/components/PegSolutions.astro:433:    background-color: var(--color-bg);
+src/components/PegSolutions.astro:524:  .color-word-plan { color: #1E4B8F; }
+src/components/PegSolutions.astro:635:  .cube-ambient-glow[data-pillar="plan"] { background: #1E4B8F; }
+src/components/PegSolutions.astro:700:    background: linear-gradient(135deg, #1E4B8F 0%, #0F2A4A 100%);
+src/components/PegSolutions.astro:828:  .plan-badge { background-color: #1E4B8F; }
+src/components/PegSolutions.astro:846:    background: var(--color-bg);
+src/components/PegSolutions.astro:948:  .highlight-plan { color: #1E4B8F; }
+src/components/PegSolutions.astro:1020:    color: #1E4B8F;
+src/components/PegSolutions.astro:1111:    background: var(--color-bg);
+src/components/PegSolutions.astro:1312:    background: var(--color-bg);
+src/components/project/PhaseArchitecture.astro:439:    background-color: var(--color-bg);
+src/components/project/PhaseArchitecture.astro:453:    background-color: #1E4B8F;
+src/components/project/PhaseArchitecture.astro:537:    background-color: #1E4B8F;
+src/components/project/PhaseArchitecture.astro:725:    background-color: var(--color-bg);
+src/components/project/PhaseArchitecture.astro:744:    background-color: #1E4B8F;
+src/components/project/PhaseArchitecture.astro:802:    color: #1E4B8F;
+src/components/project/PhaseArchitecture.astro:822:    color: #1E4B8F;
+src/components/project/PhaseArchitecture.astro:907:    background-color: var(--color-bg);
+src/components/project/PhaseArchitecture.astro:952:    color: #1E4B8F;
+src/components/project/PhaseImpact.astro:437:    background-color: #1E4B8F;
+src/components/project/PhaseImpact.astro:538:    color: #1E4B8F;
+src/components/project/PhaseImpact.astro:555:    background-color: #1E4B8F;
+src/components/project/PhaseImpact.astro:557:    border-color: #1E4B8F;
+src/components/project/PhaseImpact.astro:600:    background-color: var(--color-bg);
+src/components/project/PhaseImpact.astro:628:    background-color: #1E4B8F;
+src/components/project/PhaseImpact.astro:701:    background-color: var(--color-bg);
+src/components/project/PhasePilot.astro:422:    background-color: var(--color-bg);
+src/components/project/PhasePilot.astro:426:    background-color: #1E4B8F;
+src/components/project/PhasePilot.astro:571:    background-color: var(--color-bg);
+src/components/project/PhasePilot.astro:660:    background-color: #1E4B8F;
+src/components/project/PhasePilot.astro:686:    background-color: var(--color-bg);
+src/components/project/PhasePilot.astro:714:    background-color: var(--color-bg);
+src/components/project/PhaseProblem.astro:56:  data-stage-color="#1E4B8F"
+src/components/project/PhaseProblem.astro:60:    <span class="chapter-eyebrow" style="color: #1E4B8F;">Stage 1 of 6</span>
+src/components/project/PhaseProblem.astro:62:    {tagline && <p class="chapter-tagline" style="color: #1E4B8F;">{tagline}</p>}
+src/components/project/PhaseProblem.astro:76:    <StageComingSoon stageNumber="01" stageTitle="Understand the business" color="#1E4B8F" />
+src/components/project/PhaseProblem.astro:178:    background-color: var(--color-bg);
+src/components/project/PhaseProblem.astro:192:    background-color: #1E4B8F;
+src/components/project/PhaseProblem.astro:268:    background-color: #1E4B8F;
+src/components/project/PhaseProblem.astro:358:    color: #1E4B8F;
+src/components/project/PhaseProblem.astro:396:    color: #1E4B8F;
+src/components/project/PhaseRollout.astro:207:    background-color: var(--color-bg);
+src/components/project/PhaseRollout.astro:221:    background-color: #1E4B8F;
+src/components/project/PhaseValue.astro:213:    background-color: #1E4B8F;
+src/components/project/ProjectHero.astro:196:    background-color: var(--color-bg);
+src/components/project/ProjectHero.astro:224:    outline: 2px solid #1E4B8F;
+src/components/project/ProjectHero.astro:324:    color: #1E4B8F;
+src/components/project/ProjectHero.astro:369:    background-color: var(--color-bg);
+src/components/project/ProjectHero.astro:428:    color: #1E4B8F;
+src/components/project/ProjectHero.astro:509:    outline: 2px solid #1E4B8F;
+src/components/project/ProjectHero.astro:519:    background-color: var(--color-bg);
+src/components/project/StageRail.astro:106:    background-color: #1E4B8F;
+src/components/project/StageRail.astro:107:    border: 2px solid #1E4B8F;
+src/components/project/StageRail.astro:170:    outline: 2px solid #1E4B8F;
+src/components/project/StageRail.astro:256:      outline: 2px solid #1E4B8F;
+src/components/project/StageRail.astro:318:      color: #1E4B8F;
+src/components/project/VideoEmbed.astro:84:    color: #1E4B8F;
+src/components/SearchDialog.astro:506:    color: #1E4B8F;
+src/components/SolutionsGrid.astro:35:          <span class="group-badge" style="background-color: #1E4B8F;">P</span>
+src/components/SolutionsGrid.astro:37:            <span class="group-eyebrow" style="color: #1E4B8F;">PLAN</span>
+src/components/SolutionsGrid.astro:185:    background-color: var(--color-bg);
+src/components/SolutionsGrid.astro:372:    color: var(--color-brand-primary, #1E4B8F);
+src/components/SolutionsGrid.astro:405:    border-left: 4px solid #1E4B8F;
+src/components/Team.astro:87:    background-color: var(--color-bg);
+src/components/Team.astro:251:    background: var(--color-bg);
+src/components/ThemeToggle.astro:51:    background: var(--color-bg-alt);
+src/components/TrustBar.astro:40:    background: var(--color-bg-alt);
+src/components/WhoWeAre.astro:44:        const colors = ['#1E4B8F', '#F7941D', '#EE4B2B'];
+src/components/WhoWeAre.astro:80:    background-color: var(--color-bg-alt);
+src/config/site.ts:111:        color: '#1E4B8F', // Navy
+src/config/site.ts:176:        color: "#1E4B8F"
+src/config/site.ts:184:        color: "#27599D"
+src/data/pegBoard.ts:19:  accentColor: string; // e.g. '#EE4B2B' | '#F7941D' | '#1E4B8F'
+src/data/pegBoard.ts:185:    accentColor: '#1E4B8F', // blue (lightened to #5B8FE0 in dark mode)
+src/data/pegBoard.ts:197:    accentColor: '#1E4B8F', // blue (lightened to #5B8FE0 in dark mode)
+src/data/pegBoard.ts:297:    pegColor: '#1E4B8F'
+src/data/pegBoard.ts:308:    pegColor: '#1E4B8F'
+src/data/pegBoard.ts:319:    pegColor: '#1E4B8F'
+src/data/pegBoard.ts:330:    pegColor: '#1E4B8F'
+src/layouts/BaseLayout.astro:190:        const linkStyle = 'color: #1E4B8F; font-weight: 600; text-decoration: underline; font-family: monospace; font-size: 11px;';
+src/layouts/BaseLayout.astro:241:            'color: #1E4B8F; font-size: 12px; font-weight: 600; line-height: 1.6; font-family: sans-serif;'
+src/pages/404.astro:28:              <circle cx="160" cy="80" r="42" stroke="#1E4B8F" stroke-width="3" fill="#0F2A4A" fill-opacity="0.2" />
+src/pages/about.astro:18:    color: '#1E4B8F',
+src/pages/about.astro:227:                        <stop offset="0%" stop-color="#1E4B8F" stop-opacity="0.22" />
+src/pages/about.astro:228:                        <stop offset="100%" stop-color="#1E4B8F" stop-opacity="0" />
+src/pages/about.astro:304:            const colors = ['#1E4B8F', '#F7941D', '#EE4B2B'];
+src/pages/about.astro:396:    background-color: var(--color-bg);
+src/pages/about.astro:475:    background-color: var(--color-bg);
+src/pages/about.astro:512:  .letter-r { color: #1E4B8F; }
+src/pages/about.astro:513:  .letter-h { color: #1E4B8F; }
+src/pages/about.astro:573:    background: var(--color-bg);
+src/pages/about.astro:702:  .circle-blue { background-color: #1E4B8F; color: #FFFFFF; }
+src/pages/about.astro:736:    background: var(--color-bg);
+src/pages/about.astro:769:    background: var(--color-bg);
+src/pages/about.astro:815:    color: #1E4B8F;
+src/pages/about.astro:851:    background: var(--color-bg);
+src/pages/about.astro:873:  .label-hole-title { fill: #1E4B8F; }
+src/pages/about.astro:886:  .d-hole-ring { stroke: #1E4B8F; stroke-width: 2.5; fill: rgba(30, 75, 143, 0.05); }
+src/pages/about.astro:887:  .d-hole-inner { stroke: #1E4B8F; stroke-width: 1.5; stroke-dasharray: 5 4; fill: none; opacity: 0.7; }
+src/pages/about.astro:900:  .d-label-hole { fill: #1E4B8F; }
+src/pages/about.astro:953:    background-color: var(--color-bg);
+src/pages/about.astro:1003:  :global(html[data-theme="dark"]) .theory-card-step[style*="#1E4B8F"],
+src/pages/about.astro:1004:  :global(html[data-theme="dark"]) .theory-card-link-btn[style*="#1E4B8F"],
+src/pages/about.astro:1005:  :global(html[data-theme="dark"]) .mandate-card-step[style*="#1E4B8F"] {
+src/pages/solutions/[slug].astro:231:    color: #1E4B8F;
+src/pages/solutions/[slug].astro:246:    color: #1E4B8F;
+src/scripts/HeroScrollSequence.ts:42:    const computed = getComputedStyle(document.documentElement).getPropertyValue('--color-bg').trim();
+src/styles/global.css:30:  --rhsp-navy: #1E4B8F;
+src/styles/global.css:38:  --color-bg: #FFFFFF;
+src/styles/global.css:39:  --color-bg-alt: #F6F6F4;
+src/styles/global.css:104:    --color-bg: #0E0E0E;
+src/styles/global.css:106:    --color-bg-alt: #121212;
+src/styles/global.css:151:  --color-bg: #0E0E0E;
+src/styles/global.css:153:  --color-bg-alt: #121212;
+src/styles/global.css:193:  --color-bg: #FFFFFF;
+src/styles/global.css:194:  --color-bg-alt: #F6F6F4;
+src/styles/global.css:229:  background-color: var(--color-bg);
+src/styles/global.css:244:  background-color: var(--color-bg);
+src/styles/global.css:288:  background-color: var(--color-bg-alt);
+src/styles/global.css:516:  background-color: var(--color-bg);
+src/styles/global.css:597:/* Replace hardcoded greys (#737373) with tokens */
+src/styles/global.css:620:/* Brand navy (#1E4B8F, #27599D) must not be used as text or number on dark */
+src/styles/global.css:633:html[data-theme="dark"] .card-top-icon[style*="#1E4B8F"],
+src/styles/global.css:634:html[data-theme="dark"] .card-stage-eyebrow[style*="#1E4B8F"],
+src/styles/global.css:635:html[data-theme="dark"] .card-stage-eyebrow[style*="#27599D"],
+src/styles/global.css:636:html[data-theme="dark"] [style*="color: #1E4B8F"],
+src/styles/global.css:638:html[data-theme="dark"] [style*="color: #27599D"],
+src/styles/global.css:645:html[data-theme="dark"] .pillar-indicator[style*="#1E4B8F"],
+src/styles/global.css:646:html[data-theme="dark"] .group-badge[style*="#1E4B8F"] {
+src/styles/pegboard-tokens.css:29:  --pb-blue: #1E4B8F;
+src/styles/pegboard-tokens.css:30:  --pb-blue-deep: #1E4B8F;
+src/styles/pegboard-tokens.css:55:  --pb-blue-deep: #1E4B8F;
+src/styles/pegboard-tokens.css:110:    --pb-blue-deep: #1E4B8F;
+src/styles/solution-dark.css:6:   Orange (#F7941D -> #EE4B2B) for energy, blue (#5B8FE0, #1E4B8F)
+src/styles/solution-dark.css:24:  --sd-blue-deep: #1E4B8F;
+src/styles/solution-dark.css:46:    --sd-blue-deep: #1E4B8F;

@@ -228,7 +228,7 @@ const pageDescription: string = (p.seoDescription as string | undefined) || p.on
     height: 20px;
     border-radius: 50%;
     background-color: rgba(30, 75, 143, 0.08);
-    color: #1E4B8F;
+    color: var(--brand-blue-text, #1E4B8F);
     flex-shrink: 0;
     transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
   }
@@ -243,7 +243,7 @@ const pageDescription: string = (p.seoDescription as string | undefined) || p.on
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: #1E4B8F;
+    color: var(--brand-blue-text, #1E4B8F);
     flex-shrink: 0;
     line-height: 1;
     transition: color 0.2s ease;

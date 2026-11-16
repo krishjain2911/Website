@@ -34,21 +34,21 @@
 
 /* Dark mode: apply to BOTH [data-theme="dark"] and the unset + prefers-dark block */
 :root[data-theme="dark"] .pegboard-page {
-  --pb-page: #04060A;
+  --pb-page: #17181B;
   /* outside the board */
-  --pb-board: #0B1018;
+  --pb-board: #1B1C20;
   /* the board panel: lighter than the page */
-  --pb-tile: #131A26;
+  --pb-tile: #202125;
   /* tiles: clearly lighter than the board */
-  --pb-tile-raised: #19222F;
+  --pb-tile-raised: #292A30;
   /* drawer, popups, hovered tile */
-  --pb-tile-line: rgba(255, 255, 255, 0.07);
+  --pb-tile-line: rgba(255, 255, 255, 0.08);
   /* neutral hairline; orange/blue accents are added on top */
-  --pb-line: rgba(255, 255, 255, 0.09);
+  --pb-line: rgba(255, 255, 255, 0.08);
   --pb-panel-edge: rgba(91, 143, 224, 0.22);
-  --pb-text: #F5F7FB;
-  --pb-text-2: #BAC3D2;
-  --pb-text-3: #8A95A8;
+  --pb-text: #ECECEF;
+  --pb-text-2: #B4B4BC;
+  --pb-text-3: #92929B;
   /* >= 4.5:1 on --pb-tile */
   --pb-blue: #5B8FE0;
   /* logo light blue: links, info, ambient */
@@ -89,21 +89,21 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .pegboard-page {
-    --pb-page: #04060A;
+    --pb-page: #17181B;
     /* outside the board */
-    --pb-board: #0B1018;
+    --pb-board: #1B1C20;
     /* the board panel: lighter than the page */
-    --pb-tile: #131A26;
+    --pb-tile: #202125;
     /* tiles: clearly lighter than the board */
-    --pb-tile-raised: #19222F;
+    --pb-tile-raised: #292A30;
     /* drawer, popups, hovered tile */
-    --pb-tile-line: rgba(255, 255, 255, 0.07);
+    --pb-tile-line: rgba(255, 255, 255, 0.08);
     /* neutral hairline; orange/blue accents are added on top */
-    --pb-line: rgba(255, 255, 255, 0.09);
+    --pb-line: rgba(255, 255, 255, 0.08);
     --pb-panel-edge: rgba(91, 143, 224, 0.22);
-    --pb-text: #F5F7FB;
-    --pb-text-2: #BAC3D2;
-    --pb-text-3: #8A95A8;
+    --pb-text: #ECECEF;
+    --pb-text-2: #B4B4BC;
+    --pb-text-3: #92929B;
     /* >= 4.5:1 on --pb-tile */
     --pb-blue: #5B8FE0;
     /* logo light blue: links, info, ambient */

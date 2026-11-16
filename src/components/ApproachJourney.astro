@@ -327,7 +327,7 @@ const headlineWords = approach.headline.split(' ');
     opacity: 0.06;
   }
 
-  :global(.dark) .layer-aperture {
+  :global(html[data-theme="dark"]) .layer-aperture {
     border-color: rgba(255, 255, 255, 0.08);
   }
 
@@ -341,7 +341,7 @@ const headlineWords = approach.headline.split(' ');
     opacity: 0.05;
   }
 
-  :global(.dark) .layer-isometric-square {
+  :global(html[data-theme="dark"]) .layer-isometric-square {
     border-color: rgba(247, 148, 29, 0.12);
   }
 
@@ -608,14 +608,14 @@ const headlineWords = approach.headline.split(' ');
     stroke: rgba(30, 75, 143, 0.25);
     stroke-width: 2.5;
   }
-  :global(.dark) .socket-outer-rim {
+  :global(html[data-theme="dark"]) .socket-outer-rim {
     stroke: rgba(255, 255, 255, 0.18);
   }
 
   .socket-inner-hole {
     fill: #0F172A;
   }
-  :global(.dark) .socket-inner-hole {
+  :global(html[data-theme="dark"]) .socket-inner-hole {
     fill: #020617;
   }
 
@@ -640,7 +640,7 @@ const headlineWords = approach.headline.split(' ');
     stroke-linecap: round;
     stroke-linejoin: round;
   }
-  :global(.dark) .road-bg-track {
+  :global(html[data-theme="dark"]) .road-bg-track {
     stroke: rgba(255, 255, 255, 0.08);
   }
 
@@ -667,7 +667,7 @@ const headlineWords = approach.headline.split(' ');
     stroke-width: 1.5;
     stroke-dasharray: 4 4;
   }
-  :global(.dark) .connector-line {
+  :global(html[data-theme="dark"]) .connector-line {
     stroke: rgba(255, 255, 255, 0.15);
   }
 
@@ -694,7 +694,7 @@ const headlineWords = approach.headline.split(' ');
     will-change: transform, opacity;
     filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.3));
   }
-  :global(.dark) .journey-guide-cube {
+  :global(html[data-theme="dark"]) .journey-guide-cube {
     filter: drop-shadow(0 6px 18px rgba(247, 148, 29, 0.3)) drop-shadow(0 2px 8px rgba(0, 0, 0, 0.6));
   }
 
@@ -867,7 +867,7 @@ const headlineWords = approach.headline.split(' ');
     animation: activeCardGlowPulse 3s ease-in-out infinite alternate;
   }
 
-  :global(.dark) .journey-stop.is-active .stop-content-card {
+  :global(html[data-theme="dark"]) .journey-stop.is-active .stop-content-card {
     box-shadow:
       0 0 0 1px color-mix(in srgb, var(--step-accent) 45%, transparent),
       0 12px 48px color-mix(in srgb, var(--step-accent) 20%, transparent),
@@ -934,11 +934,43 @@ const headlineWords = approach.headline.split(' ');
       var(--shadow-card);
   }
 
-  :global(.dark) .journey-stop.is-passed .stop-content-card {
+  :global(html[data-theme="dark"]) .journey-stop.is-passed .stop-content-card {
     box-shadow:
       0 0 0 1px color-mix(in srgb, var(--step-accent) 18%, transparent),
       0 6px 24px color-mix(in srgb, var(--step-accent) 10%, transparent),
       0 4px 16px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Dark mode overrides for contrast & typography */
+  :global(html[data-theme="dark"]) .rail-indicator {
+    color: var(--text-secondary, #A3A3A3) !important;
+  }
+
+  :global(html[data-theme="dark"]) .card-detail {
+    color: var(--text-secondary, #A3A3A3) !important;
+    font-weight: 400 !important;
+    line-height: 1.6 !important;
+  }
+
+  :global(html[data-theme="dark"]) .card-stage-eyebrow[style*="#1E4B8F"],
+  :global(html[data-theme="dark"]) .card-stage-eyebrow[style*="#27599D"] {
+    color: var(--brand-blue-on-dark, #6FA3F5) !important;
+  }
+
+  :global(html[data-theme="dark"]) .card-stage-eyebrow[style*="#EE4B2B"] {
+    color: #FF6644 !important;
+  }
+
+  :global(html[data-theme="dark"]) .journey-stop[style*="#1E4B8F"] .pin-num,
+  :global(html[data-theme="dark"]) .journey-stop[style*="#27599D"] .pin-num,
+  :global(html[data-theme="dark"]) .journey-stop[style*="#1E4B8F"] .pin-glyph,
+  :global(html[data-theme="dark"]) .journey-stop[style*="#27599D"] .pin-glyph {
+    color: var(--brand-blue-on-dark, #6FA3F5) !important;
+  }
+
+  :global(html[data-theme="dark"]) .journey-stop[style*="#1E4B8F"] .pin-inner-badge,
+  :global(html[data-theme="dark"]) .journey-stop[style*="#27599D"] .pin-inner-badge {
+    border-color: var(--brand-blue-on-dark, #6FA3F5) !important;
   }
 
   .journey-stop.is-passed .pin-inner-badge {

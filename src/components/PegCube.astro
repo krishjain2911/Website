@@ -407,6 +407,11 @@ import PegCardGenAI from './PegCardGenAI.astro';
     box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.2);
   }
 
+  :global(html[data-theme="dark"]) .face-top,
+  :global([data-theme="dark"]) .face-top {
+    background: #103675;
+  }
+
   .face-top.is-popped {
     transform: rotateX(90deg) translateZ(110px);
   }

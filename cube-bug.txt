@@ -1,0 +1,827 @@
+=== cube/touch/scroll references
+src/components/PegSolutions.astro:613:    touch-action: none;
+src/components/PegSolutions.astro:1213:    scroll-snap-type: x mandatory;
+src/components/PegSolutions.astro:1245:      scroll-snap-type: none;
+src/components/PegSolutions.astro:1281:    scroll-snap-align: start;
+src/components/PegSolutions.astro:2210:            panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+src/components/PegSolutions.astro:2221:        window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+src/components/PegSolutions.astro:2255:      sceneWrapper.addEventListener('pointerdown', (e) => {
+src/components/PegSolutions.astro:2263:      sceneWrapper.addEventListener('pointermove', (e) => {
+src/components/PegSolutions.astro:2295:        window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+src/components/PegSolutions.astro:2298:      sceneWrapper.addEventListener('pointerup', endDrag);
+src/components/PegSolutions.astro:2334:            trackEl.scrollTo({ left: target, behavior: 'smooth' });
+src/components/PegSolutions.astro:2377:          e.preventDefault();
+src/components/PegSolutions.astro:2380:          e.preventDefault();
+src/components/PegSolutions.astro:2409:      trackEl.addEventListener('pointerdown', (e) => {
+src/components/PegSolutions.astro:2417:      window.addEventListener('pointermove', (e) => {
+src/components/PegSolutions.astro:2433:      window.addEventListener('pointerup', endRailDrag);
+src/components/PegSolutions.astro:2440:            e.preventDefault();
+src/components/PegCube.astro:349:    touch-action: pan-y;
+src/components/PegCube.astro:778:          e.preventDefault();
+src/components/PegCube.astro:783:          e.preventDefault();
+src/components/PegCube.astro:801:          e.preventDefault();
+src/scripts/pegLayout.ts:203:  board.addEventListener('pointerdown', (e) => {
+src/scripts/pegLayout.ts:236:  board.addEventListener('pointermove', (e) => {
+src/scripts/pegLayout.ts:306:  board.addEventListener('pointerup', end);
+src/scripts/pegLayout.ts:339:        e.preventDefault();
+src/scripts/pegLayout.ts:345:  board.addEventListener('dragstart', (e) => e.preventDefault());
+src/scripts/pegLayout.ts:361:    e.preventDefault();
+src/scripts/pegLayout.ts:377:    target?.scrollIntoView({ block: 'start', behavior: reduce() ? 'auto' : 'smooth' });
+=== PegSolutions script
+<script>
+  import { getScrollStory, smoothstep, lerp, clamp } from '../scripts/scrollStory';
+
+  function initPegSolutions() {
+    const track = document.getElementById('peg-solutions-track');
+    const stage = document.getElementById('peg-solutions-stage');
+    const introHeader = document.getElementById('stage-intro-header');
+    const scrollCue = document.getElementById('intro-scroll-cue');
+    const cubeCol = document.getElementById('stage-cube-col');
+    const cubeAssembly = document.getElementById('cube-assembly');
+    const contentCol = document.getElementById('stage-content-col');
+    const container = document.getElementById('stage-main-container');
+
+    const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('.stage-pill-tabs .peg-tab-btn'));
+    const panels: Record<string, HTMLElement | null> = {
+      plan: document.getElementById('stage-panel-plan'),
+      engineer: document.getElementById('stage-panel-engineer'),
+      genai: document.getElementById('stage-panel-genai')
+    };
+    const faces: Record<string, HTMLElement | null> = {
+      plan: document.getElementById('cube-face-plan'),
+      engineer: document.getElementById('cube-face-engineer'),
+      genai: document.getElementById('cube-face-genai')
+    };
+
+    if (!track || !stage || !cubeAssembly || !cubeCol || !contentCol) return;
+
+    // Cube rotation angles
+    // Face-front: Plan (y: 0)
+    // Face-right: Engineer (y: -90)
+    // Face-back: Gen-AI (y: -180)
+    const pillarAngles: Record<string, { x: number; y: number }> = {
+      intro: { x: -20, y: -30 },
+      plan: { x: -8, y: 0 },
+      engineer: { x: -8, y: -90 },
+      genai: { x: -8, y: -180 }
+    };
+
+    let activePillar = 'plan';
+    let trackTop = 0;
+    let trackHeight = 0;
+    let centerOffset = 0;
+    let introRevealed = false;
+
+    const atmosphereTint = document.getElementById('pillar-atmosphere-tint');
+    const cubeGlow = document.getElementById('cube-ambient-glow');
+
+    function setPanelActive(pillar: 'plan' | 'engineer' | 'genai') {
+      if (activePillar === pillar && atmosphereTint?.getAttribute('data-pillar') === pillar) return;
+      activePillar = pillar;
+
+      // Update atmosphere tint and cube ambient glow
+      if (atmosphereTint) atmosphereTint.setAttribute('data-pillar', pillar);
+      if (cubeGlow) cubeGlow.setAttribute('data-pillar', pillar);
+
+      // Update Tabs
+      tabs.forEach((tab) => {
+        const isMatch = tab.getAttribute('data-pillar') === pillar;
+        tab.classList.toggle('is-active', isMatch);
+        tab.setAttribute('aria-selected', isMatch ? 'true' : 'false');
+      });
+
+      // Update Panels
+      Object.entries(panels).forEach(([key, panel]) => {
+        if (!panel) return;
+        panel.classList.toggle('is-active', key === pillar);
+      });
+
+      // Active Face indicator
+      Object.entries(faces).forEach(([key, face]) => {
+        if (!face) return;
+        face.classList.toggle('is-active-face', key === pillar);
+      });
+    }
+
+    // Initial state on first paint for mobile / stacked layout
+    if (window.innerWidth < 900 || window.innerHeight < 640) {
+      setPanelActive('plan');
+      const initAng = pillarAngles.plan;
+      if (initAng && cubeAssembly) {
+        cubeAssembly.style.transform = `rotateX(${initAng.x}deg) rotateY(${initAng.y}deg)`;
+      }
+    }
+
+    // Subscribe to shared scrollStory controller
+    const story = getScrollStory();
+
+    story.subscribe({
+      id: 'peg-solutions',
+      gateElement: track,
+      measure: (vp) => {
+        if (vp.viewportWidth < 900 || vp.viewportHeight < 640) return;
+        const rect = track.getBoundingClientRect();
+        trackTop = rect.top + vp.scrollY;
+        trackHeight = track.offsetHeight - vp.viewportHeight;
+
+        // Calculate translation needed to place cube in exact center of container during Phase 0
+        if (container && cubeCol) {
+          const containerWidth = container.offsetWidth;
+          const cubeColWidth = cubeCol.offsetWidth;
+          centerOffset = (containerWidth - cubeColWidth) / 2;
+        }
+      },
+      update: (vp) => {
+        if (vp.viewportWidth < 900 || vp.viewportHeight < 640 || trackHeight <= 0) return;
+
+        // Intro and stop distances matching CSS variables
+        const introDist = clamp(180, Math.round(vp.viewportHeight * 0.25), 260); // 20 to 30vh
+        const stopDist = clamp(220, Math.round(vp.viewportHeight * 0.28), 300); // clamp(220px, 28vh, 300px)
+        const currentScroll = vp.scrollY - trackTop;
+        // Intro only: push the centred cube down so it clears the 3-line intro header
+        const introLiftY = clamp(44, Math.round(vp.viewportHeight * 0.08), 72);
+
+        // Intro headline staggered word reveal
+        if (!introRevealed && introHeader) {
+          const iRect = introHeader.getBoundingClientRect();
+          if (iRect.top < vp.viewportHeight * 0.9) {
+            const headlineEl = document.getElementById('intro-headline');
+            if (headlineEl) headlineEl.classList.add('is-revealed');
+            introRevealed = true;
+          }
+        }
+
+        // --- PHASE 0: Intro only (cube centred) ---
+        if (currentScroll <= introDist * 0.35) {
+          // Intro header visible
+          if (introHeader) {
+            introHeader.style.opacity = '1';
+            introHeader.style.transform = 'translateX(-50%) translateY(0px)';
+            introHeader.style.visibility = 'visible';
+            introHeader.style.pointerEvents = 'auto';
+          }
+
+          // "Scroll to explore" visible only in phase 0
+          if (scrollCue) {
+            scrollCue.style.opacity = '1';
+            scrollCue.style.visibility = 'visible';
+            scrollCue.style.pointerEvents = 'auto';
+          }
+
+          // Cube centered in stage with hand-off crossfade
+          let cubeAlpha = 1;
+          if (vp.scrollY < trackTop) {
+            const hStart = trackTop - vp.viewportHeight * 0.35;
+            const hEnd = trackTop - vp.viewportHeight * 0.05;
+            cubeAlpha = smoothstep(0, 1, clamp((vp.scrollY - hStart) / Math.max(1, hEnd - hStart), 0, 1));
+          }
+          cubeCol.style.opacity = `${cubeAlpha}`;
+          cubeCol.style.transform = `translateX(${centerOffset}px) translateY(${introLiftY}px) scale(1.08)`;
+
+          // Content column completely hidden - ZERO OVERLAP
+          contentCol.style.opacity = '0';
+          contentCol.style.visibility = 'hidden';
+          contentCol.style.pointerEvents = 'none';
+
+          // Cube is on Intro angle (P face forward, E face turning in)
+          cubeAssembly.style.transform = `rotateX(${pillarAngles.intro.x}deg) rotateY(${pillarAngles.intro.y}deg)`;
+          setPanelActive('plan');
+        }
+        // --- PHASE 1: Transition into left column (glides to left, settles slightly smaller) ---
+        else if (currentScroll <= introDist) {
+          const t1 = (currentScroll - introDist * 0.35) / (introDist * 0.65);
+          const ease1 = smoothstep(0, 1, clamp(t1, 0, 1));
+
+          // Intro header fades out
+          if (introHeader) {
+            introHeader.style.opacity = `${(1 - ease1) * 0.9}`;
+            introHeader.style.transform = `translateX(-50%) translateY(${-ease1 * 20}px)`;
+            introHeader.style.visibility = ease1 > 0.9 ? 'hidden' : 'visible';
+            introHeader.style.pointerEvents = 'none';
+          }
+
+          // "Scroll to explore" cue completely hidden
+          if (scrollCue) {
+            scrollCue.style.opacity = `${Math.max(0, 1 - ease1 * 1.5)}`;
+            scrollCue.style.visibility = ease1 > 0.6 ? 'hidden' : 'visible';
+            scrollCue.style.pointerEvents = 'none';
+          }
+
+          // Cube transitions from center to left column and settles slightly smaller (scale 1.08 -> 1.0)
+          cubeCol.style.opacity = '1';
+          const currentX = lerp(centerOffset, 0, ease1);
+          const currentScale = lerp(1.08, 1.0, ease1);
+          const currentY = lerp(introLiftY, 0, ease1);
+          cubeCol.style.transform = `translateX(${currentX}px) translateY(${currentY}px) scale(${currentScale})`;
+
+          // Cube interpolates angle: intro -> plan
+          const ang = {
+            x: lerp(pillarAngles.intro.x, pillarAngles.plan.x, ease1),
+            y: lerp(pillarAngles.intro.y, pillarAngles.plan.y, ease1)
+          };
+          cubeAssembly.style.transform = `rotateX(${ang.x}deg) rotateY(${ang.y}deg)`;
+
+          // Content column fades in smoothly
+          contentCol.style.opacity = `${ease1}`;
+          contentCol.style.visibility = 'visible';
+          contentCol.style.pointerEvents = ease1 > 0.7 ? 'auto' : 'none';
+
+          setPanelActive('plan');
+        }
+        // --- PHASES 2-4: Pillar Stops ---
+        else {
+          // Intro & scroll cue strictly hidden
+          if (introHeader) {
+            introHeader.style.opacity = '0';
+            introHeader.style.visibility = 'hidden';
+            introHeader.style.pointerEvents = 'none';
+          }
+          if (scrollCue) {
+            scrollCue.style.opacity = '0';
+            scrollCue.style.visibility = 'hidden';
+            scrollCue.style.pointerEvents = 'none';
+          }
+
+          // Cube column settled in left column
+          cubeCol.style.opacity = '1';
+          cubeCol.style.transform = 'translateX(0px) scale(1.0)';
+
+          // Content column strictly active
+          contentCol.style.opacity = '1';
+          contentCol.style.visibility = 'visible';
+          contentCol.style.pointerEvents = 'auto';
+
+          const pillarScroll = currentScroll - introDist;
+
+          if (vp.isReducedMotion) {
+            if (pillarScroll <= stopDist) {
+              setPanelActive('plan');
+              cubeAssembly.style.transform = `rotateX(${pillarAngles.plan.x}deg) rotateY(${pillarAngles.plan.y}deg)`;
+            } else if (pillarScroll <= 2 * stopDist) {
+              setPanelActive('engineer');
+              cubeAssembly.style.transform = `rotateX(${pillarAngles.engineer.x}deg) rotateY(${pillarAngles.engineer.y}deg)`;
+            } else {
+              setPanelActive('genai');
+              cubeAssembly.style.transform = `rotateX(${pillarAngles.genai.x}deg) rotateY(${pillarAngles.genai.y}deg)`;
+            }
+          } else {
+            // Stop 1: Plan (pillarScroll <= stopDist)
+            if (pillarScroll <= stopDist) {
+              // Smooth rotation towards Engineer near end of Plan
+              if (pillarScroll > stopDist * 0.75) {
+                const blend = (pillarScroll - stopDist * 0.75) / (stopDist * 0.25);
+                const ang = {
+                  x: lerp(pillarAngles.plan.x, pillarAngles.engineer.x, blend * 0.5),
+                  y: lerp(pillarAngles.plan.y, pillarAngles.engineer.y, blend * 0.5)
+                };
+                cubeAssembly.style.transform = `rotateX(${ang.x}deg) rotateY(${ang.y}deg)`;
+              } else {
+                cubeAssembly.style.transform = `rotateX(${pillarAngles.plan.x}deg) rotateY(${pillarAngles.plan.y}deg)`;
+              }
+              setPanelActive('plan');
+            }
+            // Stop 2: Engineer (stopDist < pillarScroll <= 2 * stopDist)
+            else if (pillarScroll <= 2 * stopDist) {
+              // First part finishes rotation from Plan
+              if (pillarScroll < stopDist * 1.25) {
+                const blend = (pillarScroll - stopDist) / (stopDist * 0.25);
+                const ang = {
+                  x: lerp(pillarAngles.plan.x, pillarAngles.engineer.x, 0.5 + blend * 0.5),
+                  y: lerp(pillarAngles.plan.y, pillarAngles.engineer.y, 0.5 + blend * 0.5)
+                };
+                cubeAssembly.style.transform = `rotateX(${ang.x}deg) rotateY(${ang.y}deg)`;
+              }
+              // Transition towards Govern near end of Engineer
+              else if (pillarScroll > stopDist * 1.75) {
+                const blend = (pillarScroll - stopDist * 1.75) / (stopDist * 0.25);
+                const ang = {
+                  x: lerp(pillarAngles.engineer.x, pillarAngles.genai.x, blend * 0.5),
+                  y: lerp(pillarAngles.engineer.y, pillarAngles.genai.y, blend * 0.5)
+                };
+                cubeAssembly.style.transform = `rotateX(${ang.x}deg) rotateY(${ang.y}deg)`;
+              } else {
+                cubeAssembly.style.transform = `rotateX(${pillarAngles.engineer.x}deg) rotateY(${pillarAngles.engineer.y}deg)`;
+              }
+              setPanelActive('engineer');
+            }
+            // Stop 3: Gen-AI (pillarScroll > 2 * stopDist through 15vh release buffer)
+            else {
+              // First part finishes rotation from Engineer
+              if (pillarScroll < stopDist * 2.25) {
+                const blend = (pillarScroll - 2 * stopDist) / (stopDist * 0.25);
+                const ang = {
+                  x: lerp(pillarAngles.engineer.x, pillarAngles.genai.x, 0.5 + blend * 0.5),
+                  y: lerp(pillarAngles.engineer.y, pillarAngles.genai.y, 0.5 + blend * 0.5)
+                };
+                cubeAssembly.style.transform = `rotateX(${ang.x}deg) rotateY(${ang.y}deg)`;
+              } else {
+                cubeAssembly.style.transform = `rotateX(${pillarAngles.genai.x}deg) rotateY(${pillarAngles.genai.y}deg)`;
+              }
+              setPanelActive('genai');
+            }
+          }
+        }
+      }
+    });
+
+    // Tab buttons click: smoothly scroll page to that pillar's scroll target
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const pillar = tab.getAttribute('data-pillar');
+        if (!pillar) return;
+
+        if (window.innerWidth < 900 || window.innerHeight < 640) {
+          setPanelActive(pillar as any);
+          const ang = pillarAngles[pillar];
+          if (ang && cubeAssembly) {
+            cubeAssembly.style.transform = `rotateX(${ang.x}deg) rotateY(${ang.y}deg)`;
+          }
+          const panel = panels[pillar];
+          if (panel) {
+            panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+          return;
+        }
+
+        const introDist = clamp(180, Math.round(window.innerHeight * 0.25), 260);
+        const stopDist = clamp(220, Math.round(window.innerHeight * 0.28), 300);
+        let targetScroll = trackTop + introDist + stopDist * 0.4;
+        if (pillar === 'engineer') targetScroll = trackTop + introDist + stopDist * 1.5;
+        if (pillar === 'genai') targetScroll = trackTop + introDist + stopDist * 2.5;
+
+        window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+      });
+    });
+
+    // Mobile scroll observer: rotate cube to active panel when scrolling in stacked layout
+    if ('IntersectionObserver' in window) {
+      const mobileObserver = new IntersectionObserver((entries) => {
+        if (window.innerWidth >= 900 && window.innerHeight >= 640) return;
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const pillar = entry.target.getAttribute('data-pillar') as 'plan' | 'engineer' | 'genai';
+            if (pillar && pillarAngles[pillar]) {
+              setPanelActive(pillar);
+              const ang = pillarAngles[pillar];
+              if (cubeAssembly) {
+                cubeAssembly.style.transform = `rotateX(${ang.x}deg) rotateY(${ang.y}deg)`;
+              }
+            }
+          }
+        });
+      }, { rootMargin: '-15% 0px -45% 0px', threshold: 0.1 });
+
+      Object.values(panels).forEach((p) => {
+        if (p) mobileObserver.observe(p);
+      });
+    }
+
+    // Interactive Cube Drag
+    const sceneWrapper = document.getElementById('cube-scene-wrapper');
+    if (sceneWrapper) {
+      let startX = 0;
+      let deltaX = 0;
+      let isDragging = false;
+
+      sceneWrapper.addEventListener('pointerdown', (e) => {
+        isDragging = true;
+        startX = e.clientX;
+        deltaX = 0;
+        cubeAssembly.style.transition = 'none';
+        sceneWrapper.setPointerCapture(e.pointerId);
+      });
+
+      sceneWrapper.addEventListener('pointermove', (e) => {
+        if (!isDragging) return;
+        deltaX = e.clientX - startX;
+        const currentAng = pillarAngles[activePillar] || pillarAngles.plan;
+        cubeAssembly.style.transform = `rotateX(${currentAng.x}deg) rotateY(${currentAng.y + deltaX * 0.4}deg)`;
+      });
+
+      const endDrag = (e: PointerEvent) => {
+        if (!isDragging) return;
+        isDragging = false;
+        cubeAssembly.style.transition = 'transform 0.6s cubic-bezier(0.34, 1.25, 0.64, 1)';
+        try {
+          sceneWrapper.releasePointerCapture(e.pointerId);
+        } catch (_) {}
+
+        const pillarOrder: Array<'plan' | 'engineer' | 'genai'> = ['plan', 'engineer', 'genai'];
+        let currentIdx = pillarOrder.indexOf(activePillar as any);
+        if (currentIdx === -1) currentIdx = 0;
+
+        if (deltaX < -35 && currentIdx < 2) {
+          currentIdx += 1;
+        } else if (deltaX > 35 && currentIdx > 0) {
+          currentIdx -= 1;
+        }
+
+        const nextPillar = pillarOrder[currentIdx];
+        const introDist = clamp(180, Math.round(window.innerHeight * 0.25), 260);
+        const stopDist = clamp(220, Math.round(window.innerHeight * 0.28), 300);
+        let targetScroll = trackTop + introDist + stopDist * 0.4;
+        if (nextPillar === 'engineer') targetScroll = trackTop + introDist + stopDist * 1.5;
+        if (nextPillar === 'genai') targetScroll = trackTop + introDist + stopDist * 2.5;
+
+        window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+      };
+
+      sceneWrapper.addEventListener('pointerup', endDrag);
+      sceneWrapper.addEventListener('pointercancel', endDrag);
+    }
+
+    // Horizontal Rails Setup (Engineer & Gen-AI)
+    ['engineer', 'genai'].forEach((railId) => {
+      const trackEl = document.getElementById(`rail-track-${railId}`);
+      const prevBtn = document.querySelector<HTMLButtonElement>(`.rail-nav-prev[data-rail-target="${railId}"]`);
+      const nextBtn = document.querySelector<HTMLButtonElement>(`.rail-nav-next[data-rail-target="${railId}"]`);
+      const dotsContainer = document.getElementById(`rail-dots-${railId}`);
+
+      if (!trackEl) return;
+
+      const getScrollStep = () => {
+        const firstCard = trackEl.querySelector<HTMLElement>('.project-rail-card');
+        if (!firstCard) return 280;
+        const gap = parseFloat(getComputedStyle(trackEl).gap) || 14;
+        return firstCard.offsetWidth + gap;
+      };
+
+      const updateDots = () => {
+        if (!dotsContainer) return;
+        const cards = trackEl.querySelectorAll('.project-rail-card');
+        const count = cards.length;
+        const cardsPerPage = window.innerWidth >= 1280 ? 3 : (window.innerWidth >= 768 ? 2 : 1);
+        const pageCount = Math.ceil(count / cardsPerPage);
+
+        dotsContainer.innerHTML = '';
+        for (let i = 0; i < pageCount; i++) {
+          const dot = document.createElement('button');
+          dot.type = 'button';
+          dot.className = `rail-dot ${i === 0 ? 'is-active' : ''}`;
+          dot.setAttribute('aria-label', `Page ${i + 1}`);
+          dot.addEventListener('click', () => {
+            const maxScroll = trackEl.scrollWidth - trackEl.clientWidth;
+            const target = pageCount > 1 ? (i / (pageCount - 1)) * maxScroll : 0;
+            trackEl.scrollTo({ left: target, behavior: 'smooth' });
+          });
+          dotsContainer.appendChild(dot);
+        }
+      };
+
+      const updateRailState = () => {
+        const scrollLeft = trackEl.scrollLeft;
+        const maxScroll = trackEl.scrollWidth - trackEl.clientWidth;
+
+        if (prevBtn) {
+          prevBtn.disabled = scrollLeft <= 4;
+          prevBtn.setAttribute('aria-disabled', scrollLeft <= 4 ? 'true' : 'false');
+        }
+        if (nextBtn) {
+          nextBtn.disabled = scrollLeft >= maxScroll - 4;
+          nextBtn.setAttribute('aria-disabled', scrollLeft >= maxScroll - 4 ? 'true' : 'false');
+        }
+
+        if (dotsContainer) {
+          const dots = dotsContainer.querySelectorAll('.rail-dot');
+          if (dots.length > 0 && maxScroll > 0) {
+            const progress = scrollLeft / maxScroll;
+            const activeIdx = Math.min(dots.length - 1, Math.max(0, Math.round(progress * (dots.length - 1))));
+            dots.forEach((dot, idx) => {
+              dot.classList.toggle('is-active', idx === activeIdx);
+            });
+          }
+        }
+      };
+
+      prevBtn?.addEventListener('click', () => {
+        trackEl.scrollBy({ left: -getScrollStep(), behavior: 'smooth' });
+      });
+
+      nextBtn?.addEventListener('click', () => {
+        trackEl.scrollBy({ left: getScrollStep(), behavior: 'smooth' });
+      });
+
+      // Keyboard navigation (arrow keys when row is focused)
+      trackEl.setAttribute('tabindex', '0');
+      trackEl.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          trackEl.scrollBy({ left: getScrollStep(), behavior: 'smooth' });
+        } else if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          trackEl.scrollBy({ left: -getScrollStep(), behavior: 'smooth' });
+        }
+      });
+
+      trackEl.addEventListener('scroll', updateRailState, { passive: true });
+      updateDots();
+      updateRailState();
+
+      window.addEventListener('resize', () => {
+        updateDots();
+        updateRailState();
+      }, { passive: true });
+
+      // The panel is hidden (display: none) when this runs, so widths read as 0 and the next button
+      // starts disabled. Re-measure whenever the track gets a real size (panel shown, window resized).
+      if ('ResizeObserver' in window) {
+        new ResizeObserver(() => {
+          updateDots();
+          updateRailState();
+        }).observe(trackEl);
+      }
+
+      // Drag to scroll horizontally on the track (without vertical wheel hijacking)
+      let isRailDragging = false;
+      let railStartX = 0;
+      let railScrollLeft = 0;
+      let hasDragged = false;
+
+      trackEl.addEventListener('pointerdown', (e) => {
+        isRailDragging = true;
+        hasDragged = false;
+        railStartX = e.pageX - trackEl.offsetLeft;
+        railScrollLeft = trackEl.scrollLeft;
+        trackEl.style.scrollBehavior = 'auto';
+      });
+
+      window.addEventListener('pointermove', (e) => {
+        if (!isRailDragging) return;
+        const x = e.pageX - trackEl.offsetLeft;
+        const walk = (x - railStartX) * 1.2;
+        if (Math.abs(walk) > 4) {
+          hasDragged = true;
+        }
+        trackEl.scrollLeft = railScrollLeft - walk;
+      });
+
+      const endRailDrag = () => {
+        if (!isRailDragging) return;
+        isRailDragging = false;
+        trackEl.style.scrollBehavior = 'smooth';
+      };
+
+      window.addEventListener('pointerup', endRailDrag);
+      window.addEventListener('pointercancel', endRailDrag);
+
+      // Prevent link clicks if user was dragging
+      trackEl.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', (e) => {
+          if (hasDragged) {
+            e.preventDefault();
+            hasDragged = false;
+          }
+        });
+      });
+    });
+  }
+
+  initPegSolutions();
+  document.addEventListener('astro:after-swap', initPegSolutions);
+</script>
+=== PegSolutions cube/sticky css
+53:      <!-- 0. Phase 0 Intro Header (Center-aligned above the cube in Phase 0) -->
+67:        <div class="stage-cube-col" id="stage-cube-col">
+68:          <div class="cube-zone" id="cube-zone">
+69:            <div class="cube-scene-wrapper" id="cube-scene-wrapper" data-layout="cube" aria-label="Interactive 3D PEG Cube">
+70:              <!-- Dynamic cube ambient glow matching active pillar -->
+71:              <div class="cube-ambient-glow" id="cube-ambient-glow" aria-hidden="true" data-pillar="plan"></div>
+73:              <div class="cube-viewport" id="cube-viewport">
+74:                <div class="cube-assembly" id="cube-assembly">
+76:                  <div class="cube-face face-top" aria-hidden="true"></div>
+79:                  <div class="cube-face face-bottom" aria-hidden="true"></div>
+83:                    class="cube-face face-front"
+84:                    id="cube-face-plan"
+98:                    class="cube-face face-right"
+99:                    id="cube-face-engineer"
+113:                    class="cube-face face-back"
+114:                    id="cube-face-genai"
+127:                  <div class="cube-face face-left" aria-hidden="true"></div>
+132:              <div class="cube-socket-ellipse" aria-hidden="true">
+138:          <!-- P/E/G Pill Tabs (always positioned directly below the cube in left column) -->
+445:    position: sticky;
+448:    height: 100svh;
+465:     0. Phase 0 Intro Header (Center-aligned above the cube)
+577:  .stage-cube-col {
+589:    will-change: transform, opacity;
+592:  .cube-zone {
+603:  .cube-scene-wrapper {
+604:    --cube-size: min(calc(100cqw / 1.7), 360px);
+605:    width: var(--cube-size);
+606:    height: var(--cube-size);
+618:  .cube-scene-wrapper:active {
+623:  .cube-ambient-glow {
+625:    width: min(calc(var(--cube-size) * 0.9), 240px);
+626:    height: min(calc(var(--cube-size) * 0.9), 240px);
+635:  .cube-ambient-glow[data-pillar="plan"] { background: #1E4B8F; }
+636:  .cube-ambient-glow[data-pillar="engineer"] { background: #F7941D; }
+637:  .cube-ambient-glow[data-pillar="genai"] { background: #EE4B2B; }
+639:  :global(html[data-theme="dark"]) .cube-ambient-glow {
+644:  .cube-viewport {
+645:    --face-size: clamp(80px, calc(var(--cube-size) * 0.52), 160px);
+655:  .cube-assembly {
+659:    transform-style: preserve-3d;
+664:  .cube-face {
+751:  .cube-face.is-active-face {
+756:  .cube-socket-ellipse {
+777:  /* Pill Tabs (Strictly below the cube in left column) */
+1475:    .stage-cube-col {
+1480:    .cube-scene-wrapper {
+1481:      --cube-size: 180px !important;
+1547:    .stage-cube-col {
+1564:    .cube-zone {
+1576:    .cube-scene-wrapper {
+1577:      --cube-size: clamp(140px, 34vw, 180px) !important;
+1578:      width: var(--cube-size) !important;
+1579:      height: var(--cube-size) !important;
+1589:    .cube-viewport {
+1590:      --face-size: clamp(70px, calc(var(--cube-size) * 0.52), 94px) !important;
+1595:    .cube-assembly {
+1654:    .cube-scene-wrapper {
+1908:    const cubeCol = document.getElementById('stage-cube-col');
+1909:    const cubeAssembly = document.getElementById('cube-assembly');
+1920:      plan: document.getElementById('cube-face-plan'),
+1921:      engineer: document.getElementById('cube-face-engineer'),
+1922:      genai: document.getElementById('cube-face-genai')
+1925:    if (!track || !stage || !cubeAssembly || !cubeCol || !contentCol) return;
+1945:    const cubeGlow = document.getElementById('cube-ambient-glow');
+1951:      // Update atmosphere tint and cube ambient glow
+1953:      if (cubeGlow) cubeGlow.setAttribute('data-pillar', pillar);
+1979:      if (initAng && cubeAssembly) {
+1980:        cubeAssembly.style.transform = `rotateX(${initAng.x}deg) rotateY(${initAng.y}deg)`;
+1996:        // Calculate translation needed to place cube in exact center of container during Phase 0
+1997:        if (container && cubeCol) {
+1999:          const cubeColWidth = cubeCol.offsetWidth;
+2000:          centerOffset = (containerWidth - cubeColWidth) / 2;
+2010:        // Intro only: push the centred cube down so it clears the 3-line intro header
+2023:        // --- PHASE 0: Intro only (cube centred) ---
+2041:          let cubeAlpha = 1;
+2045:            cubeAlpha = smoothstep(0, 1, clamp((vp.scrollY - hStart) / Math.max(1, hEnd - hStart), 0, 1));
+2047:          cubeCol.style.opacity = `${cubeAlpha}`;
+2048:          cubeCol.style.transform = `translateX(${centerOffset}px) translateY(${introLiftY}px) scale(1.08)`;
+2056:          cubeAssembly.style.transform = `rotateX(${pillarAngles.intro.x}deg) rotateY(${pillarAngles.intro.y}deg)`;
+=== PegCube script
+<script>
+  function setupPegCube() {
+    const sceneWrapper = document.getElementById('cube-scene-wrapper');
+    const cubeAssembly = document.getElementById('cube-assembly');
+    const tabButtons = document.querySelectorAll('.peg-tab-btn');
+    const panels = document.querySelectorAll('.peg-panel');
+    const faces = document.querySelectorAll('.cube-face[data-pillar]');
+
+    if (!cubeAssembly) return;
+
+    const angles: Record<string, { x: number; y: number }> = {
+      plan: { x: -65, y: 45 },      // Tilted upward to face viewer
+      engineer: { x: -12, y: 90 },   // Left face facing viewer
+      genai: { x: -12, y: 0 }        // Right/front face facing viewer
+    };
+
+    let currentPillar = 'plan';
+    let baseAngle = angles[currentPillar];
+
+    function setPillar(pillarKey: string) {
+      if (!angles[pillarKey] || !cubeAssembly) return;
+      currentPillar = pillarKey;
+      baseAngle = angles[pillarKey];
+
+      // Update Tabs
+      tabButtons.forEach(tab => {
+        const isMatch = tab.getAttribute('data-pillar') === pillarKey;
+        tab.classList.toggle('is-active', isMatch);
+        tab.setAttribute('aria-selected', isMatch ? 'true' : 'false');
+      });
+
+      // Update Panels
+      panels.forEach(p => {
+        if (p.id === `panel-${pillarKey}`) {
+          p.removeAttribute('hidden');
+          setTimeout(() => p.classList.add('is-active'), 10);
+        } else {
+          p.classList.remove('is-active');
+          p.setAttribute('hidden', '');
+        }
+      });
+
+      // Dispatch event for interactive peg cards
+      document.dispatchEvent(new CustomEvent('peg-tab-change', { detail: { pillar: pillarKey } }));
+
+      // Rotate Cube smoothly
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!prefersReducedMotion) {
+        cubeAssembly.style.transform = `rotateX(${baseAngle.x}deg) rotateY(${baseAngle.y}deg)`;
+
+        // Face pop-out
+        faces.forEach(face => {
+          if (face.getAttribute('data-pillar') === pillarKey) {
+            face.classList.add('is-popped');
+          } else {
+            face.classList.remove('is-popped');
+          }
+        });
+      }
+    }
+
+    // Initial setup
+    setPillar('plan');
+
+    // Tab buttons click
+    tabButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const pillar = btn.getAttribute('data-pillar');
+        if (pillar) setPillar(pillar);
+      });
+
+      // Keyboard arrow cycling
+      btn.addEventListener('keydown', (e: any) => {
+        const order = ['plan', 'engineer', 'genai'];
+        const idx = order.indexOf(currentPillar);
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+          e.preventDefault();
+          const nextPillar = order[(idx + 1) % order.length];
+          setPillar(nextPillar);
+          (document.getElementById(`tab-peg-${nextPillar}`) as HTMLButtonElement)?.focus();
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          const prevPillar = order[(idx - 1 + order.length) % order.length];
+          setPillar(prevPillar);
+          (document.getElementById(`tab-peg-${prevPillar}`) as HTMLButtonElement)?.focus();
+        }
+      });
+    });
+
+    // Face clicks
+    faces.forEach(face => {
+      face.addEventListener('click', () => {
+        const pillar = face.getAttribute('data-pillar');
+        if (pillar) {
+          setPillar(pillar);
+        }
+      });
+      face.addEventListener('keydown', (e: any) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          const pillar = face.getAttribute('data-pillar');
+          if (pillar) setPillar(pillar);
+        }
+      });
+    });
+
+    // Desktop Drag Rotation (±25°) with snap back
+    if (sceneWrapper) {
+      let isDragging = false;
+      let startX = 0;
+      let startY = 0;
+      let deltaX = 0;
+      let deltaY = 0;
+
+      sceneWrapper.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        deltaX = 0;
+        deltaY = 0;
+        cubeAssembly.style.transition = 'none';
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        deltaX = Math.max(Math.min((e.clientX - startX) * 0.4, 25), -25);
+        deltaY = Math.max(Math.min((e.clientY - startY) * -0.4, 25), -25);
+
+        cubeAssembly.style.transform = `rotateX(${baseAngle.x + deltaY}deg) rotateY(${baseAngle.y + deltaX}deg)`;
+      });
+
+      window.addEventListener('mouseup', () => {
+        if (!isDragging) return;
+        isDragging = false;
+        cubeAssembly.style.transition = 'transform 700ms cubic-bezier(0.34, 1.25, 0.64, 1)';
+        cubeAssembly.style.transform = `rotateX(${baseAngle.x}deg) rotateY(${baseAngle.y}deg)`;
+      });
+    }
+  }
+
+  // Defer initialization to idle to safeguard LCP / TBT performance
+  if (document.readyState === 'complete') {
+    if ('requestIdleCallback' in window) {
+      (window as any).requestIdleCallback(setupPegCube);
+    } else {
+      setTimeout(setupPegCube, 150);
+    }
+  } else {
+    window.addEventListener('load', () => {
+      if ('requestIdleCallback' in window) {
+        (window as any).requestIdleCallback(setupPegCube);
+      } else {
+        setTimeout(setupPegCube, 150);
+      }
+    }, { once: true });
+  }
+  document.addEventListener('astro:after-swap', setupPegCube);
+</script>
+=== scripts folder
+Hero3D.ts
+HeroScrollSequence.ts
+pegBoardState.ts
+pegLayout.ts
+scrollStory.ts
