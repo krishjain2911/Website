@@ -47,37 +47,38 @@ let beforeAfterId: 'clm' | 'dms' | 'whatsapp' | undefined;
 
 const solutionSeoMap: Record<string, { title: string; description: string }> = {
   clm: {
-    title: 'Smart CLM | Contract Lifecycle Management Platform | RHSP',
+    title: 'Smart CLM | Contract Lifecycle Management Platform | Round Hole Square Peg (RHSP)',
     description: 'Enterprise contract lifecycle management routing drafting, reviews, digital sign-offs, and compliance audit trails on OutSystems low-code architecture.'
   },
   dms: {
-    title: 'Enterprise DMS | Document Management System | RHSP',
+    title: 'Enterprise DMS | Document Management System | Round Hole Square Peg (RHSP)',
     description: 'Centralized enterprise document management system for secure file archival, metadata classification, access controls, and automated compliance retention.'
   },
   sonakshi: {
-    title: 'Sonakshi | Multilingual AI Voice Assistant for Retail | RHSP',
+    title: 'Sonakshi | Multilingual AI Voice Assistant for Retail | Round Hole Square Peg (RHSP)',
     description: 'Press-to-talk multilingual voice AI agent answering retail shoppers in regional languages with interactive product catalogs, digital carts, and billing.'
   },
   'sovereign-ai': {
-    title: 'Sovereign AI | Private On-Premises Enterprise LLM | RHSP',
+    title: 'Sovereign AI | Private On-Premises Enterprise LLM | Round Hole Square Peg (RHSP)',
     description: 'Deploy private generative AI models inside your secure infrastructure to process proprietary enterprise data with full sovereignty and zero data leakage.'
   },
   'vernacular-documents': {
-    title: 'Vernacular Documents | Multilingual Doc Generation | RHSP',
+    title: 'Vernacular Documents | Multilingual Doc Generation | Round Hole Square Peg (RHSP)',
     description: 'Automated multilingual document generation service creating compliant PDFs and Word files across regional languages through API-driven enterprise templates.'
   },
   'whatsapp-journeys': {
-    title: 'WhatsApp Journeys | Enterprise Messaging Automation | RHSP',
+    title: 'WhatsApp Journeys | Enterprise Messaging Automation | Round Hole Square Peg (RHSP)',
     description: 'Automated WhatsApp enterprise customer workflows delivering instant transactional updates, interactive document collection, and assisted self-service.'
   },
   'ask-me-anything': {
-    title: 'AskMeAnything | Enterprise AI Knowledge Retrieval | RHSP',
+    title: 'AskMeAnything | Enterprise AI Knowledge Retrieval | Round Hole Square Peg (RHSP)',
     description: 'Grounded enterprise search engine indexing internal documents, manuals, and data sources to deliver accurate, citation-backed answers for operations teams.'
   }
 };
 
 const seoData = solutionSeoMap[product.slug] || {};
-const pageTitle: string = seoData.title || (p.seoTitle as string | undefined) || `${p.title} | RHSP`;
+const rawSeoTitle = (p.seoTitle as string | undefined)?.replace(/\s*\|\s*RHSP$/, ' | Round Hole Square Peg (RHSP)');
+const pageTitle: string = seoData.title || rawSeoTitle || `${p.title} | Round Hole Square Peg (RHSP)`;
 const pageDescription: string = seoData.description || (p.seoDescription as string | undefined) || p.oneLiner;
 
 const appSchema = {

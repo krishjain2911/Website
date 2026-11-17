@@ -1,3 +1,5 @@
+import { LEGAL_NAME } from '../lib/brand';
+
 export interface PegPillar {
   id: 'plan' | 'engineer' | 'gen-ai';
   letter: 'P' | 'E' | 'G';
@@ -59,8 +61,9 @@ export interface BeforeAfterTab {
 }
 
 export const siteConfig = {
-  name: "RHSP",
-  legalName: "Round Hole Square Peg",
+  name: "Round Hole Square Peg",
+  shortName: "RHSP",
+  legalName: LEGAL_NAME,
   tagline: "Tech that adapts to business.",
   description: "RHSP is a technology partner for enterprises: consulting, implementation services and digital transformation, accelerators, and custom development.",
   url: "https://roundholesquarepeg.com",

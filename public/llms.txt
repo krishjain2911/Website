@@ -1,0 +1,23 @@
+# Round Hole Square Peg (RHSP)
+
+> Round Hole Square Peg (RHSP) is a Mumbai-based technology partner for enterprises, offering consulting, implementation and digital transformation, accelerators, and custom development on OutSystems, MERN and AI.
+
+## Offerings
+- OutSystems low-code architecture, enterprise consulting, and rapid core application delivery
+- Custom full-stack web and cloud applications built on the MERN stack
+- Sovereign enterprise AI, private on-premises LLM deployments, knowledge retrieval, and AI agents
+- Enterprise accelerators: Smart CLM, Enterprise DMS, Sonakshi Multilingual Voice AI, Sovereign AI, Vernacular Document Generation, WhatsApp Journeys, and AskMeAnything
+
+## Location
+Mumbai, Maharashtra, India
+
+## Contact
+Email: letstalk@rhsp.solutions
+
+## Links
+- Home: https://roundholesquarepeg.com/
+- About: https://roundholesquarepeg.com/about
+- Careers: https://roundholesquarepeg.com/careers
+- PEG Board: https://roundholesquarepeg.com/peg-board
+- Solutions: https://roundholesquarepeg.com/solutions/clm
+

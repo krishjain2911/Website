@@ -1,6 +1,7 @@
 ---
 import LogoMark from './brand/LogoMark.astro';
 import { siteConfig } from '../config/site';
+import { LEGAL_NAME } from '../lib/brand';
 import Icon from './Icon.astro';
 
 const { socials, contact, copyrightYear, tagline } = siteConfig;
@@ -13,7 +14,7 @@ const isCareersActive = currentPath === '/careers' || currentPath.startsWith('/c
     <div class="footer-top-row">
       <!-- Brand & Tagline -->
       <div class="footer-brand-col">
-        <a href="/" class="footer-logo-link" aria-label="RHSP home">
+        <a href="/" class="footer-logo-link" aria-label="Round Hole Square Peg (RHSP)">
           <LogoMark size="lg" showText={true} />
         </a>
         <p class="footer-tagline-statement">
@@ -138,7 +139,7 @@ const isCareersActive = currentPath === '/careers' || currentPath.startsWith('/c
     <!-- Small Copyright Row -->
     <div class="footer-bottom-row">
       <p class="copyright-text">
-        &copy; {copyrightYear} Round Hole Square Peg Technologies Pvt. Ltd. All rights reserved.
+        &copy; {copyrightYear} {LEGAL_NAME}. All rights reserved.
       </p>
       <div class="footer-bottom-links">
         <a href="/privacy" class="footer-bottom-link">Privacy</a>

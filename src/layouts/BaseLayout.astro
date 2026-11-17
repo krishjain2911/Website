@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import { siteConfig } from '../config/site';
+import { LEGAL_NAME, BRAND_NAME } from '../lib/brand';
 
 interface Props {
   title?: string;
@@ -34,42 +35,68 @@ const breadcrumbSchema = breadcrumbs && breadcrumbs.length > 0 ? {
 
 const orgSchema = {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": siteConfig.name,
-  "legalName": siteConfig.legalName,
-  "url": siteConfig.url,
-  "logo": `${siteConfig.url}/brand/rhsp-logo.png`,
-  "description": siteConfig.description,
-  "address": {
-    "@type": "PostalAddress",
-    "streetAddress": "ThePlayce, 17th Floor, Marathon Millennium, Lal Bahadur Shastri Marg, beside Nirmal Lifestyle Road, Moti Nagar, Mulund Colony, Mulund West",
-    "addressLocality": "Mumbai",
-    "addressRegion": "Maharashtra",
-    "postalCode": "400080",
-    "addressCountry": "IN"
-  },
-  "hasMap": siteConfig.contact.mapUrl,
-  "contactPoint": {
-    "@type": "ContactPoint",
-    "contactType": "sales",
-    "email": "letstalk@rhsp.solutions"
-  },
-  "founders": siteConfig.team.members.map(m => ({
-    "@type": "Person",
-    "name": m.name,
-    "jobTitle": m.role,
-    "worksFor": {
+  "@graph": [
+    {
       "@type": "Organization",
-      "name": siteConfig.legalName
+      "@id": `${siteConfig.url}/#organization`,
+      "name": "Round Hole Square Peg",
+      "alternateName": ["RHSP"],
+      "legalName": LEGAL_NAME,
+      "url": siteConfig.url,
+      "logo": `${siteConfig.url}/brand/rhsp-logo.png`,
+      "description": description,
+      "email": "letstalk@rhsp.solutions",
+      "areaServed": "IN",
+      "knowsAbout": [
+        "OutSystems",
+        "MERN stack",
+        "Enterprise AI",
+        "Digital transformation",
+        "Low-code development"
+      ],
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "ThePlayce, 17th Floor, Marathon Millennium, Lal Bahadur Shastri Marg, beside Nirmal Lifestyle Road, Moti Nagar, Mulund Colony, Mulund West",
+        "addressLocality": "Mumbai",
+        "addressRegion": "Maharashtra",
+        "postalCode": "400080",
+        "addressCountry": "IN"
+      },
+      "hasMap": siteConfig.contact.mapUrl,
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "sales",
+        "email": "letstalk@rhsp.solutions"
+      },
+      "founder": [
+        { "@id": `${siteConfig.url}/#subramaniam-iyer` },
+        { "@id": `${siteConfig.url}/#abhishek-bagwe` }
+      ],
+      "sameAs": [
+        siteConfig.socials.linkedin,
+        siteConfig.socials.twitter,
+        siteConfig.socials.youtube,
+        siteConfig.socials.instagram
+      ]
     },
-    "email": (m as any).email || "letstalk@rhsp.solutions",
-    "sameAs": m.linkedin
-  })),
-  "sameAs": [
-    siteConfig.socials.linkedin,
-    siteConfig.socials.twitter,
-    siteConfig.socials.youtube,
-    siteConfig.socials.instagram
+    {
+      "@type": "Person",
+      "@id": `${siteConfig.url}/#subramaniam-iyer`,
+      "name": "Subramaniam Iyer",
+      "jobTitle": "Founder",
+      "worksFor": { "@id": `${siteConfig.url}/#organization` },
+      "email": "subu.iyer@rhsp.solutions",
+      "sameAs": "https://linkedin.com/in/thesubuiyer"
+    },
+    {
+      "@type": "Person",
+      "@id": `${siteConfig.url}/#abhishek-bagwe`,
+      "name": "Abhishek Bagwe",
+      "jobTitle": "Co-founder",
+      "worksFor": { "@id": `${siteConfig.url}/#organization` },
+      "email": "abhishek.bagwe@rhsp.solutions",
+      "sameAs": "https://linkedin.com/in/abhishek-bagwe-90ba8710"
+    }
   ]
 };
 ---
@@ -157,7 +184,7 @@ const orgSchema = {
     <meta property="og:image" content={ogImageURL} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:site_name" content={siteConfig.legalName} />
+    <meta property="og:site_name" content="Round Hole Square Peg" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -368,8 +395,9 @@ const orgSchema = {
           if (!target) return;
 
           // Check if this link is a brand logo link
-          var isLogo = target.matches('a[aria-label="RHSP home"], a.brand-logo-link, a.footer-logo-link') ||
-            target.getAttribute('aria-label') === 'RHSP home';
+          var aria = target.getAttribute('aria-label') || '';
+          var isLogo = target.matches('a[aria-label="Round Hole Square Peg (RHSP)"], a[aria-label="RHSP home"], a.brand-logo-link, a.footer-logo-link') ||
+            aria === 'Round Hole Square Peg (RHSP)' || aria === 'RHSP home';
 
           if (!isLogo) return;
 
