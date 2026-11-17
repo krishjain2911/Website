@@ -33,6 +33,7 @@ const { socials, contact, copyrightYear, tagline } = siteConfig;
           <li><a href="/solutions/ask-me-anything" class="footer-link">AskMeAnything</a></li>
           <li><a href="/solutions/clm" class="footer-link">CLM (Contracts)</a></li>
           <li><a href="/solutions/dms" class="footer-link">DMS (Documents)</a></li>
+          <li><a href="/solutions/vernacular-documents" class="footer-link">Vernacular Documents</a></li>
           <li><a href="/solutions/whatsapp-journeys" class="footer-link">WhatsApp Journeys</a></li>
         </ul>
       </div>
@@ -118,7 +119,6 @@ const { socials, contact, copyrightYear, tagline } = siteConfig;
       <div class="footer-bottom-links">
         <a href="/privacy" class="footer-bottom-link">Privacy</a>
         <a href="/security" class="footer-bottom-link">Security</a>
-        <a href="/sitemap-index.xml" class="footer-bottom-link">Sitemap</a>
       </div>
     </div>
   </div>
@@ -219,6 +219,10 @@ const { socials, contact, copyrightYear, tagline } = siteConfig;
   }
 
   .footer-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0.25rem 0;
     font-size: var(--fs-sm);
     color: var(--color-text-secondary);
     text-decoration: none;
@@ -277,6 +281,10 @@ const { socials, contact, copyrightYear, tagline } = siteConfig;
   }
 
   .footer-bottom-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0.25rem 0.5rem;
     color: var(--color-text-secondary);
     text-decoration: none;
     transition: color 0.2s ease;

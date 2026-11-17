@@ -45,8 +45,54 @@ const phases = p.phases;
 // Check before/after interactive asset if applicable
 let beforeAfterId: 'clm' | 'dms' | 'whatsapp' | undefined;
 
-const pageTitle: string = (p.seoTitle as string | undefined) || `${p.title} | RHSP`;
-const pageDescription: string = (p.seoDescription as string | undefined) || p.oneLiner;
+const solutionSeoMap: Record<string, { title: string; description: string }> = {
+  clm: {
+    title: 'Smart CLM | Contract Lifecycle Management Platform | RHSP',
+    description: 'Enterprise contract lifecycle management routing drafting, reviews, digital sign-offs, and compliance audit trails on OutSystems low-code architecture.'
+  },
+  dms: {
+    title: 'Enterprise DMS | Document Management System | RHSP',
+    description: 'Centralized enterprise document management system for secure file archival, metadata classification, access controls, and automated compliance retention.'
+  },
+  sonakshi: {
+    title: 'Sonakshi | Multilingual AI Voice Assistant for Retail | RHSP',
+    description: 'Press-to-talk multilingual voice AI agent answering retail shoppers in regional languages with interactive product catalogs, digital carts, and billing.'
+  },
+  'sovereign-ai': {
+    title: 'Sovereign AI | Private On-Premises Enterprise LLM | RHSP',
+    description: 'Deploy private generative AI models inside your secure infrastructure to process proprietary enterprise data with full sovereignty and zero data leakage.'
+  },
+  'vernacular-documents': {
+    title: 'Vernacular Documents | Multilingual Doc Generation | RHSP',
+    description: 'Automated multilingual document generation service creating compliant PDFs and Word files across regional languages through API-driven enterprise templates.'
+  },
+  'whatsapp-journeys': {
+    title: 'WhatsApp Journeys | Enterprise Messaging Automation | RHSP',
+    description: 'Automated WhatsApp enterprise customer workflows delivering instant transactional updates, interactive document collection, and assisted self-service.'
+  },
+  'ask-me-anything': {
+    title: 'AskMeAnything | Enterprise AI Knowledge Retrieval | RHSP',
+    description: 'Grounded enterprise search engine indexing internal documents, manuals, and data sources to deliver accurate, citation-backed answers for operations teams.'
+  }
+};
+
+const seoData = solutionSeoMap[product.slug] || {};
+const pageTitle: string = seoData.title || (p.seoTitle as string | undefined) || `${p.title} | RHSP`;
+const pageDescription: string = seoData.description || (p.seoDescription as string | undefined) || p.oneLiner;
+
+const appSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": p.title,
+  "description": pageDescription,
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web, Cloud, On-Premises",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Round Hole Square Peg",
+    "url": "https://roundholesquarepeg.com"
+  }
+};
 ---
 
 <BaseLayout
@@ -62,6 +108,9 @@ const pageDescription: string = (p.seoDescription as string | undefined) || p.on
   <Nav />
 
   <main id="main-content" tabindex="-1">
+    <!-- Structured Data (SoftwareApplication JSON-LD) -->
+    <script type="application/ld+json" set:html={JSON.stringify(appSchema)} />
+
     <!-- Adjacent Solutions Floating Sticky Navigation (Sticky throughout entire scroll, docked near page ends) -->
     <aside class="solution-nav-wrapper" aria-label="Adjacent solutions navigation">
       <nav class="solution-adjacent-nav" aria-label="Adjacent solutions">

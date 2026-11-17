@@ -16,6 +16,8 @@ const {
   breadcrumbs
 } = Astro.props;
 
+const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN;
+
 const canonicalURL = new URL(Astro.url.pathname, siteConfig.url).toString();
 const ogImageURL = new URL(ogImage, siteConfig.url).toString();
 
@@ -47,10 +49,20 @@ const orgSchema = {
     "addressCountry": "IN"
   },
   "hasMap": siteConfig.contact.mapUrl,
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "sales",
+    "email": "letstalk@rhsp.solutions"
+  },
   "founders": siteConfig.team.members.map(m => ({
     "@type": "Person",
     "name": m.name,
     "jobTitle": m.role,
+    "worksFor": {
+      "@type": "Organization",
+      "name": siteConfig.legalName
+    },
+    "email": (m as any).email || "letstalk@rhsp.solutions",
     "sameAs": m.linkedin
   })),
   "sameAs": [
@@ -72,10 +84,39 @@ const orgSchema = {
     <link rel="author" href="/humans.txt" />
     <link rel="canonical" href={canonicalURL} />
 
-    <!-- Favicon -->
+    <!-- Favicon & Manifest -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" href="/brand/rhsp-logo.png" />
     <link rel="apple-touch-icon" href="/brand/rhsp-logo.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    <!-- Privacy-Friendly Analytics (Configurable via PUBLIC_PLAUSIBLE_DOMAIN) -->
+    {plausibleDomain && (
+      <script
+        defer
+        data-domain={plausibleDomain}
+        src="https://plausible.io/js/script.tagged-events.js"
+      ></script>
+    )}
+    <script is:inline>
+      (function() {
+        window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) };
+        document.addEventListener('click', function(e) {
+          const target = e.target.closest('a, button');
+          if (!target) return;
+          const href = target.getAttribute('href') || '';
+          const text = (target.textContent || '').trim().toLowerCase();
+          if (href === '#contact' || href.endsWith('/#contact') || text.includes("let's talk") || text.includes('email us')) {
+            window.plausible('LetsTalkClick', { props: { target: href || text } });
+          } else if (target.id === 'copy-email-btn' || target.closest('#copy-email-btn')) {
+            window.plausible('EmailCopyClick');
+          } else if (target.closest('[data-solution-card]') || target.classList.contains('rail-card-link') || target.classList.contains('solutions-card-link')) {
+            window.plausible('SolutionCardClick', { props: { target: href } });
+          }
+        }, { passive: true });
+      })();
+    </script>
 
     <!-- Preload critical variable display font for instant FCP/LCP -->
     <link

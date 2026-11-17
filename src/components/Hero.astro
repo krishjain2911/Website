@@ -58,7 +58,8 @@ const { hero } = siteConfig;
             srcset="/media/hero-seq/light/mobile/0001.webp 480w, /media/hero-seq/light/desktop/0001.webp 1000w"
             sizes="(max-width: 767px) 480px, 600px"
             id="hero-frame1-img-light"
-            alt="RHSP logo cube hovering over elliptical socket"
+            alt=""
+            aria-hidden="true"
             width="600"
             height="600"
             fetchpriority="high"
@@ -91,7 +92,11 @@ const { hero } = siteConfig;
           ></canvas>
 
           <!-- Fallback WebGL container if image sequence files are missing -->
-          <div id="hero-webgl-fallback" class="hero-webgl-fallback" style="display: none;" aria-hidden="true"></div>
+          <div id="hero-webgl-fallback" class="hero-webgl-fallback" style="display: none;" aria-hidden="true">
+            <div class="webgl-loading-poster" aria-hidden="true">
+              <img src="/brand/pill-square-128.webp" alt="" width="96" height="96" class="webgl-loading-logo" />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -117,11 +122,20 @@ const { hero } = siteConfig;
   }
 
   .hero-curved-arc {
-    top: 10%;
-    right: -10%;
-    width: 75%;
+    top: 5%;
+    right: 0;
+    width: 48%;
+    max-width: 580px;
     height: 80%;
     opacity: 0.65;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  @media (max-width: 1099px) {
+    :global(.hero-curved-arc) {
+      display: none !important;
+    }
   }
 
   .hero-container {
@@ -187,6 +201,9 @@ const { hero } = siteConfig;
     border: 1px solid var(--color-border);
     color: var(--color-text-secondary);
     white-space: nowrap;
+    cursor: default;
+    pointer-events: none;
+    user-select: none;
   }
 
   .hero-cta-group {
@@ -352,6 +369,29 @@ const { hero } = siteConfig;
     inset: 0;
     width: 100%;
     height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .webgl-loading-poster {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .webgl-loading-logo {
+    width: 96px;
+    height: 96px;
+    object-fit: contain;
+    animation: webglPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes webglPulse {
+    0%, 100% { opacity: 0.6; transform: scale(0.96); }
+    50% { opacity: 1; transform: scale(1.04); }
   }
 
   /* Phones: the pinned 100vh hero is shorter than its content, which clipped
@@ -520,4 +560,58 @@ const { hero } = siteConfig;
   window.addEventListener('load', fitHero);
   document.addEventListener('astro:after-swap', fitHero);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitHero);
+
+  // Subtle cursor-follow tilt (max 6deg) on desktop fine-pointer devices
+  function setupHeroCursorTilt() {
+    const isTouch = !window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (isTouch || prefersReducedMotion) return;
+
+    const hero = document.getElementById('hero');
+    const wrapper = document.getElementById('hero-sequence-wrapper');
+    if (!hero || !wrapper) return;
+
+    let targetRotateX = 0;
+    let targetRotateY = 0;
+    let currentRotateX = 0;
+    let currentRotateY = 0;
+    let animId = 0;
+
+    const onPointerMove = (e: PointerEvent) => {
+      const rect = hero.getBoundingClientRect();
+      if (e.clientY < rect.top || e.clientY > rect.bottom) return;
+      const xNorm = (e.clientX - rect.left) / rect.width - 0.5;
+      const yNorm = (e.clientY - rect.top) / rect.height - 0.5;
+      targetRotateY = xNorm * 6;
+      targetRotateX = -yNorm * 6;
+      if (!animId) animate();
+    };
+
+    const onPointerLeave = () => {
+      targetRotateX = 0;
+      targetRotateY = 0;
+      if (!animId) animate();
+    };
+
+    function animate() {
+      currentRotateX += (targetRotateX - currentRotateX) * 0.08;
+      currentRotateY += (targetRotateY - currentRotateY) * 0.08;
+      wrapper.style.transform = `perspective(1000px) rotateX(${currentRotateX.toFixed(2)}deg) rotateY(${currentRotateY.toFixed(2)}deg)`;
+
+      if (Math.abs(targetRotateX - currentRotateX) > 0.02 || Math.abs(targetRotateY - currentRotateY) > 0.02) {
+        animId = requestAnimationFrame(animate);
+      } else {
+        animId = 0;
+        if (targetRotateX === 0 && targetRotateY === 0) {
+          wrapper.style.transform = '';
+        }
+      }
+    }
+
+    hero.addEventListener('pointermove', onPointerMove, { passive: true });
+    hero.addEventListener('pointerleave', onPointerLeave, { passive: true });
+  }
+
+  setupHeroCursorTilt();
+  document.addEventListener('astro:after-swap', setupHeroCursorTilt);
 </script>

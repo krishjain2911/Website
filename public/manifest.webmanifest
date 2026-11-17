@@ -1,0 +1,27 @@
+{
+  "name": "Round Hole Square Peg",
+  "short_name": "RHSP",
+  "description": "Tech that adapts to business. OutSystems, MERN & Enterprise AI Partner in Mumbai.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#1E4B8F",
+  "icons": [
+    {
+      "src": "/brand/pill-square-64.webp",
+      "sizes": "64x64",
+      "type": "image/webp"
+    },
+    {
+      "src": "/brand/pill-square-128.webp",
+      "sizes": "128x128",
+      "type": "image/webp"
+    },
+    {
+      "src": "/brand/rhsp-logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
+

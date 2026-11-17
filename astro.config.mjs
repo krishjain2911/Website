@@ -1,5 +1,4 @@
 import { defineConfig } from 'astro/config';
-import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
@@ -9,7 +8,7 @@ export default defineConfig({
     '/solutions': '/#solutions',
     '/solutions/voice-agents': '/solutions/sonakshi'
   },
-  integrations: [sitemap()],
+  integrations: [],
   compressHTML: true,
   devToolbar: {
     enabled: false

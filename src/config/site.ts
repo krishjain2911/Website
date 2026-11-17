@@ -171,7 +171,7 @@ export const siteConfig = {
         number: 1,
         title: "Understand the business",
         description: "We study your processes, goals and challenges before proposing anything.",
-        detail: "IT and Operations experience lets us read both the floor-level process and the system of record. Understanding the nuances is the Key to unlocking value.",
+        detail: "IT and Operations experience lets us read both the floor-level process and the system of record. Understanding the nuances is the key to unlocking value.",
         icon: "compass" as const,
         color: "#1E4B8F"
       },
@@ -187,7 +187,7 @@ export const siteConfig = {
         number: 3,
         title: "Design adaptive systems",
         description: "We architect intelligent systems that adapt to how your business runs and unlock that value.",
-        detail: "We design systems around what is currently available and the business needs, Outsystems, MERN , AI as needed. No force-fits. Value creation is Key",
+        detail: "We design systems around what is currently available and the business needs, OutSystems, MERN, AI as needed. No force-fits. Value creation is the key.",
         icon: "sliders" as const,
         color: "#C28026"
       },
@@ -203,14 +203,14 @@ export const siteConfig = {
         number: 5,
         title: "Refine and deploy",
         description: "We improve from pilot feedback and launch with confidence.",
-        detail: "Systematic testing , Code review gates, Closed loop user testing ensure better adoption and an Agile system ready to meet the business needs",
+        detail: "Systematic testing, code review gates, closed loop user testing ensure better adoption and an agile system ready to meet the business needs",
         icon: "code" as const,
         color: "#F16524"
       },
       {
         number: 6,
         title: "Enable and monitor",
-        description: "We implement Observability systems and governance systems so that you Platform and application scale with the business.",
+        description: "We implement Observability systems and governance systems so that your platform and applications scale with the business.",
         detail: "Ops Dashboards, Periodic Architecture reviews and Upskilling keep the Value growing at scale ",
         icon: "shield" as const,
         color: "#EE4B2B"
@@ -604,6 +604,7 @@ export const siteConfig = {
         role: "Founder",
         bio: `Subu Iyer transforms operational friction into scalable technology. His expertise is defined by a rare convergence of Operational Technology (OT) and Information Technology (IT), bringing industrial rigor to digital transformation.\n\nWith 18+ years of experience, Subu has navigated from high-precision Robotics and ASRS in industries like Steel, Tire, and Semiconductors to architecting paperless Loan Origination Systems in BFSI.\n\nSpecializing in OutSystems and Enterprise AI, Subu helps C-suite leaders solve unique "square peg" challenges, ensuring that businesses can innovate rapidly without sacrificing data sovereignty or architectural integrity.`,
         linkedin: "https://linkedin.com/in/thesubuiyer",
+        email: "subu.iyer@rhsp.solutions",
         initials: "SI",
         imageKey: "founder-subu"
       },
@@ -612,6 +613,7 @@ export const siteConfig = {
         role: "Co-founder",
         bio: `As Co-Founder, Abhishek brings the executive weight of an 18-year corporate career to our startup’s foundation. Having led strategic initiatives for Tata Power and Tata Motors, and currently steering global expansion for FIRETECH, he is responsible for engineering our company’s growth engine.\n\nAbhishek moves beyond the typical startup mindset; he applies proven management frameworks to our AI consulting operations, focusing on rapid scalability, operational efficiency, and high-value client acquisition. He ensures our delivery models are robust enough to serve the very global conglomerates he used to manage.`,
         linkedin: "https://linkedin.com/in/abhishek-bagwe-90ba8710",
+        email: "abhishek.bagwe@rhsp.solutions",
         initials: "AB",
         imageKey: "founder-abhishek"
       }

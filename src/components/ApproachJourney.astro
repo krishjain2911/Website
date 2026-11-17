@@ -8,6 +8,9 @@ const headlineWords = approach.headline.split(' ');
 ---
 
 <section id="approach" class="approach-section" aria-labelledby="approach-heading">
+  <!-- Accessible Skip Link to bypass pinned journey section -->
+  <a href="#solutions" class="skip-journey-link">Skip journey to solutions</a>
+
   <!-- Drifting Background Geometry (Faint depth <= 0.08 opacity) -->
   <div class="journey-bg-parallax" aria-hidden="true">
     <div class="parallax-layer layer-aperture" id="bg-parallax-aperture"></div>
@@ -26,9 +29,9 @@ const headlineWords = approach.headline.split(' ');
           aria-current={idx === 0 ? 'step' : undefined}
           id={`rail-dot-${idx}`}
           data-stage={idx}
-          title={`Stage 0${step.number}: ${step.title}`}
-          aria-label={`Jump to Stage 0${step.number}: ${step.title}`}
+          aria-label={`Stage ${step.number}: ${step.title}`}
         >
+          <span class="rail-dot-num" aria-hidden="true">{step.number}</span>
           <span class="dot-inner" style={`--dot-color: ${step.color};`}></span>
           <img
             src="/brand/pill-square-64.webp"
@@ -401,16 +404,59 @@ const headlineWords = approach.headline.split(' ');
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
   }
 
+  /* Skip Journey Link */
+  .skip-journey-link {
+    position: absolute;
+    top: 1rem;
+    left: 1.5rem;
+    z-index: 100;
+    padding: 0.5rem 1rem;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    background-color: var(--color-surface);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+  .skip-journey-link:not(:focus):not(:focus-visible) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
   .rail-dot {
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 24px;
-    height: 24px;
+    min-width: 44px;
+    min-height: 44px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     text-decoration: none;
     outline: none;
+  }
+
+  .rail-dot-num {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--color-text-muted);
+    position: absolute;
+    right: calc(100% + 4px);
+    opacity: 0.85;
+    pointer-events: none;
   }
 
   .rail-dot:focus-visible {

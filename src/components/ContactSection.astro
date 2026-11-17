@@ -58,6 +58,7 @@ const { contact, team } = siteConfig;
                 <img
                   src="/media/contact/contact-angle-480.png"
                   alt=""
+                  aria-hidden="true"
                   width="220"
                   height="220"
                   loading="lazy"
@@ -153,12 +154,22 @@ const { contact, team } = siteConfig;
               </div>
 
               <div class="founder-actions-row">
+                <!-- Founder Work Email -->
+                <a
+                  href={`mailto:${member.email}`}
+                  class="founder-contact-btn founder-email-btn"
+                  aria-label={`Email ${member.name.includes('Subu') ? 'Subu Iyer' : 'Abhishek Bagwe'}`}
+                >
+                  <Icon name="mail" size={14} />
+                  <span>Email</span>
+                </a>
+
                 <!-- LinkedIn Link -->
                 <a
                   href={member.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="founder-linkedin-btn"
+                  class="founder-contact-btn founder-linkedin-btn"
                   aria-label={`${member.name} on LinkedIn`}
                 >
                   <Icon name="external-link" size={14} />
@@ -562,12 +573,16 @@ const { contact, team } = siteConfig;
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    flex-wrap: wrap;
   }
 
-  .founder-linkedin-btn {
+  .founder-contact-btn {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.4rem;
+    min-height: 44px;
+    min-width: 44px;
     padding: 0.45rem 1rem;
     border-radius: var(--radius-pill);
     border: 1px solid var(--color-border);
@@ -581,10 +596,16 @@ const { contact, team } = siteConfig;
     transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
   }
 
-  .founder-linkedin-btn:hover {
+  .founder-contact-btn:hover {
     background-color: var(--color-surface-hover);
     color: var(--color-text-primary);
     border-color: var(--color-text-secondary);
+  }
+
+  .btn-copy-email,
+  .email-pill-btn,
+  .office-map-link {
+    min-height: 44px;
   }
 </style>
 

@@ -857,3 +857,51 @@ html[data-theme="dark"] .footer-address-link:hover {
   }
 }
 
+/* Typography Accessibility Floor (B.5):
+   No visible text under 12px for labels/badges/chips, min 14px for body copy */
+.rail-indicator,
+.stage-counter-badge,
+.tab-badge,
+.pillar-badge,
+.pill-chip,
+.founder-role,
+.apollo-step-num,
+.apollo-step-label,
+.stage-num-badge,
+.product-tag,
+.sol-card-tag,
+.sol-card-desc,
+.peg-tag-pill,
+.meta-label,
+.status-pill,
+.cue-label,
+.cue-text,
+.pin-num,
+.pin-glyph,
+.pin-inner-badge,
+.rail-dot-num,
+.copyright-text,
+.footer-link,
+.footer-bottom-link,
+.search-shortcut-badge,
+.keyboard-hint,
+.hero-chip,
+.rail-count,
+.rail-label,
+.eyebrow {
+  font-size: max(12px, 1em);
+}
+
+p, li, dd, dt, blockquote {
+  font-size: max(14px, var(--fs-body, 1rem));
+}
+
+/* Touch tap targets: minimum 44x44px for touch interactions (B.4) */
+@media (pointer: coarse) {
+  a, button, [role="button"], [role="tab"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+

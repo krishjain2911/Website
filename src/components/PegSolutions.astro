@@ -326,7 +326,7 @@ const governBlocks = [
                         <span class="rail-badge">{badge}</span>
                       </div>
                       <div class="rail-card-body">
-                        <h4 class="rail-card-title">{proj.data.shortTitle || proj.data.title}</h4>
+                        <h3 class="rail-card-title">{proj.data.shortTitle || proj.data.title}</h3>
                         <p class="rail-card-desc">{proj.data.oneLiner}</p>
                         <a href={`/solutions/${proj.slug}`} class="rail-card-link">
                           <span>View solution</span>
@@ -374,7 +374,7 @@ const governBlocks = [
                   <span class="govern-icon" aria-hidden="true">
                     <Icon name={block.icon} size={18} />
                   </span>
-                  <h4 class="govern-card-title">{block.title}</h4>
+                  <h3 class="govern-card-title">{block.title}</h3>
                   <ul class="govern-list">
                     {block.points.map((pt) => (
                       <li>{pt}</li>
@@ -1254,8 +1254,10 @@ const governBlocks = [
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 28px;
-    height: 28px;
+    min-width: 44px;
+    min-height: 44px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     border: 1px solid var(--color-border);
     background: var(--color-surface);

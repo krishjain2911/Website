@@ -3,11 +3,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import Icon from '../components/Icon.astro';
+import LogoMark from '../components/brand/LogoMark.astro';
 ---
 
 <BaseLayout
   title="404 – Page Not Found | RHSP"
-  description="The page you are looking for has moved or does not exist."
+  description="Every challenge requires the right adapter. This URL does not lead to an active path."
 >
   <Nav />
 
@@ -16,21 +17,8 @@ import Icon from '../components/Icon.astro';
       <div class="container not-found-container">
         <!-- 404 Geometric Visual -->
         <div class="not-found-visual-card card-mastercard reveal-on-scroll">
-          <div class="not-found-art-wrap" aria-hidden="true">
-            <svg viewBox="0 0 240 160" fill="none" class="not-found-svg">
-              <defs>
-                <linearGradient id="peg404Grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#F7941D" />
-                  <stop offset="100%" stop-color="#EE4B2B" />
-                </linearGradient>
-              </defs>
-              <!-- Navy Socket -->
-              <circle cx="160" cy="80" r="42" stroke="#1E4B8F" stroke-width="3" fill="#0F2A4A" fill-opacity="0.2" />
-              <!-- Misaligned Square Peg -->
-              <rect x="40" y="52" width="56" height="56" rx="8" fill="url(#peg404Grad)" transform="rotate(-15 68 80)" />
-              <!-- Adapter dotted suggestion -->
-              <circle cx="160" cy="80" r="48" stroke="#F7941D" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.6" />
-            </svg>
+          <div class="not-found-logo-row">
+            <LogoMark size="lg" showText={true} />
           </div>
 
           <div class="not-found-content">
@@ -39,13 +27,13 @@ import Icon from '../components/Icon.astro';
               Page not found.
             </h1>
             <p class="not-found-subline">
-              The page you are looking for has been moved, renamed, or doesn't exist. Let's get you back on track.
+              Every challenge requires the right adapter. This URL does not lead to an active path.
             </p>
 
             <div class="not-found-cta-group">
               <a href="/" class="btn btn-primary">
                 <Icon name="arrow-left" size={16} />
-                <span>Back to Homepage</span>
+                <span>Return to Homepage</span>
               </a>
               <a href="/#solutions" class="btn btn-secondary">
                 <span>Explore Solutions</span>
@@ -58,6 +46,7 @@ import Icon from '../components/Icon.astro';
     </section>
   </main>
 
+  <Footer />
   <Footer />
 </BaseLayout>
 
