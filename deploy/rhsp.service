@@ -1,0 +1,29 @@
+[Unit]
+Description=RHSP Node Server (Careers, Admin & Telemetry)
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/rhsp
+Environment=NODE_ENV=production
+Environment=HOST=127.0.0.1
+Environment=PORT=4321
+Environment=DATA_DIR=/var/lib/rhsp-data
+Environment=CAREERS_EMAIL=letstalk@rhsp.solutions
+ExecStart=/usr/bin/node /var/www/rhsp/dist/server/entry.mjs
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=rhsp-node
+
+# Security hardening
+NoNewPrivileges=true
+ProtectSystem=full
+ProtectHome=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

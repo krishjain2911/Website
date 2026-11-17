@@ -50,6 +50,8 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
           href="/#contact"
           class="explorer-completed-pill"
           id="explorer-completed-pill"
+          data-track="peg_outbound"
+          data-track-target="book_a_call"
           style="display: none;"
         >
           <span>All explored. Book a call</span>
@@ -61,6 +63,8 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
           type="button"
           class="btn btn-secondary my-board-trigger-btn"
           id="my-board-open-btn"
+          data-track="peg_interaction"
+          data-track-action="open_my_board"
           aria-haspopup="dialog"
           aria-expanded="false"
           aria-controls="my-board-drawer"
@@ -78,11 +82,11 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
     {FEATURES.search && (
       <div class="board-filter-ledge" id="board-filter-bar">
         <div class="board-zone-chips" role="tablist" aria-label="Zone filter">
-          <button type="button" class="zone-filter-chip is-active" data-zone-filter="all">All</button>
-          <button type="button" class="zone-filter-chip" data-zone-filter="solutions">Solutions</button>
-          <button type="button" class="zone-filter-chip" data-zone-filter="case-studies">Case studies</button>
-          <button type="button" class="zone-filter-chip" data-zone-filter="resources">Resources</button>
-          <button type="button" class="zone-filter-chip" data-zone-filter="playground">Playground</button>
+          <button type="button" class="zone-filter-chip is-active" data-zone-filter="all" data-track="peg_zone_open" data-track-zone="all">All</button>
+          <button type="button" class="zone-filter-chip" data-zone-filter="solutions" data-track="peg_zone_open" data-track-zone="solutions">Solutions</button>
+          <button type="button" class="zone-filter-chip" data-zone-filter="case-studies" data-track="peg_zone_open" data-track-zone="case-studies">Case studies</button>
+          <button type="button" class="zone-filter-chip" data-zone-filter="resources" data-track="peg_zone_open" data-track-zone="resources">Resources</button>
+          <button type="button" class="zone-filter-chip" data-zone-filter="playground" data-track="peg_zone_open" data-track-zone="playground">Playground</button>
         </div>
 
         <div class="board-search-box">
@@ -444,7 +448,11 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
       });
 
       if (completedPill) {
+        const wasHidden = completedPill.style.display === 'none';
         completedPill.style.display = count >= TOTAL_PEGS ? 'inline-flex' : 'none';
+        if (count >= TOTAL_PEGS && wasHidden) {
+          (window as any).rhspTrack?.('peg_easter_egg', { egg: 'all_pegs_explored' });
+        }
       }
     }
 

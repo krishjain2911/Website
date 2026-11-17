@@ -55,7 +55,12 @@ const description = 'Our case studies are coming soon.';
         <a href="/peg-board" class="btn cs-browse-btn">
           <span>Browse the guides</span>
         </a>
-        <a href="/#contact" class="btn btn-primary cs-talk-btn">
+        <a
+          href="/#contact"
+          class="btn btn-primary cs-talk-btn"
+          data-track="peg_outbound"
+          data-track-target="case_studies_contact"
+        >
           <span>Talk to us about your project</span>
           <Icon name="arrow-right" size={14} />
         </a>
@@ -75,7 +80,7 @@ const description = 'Our case studies are coming soon.';
     min-height: calc(100vh - 120px);
     padding-top: calc(72px + 3rem);
     padding-bottom: 5rem;
-    background-color: var(--pb-page, #FFFFFF);
+    background-color: var(--pb-page, #F7F7F8);
     transition: background-color 0.25s ease;
   }
 

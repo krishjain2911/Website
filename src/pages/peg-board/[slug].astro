@@ -135,7 +135,12 @@ const articleSchema = {
         </div>
 
         <div class="cta-actions-col">
-          <a href="/#contact" class="btn btn-primary cta-talk-btn">
+          <a
+            href="/#contact"
+            class="btn btn-primary cta-talk-btn"
+            data-track="peg_outbound"
+            data-track-target="talk_to_us"
+          >
             <span>Talk to us</span>
             <Icon name="arrow-right" size={14} />
           </a>
@@ -145,6 +150,9 @@ const articleSchema = {
             class="btn btn-secondary cta-pin-btn"
             id="footer-pin-guide-btn"
             data-guide-slug={guide.slug}
+            data-track="peg_interaction"
+            data-track-action="pin_guide"
+            data-track-item={guide.slug}
           >
             <Icon name="bookmark" size={14} />
             <span id="footer-pin-btn-text">Pin this guide</span>
@@ -198,7 +206,7 @@ const articleSchema = {
     min-height: calc(100vh - 120px);
     padding-top: calc(72px + 2.5rem);
     padding-bottom: 5rem;
-    background-color: var(--pb-page, #FFFFFF);
+    background-color: var(--pb-page, #F7F7F8);
     transition: background-color 0.25s ease;
   }
 

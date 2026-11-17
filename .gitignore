@@ -2,6 +2,10 @@ node_modules/
 dist/
 .astro/
 .env*
+data/
+*.db
+*.db-wal
+*.db-shm
 lighthouse-report.json
 lh-*.json
 *.log

@@ -31,6 +31,9 @@ const { guideSlug, picker } = Astro.props;
         class="picker-chip"
         data-chip-id={chip.id}
         data-chip-weights={JSON.stringify(chip.weights)}
+        data-track="peg_interaction"
+        data-track-action="picker_chip_toggle"
+        data-track-item={chip.id}
         aria-pressed="false"
       >
         <span class="chip-check" aria-hidden="true">✓</span>

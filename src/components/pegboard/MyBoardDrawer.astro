@@ -51,6 +51,8 @@ const contactEmail = siteConfig.contact.email;
           id="discuss-board-btn"
           href={`mailto:${contactEmail}?subject=PEG%20Board%3A%20my%20pinned%20topics`}
           class="btn drawer-discuss-btn"
+          data-track="peg_outbound"
+          data-track-target="discuss_my_board"
         >
           <Icon name="mail" size={16} />
           <span>Discuss my board</span>
@@ -64,6 +66,8 @@ const contactEmail = siteConfig.contact.email;
               type="button"
               id="copy-contact-email-btn"
               class="copy-email-btn"
+              data-track="peg_interaction"
+              data-track-action="copy_email"
               aria-label="Copy email address to clipboard"
             >
               <Icon name="copy" size={14} />
@@ -77,6 +81,8 @@ const contactEmail = siteConfig.contact.email;
             type="button"
             class="drawer-reset-board-btn"
             id="drawer-reset-board-btn"
+            data-track="peg_interaction"
+            data-track-action="reset_board"
             title="Reset board layout"
           >
             Reset board

@@ -1,0 +1,283 @@
+---
+import type { Job } from '../../lib/careers/jobs';
+
+interface Props {
+  job: Job;
+}
+
+const { job } = Astro.props;
+
+const postedFormatted = job.created_at
+  ? new Date(job.created_at).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    })
+  : '';
+---
+
+<article
+  class="career-card-wrapper"
+  data-department={job.department}
+  data-location={job.location}
+  data-type={job.type}
+  data-workmode={job.work_mode}
+>
+  <div class="peg-anchor" aria-hidden="true">
+    <div class="peg-pin"></div>
+    <div class="peg-tether"></div>
+  </div>
+
+  <a
+    href={`/careers/${job.slug}`}
+    class="career-card"
+    data-track="careers_role_card_click"
+    data-track-role={job.slug}
+    aria-label={`${job.title} in ${job.department}, ${job.location}`}
+  >
+    <div class="card-aperture-notch" aria-hidden="true"></div>
+
+    <div class="card-header">
+      <div class="meta-row">
+        <span class="badge dept-badge">{job.department}</span>
+        <span class="badge type-badge">{job.type}</span>
+      </div>
+      <h3 class="role-title">{job.title}</h3>
+    </div>
+
+    {job.summary && <p class="role-summary">{job.summary}</p>}
+
+    <div class="card-footer">
+      <div class="role-details">
+        <span class="detail-item">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+          {job.location} ({job.work_mode})
+        </span>
+        {postedFormatted && (
+          <span class="detail-item date-item">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
+              <line x1="16" x2="16" y1="2" y2="6"/>
+              <line x1="8" x2="8" y1="2" y2="6"/>
+              <line x1="3" x2="21" y1="10" y2="10"/>
+            </svg>
+            Posted {postedFormatted}
+          </span>
+        )}
+      </div>
+
+      <span class="view-link" aria-hidden="true">
+        View Orientation
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </span>
+    </div>
+  </a>
+</article>
+
+<style>
+  .career-card-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 14px;
+  }
+
+  .peg-anchor {
+    position: absolute;
+    top: -14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .peg-pin {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--rhsp-peg-gradient);
+    box-shadow: 0 2px 6px rgba(238, 75, 43, 0.4);
+    border: 2px solid var(--color-bg);
+  }
+
+  .peg-tether {
+    width: 2px;
+    height: 12px;
+    background: var(--color-border);
+  }
+
+  .career-card {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    padding: 28px 24px 22px;
+    text-decoration: none;
+    color: var(--color-text-primary);
+    box-shadow: var(--shadow-subtle);
+    transform-origin: top center;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+                border-color 0.25s ease;
+    min-height: 230px;
+  }
+
+  .card-aperture-notch {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-bg-alt);
+    border: 1.5px solid var(--color-border);
+  }
+
+  .career-card:hover {
+    animation: pegWiggle 0.75s ease-in-out;
+    transform: translateY(-3px) rotate(0.8deg);
+    box-shadow: var(--shadow-card-hover);
+    border-color: var(--rhsp-peg-start);
+  }
+
+  .career-card:focus-visible {
+    outline: 2px solid var(--rhsp-peg-start);
+    outline-offset: 4px;
+    animation: pegWiggle 0.75s ease-in-out;
+  }
+
+  @keyframes pegWiggle {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(-1.5deg); }
+    50% { transform: rotate(1.2deg); }
+    75% { transform: rotate(-0.6deg); }
+    100% { transform: rotate(0.8deg); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .career-card,
+    .career-card:hover,
+    .career-card:focus-visible {
+      animation: none !important;
+      transform: none !important;
+    }
+  }
+
+  .card-header {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1;
+    padding: 6px 12px;
+    border-radius: 999px;
+  }
+
+  .dept-badge {
+    background: var(--color-bg-alt);
+    color: var(--rhsp-navy);
+    border: 1px solid var(--color-border-subtle);
+  }
+
+  :global([data-theme="dark"]) .dept-badge {
+    color: #6FA3F5;
+  }
+
+  .type-badge {
+    background: rgba(247, 148, 29, 0.12);
+    color: var(--rhsp-peg-end);
+    border: 1px solid rgba(238, 75, 43, 0.2);
+  }
+
+  .role-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--color-text-primary);
+    margin: 0;
+  }
+
+  .role-summary {
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+    margin: 0 0 18px 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding-top: 16px;
+    border-top: 1px dashed var(--color-border-subtle);
+    margin-top: auto;
+  }
+
+  .role-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+  }
+
+  .detail-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .view-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--rhsp-navy);
+    align-self: flex-start;
+    min-height: 44px;
+    align-items: center;
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+
+  :global([data-theme="dark"]) .view-link {
+    color: #6FA3F5;
+  }
+
+  .career-card:hover .view-link {
+    color: var(--rhsp-peg-end);
+    transform: translateX(4px);
+  }
+</style>
