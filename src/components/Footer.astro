@@ -4,6 +4,8 @@ import { siteConfig } from '../config/site';
 import Icon from './Icon.astro';
 
 const { socials, contact, copyrightYear, tagline } = siteConfig;
+const currentPath = Astro.url.pathname;
+const isCareersActive = currentPath === '/careers' || currentPath.startsWith('/careers/');
 ---
 
 <footer class="site-footer" role="contentinfo">
@@ -49,7 +51,7 @@ const { socials, contact, copyrightYear, tagline } = siteConfig;
         </ul>
       </div>
 
-      <!-- Company Column (About, Mission & Vision, Team, PEG Board) -->
+      <!-- Company Column (About, Mission & Vision, Team, PEG Board, Careers) -->
       <div class="footer-nav-col">
         <span class="footer-col-title">Company</span>
         <ul class="footer-nav-list">
@@ -57,6 +59,16 @@ const { socials, contact, copyrightYear, tagline } = siteConfig;
           <li><a href="/about#mission" class="footer-link">Mission &amp; Vision</a></li>
           <li><a href="/about#team" class="footer-link">Leadership Team</a></li>
           <li><a href="/peg-board" class="footer-link">PEG Board</a></li>
+          <li>
+            <a
+              href="/careers"
+              class={`footer-link ${isCareersActive ? 'is-active' : ''}`}
+              aria-current={isCareersActive ? 'page' : undefined}
+              data-track="footer_careers_click"
+            >
+              Careers
+            </a>
+          </li>
           <li><a href="/#contact" class="footer-link">Let's Talk</a></li>
         </ul>
       </div>
@@ -227,6 +239,11 @@ const { socials, contact, copyrightYear, tagline } = siteConfig;
     color: var(--color-text-secondary);
     text-decoration: none;
     transition: color 0.2s ease;
+  }
+
+  .footer-link.is-active {
+    color: var(--color-primary);
+    font-weight: 600;
   }
 
   .footer-plain-text {

@@ -209,7 +209,7 @@ const pageDescription = 'Explore opportunities at RHSP. We engineer high-precisi
           <div class="open-app-content">
             <h2 id="open-app-heading" class="open-app-title">Don't see your angle?</h2>
             <p class="open-app-desc">
-              If your experience diverges from standard industry profiles, we welcome your distinctive perspective. Tell us about the challenges you gravitate toward.
+              Don't see your angle? Mail your resume to <a href={`mailto:${CAREERS_EMAIL}?subject=Open%20application`} class="email-inline-link">{CAREERS_EMAIL}</a>.
             </p>
             <div class="open-app-actions">
               <a
@@ -217,13 +217,25 @@ const pageDescription = 'Explore opportunities at RHSP. We engineer high-precisi
                 class="cta-primary"
                 data-track="careers_open_card_apply_click"
               >
-                Send Open Application
+                Mail Resume
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                  <polyline points="12 5 19 12 12 19"></polyline>
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                  <polyline points="22,6 12,13 2,6"></polyline>
                 </svg>
               </a>
-              <span class="email-note">Direct correspondence to <code>{CAREERS_EMAIL}</code></span>
+              <button
+                type="button"
+                id="copy-careers-email-btn"
+                class="cta-secondary copy-email-btn"
+                data-email={CAREERS_EMAIL}
+                aria-label={`Copy ${CAREERS_EMAIL} to clipboard`}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <span id="copy-btn-label">Copy Email</span>
+              </button>
             </div>
           </div>
         </div>
@@ -253,10 +265,21 @@ const pageDescription = 'Explore opportunities at RHSP. We engineer high-precisi
       const selectedWorkmode = workmodeSelect ? workmodeSelect.value : 'all';
       const selectedType = typeSelect ? typeSelect.value : 'all';
       const selectedLocation = locationSelect ? locationSelect.value : 'all';
+      const now = Date.now();
 
       let visibleCount = 0;
 
       cards.forEach((card) => {
+        // Client-side expiration check
+        const closesAt = card.dataset.closesAt;
+        if (closesAt) {
+          const closeTime = new Date(closesAt).getTime();
+          if (!isNaN(closeTime) && closeTime < now) {
+            card.style.display = 'none';
+            return;
+          }
+        }
+
         const d = card.dataset.department || '';
         const w = card.dataset.workmode || '';
         const t = card.dataset.type || '';
@@ -298,12 +321,42 @@ const pageDescription = 'Explore opportunities at RHSP. We engineer high-precisi
     locationSelect?.addEventListener('change', applyFilters);
     resetBtn?.addEventListener('click', reset);
     clearBtn?.addEventListener('click', reset);
+
+    // Initial check for expired roles
+    applyFilters();
+  }
+
+  function setupCopyButton() {
+    const copyBtn = document.getElementById('copy-careers-email-btn');
+    const label = document.getElementById('copy-btn-label');
+    if (!copyBtn || !label) return;
+
+    copyBtn.addEventListener('click', async () => {
+      const email = copyBtn.getAttribute('data-email') || '';
+      try {
+        await navigator.clipboard.writeText(email);
+        const originalText = label.textContent;
+        label.textContent = 'Copied!';
+        copyBtn.classList.add('is-copied');
+        setTimeout(() => {
+          label.textContent = originalText;
+          copyBtn.classList.remove('is-copied');
+        }, 2000);
+      } catch (err) {
+        console.warn('Clipboard copy fallback', err);
+      }
+    });
+  }
+
+  function init() {
+    setupFilters();
+    setupCopyButton();
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', setupFilters);
+    document.addEventListener('DOMContentLoaded', init);
   } else {
-    setupFilters();
+    init();
   }
 </script>
 
@@ -721,24 +774,39 @@ const pageDescription = 'Explore opportunities at RHSP. We engineer high-precisi
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 20px;
+    gap: 16px;
   }
 
-  .email-note {
-    font-size: 0.875rem;
-    color: var(--color-text-muted);
+  .email-inline-link {
+    color: var(--color-primary, #F7941D);
+    text-decoration: underline;
+    font-weight: 600;
   }
 
-  .email-note code {
-    background: var(--color-bg-alt);
-    padding: 4px 8px;
-    border-radius: 6px;
-    font-size: 0.875rem;
-    color: var(--rhsp-navy);
+  .copy-email-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    padding: 12px 20px;
+    border-radius: var(--radius-full, 9999px);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+    transition: all 0.2s ease;
   }
 
-  :global([data-theme="dark"]) .email-note code {
-    color: #6FA3F5;
+  .copy-email-btn:hover {
+    background: var(--color-surface-hover, rgba(0,0,0,0.04));
+    border-color: var(--color-border-hover, var(--color-text-primary));
+  }
+
+  .copy-email-btn.is-copied {
+    border-color: #10B981;
+    color: #10B981;
   }
 
   .sr-only {
