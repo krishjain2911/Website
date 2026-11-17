@@ -1,5 +1,22 @@
 /* PEG Board Design Tokens */
 
+:root:has(.pegboard-page),
+html:has(.pegboard-page) {
+  --pb-page: #F7F7F8;
+}
+
+:root[data-theme="dark"]:has(.pegboard-page),
+html[data-theme="dark"]:has(.pegboard-page) {
+  --pb-page: #0F1012;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):has(.pegboard-page),
+  html:not([data-theme="light"]):has(.pegboard-page) {
+    --pb-page: #0F1012;
+  }
+}
+
 .pegboard-page {
   --pb-board: #F7F7F8;
   --pb-hole: rgba(20, 20, 24, 0.14);
@@ -150,20 +167,45 @@ body:has(.pegboard-page) {
   transition: background-color 0.25s ease;
 }
 
-:root[data-theme="dark"] html:has(.pegboard-page),
+:root[data-theme="dark"]:has(.pegboard-page),
+html[data-theme="dark"]:has(.pegboard-page),
 :root[data-theme="dark"] body:has(.pegboard-page),
 :root[data-theme="dark"] .peg-board-page-main,
 :root[data-theme="dark"] .pegboard-page {
-  background-color: var(--pb-page, #04060A) !important;
+  background-color: var(--pb-page, #0F1012) !important;
 }
 
 @media (prefers-color-scheme: dark) {
 
-  :root:not([data-theme="light"]) html:has(.pegboard-page),
+  :root:not([data-theme="light"]):has(.pegboard-page),
+  html:not([data-theme="light"]):has(.pegboard-page),
   :root:not([data-theme="light"]) body:has(.pegboard-page),
   :root:not([data-theme="light"]) .peg-board-page-main,
   :root:not([data-theme="light"]) .pegboard-page {
-    background-color: var(--pb-page, #04060A) !important;
+    background-color: var(--pb-page, #0F1012) !important;
+  }
+}
+
+/* Explicit scroller (scrollbar track) styling on pegboard page so it never renders white */
+html:has(.pegboard-page)::-webkit-scrollbar-track,
+body:has(.pegboard-page)::-webkit-scrollbar-track,
+.pegboard-page::-webkit-scrollbar-track {
+  background: var(--pb-page, #F7F7F8) !important;
+}
+
+:root[data-theme="dark"]:has(.pegboard-page)::-webkit-scrollbar-track,
+html[data-theme="dark"]:has(.pegboard-page)::-webkit-scrollbar-track,
+:root[data-theme="dark"] body:has(.pegboard-page)::-webkit-scrollbar-track,
+:root[data-theme="dark"] .pegboard-page::-webkit-scrollbar-track {
+  background: var(--pb-page, #0F1012) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):has(.pegboard-page)::-webkit-scrollbar-track,
+  html:not([data-theme="light"]):has(.pegboard-page)::-webkit-scrollbar-track,
+  :root:not([data-theme="light"]) body:has(.pegboard-page)::-webkit-scrollbar-track,
+  :root:not([data-theme="light"]) .pegboard-page::-webkit-scrollbar-track {
+    background: var(--pb-page, #0F1012) !important;
   }
 }
 

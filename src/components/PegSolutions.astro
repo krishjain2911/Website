@@ -1345,7 +1345,14 @@ const governBlocks = [
   }
 
   .projects-rail-track::-webkit-scrollbar {
-    display: none;
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    background: transparent !important;
+  }
+
+  .projects-rail-track::-webkit-scrollbar-track {
+    background: transparent !important;
   }
 
   /* Standardized identical card width across all rails */
