@@ -1168,6 +1168,7 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
     position: relative;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
+    align-items: stretch; /* Cards stretch to equal row height */
     column-gap: 28px;
     row-gap: 56px;
     padding-top: 32px;
@@ -1176,12 +1177,14 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
   @media (max-width: 1099px) {
     .zone-tiles-track {
       grid-template-columns: repeat(3, 1fr);
+      align-items: stretch;
     }
   }
 
   @media (max-width: 759px) {
     .zone-tiles-track {
       grid-template-columns: repeat(2, 1fr);
+      align-items: stretch;
     }
   }
 
@@ -1202,6 +1205,7 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
     .zone-tiles-track {
       display: grid;
       grid-template-columns: minmax(0, 1fr);
+      align-items: stretch;
       column-gap: 0;
       row-gap: 40px;
       padding-top: 28px;

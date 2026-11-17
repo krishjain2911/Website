@@ -100,10 +100,12 @@ const tileAriaLabel = tile.quickTake
     border-radius: 16px;
     position: relative;
     width: 100%;
-    min-height: 168px;
+    height: auto;
+    min-height: 176px;
     transform-origin: 50% -22px;
     display: flex;
     flex-direction: column;
+    padding-bottom: 0;
     transition: border-color 0.2s ease, transform 0.25s ease, opacity 0.25s ease;
     z-index: 2;
     user-select: none;
@@ -114,15 +116,17 @@ const tileAriaLabel = tile.quickTake
   :global([data-mode="free"]) .pb-tile,
   :global(.pb-canvas) .pb-tile {
     position: absolute;
-    width: 208px;
-    height: 192px;
-    min-height: 0;
+    width: 220px;
+    height: auto;
+    min-height: 200px;
     margin: 0;
   }
 
   :global([data-mode="free"]) .tile-hit-link,
   :global(.pb-canvas) .tile-hit-link {
-    padding: 12px 14px 10px;
+    padding: 14px 14px 14px;
+    height: 100%;
+    box-sizing: border-box;
   }
 
   :global([data-mode="free"]) .tile-header-row,
@@ -132,7 +136,7 @@ const tileAriaLabel = tile.quickTake
 
   :global([data-mode="free"]) .tile-footer-row,
   :global(.pb-canvas) .tile-footer-row {
-    padding-top: 0.35rem;
+    padding-top: 0.5rem;
   }
 
   /* Pre-rendered glow layer */
@@ -277,8 +281,10 @@ const tileAriaLabel = tile.quickTake
   .tile-hit-link {
     display: flex;
     flex-direction: column;
-    flex: 1;
-    padding: 1.15rem 1.15rem 1rem;
+    flex: 1 1 auto;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 1.15rem 1.15rem 1.25rem; /* Roomy padding with safe bottom clearance */
     color: inherit;
     text-decoration: none;
     outline: none;
@@ -320,19 +326,22 @@ const tileAriaLabel = tile.quickTake
   }
 
   .tile-body {
-    flex: 1;
+    flex: 1 1 auto;
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.35rem;
+    min-height: 0;
   }
 
   .tile-title {
     font-size: 1rem;
     font-weight: 700;
-    line-height: 1.25;
+    line-height: 1.3;
     margin: 0;
     color: var(--pb-text, #16161A);
     letter-spacing: -0.01em;
+    word-break: normal;
+    overflow-wrap: break-word;
   }
 
   .tile-description {
@@ -348,19 +357,26 @@ const tileAriaLabel = tile.quickTake
 
   .tile-footer-row {
     margin-top: auto;
-    padding-top: 0.65rem;
+    padding-top: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
   }
 
   .tile-tag {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    position: static; /* normal flow, no absolute positioning */
     font-size: 10.5px;
     font-weight: 600;
-    padding: 0.2rem 0.55rem;
+    padding: 0.25rem 0.6rem;
     border-radius: 999px;
     background: var(--pb-accent-wash, rgba(247, 148, 29, 0.12));
     color: var(--pb-peg, #F7941D);
     letter-spacing: 0.02em;
     border: 1px solid transparent;
+    line-height: 1.2;
+    white-space: nowrap;
   }
 
   .tile-tag--soon {
