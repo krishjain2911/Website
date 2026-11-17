@@ -1,0 +1,319 @@
+---
+export const prerender = false;
+
+import {
+  checkLoginRateLimit,
+  recordFailedLogin,
+  clearFailedLogins,
+  verifyPassword,
+  createSession,
+  getSession,
+  validateCsrf,
+} from '../../lib/admin/auth';
+import { ADMIN_CREDENTIALS } from '../../lib/admin/credentials';
+
+Astro.response.headers.set('X-Robots-Tag', 'noindex, nofollow');
+
+// If already authenticated, redirect to /admin
+const currentSession = getSession(Astro.cookies);
+if (currentSession.valid) {
+  return Astro.redirect('/admin');
+}
+
+let errorMessage = '';
+let lockoutMessage = '';
+
+const clientIp =
+  Astro.clientAddress ||
+  Astro.request.headers.get('x-forwarded-for')?.split(',')[0].trim() ||
+  '127.0.0.1';
+
+// Initial rate limit check
+const rateCheck = checkLoginRateLimit(clientIp);
+if (!rateCheck.allowed) {
+  lockoutMessage = `Too many failed authentication attempts. Access locked. Please wait ${Math.ceil((rateCheck.retryAfterSec || 900) / 60)} minute(s) before trying again.`;
+}
+
+if (Astro.request.method === 'POST') {
+  if (!validateCsrf(Astro.request)) {
+    errorMessage = 'Security validation failed (CSRF). Please refresh and submit again.';
+  } else if (!rateCheck.allowed) {
+    lockoutMessage = `Too many failed authentication attempts. Access locked. Please wait ${Math.ceil((rateCheck.retryAfterSec || 900) / 60)} minute(s) before trying again.`;
+  } else {
+    try {
+      const data = await Astro.request.formData();
+      const email = (data.get('email') as string || '').trim().toLowerCase();
+      const password = (data.get('password') as string || '').trim();
+
+      const emailMatches = email === ADMIN_CREDENTIALS.email.toLowerCase();
+      const passwordMatches = verifyPassword(password);
+
+      if (emailMatches && passwordMatches) {
+        clearFailedLogins(clientIp);
+        createSession(email, Astro.cookies, import.meta.env.PROD);
+        return Astro.redirect('/admin');
+      } else {
+        recordFailedLogin(clientIp);
+        const updatedCheck = checkLoginRateLimit(clientIp);
+        if (!updatedCheck.allowed) {
+          lockoutMessage = 'Maximum authentication attempts exceeded. Access locked for 15 minutes.';
+        } else {
+          errorMessage = `Invalid credentials. ${updatedCheck.remainingAttempts} attempt(s) remaining before temporary lockout.`;
+        }
+      }
+    } catch (err) {
+      errorMessage = 'An error occurred during authentication processing.';
+    }
+  }
+}
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>RHSP Admin &bull; Sign In</title>
+    <link rel="stylesheet" href="/fonts/raleway.css" />
+    <style>
+      :root {
+        --color-bg: #FFFFFF;
+        --color-surface: #FFFFFF;
+        --color-border: #E6E6E3;
+        --color-text-primary: #141413;
+        --color-text-secondary: #575757;
+        --rhsp-navy: #1E4B8F;
+        --rhsp-peg-start: #F7941D;
+        --rhsp-peg-end: #EE4B2B;
+        --rhsp-peg-gradient: linear-gradient(135deg, #F7941D 0%, #EE4B2B 100%);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --color-bg: #0F1012;
+          --color-surface: #1A1B20;
+          --color-border: #2A2B32;
+          --color-text-primary: #ECECEE;
+          --color-text-secondary: #9A9AA2;
+        }
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: 'Raleway', -apple-system, BlinkMacSystemFont, sans-serif;
+        background-color: var(--color-bg);
+        color: var(--color-text-primary);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+
+      .login-container {
+        width: 100%;
+        max-width: 440px;
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: 24px;
+        padding: 44px 36px;
+        box-shadow: 0 12px 36px rgba(0, 0, 0, 0.06);
+      }
+
+      .brand-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.8125rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--rhsp-peg-end);
+        margin-bottom: 16px;
+      }
+
+      .badge-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--rhsp-peg-gradient);
+      }
+
+      h1 {
+        font-size: 1.75rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        margin: 0 0 8px;
+      }
+
+      p.subline {
+        font-size: 0.9375rem;
+        color: var(--color-text-secondary);
+        margin: 0 0 28px;
+        line-height: 1.5;
+      }
+
+      .alert {
+        padding: 14px 16px;
+        border-radius: 12px;
+        font-size: 0.875rem;
+        line-height: 1.45;
+        margin-bottom: 24px;
+      }
+
+      .alert-error {
+        background: rgba(238, 75, 43, 0.08);
+        border: 1px solid rgba(238, 75, 43, 0.25);
+        color: var(--rhsp-peg-end);
+      }
+
+      .alert-lockout {
+        background: rgba(247, 148, 29, 0.12);
+        border: 1px solid rgba(247, 148, 29, 0.35);
+        color: #B35B00;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .alert-lockout {
+          color: #FFB366;
+        }
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+
+      label {
+        font-size: 0.8125rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--color-text-secondary);
+      }
+
+      input[type="email"],
+      input[type="password"] {
+        min-height: 48px;
+        padding: 10px 16px;
+        font-family: inherit;
+        font-size: 1rem;
+        color: var(--color-text-primary);
+        background: var(--color-bg);
+        border: 1px solid var(--color-border);
+        border-radius: 12px;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      input:focus-visible {
+        outline: none;
+        border-color: var(--rhsp-peg-start);
+        box-shadow: 0 0 0 3px rgba(247, 148, 29, 0.2);
+      }
+
+      button[type="submit"] {
+        width: 100%;
+        min-height: 48px;
+        padding: 12px;
+        font-family: inherit;
+        font-size: 1rem;
+        font-weight: 700;
+        color: #ffffff;
+        background: var(--color-text-primary);
+        border: none;
+        border-radius: 999px;
+        cursor: pointer;
+        margin-top: 8px;
+        transition: transform 0.2s ease, opacity 0.2s ease;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        button[type="submit"] {
+          background: #ffffff;
+          color: #0F1012;
+        }
+      }
+
+      button[type="submit"]:hover:not(:disabled) {
+        transform: translateY(-2px);
+      }
+
+      button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .footer-note {
+        text-align: center;
+        font-size: 0.8125rem;
+        color: var(--color-text-secondary);
+        margin-top: 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-container">
+      <div class="brand-badge">
+        <span class="badge-dot"></span>
+        <span>RHSP Console</span>
+      </div>
+
+      <h1>Administrator Access</h1>
+      <p class="subline">Authenticate to manage positions and review interaction telemetry.</p>
+
+      {lockoutMessage && (
+        <div class="alert alert-lockout" role="alert">
+          {lockoutMessage}
+        </div>
+      )}
+
+      {errorMessage && !lockoutMessage && (
+        <div class="alert alert-error" role="alert">
+          {errorMessage}
+        </div>
+      )}
+
+      <form method="POST" action="/admin/login">
+        <div class="form-group">
+          <label for="email">Account Identifier</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            autocomplete="username"
+            placeholder="admin@rhsp.solutions"
+            disabled={!rateCheck.allowed}
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Security Credential</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            required
+            autocomplete="current-password"
+            disabled={!rateCheck.allowed}
+          />
+        </div>
+
+        <button type="submit" disabled={!rateCheck.allowed}>
+          Verify &amp; Enter Console
+        </button>
+      </form>
+
+      <div class="footer-note">
+        Protected by session telemetry &bull; Rate-limited to 5 attempts
+      </div>
+    </div>
+  </body>
+</html>

@@ -45,6 +45,8 @@ import { finderQuestions } from '../../data/pegBoard';
                     class="finder-pill-btn"
                     data-question={q.id}
                     data-value={opt.value}
+                    data-track="peg_interaction"
+                    data-track-action="finder_select"
                     role="radio"
                     aria-checked="false"
                   >
@@ -79,7 +81,13 @@ import { finderQuestions } from '../../data/pegBoard';
           </p>
         </div>
         <div class="finder-result-actions">
-          <a href="#" class="btn btn-primary btn-sm finder-open-guide-btn" id="finder-open-guide-btn">
+          <a
+            href="#"
+            class="btn btn-primary btn-sm finder-open-guide-btn"
+            id="finder-open-guide-btn"
+            data-track="peg_outbound"
+            data-track-target="finder_guide"
+          >
             <span>Open the guide</span>
             <Icon name="arrow-right" size={13} />
           </a>
@@ -206,6 +214,9 @@ import { finderQuestions } from '../../data/pegBoard';
       estateChip.classList.toggle('is-active', !isPressed);
       if (!isPressed) {
         answers['estate'] = 'o11';
+        try {
+          (window as any).rhspTrack?.('peg_easter_egg', { egg: 'o11_estate_unlocked' });
+        } catch {}
       } else {
         delete answers['estate'];
       }
@@ -276,6 +287,9 @@ import { finderQuestions } from '../../data/pegBoard';
         elResultSentence.textContent = sentence;
         elOpenGuideBtn.href = `/peg-board/${bestSlug}`;
         syncPinBtn();
+        try {
+          (window as any).rhspTrack?.('peg_interaction', { action: 'finder_complete', result: bestSlug });
+        } catch {}
       } else {
         elResultBox.style.display = 'none';
       }

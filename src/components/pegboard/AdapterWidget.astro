@@ -83,6 +83,9 @@ import Icon from '../Icon.astro';
       powerBtn!.setAttribute('aria-pressed', String(on));
       powerBtn!.textContent = `RHSP adapter: ${on ? 'on' : 'off'}`;
       hintEl!.textContent = on ? 'Adapter on: click anywhere to throw.' : 'Drag back from the peg, then let go.';
+      try {
+        (window as any).rhspTrack?.('peg_interaction', { action: 'adapter_power_toggle', state: on ? 'on' : 'off' });
+      } catch {}
     }
     powerBtn.addEventListener('click', () => setPower(!power));
 
@@ -155,6 +158,12 @@ import Icon from '../Icon.astro';
       if (!peg.scored && py < RIM_L.y && peg.y >= RIM_L.y && peg.vy > 0 && peg.x > RIM_L.x && peg.x < RIM_R.x) {
         peg.scored = true; score++; streak++; flash = 1;
         scoreEl!.textContent = String(score); streakEl!.textContent = String(streak);
+        try {
+          (window as any).rhspTrack?.('peg_interaction', { action: 'adapter_score', streak: String(streak) });
+          if (streak >= 3) {
+            (window as any).rhspTrack?.('peg_easter_egg', { egg: 'adapter_streak_3' });
+          }
+        } catch {}
       }
       if (peg.y > H - 10) { peg.y = H - 10; peg.vy *= -0.4; peg.vx *= 0.8; if (Math.abs(peg.vy) < 40) endThrow(); }
       if (peg.x < -30 || peg.x > W + 30) endThrow();

@@ -1,0 +1,805 @@
+---
+export const prerender = false;
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import CareersHeroVisual from '../../components/careers/CareersHeroVisual.astro';
+import CareersRoleCard from '../../components/careers/CareersRoleCard.astro';
+import { getPublishedJobs } from '../../lib/careers/jobs';
+import { CAREERS_EMAIL } from '../../lib/careers/config';
+
+const jobs = getPublishedJobs();
+
+const departments = Array.from(new Set(jobs.map((j) => j.department))).filter(Boolean);
+const locations = Array.from(new Set(jobs.map((j) => j.location))).filter(Boolean);
+const types = Array.from(new Set(jobs.map((j) => j.type))).filter(Boolean);
+const workModes = Array.from(new Set(jobs.map((j) => j.work_mode))).filter(Boolean);
+
+const pageTitle = 'Careers at RHSP | Every Angle Belongs Here';
+const pageDescription = 'Explore opportunities at RHSP. We engineer high-precision enterprise systems and welcome exceptional talent from unconventional trajectories.';
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <Nav />
+
+  <main id="main-content" class="careers-page">
+    <!-- Hero Section -->
+    <header class="careers-hero">
+      <div class="hero-container">
+        <div class="hero-text-block">
+          <div class="hero-badge">
+            <span class="badge-dot"></span>
+            <span>Talent &amp; Perspectives</span>
+          </div>
+          <h1 class="hero-title">Every angle belongs here.</h1>
+          <p class="hero-subline">
+            Conventional teams demand conformity. At RHSP, we build transformative apertures around distinct trajectories and singular engineering acumen.
+          </p>
+          <div class="hero-cta-group">
+            <a href="#open-roles" class="cta-primary" data-track="careers_hero_explore_click">
+              Explore Open Positions
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <polyline points="19 12 12 19 5 12"></polyline>
+              </svg>
+            </a>
+            <a
+              href={`mailto:${CAREERS_EMAIL}?subject=Open%20application`}
+              class="cta-secondary"
+              data-track="careers_hero_open_apply_click"
+            >
+              Open Application
+            </a>
+          </div>
+        </div>
+
+        <div class="hero-visual-block" aria-hidden="true">
+          <CareersHeroVisual />
+        </div>
+      </div>
+    </header>
+
+    <!-- Mini Pegboard Section / Roles -->
+    <section id="open-roles" class="roles-section" aria-labelledby="roles-heading">
+      <div class="section-container">
+        <div class="section-header">
+          <div class="peg-track-line" aria-hidden="true">
+            <div class="peg-dot"></div>
+            <div class="peg-bar"></div>
+            <div class="peg-dot"></div>
+          </div>
+          <h2 id="roles-heading" class="section-title">Open Orientations</h2>
+          <p class="section-subtext">
+            Each role below is an active aperture seeking specialized mastery. Filter by practice, location, or work arrangement.
+          </p>
+        </div>
+
+        {jobs.length > 0 && (
+          <div class="filter-controls" role="search" aria-label="Filter career opportunities">
+            <div class="filter-group">
+              <label for="filter-dept" class="filter-label">Practice</label>
+              <select id="filter-dept" class="filter-select" aria-controls="roles-grid">
+                <option value="all">All Practices</option>
+                {departments.map((dept) => (
+                  <option value={dept}>{dept}</option>
+                ))}
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label for="filter-workmode" class="filter-label">Work Mode</label>
+              <select id="filter-workmode" class="filter-select" aria-controls="roles-grid">
+                <option value="all">All Modes</option>
+                {workModes.map((mode) => (
+                  <option value={mode}>{mode}</option>
+                ))}
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label for="filter-type" class="filter-label">Engagement</label>
+              <select id="filter-type" class="filter-select" aria-controls="roles-grid">
+                <option value="all">All Types</option>
+                {types.map((t) => (
+                  <option value={t}>{t}</option>
+                ))}
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label for="filter-location" class="filter-label">Location</label>
+              <select id="filter-location" class="filter-select" aria-controls="roles-grid">
+                <option value="all">All Locations</option>
+                {locations.map((loc) => (
+                  <option value={loc}>{loc}</option>
+                ))}
+              </select>
+            </div>
+
+            <button type="button" id="reset-filters" class="reset-button" aria-label="Reset all filters">
+              Reset Filters
+            </button>
+          </div>
+        )}
+
+        <div id="filter-status" class="sr-only" aria-live="polite" role="status">
+          Showing {jobs.length} open position{jobs.length === 1 ? '' : 's'}.
+        </div>
+
+        {jobs.length > 0 ? (
+          <div id="roles-grid" class="roles-grid" role="list">
+            {jobs.map((job) => (
+              <CareersRoleCard job={job} />
+            ))}
+          </div>
+        ) : (
+          <div class="empty-state">
+            <div class="empty-icon" aria-hidden="true">
+              <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+                <circle cx="32" cy="32" r="28" stroke="var(--color-border)" stroke-width="2" stroke-dasharray="4 4"/>
+                <rect x="22" y="22" width="20" height="20" rx="3" fill="var(--rhsp-peg-gradient)"/>
+              </svg>
+            </div>
+            <h3 class="empty-title">No open holes right now. Square pegs are always welcome.</h3>
+            <p class="empty-subtext">
+              We frequently expand capacity for exceptional technologists, architects, and problem solvers whose orientation aligns with our vision.
+            </p>
+            <a
+              href={`mailto:${CAREERS_EMAIL}?subject=Open%20application`}
+              class="cta-primary empty-cta"
+              data-track="careers_empty_open_apply_click"
+            >
+              Submit Open Application
+            </a>
+          </div>
+        )}
+
+        <div id="no-filter-results" class="empty-state no-filter-results" style="display: none;">
+          <h3 class="empty-title">No roles match this specific filter selection.</h3>
+          <p class="empty-subtext">Clear your filters or submit an open application with your background.</p>
+          <button type="button" id="clear-filters-btn" class="cta-secondary">Clear Filter Selection</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Life at RHSP (Principles) -->
+    <section class="principles-section" aria-labelledby="principles-heading">
+      <div class="section-container">
+        <div class="section-header">
+          <div class="peg-track-line" aria-hidden="true">
+            <div class="peg-dot"></div>
+            <div class="peg-bar"></div>
+            <div class="peg-dot"></div>
+          </div>
+          <h2 id="principles-heading" class="section-title">Life at RHSP</h2>
+          <p class="section-subtext">Three engineering tenets define our internal craft and delivery standard.</p>
+        </div>
+
+        <div class="principles-grid">
+          <div class="principle-card">
+            <div class="principle-marker" aria-hidden="true">
+              <span class="marker-code">P</span>
+            </div>
+            <h3 class="principle-title">Plan with foresight</h3>
+            <p class="principle-desc">Anticipate systemic complexity before drafting the initial lines of enterprise architecture.</p>
+          </div>
+
+          <div class="principle-card">
+            <div class="principle-marker" aria-hidden="true">
+              <span class="marker-code">E</span>
+            </div>
+            <h3 class="principle-title">Engineer with precision</h3>
+            <p class="principle-desc">Construct robust, modular adapters bridging legacy enterprise scale with modern operational speed.</p>
+          </div>
+
+          <div class="principle-card">
+            <div class="principle-marker" aria-hidden="true">
+              <span class="marker-code">G</span>
+            </div>
+            <h3 class="principle-title">Govern to scale</h3>
+            <p class="principle-desc">Establish real-time telemetry and systemic guardrails ensuring resilience under extreme workload volume.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Open Application Card -->
+    <section class="open-application-section" aria-labelledby="open-app-heading">
+      <div class="section-container">
+        <div class="open-app-card">
+          <div class="open-app-content">
+            <h2 id="open-app-heading" class="open-app-title">Don't see your angle?</h2>
+            <p class="open-app-desc">
+              If your experience diverges from standard industry profiles, we welcome your distinctive perspective. Tell us about the challenges you gravitate toward.
+            </p>
+            <div class="open-app-actions">
+              <a
+                href={`mailto:${CAREERS_EMAIL}?subject=Open%20application`}
+                class="cta-primary"
+                data-track="careers_open_card_apply_click"
+              >
+                Send Open Application
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+              <span class="email-note">Direct correspondence to <code>{CAREERS_EMAIL}</code></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<script>
+  function setupFilters() {
+    const deptSelect = document.getElementById('filter-dept') as HTMLSelectElement | null;
+    const workmodeSelect = document.getElementById('filter-workmode') as HTMLSelectElement | null;
+    const typeSelect = document.getElementById('filter-type') as HTMLSelectElement | null;
+    const locationSelect = document.getElementById('filter-location') as HTMLSelectElement | null;
+    const resetBtn = document.getElementById('reset-filters') as HTMLButtonElement | null;
+    const clearBtn = document.getElementById('clear-filters-btn') as HTMLButtonElement | null;
+    const statusLive = document.getElementById('filter-status');
+    const noResults = document.getElementById('no-filter-results');
+    const cards = Array.from(document.querySelectorAll('.career-card-wrapper')) as HTMLElement[];
+
+    if (!cards.length) return;
+
+    function applyFilters() {
+      const selectedDept = deptSelect ? deptSelect.value : 'all';
+      const selectedWorkmode = workmodeSelect ? workmodeSelect.value : 'all';
+      const selectedType = typeSelect ? typeSelect.value : 'all';
+      const selectedLocation = locationSelect ? locationSelect.value : 'all';
+
+      let visibleCount = 0;
+
+      cards.forEach((card) => {
+        const d = card.dataset.department || '';
+        const w = card.dataset.workmode || '';
+        const t = card.dataset.type || '';
+        const l = card.dataset.location || '';
+
+        const matchDept = selectedDept === 'all' || d === selectedDept;
+        const matchWorkmode = selectedWorkmode === 'all' || w === selectedWorkmode;
+        const matchType = selectedType === 'all' || t === selectedType;
+        const matchLocation = selectedLocation === 'all' || l === selectedLocation;
+
+        if (matchDept && matchWorkmode && matchType && matchLocation) {
+          card.style.display = 'flex';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      if (statusLive) {
+        statusLive.textContent = `Showing ${visibleCount} role${visibleCount === 1 ? '' : 's'}.`;
+      }
+
+      if (noResults) {
+        noResults.style.display = visibleCount === 0 ? 'flex' : 'none';
+      }
+    }
+
+    function reset() {
+      if (deptSelect) deptSelect.value = 'all';
+      if (workmodeSelect) workmodeSelect.value = 'all';
+      if (typeSelect) typeSelect.value = 'all';
+      if (locationSelect) locationSelect.value = 'all';
+      applyFilters();
+    }
+
+    deptSelect?.addEventListener('change', applyFilters);
+    workmodeSelect?.addEventListener('change', applyFilters);
+    typeSelect?.addEventListener('change', applyFilters);
+    locationSelect?.addEventListener('change', applyFilters);
+    resetBtn?.addEventListener('click', reset);
+    clearBtn?.addEventListener('click', reset);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupFilters);
+  } else {
+    setupFilters();
+  }
+</script>
+
+<style>
+  .careers-page {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    padding-top: 80px;
+    background: var(--color-bg);
+    color: var(--color-text-primary);
+  }
+
+  .careers-hero {
+    padding: 72px 24px 64px;
+    background: radial-gradient(circle at 85% 20%, rgba(247, 148, 29, 0.08) 0%, transparent 60%),
+                radial-gradient(circle at 15% 80%, rgba(30, 75, 143, 0.06) 0%, transparent 60%);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .hero-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 48px;
+    align-items: center;
+  }
+
+  .hero-text-block {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--rhsp-peg-end);
+    background: rgba(238, 75, 43, 0.08);
+    border: 1px solid rgba(238, 75, 43, 0.2);
+    padding: 6px 14px;
+    border-radius: 999px;
+    align-self: flex-start;
+  }
+
+  .badge-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--rhsp-peg-start);
+  }
+
+  .hero-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    color: var(--color-text-primary);
+    margin: 0;
+  }
+
+  .hero-subline {
+    font-size: clamp(1.0625rem, 1.4vw, 1.25rem);
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    max-width: 580px;
+    margin: 0;
+  }
+
+  .hero-cta-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+    margin-top: 12px;
+  }
+
+  .cta-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 48px;
+    padding: 12px 28px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #ffffff;
+    background: var(--color-text-primary);
+    border: 1px solid var(--color-text-primary);
+    border-radius: 999px;
+    text-decoration: none;
+    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+  }
+
+  :global([data-theme="dark"]) .cta-primary {
+    background: #ffffff;
+    color: #141413;
+    border-color: #ffffff;
+  }
+
+  .cta-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  }
+
+  .cta-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 12px 26px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    text-decoration: none;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+    cursor: pointer;
+  }
+
+  .cta-secondary:hover {
+    border-color: var(--rhsp-peg-start);
+    transform: translateY(-2px);
+  }
+
+  .hero-visual-block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Roles Section */
+  .roles-section {
+    padding: 96px 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-container {
+    width: 100%;
+  }
+
+  .section-header {
+    text-align: center;
+    max-width: 680px;
+    margin: 0 auto 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .peg-track-line {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .peg-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--rhsp-peg-start);
+  }
+
+  .peg-bar {
+    width: 36px;
+    height: 2px;
+    background: var(--rhsp-peg-gradient);
+  }
+
+  .section-title {
+    font-size: clamp(2rem, 3.5vw, 2.75rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0 0 12px;
+  }
+
+  .section-subtext {
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  /* Filter Controls */
+  .filter-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: flex-end;
+    justify-content: center;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    padding: 20px 24px;
+    border-radius: 20px;
+    margin-bottom: 40px;
+    box-shadow: var(--shadow-subtle);
+  }
+
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 160px;
+    flex: 1;
+  }
+
+  .filter-label {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+  }
+
+  .filter-select {
+    min-height: 44px;
+    padding: 8px 14px;
+    font-size: 0.9375rem;
+    font-family: inherit;
+    color: var(--color-text-primary);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+  }
+
+  .filter-select:focus-visible {
+    outline: 2px solid var(--rhsp-peg-start);
+    outline-offset: 2px;
+  }
+
+  .reset-button {
+    min-height: 44px;
+    padding: 8px 18px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    font-family: inherit;
+    color: var(--color-text-secondary);
+    background: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  .reset-button:hover {
+    background: var(--color-border);
+    color: var(--color-text-primary);
+  }
+
+  .reset-button:focus-visible {
+    outline: 2px solid var(--rhsp-peg-start);
+    outline-offset: 2px;
+  }
+
+  /* Roles Grid */
+  .roles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 32px 24px;
+  }
+
+  /* Empty State */
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 64px 24px;
+    background: var(--color-surface);
+    border: 1px dashed var(--color-border);
+    border-radius: 24px;
+    margin: 24px 0;
+  }
+
+  .empty-icon {
+    margin-bottom: 20px;
+  }
+
+  .empty-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 12px;
+    max-width: 520px;
+  }
+
+  .empty-subtext {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    max-width: 520px;
+    margin: 0 0 24px;
+  }
+
+  .empty-cta {
+    align-self: center;
+  }
+
+  /* Principles */
+  .principles-section {
+    padding: 80px 24px;
+    background: var(--color-bg-alt);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .principles-section .section-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .principles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+  }
+
+  .principle-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    padding: 32px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+  }
+
+  .principle-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--rhsp-peg-start);
+  }
+
+  .principle-marker {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--rhsp-peg-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 4px;
+  }
+
+  .marker-code {
+    color: #ffffff;
+    font-size: 1.25rem;
+    font-weight: 800;
+    font-family: inherit;
+  }
+
+  .principle-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .principle-desc {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  /* Open Application Card */
+  .open-application-section {
+    padding: 96px 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .open-app-card {
+    background: radial-gradient(circle at 10% 20%, rgba(30, 75, 143, 0.1) 0%, transparent 70%),
+                radial-gradient(circle at 90% 80%, rgba(247, 148, 29, 0.1) 0%, transparent 70%),
+                var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 28px;
+    padding: 56px 40px;
+    box-shadow: var(--shadow-subtle);
+  }
+
+  .open-app-content {
+    max-width: 680px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .open-app-title {
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+
+  .open-app-desc {
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    margin: 0 0 12px;
+  }
+
+  .open-app-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .email-note {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+  }
+
+  .email-note code {
+    background: var(--color-bg-alt);
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    color: var(--rhsp-navy);
+  }
+
+  :global([data-theme="dark"]) .email-note code {
+    color: #6FA3F5;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  @media (max-width: 900px) {
+    .hero-container {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+
+    .hero-text-block {
+      align-items: center;
+    }
+
+    .hero-cta-group {
+      justify-content: center;
+    }
+
+    .hero-subline {
+      margin: 0 auto;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .careers-hero {
+      padding: 48px 16px 40px;
+    }
+
+    .roles-section,
+    .principles-section,
+    .open-application-section {
+      padding: 56px 16px;
+    }
+
+    .filter-controls {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .filter-group {
+      min-width: 100%;
+    }
+
+    .roles-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .open-app-card {
+      padding: 36px 20px;
+    }
+  }
+</style>
