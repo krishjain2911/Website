@@ -1,41 +1,47 @@
 ---
-export const prerender = false;
-
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
-import { getPublishedJobBySlug } from '../../lib/careers/jobs';
+import { getPublishedJobs, renderMarkdown, type Job } from '../../lib/careers/jobs';
 import { CAREERS_EMAIL, COMPANY_NAME, DEFAULT_LOCATION } from '../../lib/careers/config';
 
-const { slug } = Astro.params;
-const job = slug ? getPublishedJobBySlug(slug) : undefined;
-
-if (!job || job.status !== 'Published') {
-  Astro.response.status = 404;
+export function getStaticPaths() {
+  const jobs = getPublishedJobs();
+  return jobs.map((job) => ({
+    params: { slug: job.slug },
+    props: { job },
+  }));
 }
 
-const applyEmail = job?.apply_email || CAREERS_EMAIL;
-const applySubject = encodeURIComponent(`Application: ${job?.title || ''}`);
+interface Props {
+  job: Job;
+}
+
+const { job } = Astro.props;
+
+const applyEmail = job.applyEmail || job.apply_email || CAREERS_EMAIL;
+const applySubject = encodeURIComponent(`Application: ${job.title}`);
 const applyMailto = `mailto:${applyEmail}?subject=${applySubject}`;
 
-const respList = job?.responsibilities
-  ? job.responsibilities.split('\n').map((s) => s.trim()).filter(Boolean)
-  : [];
+const respList = Array.isArray(job.responsibilities)
+  ? job.responsibilities
+  : (job.responsibilities as any || '').split('\n').map((s: string) => s.trim()).filter(Boolean);
 
-const reqList = job?.requirements
-  ? job.requirements.split('\n').map((s) => s.trim()).filter(Boolean)
-  : [];
+const reqList = Array.isArray(job.requirements)
+  ? job.requirements
+  : (job.requirements as any || '').split('\n').map((s: string) => s.trim()).filter(Boolean);
 
-const isRemote = job?.work_mode?.toLowerCase().includes('remote') || false;
+const isRemote = (job.mode || job.work_mode || '').toLowerCase().includes('remote');
+const renderedDescription = renderMarkdown(job.description);
 
 // JobPosting JSON-LD schema
-const jobPostingSchema = job && job.status === 'Published' ? {
+const jobPostingSchema = {
   '@context': 'https://schema.org',
   '@type': 'JobPosting',
   title: job.title,
-  description: job.description_html || job.summary || job.title,
-  datePosted: job.created_at,
-  ...(job.closing_date ? { validThrough: job.closing_date } : {}),
+  description: renderedDescription || job.summary || job.title,
+  datePosted: job.postedAt || job.created_at,
+  ...(job.closesAt ? { validThrough: job.closesAt } : {}),
   employmentType: job.type ? job.type.toUpperCase().replace('-', '_') : 'FULL_TIME',
   hiringOrganization: {
     '@type': 'Organization',
@@ -51,210 +57,200 @@ const jobPostingSchema = job && job.status === 'Published' ? {
     },
   },
   ...(isRemote ? { jobLocationType: 'TELECOMMUTE' } : {}),
-} : null;
+};
 
-const pageTitle = job && job.status === 'Published'
-  ? `${job.title} | Careers at RHSP`
-  : 'Position Not Found | RHSP Careers';
-
-const pageDesc = job && job.status === 'Published'
-  ? (job.summary || `${job.title} opening at RHSP in ${job.department}, ${job.location}. Explore our engineering orientation.`)
-  : 'The requested position is unavailable or has closed.';
+const canonicalUrl = `https://roundholesquarepeg.com/careers/${job.slug}`;
+const pageTitle = `${job.title} | Careers at RHSP`;
+const pageDesc = job.summary || `${job.title} opening at RHSP in ${job.department}, ${job.location}. Explore our engineering orientation.`;
 ---
 
 <BaseLayout
   title={pageTitle}
   description={pageDesc}
-  breadcrumbs={job && job.status === 'Published' ? [
+  breadcrumbs={[
     { name: 'Careers', item: '/careers' },
     { name: job.title, item: `/careers/${job.slug}` },
-  ] : undefined}
+  ]}
 >
   <Nav />
 
-  <main id="main-content" class="role-page">
-    {job && job.status === 'Published' ? (
-      <article class="role-article">
-        {jobPostingSchema && (
-          <script type="application/ld+json" set:html={JSON.stringify(jobPostingSchema)} />
-        )}
+  <main id="main-content" class="role-page" data-closes-at={job.closesAt || ''}>
+    <article class="role-article">
+      <script type="application/ld+json" set:html={JSON.stringify(jobPostingSchema)} />
+      <link rel="canonical" href={canonicalUrl} />
 
-        <!-- Top Navigation Bar -->
-        <div class="role-top-nav">
-          <div class="article-container">
-            <a href="/careers" class="back-link" data-track="careers_back_click">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <line x1="19" y1="12" x2="5" y2="12"></line>
-                <polyline points="12 19 5 12 12 5"></polyline>
-              </svg>
-              <span>Back to all open orientations</span>
-            </a>
+      <!-- Top Navigation Bar -->
+      <div class="role-top-nav">
+        <div class="article-container">
+          <a href="/careers" class="back-link" data-track="careers_back_click">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>Back to all open orientations</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Role Header -->
+      <header class="role-header">
+        <div class="article-container">
+          <div class="role-badge-row">
+            <span class="badge dept-badge">{job.department}</span>
+            <span class="badge type-badge">{job.type}</span>
+            <span class="badge mode-badge">{job.mode || job.work_mode}</span>
+          </div>
+
+          <h1 class="role-title">{job.title}</h1>
+
+          <div class="role-meta-grid">
+            <div class="meta-item">
+              <span class="meta-label">Location</span>
+              <span class="meta-val">{job.location}</span>
+            </div>
+            {job.experience && (
+              <div class="meta-item">
+                <span class="meta-label">Experience</span>
+                <span class="meta-val">{job.experience}</span>
+              </div>
+            )}
+            {job.salary && (
+              <div class="meta-item">
+                <span class="meta-label">Compensation</span>
+                <span class="meta-val">{job.salary}</span>
+              </div>
+            )}
+            {job.closesAt && (
+              <div class="meta-item">
+                <span class="meta-label">Closing Date</span>
+                <span class="meta-val">{new Date(job.closesAt).toLocaleDateString()}</span>
+              </div>
+            )}
           </div>
         </div>
+      </header>
 
-        <!-- Role Header -->
-        <header class="role-header">
-          <div class="article-container">
-            <div class="role-badge-row">
-              <span class="badge dept-badge">{job.department}</span>
-              <span class="badge type-badge">{job.type}</span>
-              <span class="badge mode-badge">{job.work_mode}</span>
-            </div>
-
-            <h1 class="role-title">{job.title}</h1>
-
-            <div class="role-meta-grid">
-              <div class="meta-item">
-                <span class="meta-label">Location</span>
-                <span class="meta-val">{job.location}</span>
+      <!-- Role Body & Sticky Sidebar -->
+      <div class="role-body-section">
+        <div class="article-container body-grid">
+          <div class="role-main-content">
+            {job.summary && (
+              <div class="role-lead-summary">
+                <p>{job.summary}</p>
               </div>
-              {job.experience && (
-                <div class="meta-item">
-                  <span class="meta-label">Experience</span>
-                  <span class="meta-val">{job.experience}</span>
-                </div>
-              )}
-              {job.salary && (
-                <div class="meta-item">
-                  <span class="meta-label">Compensation</span>
-                  <span class="meta-val">{job.salary}</span>
-                </div>
-              )}
-              {job.closing_date && (
-                <div class="meta-item">
-                  <span class="meta-label">Closing Date</span>
-                  <span class="meta-val">{job.closing_date}</span>
-                </div>
-              )}
-            </div>
-          </div>
-        </header>
+            )}
 
-        <!-- Role Body & Sticky Sidebar -->
-        <div class="role-body-section">
-          <div class="article-container body-grid">
-            <div class="role-main-content">
-              {job.summary && (
-                <div class="role-lead-summary">
-                  <p>{job.summary}</p>
-                </div>
-              )}
-
-              {job.description_html && (
-                <section class="content-block" aria-labelledby="heading-about-role">
-                  <h2 id="heading-about-role" class="content-heading">Context &amp; Challenge</h2>
-                  <div class="rendered-markdown" set:html={job.description_html} />
-                </section>
-              )}
-
-              {respList.length > 0 && (
-                <section class="content-block" aria-labelledby="heading-responsibilities">
-                  <h2 id="heading-responsibilities" class="content-heading">Responsibilities</h2>
-                  <ul class="role-list">
-                    {respList.map((item) => (
-                      <li>
-                        <span class="list-bullet" aria-hidden="true"></span>
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </section>
-              )}
-
-              {reqList.length > 0 && (
-                <section class="content-block" aria-labelledby="heading-requirements">
-                  <h2 id="heading-requirements" class="content-heading">Qualifications &amp; Trajectory</h2>
-                  <ul class="role-list">
-                    {reqList.map((item) => (
-                      <li>
-                        <span class="list-bullet" aria-hidden="true"></span>
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </section>
-              )}
-
-              <section class="apply-bottom-card" aria-label="Apply for this orientation">
-                <div class="apply-card-inner">
-                  <h3>Ready to calibrate your orientation with RHSP?</h3>
-                  <p>Send your portfolio, repository links, or dossier directly to our engineering review panel.</p>
-                  <a
-                    href={applyMailto}
-                    class="cta-apply-prominent"
-                    data-track="careers_apply_click"
-                    data-track-role={job.slug}
-                  >
-                    Apply for this Position
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                      <line x1="5" y1="12" x2="19" y2="12"></line>
-                      <polyline points="12 5 19 12 12 19"></polyline>
-                    </svg>
-                  </a>
-                </div>
+            {renderedDescription && (
+              <section class="content-block" aria-labelledby="heading-about-role">
+                <h2 id="heading-about-role" class="content-heading">Context &amp; Challenge</h2>
+                <div class="rendered-markdown" set:html={renderedDescription} />
               </section>
-            </div>
+            )}
 
-            <!-- Sticky Sidebar -->
-            <aside class="role-sidebar" aria-label="Role Summary and Application">
-              <div class="sticky-apply-box">
-                <div class="box-header">
-                  <span class="box-badge">Direct Application</span>
-                  <div class="box-peg-notch" aria-hidden="true"></div>
-                </div>
+            {respList.length > 0 && (
+              <section class="content-block" aria-labelledby="heading-responsibilities">
+                <h2 id="heading-responsibilities" class="content-heading">Responsibilities</h2>
+                <ul class="role-list">
+                  {respList.map((item: string) => (
+                    <li>
+                      <span class="list-bullet" aria-hidden="true"></span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
 
-                <div class="box-role-info">
-                  <h3 class="box-title">{job.title}</h3>
-                  <p class="box-location">{job.location} &bull; {job.work_mode}</p>
-                </div>
+            {reqList.length > 0 && (
+              <section class="content-block" aria-labelledby="heading-requirements">
+                <h2 id="heading-requirements" class="content-heading">Qualifications &amp; Trajectory</h2>
+                <ul class="role-list">
+                  {reqList.map((item: string) => (
+                    <li>
+                      <span class="list-bullet" aria-hidden="true"></span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
 
+            <section class="apply-bottom-card" aria-label="Apply for this orientation">
+              <div class="apply-card-inner">
+                <h3>Ready to calibrate your orientation with RHSP?</h3>
+                <p>Send your portfolio, repository links, or dossier directly to our engineering review panel.</p>
                 <a
                   href={applyMailto}
-                  class="cta-apply-sticky"
+                  class="cta-apply-prominent"
                   data-track="careers_apply_click"
                   data-track-role={job.slug}
                 >
-                  Apply Now
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  Apply for this Position
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <line x1="5" y1="12" x2="19" y2="12"></line>
                     <polyline points="12 5 19 12 12 19"></polyline>
                   </svg>
                 </a>
-
-                <div class="box-footer-note">
-                  <p>Inquiries routed to <code>{applyEmail}</code></p>
-                  <p class="anti-spam-note">Response guaranteed within 3 enterprise cycles.</p>
-                </div>
               </div>
-            </aside>
+            </section>
           </div>
-        </div>
-      </article>
-    ) : (
-      <div class="not-found-container">
-        <div class="not-found-card">
-          <div class="not-found-aperture" aria-hidden="true">
-            <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
-              <circle cx="36" cy="36" r="32" stroke="var(--color-border)" stroke-width="2" stroke-dasharray="6 6"/>
-              <line x1="26" y1="26" x2="46" y2="46" stroke="var(--rhsp-peg-end)" stroke-width="3" stroke-linecap="round"/>
-              <line x1="46" y1="26" x2="26" y2="46" stroke="var(--rhsp-peg-end)" stroke-width="3" stroke-linecap="round"/>
-            </svg>
-          </div>
-          <h1>Orientation Closed or Unavailable</h1>
-          <p>
-            The role you are looking for has either concluded its intake cycle or has moved to an alternate aperture.
-          </p>
-          <div class="not-found-actions">
-            <a href="/careers" class="cta-primary">View Open Roles</a>
-            <a href={`mailto:${CAREERS_EMAIL}?subject=Open%20application`} class="cta-secondary">Open Application</a>
-          </div>
+
+          <!-- Sticky Sidebar -->
+          <aside class="role-sidebar" aria-label="Role Summary and Application">
+            <div class="sticky-apply-box">
+              <div class="box-header">
+                <span class="box-badge">Direct Application</span>
+                <div class="box-peg-notch" aria-hidden="true"></div>
+              </div>
+
+              <div class="box-role-info">
+                <h3 class="box-title">{job.title}</h3>
+                <p class="box-location">{job.location} &bull; {job.mode || job.work_mode}</p>
+              </div>
+
+              <a
+                href={applyMailto}
+                class="cta-apply-sticky"
+                data-track="careers_apply_click"
+                data-track-role={job.slug}
+              >
+                Apply Now
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+
+              <div class="box-footer-note">
+                <p>Inquiries routed to <code>{applyEmail}</code></p>
+                <p class="anti-spam-note">Response guaranteed within 3 enterprise cycles.</p>
+              </div>
+            </div>
+          </aside>
         </div>
       </div>
-    )}
+    </article>
   </main>
 
   <Footer />
 </BaseLayout>
+
+<script>
+  // Hide expired role client-side if closesAt has passed
+  const main = document.getElementById('main-content');
+  const closesAt = main?.getAttribute('data-closes-at');
+  if (closesAt) {
+    const closeTime = new Date(closesAt).getTime();
+    if (!isNaN(closeTime) && closeTime < Date.now()) {
+      const applyBtns = document.querySelectorAll('[data-track="careers_apply_click"]');
+      applyBtns.forEach((btn) => {
+        (btn as HTMLElement).style.pointerEvents = 'none';
+        (btn as HTMLElement).style.opacity = '0.5';
+        btn.textContent = 'Application Window Concluded';
+      });
+    }
+  }
+</script>
 
 <style>
   .role-page {
@@ -653,75 +649,6 @@ const pageDesc = job && job.status === 'Published'
 
   .cta-apply-prominent:hover {
     transform: translateY(-2px);
-  }
-
-  /* Not Found */
-  .not-found-container {
-    max-width: 640px;
-    margin: 80px auto 120px;
-    padding: 0 24px;
-    text-align: center;
-  }
-
-  .not-found-card {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 28px;
-    padding: 56px 36px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .not-found-card h1 {
-    font-size: 1.75rem;
-    font-weight: 800;
-    margin: 0;
-  }
-
-  .not-found-card p {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: var(--color-text-secondary);
-    margin: 0 0 16px;
-  }
-
-  .not-found-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    justify-content: center;
-  }
-
-  .cta-primary {
-    display: inline-flex;
-    align-items: center;
-    min-height: 48px;
-    padding: 12px 28px;
-    font-weight: 700;
-    color: #ffffff;
-    background: var(--color-text-primary);
-    border-radius: 999px;
-    text-decoration: none;
-  }
-
-  :global([data-theme="dark"]) .cta-primary {
-    background: #ffffff;
-    color: #141413;
-  }
-
-  .cta-secondary {
-    display: inline-flex;
-    align-items: center;
-    min-height: 48px;
-    padding: 12px 24px;
-    font-weight: 700;
-    color: var(--color-text-primary);
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 999px;
-    text-decoration: none;
   }
 
   @media (max-width: 960px) {

@@ -1,0 +1,58 @@
+[
+  {
+    "slug": "enterprise-systems-architect",
+    "title": "Enterprise Systems Architect",
+    "department": "Architecture & Systems",
+    "location": "Mumbai",
+    "type": "Full-time",
+    "mode": "Hybrid",
+    "experience": "7+ years",
+    "summary": "Design high-concurrency modular adapters bridging legacy enterprise backends with reactive event streams.",
+    "description": "### Strategic Orientation\n\nRHSP engineers modular software adapters that align disparate enterprise workflows. As an Enterprise Systems Architect, you will establish architectural boundaries, design scalable data trajectories, and resolve core structural friction for mission-critical platforms.\n\n### Core Acumen\n\nYou will orchestrate systems across cloud infrastructure and on-premises perimeters, defining clear integration apertures without compromising security or operational velocity.",
+    "responsibilities": [
+      "Architect resilient distributed pipelines and low-latency API adapters",
+      "Govern system design reviews and establish engineering standards across delivery teams",
+      "Model domain boundaries to insulate core banking and enterprise records from front-end volatility",
+      "Guide technical teams through complex integration milestones with precision"
+    ],
+    "requirements": [
+      "Demonstrated architectural leadership in distributed enterprise environments",
+      "Deep understanding of transactional integrity, event-driven designs, and telemetry pipelines",
+      "Fluency in TypeScript, Go, or Java alongside modern cloud ecosystems",
+      "Clear communication skills for articulating technical trade-offs to executive stakeholders"
+    ],
+    "salary": "Competitive &bull; Tier 1 Enterprise Band",
+    "applyEmail": "architects@rhsp.solutions",
+    "postedAt": "2026-03-01T09:00:00Z",
+    "closesAt": "2026-12-31T23:59:59Z",
+    "status": "published"
+  },
+  {
+    "slug": "lead-platform-engineer",
+    "title": "Lead Platform Engineer",
+    "department": "Platform Operations",
+    "location": "Mumbai",
+    "type": "Full-time",
+    "mode": "On-site",
+    "experience": "5+ years",
+    "summary": "Construct internal developer platforms, automated delivery pipelines, and observability perimeters at scale.",
+    "description": "### Operational Scope\n\nAt RHSP, infrastructure is treated as an active mathematical surface. We build platform toolchains that enable rapid deployment cycles while maintaining strict compliance contours.\n\n### Technical Mission\n\nYou will lead our platform operations group, ensuring zero-downtime rollouts, resilient container orchestration, and continuous telemetry monitoring across hybrid cloud deployments.",
+    "responsibilities": [
+      "Construct and maintain sovereign Kubernetes clusters and CI/CD pipelines",
+      "Implement automated security boundaries and zero-trust networking perimeters",
+      "Design comprehensive telemetry dashboards for real-time latency and throughput tracking",
+      "Partner with product engineers to accelerate local development feedback loops"
+    ],
+    "requirements": [
+      "Hands-on mastery of Kubernetes, Terraform, Docker, and Linux kernel internals",
+      "Proven track record governing mission-critical production infrastructure",
+      "Experience with Prometheus, OpenTelemetry, and structured log aggregation",
+      "Rigorous mindset towards infrastructure-as-code and reproducible environments"
+    ],
+    "salary": "Competitive &bull; Tier 1 Platform Band",
+    "applyEmail": "platform@rhsp.solutions",
+    "postedAt": "2026-03-10T10:00:00Z",
+    "closesAt": "2026-12-31T23:59:59Z",
+    "status": "published"
+  }
+]
