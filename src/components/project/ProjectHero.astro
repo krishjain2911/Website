@@ -20,9 +20,15 @@ const showHeroMedia = product.slug === 'sonakshi';
   <div class="container project-hero-container">
     <!-- Breadcrumb / Back Navigation -->
     <nav class="project-hero-nav" aria-label="Breadcrumb">
-      <a href="/#solutions" class="hero-back-link">
+      <a
+        href="/#solutions"
+        class="hero-back-link"
+        id="solution-back-btn"
+        data-solution-back
+        aria-label="Back to Home"
+      >
         <Icon name="arrow-left" size={14} />
-        <span>Back to solutions</span>
+        <span class="back-text">Back to Home</span>
       </a>
       <span class="nav-sep" aria-hidden="true">/</span>
       <span class="nav-pillar">{p.pillar}</span>
@@ -120,9 +126,6 @@ const showHeroMedia = product.slug === 'sonakshi';
         <div class="project-actions-row">
           <a href="#contact" class="btn btn-primary hero-cta-btn">
             <span>Talk to us about this</span>
-          </a>
-          <a href="/#solutions" class="btn btn-secondary hero-back-btn">
-            <span>All solutions</span>
           </a>
         </div>
       </div>

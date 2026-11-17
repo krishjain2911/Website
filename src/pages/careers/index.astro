@@ -4,6 +4,7 @@ import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
 import CareersHeroVisual from '../../components/careers/CareersHeroVisual.astro';
 import CareersRoleCard from '../../components/careers/CareersRoleCard.astro';
+import CareersPrinciples from '../../components/careers/CareersPrinciples.astro';
 import { getPublishedJobs } from '../../lib/careers/jobs';
 import { CAREERS_EMAIL } from '../../lib/careers/config';
 
@@ -162,45 +163,7 @@ const pageDescription = 'Explore opportunities at RHSP. We engineer high-precisi
     </section>
 
     <!-- Life at RHSP (Principles) -->
-    <section class="principles-section" aria-labelledby="principles-heading">
-      <div class="section-container">
-        <div class="section-header">
-          <div class="peg-track-line" aria-hidden="true">
-            <div class="peg-dot"></div>
-            <div class="peg-bar"></div>
-            <div class="peg-dot"></div>
-          </div>
-          <h2 id="principles-heading" class="section-title">Life at RHSP</h2>
-          <p class="section-subtext">Three engineering tenets define our internal craft and delivery standard.</p>
-        </div>
-
-        <div class="principles-grid">
-          <div class="principle-card">
-            <div class="principle-marker" aria-hidden="true">
-              <span class="marker-code">P</span>
-            </div>
-            <h3 class="principle-title">Plan with foresight</h3>
-            <p class="principle-desc">Anticipate systemic complexity before drafting the initial lines of enterprise architecture.</p>
-          </div>
-
-          <div class="principle-card">
-            <div class="principle-marker" aria-hidden="true">
-              <span class="marker-code">E</span>
-            </div>
-            <h3 class="principle-title">Engineer with precision</h3>
-            <p class="principle-desc">Construct robust, modular adapters bridging legacy enterprise scale with modern operational speed.</p>
-          </div>
-
-          <div class="principle-card">
-            <div class="principle-marker" aria-hidden="true">
-              <span class="marker-code">G</span>
-            </div>
-            <h3 class="principle-title">Govern to scale</h3>
-            <p class="principle-desc">Establish real-time telemetry and systemic guardrails ensuring resilience under extreme workload volume.</p>
-          </div>
-        </div>
-      </div>
-    </section>
+    <CareersPrinciples />
 
     <!-- Open Application Card -->
     <section class="open-application-section" aria-labelledby="open-app-heading">
@@ -664,72 +627,6 @@ const pageDescription = 'Explore opportunities at RHSP. We engineer high-precisi
 
   .empty-cta {
     align-self: center;
-  }
-
-  /* Principles */
-  .principles-section {
-    padding: 80px 24px;
-    background: var(--color-bg-alt);
-    border-top: 1px solid var(--color-border);
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .principles-section .section-container {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
-  .principles-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 24px;
-  }
-
-  .principle-card {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 20px;
-    padding: 32px 28px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    transition: transform 0.3s ease, border-color 0.3s ease;
-  }
-
-  .principle-card:hover {
-    transform: translateY(-3px);
-    border-color: var(--rhsp-peg-start);
-  }
-
-  .principle-marker {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    background: var(--rhsp-peg-gradient);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 4px;
-  }
-
-  .marker-code {
-    color: #ffffff;
-    font-size: 1.25rem;
-    font-weight: 800;
-    font-family: inherit;
-  }
-
-  .principle-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    margin: 0;
-  }
-
-  .principle-desc {
-    font-size: 0.9375rem;
-    line-height: 1.6;
-    color: var(--color-text-secondary);
-    margin: 0;
   }
 
   /* Open Application Card */

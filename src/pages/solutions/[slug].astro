@@ -382,3 +382,127 @@ const appSchema = {
     gap: 24px;
   }
 </style>
+
+<script is:inline>
+  (function initSolutionNav() {
+    function setupNav() {
+      var backBtn = document.getElementById('solution-back-btn') || document.querySelector('[data-solution-back]');
+      if (!backBtn) return;
+
+      var originData = null;
+      var ref = document.referrer;
+      var isReload = false;
+      try {
+        var navEntries = performance.getEntriesByType('navigation');
+        if (navEntries.length > 0 && navEntries[0].type === 'reload') {
+          isReload = true;
+        }
+      } catch (e) {}
+
+      if (isReload) {
+        // Reload on a solution page: keep existing stored origin
+        try {
+          var stored = sessionStorage.getItem('rhsp:origin');
+          if (stored) originData = JSON.parse(stored);
+        } catch (e) {}
+      } else if (ref) {
+        try {
+          var refUrl = new URL(ref);
+          if (refUrl.origin === window.location.origin) {
+            // Same-origin
+            if (refUrl.pathname.indexOf('/solutions/') === 0) {
+              // Referrer is another /solutions/ page: keep existing stored origin
+              try {
+                var stored = sessionStorage.getItem('rhsp:origin');
+                if (stored) originData = JSON.parse(stored);
+              } catch (e) {}
+            } else {
+              // Referrer is outside /solutions/ (Home, PEG Board, About, Careers, etc.)
+              var p = refUrl.pathname.replace(/\/+$/, '') || '/';
+              var label = 'previous page';
+              if (p === '' || p === '/') {
+                label = 'Home';
+              } else if (p === '/peg-board' || p.indexOf('/peg-board') === 0) {
+                label = 'PEG Board';
+              } else if (p === '/about' || p.indexOf('/about') === 0) {
+                label = 'About';
+              } else if (p === '/careers' || p.indexOf('/careers') === 0) {
+                label = 'Careers';
+              } else if (p === '/contact' || p.indexOf('/contact') === 0) {
+                label = 'Contact';
+              } else if (p === '/privacy') {
+                label = 'Privacy';
+              } else if (p === '/security') {
+                label = 'Security';
+              } else {
+                label = p.replace(/^\//, '').split('/')[0];
+                label = label.charAt(0).toUpperCase() + label.slice(1);
+              }
+
+              originData = {
+                url: refUrl.pathname + refUrl.search + refUrl.hash,
+                label: label
+              };
+              try {
+                sessionStorage.setItem('rhsp:origin', JSON.stringify(originData));
+              } catch (e) {}
+            }
+          } else {
+            // External referrer: clear stored origin
+            try { sessionStorage.removeItem('rhsp:origin'); } catch (e) {}
+          }
+        } catch (e) {
+          try { sessionStorage.removeItem('rhsp:origin'); } catch (e) {}
+        }
+      } else {
+        // Empty referrer (new tab, direct link, address bar): clear stored origin
+        try { sessionStorage.removeItem('rhsp:origin'); } catch (e) {}
+      }
+
+      // Update Back button text and aria-label
+      var backLabel = originData && originData.label ? ('Back to ' + originData.label) : 'Back to Home';
+      var textSpan = backBtn.querySelector('.back-text') || backBtn.querySelector('span:not(.icon)');
+      if (textSpan) {
+        textSpan.textContent = backLabel;
+      }
+      backBtn.setAttribute('aria-label', backLabel);
+
+      // Back button click handler (plain left-click, no modifier keys)
+      backBtn.onclick = function(e) {
+        if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) {
+          return;
+        }
+        e.preventDefault();
+        if (originData && window.history.length > 1) {
+          window.history.back();
+        } else if (originData && originData.url) {
+          window.location.assign(originData.url);
+        } else {
+          window.location.assign('/#solutions');
+        }
+      };
+
+      // Prev/Next solution links navigate with location.replace
+      var navLinks = document.querySelectorAll('.solution-nav-btn');
+      navLinks.forEach(function(link) {
+        link.onclick = function(e) {
+          if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) {
+            return;
+          }
+          var targetHref = link.getAttribute('href');
+          if (targetHref) {
+            e.preventDefault();
+            window.location.replace(targetHref);
+          }
+        };
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', setupNav);
+    } else {
+      setupNav();
+    }
+    document.addEventListener('astro:after-swap', setupNav);
+  })();
+</script>

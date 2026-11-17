@@ -632,7 +632,8 @@ export const siteConfig = {
   socials: {
     linkedin: "https://linkedin.com/company/roundholesquarepeg",
     twitter: "https://x.com/RoundHoleSqrPeg",
-    youtube: "https://youtube.com/@roundholesquarepeg"
+    youtube: "https://youtube.com/@roundholesquarepeg",
+    instagram: "https://www.instagram.com/theroundholesquarepeg"
   },
 
   // TODO og-default: replace with 1200x630 asset when delivered

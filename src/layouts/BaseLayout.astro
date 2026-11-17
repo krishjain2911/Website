@@ -68,7 +68,8 @@ const orgSchema = {
   "sameAs": [
     siteConfig.socials.linkedin,
     siteConfig.socials.twitter,
-    siteConfig.socials.youtube
+    siteConfig.socials.youtube,
+    siteConfig.socials.instagram
   ]
 };
 ---
@@ -309,6 +310,132 @@ const orgSchema = {
         });
       })();
     
+        // Scroll restoration across page transitions
+        window.addEventListener('pagehide', function() {
+          try {
+            sessionStorage.setItem('rhsp:y:' + window.location.pathname, String(window.scrollY));
+          } catch (e) {}
+        });
+
+        // Check for one-time reset flag (e.g. from logo click on another page)
+        var resetHomeScroll = false;
+        try {
+          if (sessionStorage.getItem('rhsp:reset_scroll:home') === '1') {
+            resetHomeScroll = true;
+            sessionStorage.removeItem('rhsp:reset_scroll:home');
+            sessionStorage.removeItem('rhsp:y:/');
+          }
+        } catch (e) {}
+
+        if (resetHomeScroll && (window.location.pathname === '/' || window.location.pathname === '/index.html')) {
+          if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+          }
+          window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+          requestAnimationFrame(function() {
+            window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+            window.dispatchEvent(new CustomEvent('rhsp:reset-to-top'));
+          });
+        } else if (!window.location.hash) {
+          try {
+            var savedY = sessionStorage.getItem('rhsp:y:' + window.location.pathname);
+            if (savedY !== null) {
+              var targetY = parseInt(savedY, 10);
+              if (!isNaN(targetY) && targetY > 0) {
+                var restoreScroll = function() {
+                  requestAnimationFrame(function() {
+                    window.scrollTo({ top: targetY, behavior: 'instant' });
+                  });
+                };
+                if (document.readyState === 'loading') {
+                  document.addEventListener('DOMContentLoaded', restoreScroll);
+                } else {
+                  restoreScroll();
+                }
+              }
+            }
+          } catch (e) {}
+        }
+
+        // RHSP Brand Logo Click Handler (Always returns to top of home page)
+        document.addEventListener('click', function(e) {
+          // Only plain left-clicks (no Ctrl, Cmd, Shift, Alt, middle-click)
+          if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) {
+            return;
+          }
+
+          var target = e.target && e.target.closest ? e.target.closest('a') : null;
+          if (!target) return;
+
+          // Check if this link is a brand logo link
+          var isLogo = target.matches('a[aria-label="RHSP home"], a.brand-logo-link, a.footer-logo-link') ||
+            target.getAttribute('aria-label') === 'RHSP home';
+
+          if (!isLogo) return;
+
+          var href = target.getAttribute('href');
+          if (href !== '/' && href !== '/index.html' && href !== '') return;
+
+          var isHome = window.location.pathname === '/' || window.location.pathname === '/index.html';
+
+          if (isHome) {
+            e.preventDefault();
+
+            // 1. Close mobile drawer if open without restoring scroll
+            window.dispatchEvent(new CustomEvent('rhsp:close-drawer-no-scroll'));
+
+            // 2. Remove hash from URL without pushing history entry
+            if (window.location.hash) {
+              history.replaceState(null, '', window.location.pathname);
+            }
+
+            // 3. Reset components (pinned approach journey, PEG cube, header)
+            window.dispatchEvent(new CustomEvent('rhsp:reset-to-top'));
+
+            // 4. Smooth scroll to scrollTop 0 (instant under prefers-reduced-motion)
+            var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            window.scrollTo({
+              top: 0,
+              left: 0,
+              behavior: prefersReducedMotion ? 'instant' : 'smooth'
+            });
+
+            // 5. Ensure components stay reset once scroll reaches 0
+            if (!prefersReducedMotion) {
+              var checkScrollEnd = function() {
+                if (window.scrollY === 0) {
+                  window.dispatchEvent(new CustomEvent('rhsp:reset-to-top'));
+                  window.removeEventListener('scroll', onScrollCheck);
+                }
+              };
+              var onScrollCheck = function() {
+                if (window.scrollY === 0) {
+                  checkScrollEnd();
+                }
+              };
+              window.addEventListener('scroll', onScrollCheck, { passive: true });
+              setTimeout(function() {
+                window.dispatchEvent(new CustomEvent('rhsp:reset-to-top'));
+                window.removeEventListener('scroll', onScrollCheck);
+              }, 800);
+            }
+          } else {
+            // When on any other page: navigate to "/" and land at top with no scroll restoration
+            e.preventDefault();
+
+            try {
+              sessionStorage.setItem('rhsp:reset_scroll:home', '1');
+              sessionStorage.removeItem('rhsp:y:/');
+            } catch (err) {}
+
+            if ('scrollRestoration' in history) {
+              history.scrollRestoration = 'manual';
+            }
+
+            window.location.assign('/');
+          }
+        });
+
         // Handle all "Let's talk" and #contact links to smoothly scroll to founders contact section
         document.addEventListener('click', (e) => {
           const target = e.target && e.target.closest ? e.target.closest('a') : null;

@@ -43,7 +43,7 @@ const governBlocks = [
 ];
 ---
 
-<section id="solutions" class="peg-solutions-section" aria-label="How we think and capabilities">
+<section id="solutions" class="peg-solutions-section" aria-labelledby="solutions-heading">
   <!-- Dynamic Background Atmosphere Tint (<= 6% opacity) -->
   <div class="pillar-atmosphere-tint" id="pillar-atmosphere-tint" aria-hidden="true" data-pillar="plan"></div>
 
@@ -53,7 +53,7 @@ const governBlocks = [
       <!-- 0. Phase 0 Intro Header (Center-aligned above the cube in Phase 0) -->
       <div class="stage-intro-header" id="stage-intro-header" data-layout="intro-text" aria-hidden="false">
         <span class="eyebrow intro-eyebrow">HOW WE THINK</span>
-        <h2 class="intro-headline" id="intro-headline">
+        <h2 class="intro-headline" id="solutions-heading" tabindex="-1">
           <span class="color-word-plan">Plan.</span>
           <span class="color-word-engineer">Engineer.</span>
           <span class="color-word-genai">Govern.</span>
@@ -339,9 +339,16 @@ const governBlocks = [
               </div>
 
               <!-- Rail Progress Dots -->
-              <div class="rail-dots-row" id="rail-dots-engineer" aria-hidden="true">
+              <div class="rail-dots-row" id="rail-dots-engineer" role="tablist" aria-label="Engineer carousel slides">
                 {engineerProjects.map((_, idx) => (
-                  <span class:list={['rail-dot', { 'is-active': idx === 0 }]} data-index={idx}></span>
+                  <button
+                    type="button"
+                    class:list={['rail-dot', { 'is-active': idx === 0 }]}
+                    data-index={idx}
+                    role="tab"
+                    aria-label={`Slide ${idx + 1}`}
+                    aria-selected={idx === 0 ? 'true' : 'false'}
+                  ></button>
                 ))}
               </div>
             </div>
@@ -620,8 +627,14 @@ const governBlocks = [
     visibility: visible;
   }
 
-  .cube-scene-wrapper:active {
+  .cube-scene-wrapper:active,
+  .cube-scene-wrapper.is-dragging {
     cursor: grabbing;
+  }
+
+  .cube-scene-wrapper.is-dragging,
+  .cube-scene-wrapper.is-dragging * {
+    cursor: grabbing !important;
   }
 
   /* Dynamic Cube Ambient Glow */
@@ -673,6 +686,7 @@ const governBlocks = [
     perspective-origin: 50% 50%;
     position: relative;
     z-index: 5;
+    cursor: default;
   }
 
   .cube-assembly {
@@ -682,6 +696,7 @@ const governBlocks = [
     transform-style: preserve-3d;
     transform: rotateX(-20deg) rotateY(-30deg);
     transition: transform 0.6s cubic-bezier(0.34, 1.25, 0.64, 1);
+    cursor: default;
   }
 
   .cube-face {
@@ -1342,8 +1357,14 @@ const governBlocks = [
     }
   }
 
-  .projects-rail-track:active {
+  .projects-rail-track:active,
+  .projects-rail-track.is-dragging {
     cursor: grabbing;
+  }
+
+  .projects-rail-track.is-dragging,
+  .projects-rail-track.is-dragging * {
+    cursor: grabbing !important;
   }
 
   .projects-rail-track::-webkit-scrollbar {
@@ -1370,6 +1391,18 @@ const governBlocks = [
     flex-direction: column;
     height: 100%;
     box-sizing: border-box;
+    cursor: default;
+  }
+
+  .project-rail-card .rail-card-media,
+  .project-rail-card .rail-card-media :global(img),
+  .project-rail-card .rail-card-media :global(picture),
+  .project-rail-card .rail-badge,
+  .project-rail-card .rail-card-body,
+  .project-rail-card .rail-card-title,
+  .project-rail-card .rail-card-desc,
+  .project-rail-card .spotlight-ribbon {
+    cursor: default;
   }
 
   .spotlight-ribbon {
@@ -1458,7 +1491,12 @@ const governBlocks = [
     color: #B86200;
     text-decoration: none;
     margin-top: auto;
+    cursor: pointer;
     transition: transform 0.2s ease, color 0.2s ease;
+  }
+
+  .rail-card-link * {
+    cursor: pointer;
   }
 
   :global(html[data-theme="dark"]) .rail-card-link {
@@ -1487,7 +1525,8 @@ const governBlocks = [
     width: 100%;
   }
 
-  .rail-dot {
+  .rail-dot,
+  :global(#rail-dots-engineer .rail-dot) {
     width: 6px;
     height: 6px;
     border-radius: 50%;
@@ -1499,7 +1538,8 @@ const governBlocks = [
     cursor: pointer;
   }
 
-  .rail-dot.is-active {
+  .rail-dot.is-active,
+  :global(#rail-dots-engineer .rail-dot.is-active) {
     width: 18px;
     border-radius: var(--radius-full);
     background: var(--color-text-primary);
@@ -1813,6 +1853,18 @@ const governBlocks = [
     border-radius: 18px;
     border: 1px solid var(--color-border);
     box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+    cursor: default;
+  }
+
+  .stage-panel .stage-card * {
+    cursor: default;
+  }
+
+  .stage-panel .stage-card a,
+  .stage-panel .stage-card button,
+  .stage-panel .plan-cta-btn,
+  .stage-panel .plan-cta-btn * {
+    cursor: pointer;
   }
 
   .stage-panel .stage-card:hover {
@@ -1971,6 +2023,16 @@ const governBlocks = [
     box-sizing: border-box;
     position: relative;
     overflow: hidden;
+    cursor: default;
+  }
+
+  .stage-panel .govern-card * {
+    cursor: default;
+  }
+
+  .stage-panel .govern-card a,
+  .stage-panel .govern-card button {
+    cursor: pointer;
   }
 
   .stage-panel .govern-card::before {
@@ -2378,6 +2440,7 @@ const governBlocks = [
 
       sceneWrapper.addEventListener('pointerdown', (e) => {
         isDragging = true;
+        sceneWrapper.classList.add('is-dragging');
         startX = e.clientX;
         deltaX = 0;
         cubeAssembly.style.transition = 'none';
@@ -2394,6 +2457,7 @@ const governBlocks = [
       const endDrag = (e: PointerEvent) => {
         if (!isDragging) return;
         isDragging = false;
+        sceneWrapper.classList.remove('is-dragging');
         cubeAssembly.style.transition = 'transform 0.6s cubic-bezier(0.34, 1.25, 0.64, 1)';
         try {
           sceneWrapper.releasePointerCapture(e.pointerId);
@@ -2454,10 +2518,14 @@ const governBlocks = [
         const pageCount = Math.ceil(count / cardsPerPage);
 
         dotsContainer.innerHTML = '';
+        const cid = Array.from(dotsContainer.attributes).find(a => a.name.startsWith('data-astro-cid'))?.name;
         for (let i = 0; i < pageCount; i++) {
           const dot = document.createElement('button');
           dot.type = 'button';
+          if (cid) dot.setAttribute(cid, '');
           dot.className = `rail-dot ${i === 0 ? 'is-active' : ''}`;
+          dot.setAttribute('role', 'tab');
+          dot.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
           dot.setAttribute('aria-label', `Page ${i + 1}`);
           dot.addEventListener('click', () => {
             const maxScroll = trackEl.scrollWidth - trackEl.clientWidth;
@@ -2487,7 +2555,9 @@ const governBlocks = [
             const progress = scrollLeft / maxScroll;
             const activeIdx = Math.min(dots.length - 1, Math.max(0, Math.round(progress * (dots.length - 1))));
             dots.forEach((dot, idx) => {
-              dot.classList.toggle('is-active', idx === activeIdx);
+              const isActive = idx === activeIdx;
+              dot.classList.toggle('is-active', isActive);
+              dot.setAttribute('aria-selected', isActive ? 'true' : 'false');
             });
           }
         }
@@ -2538,11 +2608,13 @@ const governBlocks = [
       let hasDragged = false;
 
       trackEl.addEventListener('pointerdown', (e) => {
+        if ((e.target as HTMLElement)?.closest('a, button')) return;
         isRailDragging = true;
         hasDragged = false;
         railStartX = e.pageX - trackEl.offsetLeft;
         railScrollLeft = trackEl.scrollLeft;
         trackEl.style.scrollBehavior = 'auto';
+        trackEl.classList.add('is-dragging');
       });
 
       window.addEventListener('pointermove', (e) => {
@@ -2558,6 +2630,7 @@ const governBlocks = [
       const endRailDrag = () => {
         if (!isRailDragging) return;
         isRailDragging = false;
+        trackEl.classList.remove('is-dragging');
         trackEl.style.scrollBehavior = 'smooth';
       };
 
@@ -2573,6 +2646,40 @@ const governBlocks = [
           }
         });
       });
+    });
+
+    // Reset to top handler (called on brand logo click)
+    window.addEventListener('rhsp:reset-to-top', () => {
+      setPanelActive('plan');
+      if (cubeAssembly) {
+        cubeAssembly.style.transition = 'none';
+        cubeAssembly.style.transform = `rotateX(${pillarAngles.intro.x}deg) rotateY(${pillarAngles.intro.y}deg)`;
+        requestAnimationFrame(() => {
+          if (cubeAssembly) cubeAssembly.style.transition = '';
+        });
+      }
+      if (introHeader) {
+        introHeader.style.opacity = '1';
+        introHeader.style.transform = 'translateX(-50%) translateY(0px)';
+        introHeader.style.visibility = 'visible';
+        introHeader.style.pointerEvents = 'auto';
+      }
+      if (scrollCue) {
+        scrollCue.style.opacity = '1';
+        scrollCue.style.visibility = 'visible';
+        scrollCue.style.pointerEvents = 'auto';
+      }
+      if (cubeCol) {
+        const introLift = clamp(44, Math.round(window.innerHeight * 0.08), 72);
+        cubeCol.style.opacity = '1';
+        cubeCol.style.transform = `translateX(${centerOffset}px) translateY(${introLift}px) scale(1.08)`;
+      }
+      if (contentCol) {
+        contentCol.style.opacity = '0';
+        contentCol.style.visibility = 'hidden';
+        contentCol.style.pointerEvents = 'none';
+      }
+      story.invalidate();
     });
   }
 

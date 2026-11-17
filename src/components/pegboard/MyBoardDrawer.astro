@@ -14,50 +14,83 @@ const contactEmail = siteConfig.contact.email;
     aria-labelledby="my-board-heading"
     aria-modal="true"
   >
+    <!-- Drawer Header -->
     <div class="drawer-header">
       <div class="drawer-title-group">
         <span class="drawer-eyebrow">SAVED TOPICS</span>
-        <h2 id="my-board-heading" class="drawer-heading">Your pinned topics</h2>
+        <div class="drawer-heading-row">
+          <h2 id="my-board-heading" class="drawer-heading">Your pinned topics</h2>
+          <span id="drawer-pins-count" class="drawer-count-badge" aria-label="0 pinned topics">0</span>
+        </div>
       </div>
       <button
         type="button"
         id="my-board-close-btn"
         class="drawer-close-btn"
-        aria-label="Close my board drawer"
+        aria-label="Close saved topics drawer"
       >
         <Icon name="x" size={18} />
       </button>
     </div>
 
-    <!-- Pinned tiles list / Empty state -->
+    <!-- Pinned topics list / Empty state -->
     <div class="drawer-content">
+      <!-- Empty State -->
       <div id="pinned-empty-state" class="pinned-empty-state">
-        <div class="empty-icon-circle" aria-hidden="true">
-          <Icon name="bookmark" size={24} />
+        <div class="empty-illustration" aria-hidden="true">
+          <svg width="88" height="88" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="12" y="12" width="64" height="64" rx="16" fill="var(--pb-tile, #f8fafc)" stroke="var(--pb-line, #e2e8f0)" stroke-width="2" stroke-dasharray="4 4"/>
+            <!-- Grid holes -->
+            <circle cx="28" cy="28" r="4" fill="var(--pb-line, #cbd5e1)"/>
+            <circle cx="60" cy="28" r="4" fill="var(--pb-line, #cbd5e1)"/>
+            <circle cx="28" cy="60" r="4" fill="var(--pb-line, #cbd5e1)"/>
+            <circle cx="60" cy="60" r="4" fill="var(--pb-line, #cbd5e1)"/>
+            <!-- Target socket hole with dashed accent ring -->
+            <circle cx="44" cy="44" r="10" stroke="var(--pb-accent, #F7941D)" stroke-width="2" stroke-dasharray="3 3" fill="var(--pb-accent-wash, rgba(247,148,29,0.08))"/>
+            <circle cx="44" cy="44" r="4" fill="var(--pb-accent, #F7941D)" opacity="0.45"/>
+            <!-- Floating square peg ready to dock -->
+            <g transform="translate(48, 14) rotate(15)">
+              <rect x="0" y="0" width="16" height="16" rx="4" fill="url(#empty-peg-grad)" stroke="#EE4B2B" stroke-width="1.5"/>
+              <rect x="4" y="4" width="8" height="8" rx="2" fill="#FFFFFF" opacity="0.85"/>
+            </g>
+            <defs>
+              <linearGradient id="empty-peg-grad" x1="0" y1="0" x2="16" y2="16" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#F7941D"/>
+                <stop offset="1" stop-color="#EE4B2B"/>
+              </linearGradient>
+            </defs>
+          </svg>
         </div>
-        <p class="empty-text">Pin a few tiles and they will appear here.</p>
-        <p class="empty-sub">Explore the board, pin what matters to your roadmap, and discuss your priorities with our team.</p>
+        <p class="empty-text">Pin topics to build your board,</p>
+        <p class="empty-sub">and we'll tailor a strategic discussion around your chosen directions.</p>
+        <button type="button" id="empty-explore-btn" class="empty-explore-btn">
+          Explore topics
+        </button>
       </div>
 
-      <ul id="pinned-tiles-list" class="pinned-tiles-list" aria-label="Pinned board tiles">
+      <!-- Cards List -->
+      <ul id="pinned-tiles-list" class="pinned-tiles-list" aria-label="Pinned board topics">
         <!-- Rendered dynamically by client script -->
       </ul>
     </div>
 
-    <!-- Drawer Footer: Discuss my board + Email copy + Reset board -->
+    <!-- Drawer Sticky Footer -->
     <div class="drawer-footer">
       <div class="drawer-actions-col">
+        <!-- Primary action: Discuss my board -->
         <a
           id="discuss-board-btn"
-          href={`mailto:${contactEmail}?subject=PEG%20Board%3A%20my%20pinned%20topics`}
+          href={`mailto:${contactEmail}?subject=Discussing%20my%20RHSP%20board`}
           class="btn drawer-discuss-btn"
-          data-track="peg_outbound"
-          data-track-target="discuss_my_board"
+          data-track="peg_discuss_click"
+          aria-disabled="true"
+          title="Pin at least one topic to discuss"
         >
           <Icon name="mail" size={16} />
           <span>Discuss my board</span>
         </a>
 
+        <!-- Secondary row: Direct email with copy -->
         <div class="email-fallback-row">
           <span class="email-label">Or email us directly:</span>
           <div class="email-copy-box">
@@ -71,22 +104,29 @@ const contactEmail = siteConfig.contact.email;
               aria-label="Copy email address to clipboard"
             >
               <Icon name="copy" size={14} />
-              <span id="copy-email-feedback">Copy</span>
+              <span id="copy-email-feedback" aria-live="polite">Copy</span>
             </button>
           </div>
         </div>
 
+        <!-- Secondary action: Reset board with inline confirmation -->
         <div class="drawer-reset-row">
           <button
             type="button"
             class="drawer-reset-board-btn"
             id="drawer-reset-board-btn"
-            data-track="peg_interaction"
-            data-track-action="reset_board"
-            title="Reset board layout"
+            data-track="peg_reset"
           >
             Reset board
           </button>
+
+          <div id="drawer-reset-confirm" class="drawer-reset-confirm" style="display: none;" role="alert">
+            <span class="confirm-prompt-text">Remove all pinned topics?</span>
+            <div class="confirm-actions">
+              <button type="button" id="reset-confirm-yes" class="btn-confirm-yes">Confirm</button>
+              <button type="button" id="reset-confirm-cancel" class="btn-confirm-cancel">Cancel</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -102,7 +142,8 @@ const contactEmail = siteConfig.contact.email;
     justify-content: flex-end;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s;
+    transition: opacity 0.25s ease, visibility 0.25s;
+    font-family: var(--font-sans, 'Raleway', system-ui, sans-serif);
   }
 
   .my-board-drawer-overlay.is-open {
@@ -113,9 +154,9 @@ const contactEmail = siteConfig.contact.email;
   .my-board-backdrop {
     position: absolute;
     inset: 0;
-    background-color: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(3px);
-    -webkit-backdrop-filter: blur(3px);
+    background-color: rgba(10, 10, 12, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
   }
 
   .my-board-panel {
@@ -124,20 +165,21 @@ const contactEmail = siteConfig.contact.email;
     max-width: 440px;
     height: 100%;
     background-color: var(--pb-tile-raised, #FFFFFF);
-    box-shadow: -8px 0 32px rgba(0, 0, 0, 0.35);
+    box-shadow: -8px 0 36px rgba(0, 0, 0, 0.35);
     display: flex;
     flex-direction: column;
     transform: translateX(100%);
     transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     z-index: 2;
-    border-left: 1px solid var(--pb-line);
+    border-left: 1px solid var(--pb-line, #E2E8F0);
   }
 
   .my-board-drawer-overlay.is-open .my-board-panel {
     transform: translateX(0);
   }
 
-  @media (max-width: 639px) {
+  /* Bottom sheet on mobile (640px and below) */
+  @media (max-width: 640px) {
     .my-board-drawer-overlay {
       align-items: flex-end;
     }
@@ -156,34 +198,59 @@ const contactEmail = siteConfig.contact.email;
     }
   }
 
+  /* Header */
   .drawer-header {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
-    padding: 1.5rem 1.75rem 1.25rem;
-    border-bottom: 1px solid var(--pb-line);
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--pb-line, #E2E8F0);
+    background-color: var(--pb-tile-raised, #FFFFFF);
+    flex-shrink: 0;
   }
 
   .drawer-title-group {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.2rem;
   }
 
   .drawer-eyebrow {
     font-size: 11px;
     font-weight: 700;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     color: var(--pb-accent, #F7941D);
+    text-transform: uppercase;
+  }
+
+  .drawer-heading-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
   }
 
   .drawer-heading {
-    font-size: 1.35rem;
+    font-size: 1.25rem;
     font-weight: 700;
     line-height: 1.2;
     margin: 0;
-    color: var(--pb-text);
+    color: var(--pb-text, #0f172a);
     letter-spacing: -0.01em;
+  }
+
+  .drawer-count-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #F7941D, #EE4B2B);
+    color: #FFFFFF;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
   }
 
   .drawer-close-btn {
@@ -192,146 +259,246 @@ const contactEmail = siteConfig.contact.email;
     justify-content: center;
     width: 44px;
     height: 44px;
-    border-radius: 8px;
-    border: 1px solid var(--pb-line);
+    border-radius: 10px;
+    border: 1px solid var(--pb-line, #E2E8F0);
     background: transparent;
-    color: var(--pb-text-2);
+    color: var(--pb-text-2, #64748b);
     cursor: pointer;
-    transition: background-color 0.15s ease, color 0.15s ease;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
   }
 
   .drawer-close-btn:hover {
-    color: var(--pb-text);
-    background-color: var(--pb-accent-wash);
-    border-color: var(--pb-accent);
+    color: var(--pb-text, #0f172a);
+    background-color: var(--pb-accent-wash, rgba(247, 148, 29, 0.08));
+    border-color: var(--pb-accent, #F7941D);
   }
 
   .drawer-close-btn:focus-visible {
-    outline: 2px solid var(--pb-focus-ring);
+    outline: 2px solid var(--pb-accent, #F7941D);
+    outline-offset: 2px;
   }
 
+  /* Content */
   .drawer-content {
     flex: 1;
     overflow-y: auto;
-    padding: 1.5rem 1.75rem;
+    padding: 1.25rem 1.5rem;
   }
 
+  /* Empty State */
   .pinned-empty-state {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    height: 100%;
-    min-height: 220px;
-    color: var(--pb-text-2);
+    padding: 2.5rem 1rem;
+    min-height: 280px;
   }
 
-  .empty-icon-circle {
-    display: grid;
-    place-items: center;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background-color: var(--pb-accent-wash);
-    color: var(--pb-accent);
-    margin-bottom: 1rem;
-    border: 1px solid var(--pb-line);
+  .empty-illustration {
+    margin-bottom: 1.25rem;
   }
 
   .empty-text {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--pb-text);
-    margin: 0 0 0.4rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--pb-text, #0f172a);
+    margin: 0 0 0.35rem;
+    letter-spacing: -0.01em;
   }
 
   .empty-sub {
-    font-size: 0.8125rem;
+    font-size: 0.85rem;
     line-height: 1.5;
-    color: var(--pb-text-2);
-    margin: 0;
-    max-width: 28ch;
+    color: var(--pb-text-2, #64748b);
+    margin: 0 0 1.5rem;
+    max-width: 32ch;
   }
 
+  .empty-explore-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0.5rem 1.25rem;
+    border-radius: 999px;
+    border: 1px solid var(--pb-line, #E2E8F0);
+    background: var(--pb-tile, #f8fafc);
+    color: var(--pb-text, #0f172a);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .empty-explore-btn:hover {
+    border-color: var(--pb-accent, #F7941D);
+    background-color: var(--pb-accent-wash, rgba(247, 148, 29, 0.08));
+    color: var(--pb-accent, #F7941D);
+  }
+
+  .empty-explore-btn:focus-visible {
+    outline: 2px solid var(--pb-accent, #F7941D);
+    outline-offset: 2px;
+  }
+
+  /* Pinned Cards List */
   .pinned-tiles-list {
     list-style: none;
     margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.85rem;
   }
 
-  .pinned-item-row {
+  :global(.pinned-card) {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.85rem 1rem;
-    border: 1px solid var(--pb-line);
-    border-radius: 12px;
-    background-color: var(--pb-tile);
-    gap: 0.75rem;
+    align-items: flex-start;
+    padding: 1rem;
+    border-radius: 16px;
+    background-color: var(--pb-tile, #F8FAFC);
+    border: 1px solid var(--pb-line, #E2E8F0);
+    gap: 0.85rem;
+    position: relative;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, opacity 0.18s ease;
+    opacity: 1;
   }
 
-  .pinned-item-info {
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-    flex: 1;
+  :global(.pinned-card:hover) {
+    border-color: var(--pb-line-strong, #cbd5e1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
   }
 
-  .pinned-item-title {
-    font-size: 0.9375rem;
-    font-weight: 600;
-    color: var(--pb-text);
-    text-decoration: none;
+  :global(.pinned-card.is-removing) {
+    opacity: 0;
+    transform: translateX(16px);
   }
 
-  .pinned-item-title:hover {
-    color: var(--pb-accent);
-    text-decoration: underline;
+  @media (prefers-reduced-motion: reduce) {
+    :global(.pinned-card),
+    :global(.pinned-card.is-removing) {
+      transition: none !important;
+      transform: none !important;
+    }
   }
 
-  .pinned-item-tag {
-    font-size: 10.5px;
-    color: var(--pb-text-3);
-  }
-
-  .pinned-remove-btn {
+  :global(.pinned-card-icon-badge) {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 44px;
-    min-height: 44px;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: var(--pb-accent-wash, rgba(247, 148, 29, 0.08));
+    color: var(--pb-accent, #F7941D);
+    border: 1px solid var(--pb-line, #E2E8F0);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  :global(.pinned-card-body) {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    flex: 1;
+    min-width: 0;
+  }
+
+  :global(.pinned-card-meta) {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  :global(.pinned-type-chip) {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: var(--pb-accent-wash, rgba(247, 148, 29, 0.08));
+    color: var(--pb-accent, #F7941D);
+    border: 1px solid var(--pb-line, #E2E8F0);
+    line-height: 1.3;
+  }
+
+  :global(.pinned-card-title) {
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--pb-text, #0f172a);
+    text-decoration: none;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: color 0.15s ease;
+  }
+
+  :global(.pinned-card-title:hover) {
+    color: var(--pb-accent, #F7941D);
+    text-decoration: underline;
+  }
+
+  :global(.pinned-card-title:focus-visible) {
+    outline: 2px solid var(--pb-accent, #F7941D);
+    outline-offset: 2px;
+  }
+
+  :global(.pinned-card-desc) {
+    font-size: 0.8rem;
+    line-height: 1.45;
+    color: var(--pb-text-2, #64748b);
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  :global(.pinned-remove-btn) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
     border: none;
     background: transparent;
-    color: var(--pb-text-3);
+    color: var(--pb-text-3, #94a3b8);
     cursor: pointer;
-    border-radius: 6px;
-    font-size: 14px;
+    border-radius: 8px;
+    flex-shrink: 0;
+    margin: -6px -6px 0 0;
     transition: color 0.15s ease, background-color 0.15s ease;
   }
 
-  .pinned-remove-btn:hover {
-    color: var(--pb-accent);
-    background-color: var(--pb-accent-wash);
+  :global(.pinned-remove-btn:hover) {
+    color: #EE4B2B;
+    background-color: rgba(238, 75, 43, 0.08);
   }
 
-  .pinned-remove-btn:focus-visible {
-    outline: 2px solid var(--pb-focus-ring);
+  :global(.pinned-remove-btn:focus-visible) {
+    outline: 2px solid var(--pb-accent, #F7941D);
+    outline-offset: 2px;
   }
 
+  /* Sticky Footer */
   .drawer-footer {
-    padding: 1.25rem 1.75rem;
-    border-top: 1px solid var(--pb-line);
-    background-color: var(--pb-tile-raised);
+    padding: 1.25rem 1.5rem;
+    border-top: 1px solid var(--pb-line, #E2E8F0);
+    background-color: var(--pb-tile-raised, #FFFFFF);
+    flex-shrink: 0;
   }
 
   .drawer-actions-col {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.9rem;
   }
 
   .drawer-discuss-btn {
@@ -345,110 +512,194 @@ const contactEmail = siteConfig.contact.email;
     font-size: 0.9375rem;
     font-weight: 700;
     border-radius: 999px;
-    background-color: var(--pb-accent, #F7941D);
-    color: var(--pb-on-accent, #14110F);
-    border: 1px solid var(--pb-accent-lo, #B86200);
+    background: linear-gradient(135deg, #F7941D 0%, #EE4B2B 100%);
+    color: #FFFFFF;
+    border: none;
     text-decoration: none;
-    box-shadow: 0 4px 14px var(--pb-glow);
-    transition: background-color 0.15s ease, transform 0.15s ease;
+    box-shadow: 0 4px 14px rgba(247, 148, 29, 0.35);
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
   }
 
-  .drawer-discuss-btn:hover {
-    background-color: var(--pb-accent-hi, #FFAE4A);
+  .drawer-discuss-btn:hover:not([aria-disabled="true"]) {
     transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(247, 148, 29, 0.45);
+  }
+
+  .drawer-discuss-btn[aria-disabled="true"] {
+    opacity: 0.55;
+    cursor: not-allowed;
+    box-shadow: none;
   }
 
   .drawer-discuss-btn:focus-visible {
-    outline: 2px solid var(--pb-focus-ring);
+    outline: 2px solid var(--pb-accent, #F7941D);
     outline-offset: 2px;
   }
 
   .email-fallback-row {
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
+    gap: 0.3rem;
   }
 
   .email-label {
     font-size: 11px;
-    color: var(--pb-text-3);
+    font-weight: 600;
+    color: var(--pb-text-3, #94a3b8);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
   .email-copy-box {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.3rem 0.5rem 0.3rem 0.85rem;
-    border-radius: 8px;
-    background-color: var(--pb-tile);
-    border: 1px solid var(--pb-line);
+    padding: 0.25rem 0.4rem 0.25rem 0.85rem;
+    border-radius: 10px;
+    background-color: var(--pb-tile, #F8FAFC);
+    border: 1px solid var(--pb-line, #E2E8F0);
     gap: 0.5rem;
   }
 
   .selectable-email {
-    font-family: var(--font-sans);
     font-size: 12px;
-    color: var(--pb-text-2);
+    color: var(--pb-text-2, #64748b);
     user-select: all;
     -webkit-user-select: all;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    font-family: var(--font-mono, monospace);
   }
 
   .copy-email-btn {
     display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
-    min-height: 44px;
+    justify-content: center;
+    gap: 0.35rem;
+    min-height: 38px;
+    min-width: 44px;
     padding: 0.35rem 0.75rem;
-    border: 1px solid var(--pb-line);
-    border-radius: 6px;
+    border: 1px solid var(--pb-line, #E2E8F0);
+    border-radius: 8px;
     background: transparent;
-    color: var(--pb-text);
-    font-size: 11.5px;
+    color: var(--pb-text, #0f172a);
+    font-size: 12px;
     font-weight: 600;
     cursor: pointer;
     flex-shrink: 0;
-    transition: border-color 0.15s ease, color 0.15s ease;
+    transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
   }
 
   .copy-email-btn:hover {
-    border-color: var(--pb-accent);
-    color: var(--pb-accent);
+    border-color: var(--pb-accent, #F7941D);
+    color: var(--pb-accent, #F7941D);
+    background-color: var(--pb-accent-wash, rgba(247, 148, 29, 0.08));
   }
 
   .copy-email-btn:focus-visible {
-    outline: 2px solid var(--pb-focus-ring);
+    outline: 2px solid var(--pb-accent, #F7941D);
+    outline-offset: 2px;
   }
 
   .drawer-reset-row {
     display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
-    margin-top: 0.5rem;
     padding-top: 0.5rem;
-    border-top: 1px dashed var(--pb-line);
+    border-top: 1px dashed var(--pb-line, #E2E8F0);
+    min-height: 44px;
   }
 
   .drawer-reset-board-btn {
     background: transparent;
     border: none;
-    color: var(--pb-text-3);
-    font-size: 11.5px;
+    color: var(--pb-text-3, #94a3b8);
+    font-size: 12px;
+    font-weight: 500;
     text-decoration: underline;
     cursor: pointer;
-    padding: 0.25rem 0.5rem;
     min-height: 44px;
+    padding: 0 0.75rem;
     display: inline-flex;
     align-items: center;
     transition: color 0.15s ease;
   }
 
   .drawer-reset-board-btn:hover {
-    color: var(--pb-text);
+    color: #EE4B2B;
   }
 
   .drawer-reset-board-btn:focus-visible {
-    outline: 2px solid var(--pb-focus-ring);
+    outline: 2px solid var(--pb-accent, #F7941D);
+    outline-offset: 2px;
+  }
+
+  .drawer-reset-confirm {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.4rem 0.6rem;
+    border-radius: 8px;
+    background-color: var(--pb-accent-wash, rgba(247, 148, 29, 0.08));
+    border: 1px solid var(--pb-line, #E2E8F0);
+    gap: 0.5rem;
+  }
+
+  .confirm-prompt-text {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--pb-text, #0f172a);
+  }
+
+  .confirm-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .btn-confirm-yes {
+    background-color: #EE4B2B;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 6px;
+    padding: 0.3rem 0.6rem;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    min-height: 32px;
+    transition: opacity 0.15s ease;
+  }
+
+  .btn-confirm-yes:hover {
+    opacity: 0.9;
+  }
+
+  .btn-confirm-yes:focus-visible {
+    outline: 2px solid #EE4B2B;
+  }
+
+  .btn-confirm-cancel {
+    background: transparent;
+    color: var(--pb-text-2, #64748b);
+    border: 1px solid var(--pb-line, #E2E8F0);
+    border-radius: 6px;
+    padding: 0.3rem 0.6rem;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    min-height: 32px;
+    transition: color 0.15s ease;
+  }
+
+  .btn-confirm-cancel:hover {
+    color: var(--pb-text, #0f172a);
+  }
+
+  .btn-confirm-cancel:focus-visible {
+    outline: 2px solid var(--pb-accent, #F7941D);
   }
 </style>

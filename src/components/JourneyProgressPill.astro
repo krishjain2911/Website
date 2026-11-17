@@ -3,21 +3,19 @@ import { siteConfig } from '../config/site';
 
 interface Props {
   targetPrefix?: string; // 'journey-stop' for homepage, 'stage-0' for solutions
-  marker?: 'dot' | 'peg'; // 'dot' on homepage, 'peg' (square logo mark cube) on solutions
   class?: string;
 }
 
-const { targetPrefix = 'stage-0', marker = 'peg', class: className = '' } = Astro.props;
+const { targetPrefix = 'stage-0', class: className = '' } = Astro.props;
 const steps = siteConfig.approach.steps;
 ---
 
 <nav
-  class={`journey-progress-rail ${marker === 'peg' ? 'marker-peg' : 'marker-dot'} ${className}`}
+  class={`journey-progress-rail ${className}`}
   id="journey-progress-rail"
   aria-label="Journey stages progress"
-  data-marker={marker}
 >
-  <div class="rail-indicator" id="rail-indicator-text">STAGE 1 / 6</div>
+  <div class="rail-indicator" id="rail-indicator-text" aria-live="polite">STAGE 1 / 6</div>
   <div class="rail-dots-track">
     <div class="rail-connecting-line" aria-hidden="true"></div>
     {steps.map((step, idx) => {
@@ -30,10 +28,9 @@ const steps = siteConfig.approach.steps;
           data-stage={idx}
           data-target={targetId}
           title={`Stage 0${step.number}: ${step.title}`}
-          aria-label={`Stage 0${step.number}: ${step.title}`}
+          aria-label={`Stage ${step.number}: ${step.title}`}
           aria-current={idx === 0 ? 'step' : undefined}
         >
-          <span class="rail-dot-num" aria-hidden="true">{step.number}</span>
           <span class="rail-marker-box">
             <span class="dot-inner dot-passed" style={`--dot-color: ${step.color};`}></span>
             <img
@@ -41,7 +38,7 @@ const steps = siteConfig.approach.steps;
               srcset="/brand/pill-square-64.webp 1x, /brand/pill-square-128.webp 2x"
               alt=""
               aria-hidden="true"
-              class="peg-marker-cube rail-cube"
+              class="rail-cube"
               width="20"
               height="20"
               decoding="async"
@@ -62,7 +59,7 @@ const steps = siteConfig.approach.steps;
     z-index: 50;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Keeps STAGE n / 6 pill centered above */
+    align-items: center; /* Centers STAGE n / 6 chip directly above the pill */
     gap: 0.65rem;
     opacity: 0;
     pointer-events: none;
@@ -96,82 +93,91 @@ const steps = siteConfig.approach.steps;
     text-align: center;
   }
 
-  /* Rail dots track pill container */
+  :global(html[data-theme="dark"]) .rail-indicator {
+    background-color: var(--color-surface, #1A1B20);
+    border-color: rgba(255, 255, 255, 0.12);
+    color: var(--color-text-secondary, #A0A5B2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  }
+
+  /* Narrow rounded pill with equal inner padding */
   .rail-dots-track {
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
-    padding: 0.6rem 0.5rem; /* Inner padding prevents any border clipping */
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.55rem 0.45rem;
     background-color: var(--color-surface);
     border: 1px solid var(--color-border);
-    border-radius: 20px;
+    border-radius: var(--radius-pill, 9999px);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   }
 
-  /* Connecting vertical line centered on the marker column (Col 2) */
+  :global(html[data-theme="dark"]) .rail-dots-track {
+    background-color: var(--color-surface, #1A1B20);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  }
+
+  /* Connecting vertical line centered on single vertical axis */
   .rail-connecting-line {
     position: absolute;
-    right: calc(0.5rem + 13px); /* 0.5rem track padding + half of 26px marker box */
-    top: calc(0.6rem + 13px);
-    bottom: calc(0.6rem + 13px);
+    left: 50%;
+    transform: translateX(-50%);
+    top: calc(0.55rem + 12px);
+    bottom: calc(0.55rem + 12px);
     width: 2px;
-    transform: translateX(50%);
     background: var(--color-border);
     z-index: 1;
     border-radius: 1px;
     pointer-events: none;
   }
 
-  /* Fixed-width CSS Grid (Label Col: 16px, Marker Col: 26px) */
+  :global(html[data-theme="dark"]) .rail-connecting-line {
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  /* Marker hit area: at least 24x24px, centered on column */
   .rail-dot {
     position: relative;
     z-index: 2;
-    display: grid;
-    grid-template-columns: 16px 26px; /* Fixed width: 16px label, 26px marker */
-    column-gap: 6px;
+    display: flex;
     align-items: center;
-    justify-items: center;
-    padding: 2px 4px;
-    min-height: 32px;
-    border-radius: 8px;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
     text-decoration: none;
     outline: none;
     cursor: pointer;
     transition: background-color 0.2s ease;
   }
 
+  .rail-dot::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+  }
+
   .rail-dot:hover {
     background-color: var(--color-surface-hover, rgba(0, 0, 0, 0.04));
+  }
+
+  :global(html[data-theme="dark"]) .rail-dot:hover {
+    background-color: rgba(255, 255, 255, 0.08);
   }
 
   .rail-dot:focus-visible {
     box-shadow: 0 0 0 2px #F7941D;
   }
 
-  /* Label Column (Numbers 1-6) - safely contained inside grid, never overlaps pill border */
-  .rail-dot-num {
-    font-family: var(--font-sans);
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--color-text-muted);
-    justify-self: end;
-    text-align: right;
-    line-height: 1;
-    transition: color 0.2s ease;
-    user-select: none;
-  }
-
-  .rail-dot.is-active .rail-dot-num,
-  .rail-dot.is-passed .rail-dot-num {
-    color: var(--color-text-primary);
-  }
-
-  /* Fixed-size Marker Box */
+  /* Fixed-size Marker Box (24x24px): perfectly centered */
   .rail-marker-box {
     position: relative;
-    width: 26px;
-    height: 26px;
+    width: 24px;
+    height: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -190,7 +196,7 @@ const steps = siteConfig.approach.steps;
 
   .rail-dot:hover .dot-inner {
     opacity: 0.85;
-    transform: scale(1.2);
+    transform: scale(1.25);
   }
 
   /* Upcoming stages: pale grey dot */
@@ -198,11 +204,12 @@ const steps = siteConfig.approach.steps;
     background-color: #cbd5e1;
     opacity: 0.7;
   }
-  :global(:root[data-theme="dark"]) .rail-dot.is-upcoming .dot-passed {
+
+  :global(html[data-theme="dark"]) .rail-dot.is-upcoming .dot-passed {
     background-color: rgba(255, 255, 255, 0.25);
   }
 
-  /* Passed stages: filled dot with stage color */
+  /* Passed stages: filled dot with stage color and subtle glow */
   .rail-dot.is-passed .dot-inner {
     width: 8px;
     height: 8px;
@@ -262,12 +269,31 @@ const steps = siteConfig.approach.steps;
       .map((num) => document.getElementById(`stage-0${num}`))
       .filter((el): el is HTMLElement => Boolean(el));
 
-    if (stageSections.length === 6) {
-      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      // Click handler
+    function setActiveStage(activeIdx: number) {
+      if (railText) {
+        railText.textContent = `STAGE ${activeIdx + 1} / 6`;
+      }
       dots.forEach((dot, idx) => {
-        dot.addEventListener('click', (e) => {
+        dot.classList.remove('is-active', 'is-current', 'is-passed', 'is-upcoming');
+        if (idx < activeIdx) {
+          dot.classList.add('is-passed');
+          dot.removeAttribute('aria-current');
+        } else if (idx === activeIdx) {
+          dot.classList.add('is-active', 'is-current');
+          dot.setAttribute('aria-current', 'step');
+        } else {
+          dot.classList.add('is-upcoming');
+          dot.removeAttribute('aria-current');
+        }
+      });
+    }
+
+    if (stageSections.length === 6) {
+      // SOLUTION PAGE MODE
+      dots.forEach((dot, idx) => {
+        dot.onclick = (e) => {
           e.preventDefault();
           const target = stageSections[idx];
           if (target) {
@@ -276,15 +302,13 @@ const steps = siteConfig.approach.steps;
               block: 'start'
             });
           }
-        });
+        };
       });
 
-      // Update pill visibility and current stage
       const updateSolutionPill = () => {
         const firstRect = stageSections[0].getBoundingClientRect();
         const lastRect = stageSections[5].getBoundingClientRect();
 
-        // Visible only while within stage panels: hidden above stage 1 and below stage 6
         const inView = firstRect.top <= window.innerHeight * 0.6 && lastRect.bottom >= window.innerHeight * 0.2;
         rail.classList.toggle('is-visible', inView && window.innerWidth >= 900);
 
@@ -293,29 +317,11 @@ const steps = siteConfig.approach.steps;
         let activeIdx = 0;
         stageSections.forEach((section, idx) => {
           const rect = section.getBoundingClientRect();
-          // Header is ~80px, active when upper third
           if (rect.top <= window.innerHeight * 0.45) {
             activeIdx = idx;
           }
         });
-
-        if (railText) {
-          railText.textContent = `STAGE ${activeIdx + 1} / 6`;
-        }
-
-        dots.forEach((dot, idx) => {
-          dot.classList.remove('is-active', 'is-current', 'is-passed', 'is-upcoming');
-          if (idx < activeIdx) {
-            dot.classList.add('is-passed');
-            dot.removeAttribute('aria-current');
-          } else if (idx === activeIdx) {
-            dot.classList.add('is-active', 'is-current');
-            dot.setAttribute('aria-current', 'step');
-          } else {
-            dot.classList.add('is-upcoming');
-            dot.removeAttribute('aria-current');
-          }
-        });
+        setActiveStage(activeIdx);
       };
 
       window.addEventListener('scroll', updateSolutionPill, { passive: true });

@@ -1,6 +1,7 @@
 ---
 import { siteConfig } from '../config/site';
 import Icon from './Icon.astro';
+import JourneyProgressPill from './JourneyProgressPill.astro';
 
 const { approach } = siteConfig;
 const steps = approach.steps;
@@ -8,9 +9,6 @@ const headlineWords = approach.headline.split(' ');
 ---
 
 <section id="approach" class="approach-section" aria-labelledby="approach-heading">
-  <!-- Accessible Skip Link to bypass pinned journey section -->
-  <a href="#solutions" class="skip-journey-link">Skip journey to solutions</a>
-
   <!-- Drifting Background Geometry (Faint depth <= 0.08 opacity) -->
   <div class="journey-bg-parallax" aria-hidden="true">
     <div class="parallax-layer layer-aperture" id="bg-parallax-aperture"></div>
@@ -18,43 +16,12 @@ const headlineWords = approach.headline.split(' ');
     <div class="parallax-layer layer-thin-grid"></div>
   </div>
 
-  <!-- Journey Progress Rail (Fixed on desktop right viewport margin) -->
-  <nav class="journey-progress-rail" id="journey-progress-rail" aria-label="Journey stages progress">
-    <div class="rail-indicator" id="rail-indicator-text">STAGE 1 / 6</div>
-    <div class="rail-dots-track">
-      <div class="rail-connecting-line" aria-hidden="true"></div>
-      {steps.map((step, idx) => (
-        <a
-          href={`#journey-stop-${idx}`}
-          class={`rail-dot ${idx === 0 ? 'is-active is-current' : 'is-upcoming'}`}
-          aria-current={idx === 0 ? 'step' : undefined}
-          id={`rail-dot-${idx}`}
-          data-stage={idx}
-          aria-label={`Stage ${step.number}: ${step.title}`}
-        >
-          <span class="rail-dot-num" aria-hidden="true">{step.number}</span>
-          <span class="rail-marker-box">
-            <span class="dot-inner dot-passed" style={`--dot-color: ${step.color};`}></span>
-            <img
-              src="/brand/pill-square-64.webp"
-              srcset="/brand/pill-square-64.webp 1x, /brand/pill-square-128.webp 2x"
-              alt=""
-              aria-hidden="true"
-              class="rail-cube"
-              width="20"
-              height="20"
-              decoding="async"
-            />
-          </span>
-        </a>
-      ))}
-    </div>
-  </nav>
-
   <div class="container approach-container">
     <!-- Header (Centred with <= 96px vertical gap from Hero) -->
     <div class="approach-header">
       <span class="eyebrow">{approach.badge}</span>
+      <!-- Accessible Skip Link right before journey section's heading -->
+      <a href="#solutions" class="skip-link skip-journey-link" id="skip-journey-link">Skip journey to solutions</a>
       <h2 id="approach-heading" class="approach-title staged-word-heading">
         {headlineWords.map((word, wIdx) => (
           <span class="staged-word" style={`--word-idx: ${wIdx};`}>{word}{' '}</span>
@@ -62,6 +29,9 @@ const headlineWords = approach.headline.split(' ');
       </h2>
       <p class="approach-subline">{approach.subline}</p>
     </div>
+
+    <!-- Shared Journey Progress Rail (Fixed on desktop right viewport margin) -->
+    <JourneyProgressPill targetPrefix="journey-stop" />
 
     <!-- Vertical Journey Stage Container -->
     <div class="approach-journey-stage" id="approach-journey-stage">
@@ -358,181 +328,6 @@ const headlineWords = approach.headline.split(' ');
       linear-gradient(to right, rgba(140, 150, 165, 0.03) 1px, transparent 1px),
       linear-gradient(to bottom, rgba(140, 150, 165, 0.03) 1px, transparent 1px);
     opacity: 0.04;
-  }
-
-  /* Fixed Journey Progress Rail (Desktop right edge) */
-  .journey-progress-rail {
-    position: fixed;
-    right: 1.75rem;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 50;
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Keeps STAGE n / 6 pill centered above */
-    gap: 0.65rem;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 150ms ease;
-  }
-
-  .journey-progress-rail.is-visible {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  .rail-indicator {
-    font-family: var(--font-sans);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    color: var(--color-text-muted);
-    text-transform: uppercase;
-    background-color: var(--color-surface);
-    padding: 0.25rem 0.65rem;
-    border-radius: var(--radius-pill, 9999px);
-    border: 1px solid var(--color-border);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    white-space: nowrap;
-    text-align: center;
-  }
-
-  /* Rail dots track pill container */
-  .rail-dots-track {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-    padding: 0.6rem 0.5rem; /* Inner padding prevents any border clipping */
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 20px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  }
-
-  /* Connecting vertical line centered on the marker column (Col 2) */
-  .rail-connecting-line {
-    position: absolute;
-    right: calc(0.5rem + 13px); /* 0.5rem track padding + half of 26px marker box */
-    top: calc(0.6rem + 13px);
-    bottom: calc(0.6rem + 13px);
-    width: 2px;
-    transform: translateX(50%);
-    background: var(--color-border);
-    z-index: 1;
-    border-radius: 1px;
-    pointer-events: none;
-  }
-
-  /* Fixed-width CSS Grid (Label Col: 16px, Marker Col: 26px) */
-  .rail-dot {
-    position: relative;
-    z-index: 2;
-    display: grid;
-    grid-template-columns: 16px 26px; /* Fixed width: 16px label, 26px marker */
-    column-gap: 6px;
-    align-items: center;
-    justify-items: center;
-    padding: 2px 4px;
-    min-height: 32px;
-    border-radius: 8px;
-    text-decoration: none;
-    outline: none;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-
-  .rail-dot:hover {
-    background-color: var(--color-surface-hover, rgba(0, 0, 0, 0.04));
-  }
-
-  .rail-dot:focus-visible {
-    box-shadow: 0 0 0 2px #F7941D;
-  }
-
-  /* Label Column (Numbers 1-6) - safely contained inside grid, never overlaps pill border */
-  .rail-dot-num {
-    font-family: var(--font-sans);
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--color-text-muted);
-    justify-self: end;
-    text-align: right;
-    line-height: 1;
-    transition: color 0.2s ease;
-    user-select: none;
-  }
-
-  .rail-dot.is-active .rail-dot-num,
-  .rail-dot.is-passed .rail-dot-num {
-    color: var(--color-text-primary);
-  }
-
-  /* Fixed-size Marker Box */
-  .rail-marker-box {
-    position: relative;
-    width: 26px;
-    height: 26px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-
-  /* Dot Marker */
-  .dot-inner {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background-color: var(--color-text-muted);
-    opacity: 0.45;
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .rail-dot:hover .dot-inner {
-    opacity: 0.85;
-    transform: scale(1.2);
-  }
-
-  /* Passed stages: filled dot with stage color */
-  .rail-dot.is-passed .dot-inner {
-    width: 8px;
-    height: 8px;
-    background-color: var(--dot-color, #1E4B8F);
-    opacity: 0.95;
-    box-shadow: 0 0 6px var(--dot-color, #1E4B8F);
-  }
-
-  /* Active stage: 20px RHSP logo cube replaces dot without expanding box */
-  .rail-cube {
-    display: none;
-    width: 20px;
-    height: 20px;
-    object-fit: contain;
-    pointer-events: none;
-    filter: drop-shadow(0 2px 4px rgba(247, 148, 29, 0.45));
-  }
-
-  .rail-dot.is-active .dot-inner {
-    display: none;
-  }
-
-  .rail-dot.is-active .rail-cube {
-    display: block;
-    animation: railCubePop 0.26s cubic-bezier(0.34, 1.4, 0.64, 1);
-  }
-
-  .rail-dot:hover .rail-cube {
-    transform: scale(1.1);
-  }
-
-  @keyframes railCubePop {
-    from { transform: scale(0.6); opacity: 0.4; }
-    to { transform: scale(1); opacity: 1; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .rail-dot.is-active .rail-cube { animation: none; }
   }
 
   /* Centered Header (<= 96px vertical gap from Hero) */
@@ -1008,10 +803,6 @@ const headlineWords = approach.headline.split(' ');
   }
 
   /* Dark mode overrides for contrast & typography */
-  :global(html[data-theme="dark"]) .rail-indicator {
-    color: var(--text-secondary, #A3A3A3) !important;
-  }
-
   :global(html[data-theme="dark"]) .card-detail {
     color: var(--text-secondary, #A3A3A3) !important;
     font-weight: 400 !important;
@@ -1173,10 +964,6 @@ const headlineWords = approach.headline.split(' ');
 
   /* Mobile Layout (< 900px) */
   @media (max-width: 899px) {
-    .journey-progress-rail {
-      display: none !important;
-    }
-
     .approach-header {
       text-align: left;
       margin-bottom: 2.5rem;
@@ -1584,10 +1371,17 @@ const headlineWords = approach.headline.split(' ');
             railText.textContent = `STAGE ${nearestIdx + 1} / 6`;
           }
           railDots.forEach((dot, idx) => {
-            dot.classList.toggle('is-active', idx === nearestIdx);
-            dot.classList.toggle('is-passed', idx < nearestIdx);
-            if (idx === nearestIdx) dot.setAttribute('aria-current', 'step');
-            else dot.removeAttribute('aria-current');
+            dot.classList.remove('is-active', 'is-current', 'is-passed', 'is-upcoming');
+            if (idx < nearestIdx) {
+              dot.classList.add('is-passed');
+              dot.removeAttribute('aria-current');
+            } else if (idx === nearestIdx) {
+              dot.classList.add('is-active', 'is-current');
+              dot.setAttribute('aria-current', 'step');
+            } else {
+              dot.classList.add('is-upcoming');
+              dot.removeAttribute('aria-current');
+            }
           });
         }
       }
@@ -1604,6 +1398,28 @@ const headlineWords = approach.headline.split(' ');
       });
     });
 
+    // Skip journey to solutions handler
+    const skipLink = document.getElementById('skip-journey-link');
+    if (skipLink) {
+      skipLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        const solutionsSection = document.getElementById('solutions');
+        const solutionsHeading = (document.getElementById('solutions-heading') ||
+          solutionsSection?.querySelector('h2')) as HTMLElement | null;
+        if (solutionsSection) {
+          const targetTop = solutionsSection.getBoundingClientRect().top + window.scrollY;
+          window.scrollTo({
+            top: targetTop,
+            behavior: prefersReducedMotion ? 'instant' : 'smooth'
+          });
+          history.pushState(null, '', '#solutions');
+          if (solutionsHeading) {
+            solutionsHeading.focus({ preventScroll: true });
+          }
+        }
+      });
+    }
+
     // IntersectionObserver to fade pill in/out in 150ms strictly within approach journey section
     if (rail && 'IntersectionObserver' in window) {
       const approachObserver = new IntersectionObserver((entries) => {
@@ -1616,6 +1432,40 @@ const headlineWords = approach.headline.split(' ');
       });
       approachObserver.observe(section);
     }
+
+    // Reset to top handler (called on brand logo click)
+    window.addEventListener('rhsp:reset-to-top', () => {
+      currentDistance = 0;
+      if (path && totalPathLength > 0) {
+        path.style.strokeDashoffset = `${totalPathLength}`;
+      }
+      if (cube) {
+        cube.style.opacity = '0';
+        cube.setAttribute('transform', `translate(${startX}, ${startY}) scale(1.0)`);
+      }
+      if (ripple) ripple.style.opacity = '0';
+      stops.forEach((s, idx) => {
+        s.classList.remove('is-active', 'is-passed');
+        s.classList.add('is-upcoming');
+        if (cards[idx]) {
+          cards[idx].style.transform = '';
+        }
+      });
+      if (railText) {
+        railText.textContent = 'STAGE 1 / 6';
+      }
+      railDots.forEach((dot, idx) => {
+        dot.classList.remove('is-active', 'is-current', 'is-passed', 'is-upcoming');
+        if (idx === 0) {
+          dot.classList.add('is-active', 'is-current');
+          dot.setAttribute('aria-current', 'step');
+        } else {
+          dot.classList.add('is-upcoming');
+          dot.removeAttribute('aria-current');
+        }
+      });
+      story.invalidate();
+    });
 
     // Recompute on DOM resize / font load
     const triggerRemount = () => {

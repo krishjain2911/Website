@@ -10,6 +10,8 @@ const ARRIVAL_KEY = 'rhsp.pegboard.v2.arrival';
 
 // In-memory explored list for the current session
 let inMemoryExplored: string[] = [];
+// In-memory pinned list fallback
+let inMemoryPins: string[] = [];
 
 // Clean up any legacy persistent explored state from localStorage
 try {
@@ -90,13 +92,19 @@ if (typeof window !== 'undefined') {
 
 export function getPinnedSlugs(): string[] {
   try {
-    if (typeof window === 'undefined' || !window.localStorage) return [];
-    const raw = window.localStorage.getItem(PINS_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
+    if (typeof window === 'undefined') return inMemoryPins;
+    if (window.localStorage) {
+      const raw = window.localStorage.getItem(PINS_KEY);
+      if (!raw) return inMemoryPins;
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        inMemoryPins = parsed;
+        return parsed;
+      }
+    }
+    return inMemoryPins;
   } catch {
-    return [];
+    return inMemoryPins;
   }
 }
 
@@ -117,18 +125,57 @@ export function togglePin(slug: string, source: string = 'toggle'): { pinned: bo
       next = [...slugs, slug];
       pinned = true;
     }
+    inMemoryPins = next;
     if (typeof window !== 'undefined' && window.localStorage) {
-      window.localStorage.setItem(PINS_KEY, JSON.stringify(next));
+      try {
+        window.localStorage.setItem(PINS_KEY, JSON.stringify(next));
+      } catch {}
     }
-    window.dispatchEvent(
-      new CustomEvent('rhsp:pegboard:pins-changed', {
-        detail: { slugs: next, toggledSlug: slug, pinned, source }
-      })
-    );
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(
+        new CustomEvent('rhsp:pegboard:pins-changed', {
+          detail: { slugs: next, toggledSlug: slug, pinned, source }
+        })
+      );
+    }
     return { pinned, slugs: next };
   } catch {
-    return { pinned: false, slugs: [] };
+    return { pinned: false, slugs: inMemoryPins };
   }
+}
+
+export function clearPins(): string[] {
+  const previous = [...getPinnedSlugs()];
+  inMemoryPins = [];
+  try {
+    if (typeof window !== 'undefined') {
+      if (window.localStorage) {
+        window.localStorage.removeItem(PINS_KEY);
+      }
+      window.dispatchEvent(
+        new CustomEvent('rhsp:pegboard:pins-changed', {
+          detail: { slugs: [], cleared: true, previous, source: 'clear' }
+        })
+      );
+    }
+  } catch {}
+  return previous;
+}
+
+export function restorePins(slugs: string[]): void {
+  inMemoryPins = [...slugs];
+  try {
+    if (typeof window !== 'undefined') {
+      if (window.localStorage) {
+        window.localStorage.setItem(PINS_KEY, JSON.stringify(slugs));
+      }
+      window.dispatchEvent(
+        new CustomEvent('rhsp:pegboard:pins-changed', {
+          detail: { slugs, restored: true, source: 'restore' }
+        })
+      );
+    }
+  } catch {}
 }
 
 export function getExploredSlugs(): string[] {

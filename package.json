@@ -12,7 +12,9 @@
     "check": "astro check",
     "audit:layout": "node scripts/layout-audit.mjs",
     "generate:posters": "node scripts/generate-project-posters.mjs",
-    "media": "node scripts/process-media.js"
+    "media": "node scripts/process-media.js",
+    "test:visual-rail": "node tests/visual-rail/test-visual-rail.mjs",
+    "test:drawer": "node tests/pegboard-drawer.spec.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",

@@ -13,7 +13,7 @@ const isCareersActive = currentPath === '/careers' || currentPath.startsWith('/c
     <div class="footer-top-row">
       <!-- Brand & Tagline -->
       <div class="footer-brand-col">
-        <a href="/" class="footer-logo-link" aria-label="RHSP - Return to top of page">
+        <a href="/" class="footer-logo-link" aria-label="RHSP home">
           <LogoMark size="lg" showText={true} />
         </a>
         <p class="footer-tagline-statement">
@@ -21,7 +21,7 @@ const isCareersActive = currentPath === '/careers' || currentPath.startsWith('/c
         </p>
         <p class="footer-location">
           <a href={contact.mapUrl} target="_blank" rel="noopener noreferrer" class="footer-address-link" title="View office on Google Maps">
-            ThePlayce, Mulund West, Mumbai · Enterprise Technology Partner
+          ThePlayce, 17th Floor, Marathon Millennium, Mulund West
           </a>
         </p>
       </div>
@@ -119,6 +119,18 @@ const isCareersActive = currentPath === '/careers' || currentPath.startsWith('/c
               <span>YouTube</span>
             </a>
           </li>
+          <li>
+            <a
+              href={socials.instagram}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="footer-link social-link"
+              aria-label="RHSP on Instagram"
+            >
+              <Icon name="external-link" size={16} />
+              <span>Instagram</span>
+            </a>
+          </li>
         </ul>
       </div>
     </div>
@@ -177,6 +189,14 @@ const isCareersActive = currentPath === '/careers' || currentPath.startsWith('/c
     display: inline-block;
     text-decoration: none;
     color: inherit;
+    border-radius: 8px;
+    transition: opacity 0.2s ease;
+  }
+
+  .footer-logo-link:focus-visible {
+    outline: 2px solid var(--color-border-focus, #F7941D);
+    outline-offset: 4px;
+    border-radius: 8px;
   }
 
   .footer-tagline-statement {

@@ -204,16 +204,40 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
   import {
     getPinnedSlugs,
     togglePin,
+    clearPins,
+    restorePins,
     getExploredSlugs,
     markExplored,
     initExploredState,
-    resetTileOrder,
     clearLayout,
     setArrivalVisited,
     hasVisitedArrival
   } from '../../scripts/pegBoardState';
   import { initPegLayout } from '../../scripts/pegLayout';
   import { tiles, FEATURES } from '../../data/pegBoard';
+
+  const TILE_ICONS: Record<string, string> = {
+    'file-text': '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>',
+    'phone': '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>',
+    'message-square': '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+    'database': '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg>',
+    'shield': '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>',
+    'folder-git-2': '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H20a2 2 0 0 1 2 2v5"/><circle cx="13" cy="12" r="2"/><path d="M18 19c-2.8 0-5-2.2-5-5v8"/><circle cx="20" cy="19" r="2"/></svg>',
+    'layers': '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>',
+    'cloud': '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>',
+    'server': '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg>',
+    'code': '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
+    'sliders': '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" x2="4" y1="21" y2="14"/><line x1="4" x2="4" y1="10" y2="3"/><line x1="12" x2="12" y1="21" y2="12"/><line x1="12" x2="12" y1="8" y2="3"/><line x1="20" x2="20" y1="21" y2="16"/><line x1="20" x2="20" y1="12" y2="3"/><line x1="1" x2="7" y1="14" y2="14"/><line x1="9" x2="15" y1="8" y2="8"/><line x1="17" x2="23" y1="16" y2="16"/></svg>',
+    'compass': '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>'
+  };
+
+  function getTileTypeChip(tile: (typeof tiles)[number]): string {
+    if (tile.tag === 'Comparison') return 'Comparison';
+    if (tile.zoneId === 'solutions') return 'Solution';
+    if (tile.zoneId === 'case-studies') return 'Case study';
+    if (tile.zoneId === 'playground') return 'Playground';
+    return 'Guide';
+  }
 
   function initPegBoard() {
     const board = document.getElementById('peg-board-panel');
@@ -230,38 +254,45 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
     const drawerCloseBtn = document.getElementById('my-board-close-btn');
     const drawerOpenBtn = document.getElementById('my-board-open-btn');
     const myBoardBtnLabel = document.getElementById('my-board-btn-label');
+    const drawerPinsCount = document.getElementById('drawer-pins-count');
     const pinnedListEl = document.getElementById('pinned-tiles-list');
     const emptyStateEl = document.getElementById('pinned-empty-state');
+    const emptyExploreBtn = document.getElementById('empty-explore-btn');
     const discussBtn = document.getElementById('discuss-board-btn') as HTMLAnchorElement | null;
     const copyEmailBtn = document.getElementById('copy-contact-email-btn');
     const copyEmailFeedback = document.getElementById('copy-email-feedback');
     const selectableEmail = document.getElementById('selectable-contact-email');
     const drawerResetBtn = document.getElementById('drawer-reset-board-btn');
+    const drawerResetConfirm = document.getElementById('drawer-reset-confirm');
+    const resetConfirmYes = document.getElementById('reset-confirm-yes');
+    const resetConfirmCancel = document.getElementById('reset-confirm-cancel');
 
     // Toast element
     const toastEl = document.getElementById('pb-toast');
     const toastUndoBtn = document.getElementById('toast-undo-btn');
     let toastTimeout: any = null;
-    let lastUnpinnedSlug: string | null = null;
+    let currentUndoCallback: (() => void) | null = null;
 
-    function showUnpinToast(slug: string) {
+    function triggerUndoToast(message: string, undoCallback: () => void) {
       if (!toastEl) return;
-      lastUnpinnedSlug = slug;
-      toastEl.style.display = 'flex';
+      const msgEl = toastEl.querySelector<HTMLElement>('.toast-message');
+      if (msgEl) msgEl.textContent = message;
+      currentUndoCallback = undoCallback;
+      toastEl.style.display = 'inline-flex';
       if (toastTimeout) clearTimeout(toastTimeout);
       toastTimeout = setTimeout(() => {
         if (toastEl) toastEl.style.display = 'none';
-        lastUnpinnedSlug = null;
-      }, 6000);
+        currentUndoCallback = null;
+      }, 5000);
     }
 
     toastUndoBtn?.addEventListener('click', () => {
-      if (lastUnpinnedSlug) {
-        togglePin(lastUnpinnedSlug, 'undo-toast');
-        if (toastEl) toastEl.style.display = 'none';
-        lastUnpinnedSlug = null;
-        syncPinsUI();
+      if (currentUndoCallback) {
+        currentUndoCallback();
+        currentUndoCallback = null;
       }
+      if (toastEl) toastEl.style.display = 'none';
+      if (toastTimeout) clearTimeout(toastTimeout);
     });
 
     function syncPinsUI() {
@@ -275,12 +306,17 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
         const pinBtn = wrapper.querySelector<HTMLButtonElement>('[data-pin-btn]');
         if (pinBtn) {
           pinBtn.setAttribute('aria-pressed', isP ? 'true' : 'false');
+          pinBtn.setAttribute('data-track', isP ? 'peg_unpin' : 'peg_pin');
         }
       });
 
-      // Update header button count
+      // Update header button count and drawer count badge
       const countLabel = `My board (${pinnedSlugs.length})`;
       if (myBoardBtnLabel) myBoardBtnLabel.textContent = countLabel;
+      if (drawerPinsCount) {
+        drawerPinsCount.textContent = String(pinnedSlugs.length);
+        drawerPinsCount.setAttribute('aria-label', `${pinnedSlugs.length} pinned topics`);
+      }
 
       // Render drawer items
       if (pinnedListEl && emptyStateEl) {
@@ -293,50 +329,84 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
             .map((slug) => {
               const tile = tiles.find((t) => t.slug === slug);
               if (!tile) return '';
+              const iconSvg = TILE_ICONS[tile.iconName] || TILE_ICONS['file-text'];
+              const chip = getTileTypeChip(tile);
               return `
-                <li class="pinned-item-row" data-pinned-slug="${tile.slug}">
-                  <div class="pinned-item-info">
-                    <a href="${tile.href}" class="pinned-item-title">${tile.title}</a>
-                    <span class="pinned-item-tag">${tile.tag}</span>
+                <li class="pinned-card" data-pinned-slug="${tile.slug}">
+                  <div class="pinned-card-icon-badge" aria-hidden="true">
+                    ${iconSvg}
                   </div>
-                  <button type="button" class="pinned-remove-btn" data-remove-slug="${tile.slug}" aria-label="Remove ${tile.title} from pins">
-                    ✕
+                  <div class="pinned-card-body">
+                    <div class="pinned-card-meta">
+                      <span class="pinned-type-chip">${chip}</span>
+                    </div>
+                    <a href="${tile.href}" class="pinned-card-title">${tile.title}</a>
+                    <p class="pinned-card-desc">${tile.description}</p>
+                  </div>
+                  <button
+                    type="button"
+                    class="pinned-remove-btn"
+                    data-remove-slug="${tile.slug}"
+                    aria-label="Remove ${tile.title}"
+                    data-track="peg_unpin"
+                    data-track-target="${tile.slug}"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
                   </button>
                 </li>
               `;
             })
             .join('');
 
-          // Wire remove buttons inside drawer
+          // Wire remove buttons inside drawer with animated exit
           pinnedListEl.querySelectorAll<HTMLButtonElement>('[data-remove-slug]').forEach((btn) => {
             btn.addEventListener('click', () => {
               const slug = btn.getAttribute('data-remove-slug');
-              if (slug) {
+              if (!slug) return;
+              const card = btn.closest<HTMLElement>('.pinned-card');
+              if (card) {
+                card.classList.add('is-removing');
+              }
+              const delay = prefersReducedMotion ? 0 : 180;
+              setTimeout(() => {
                 const res = togglePin(slug, 'drawer');
                 if (!res.pinned) {
-                  showUnpinToast(slug);
+                  triggerUndoToast('Removed from your board.', () => {
+                    togglePin(slug, 'undo-toast');
+                    syncPinsUI();
+                  });
                 }
                 syncPinsUI();
-              }
+              }, delay);
             });
           });
         }
       }
 
-      // Update discuss mailto URL
+      // Update discuss mailto URL & disabled state
       if (discussBtn) {
-        const pinnedTitles = pinnedSlugs
-          .map((s) => tiles.find((t) => t.slug === s)?.title)
-          .filter(Boolean);
-        const subject = encodeURIComponent('PEG Board: my pinned topics');
-        const bodyLines = [
-          'Pinned topics from RHSP PEG Board:',
-          ...pinnedTitles.map((t) => `- ${t}`),
-          '',
-          'Tell us a little about your project:'
-        ].join('\n');
-        const body = encodeURIComponent(bodyLines);
-        discussBtn.href = `mailto:letstalk@rhsp.solutions?subject=${subject}&body=${body}`;
+        if (pinnedSlugs.length === 0) {
+          discussBtn.setAttribute('aria-disabled', 'true');
+          discussBtn.setAttribute('title', 'Pin at least one topic to discuss');
+          discussBtn.removeAttribute('href');
+        } else {
+          discussBtn.setAttribute('aria-disabled', 'false');
+          discussBtn.removeAttribute('title');
+          const pinnedTileObjs = pinnedSlugs
+            .map((s) => tiles.find((t) => t.slug === s))
+            .filter(Boolean) as (typeof tiles)[number][];
+
+          const origin = 'https://roundholesquarepeg.com';
+          const subject = encodeURIComponent('Discussing my RHSP board');
+          const bodyLines = [
+            'Pinned topics from RHSP PEG Board:',
+            ...pinnedTileObjs.map((t) => `- ${t.title}: ${origin}${t.href}`),
+            '',
+            'Tell us a little about your project:'
+          ].join('\n');
+          const body = encodeURIComponent(bodyLines);
+          discussBtn.href = `mailto:letstalk@rhsp.solutions?subject=${subject}&body=${body}`;
+        }
       }
     }
 
@@ -357,10 +427,26 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
             setTimeout(() => tileCard.classList.remove('is-swinging'), 1200);
           }
           if (!res.pinned) {
-            showUnpinToast(slug);
+            triggerUndoToast('Removed from your board.', () => {
+              togglePin(slug, 'undo-toast');
+              syncPinsUI();
+            });
           }
           syncPinsUI();
         }
+      }
+    });
+
+    // Discuss button click guard & telemetry
+    discussBtn?.addEventListener('click', (e) => {
+      if (discussBtn.getAttribute('aria-disabled') === 'true') {
+        e.preventDefault();
+        return;
+      }
+      if (typeof (window as any).plausible === 'function') {
+        (window as any).plausible('peg_discuss_click', {
+          props: { count: getPinnedSlugs().length }
+        });
       }
     });
 
@@ -373,10 +459,10 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
       drawerOverlay.classList.add('is-open');
       drawerOverlay.setAttribute('aria-hidden', 'false');
       drawerOpenBtn?.setAttribute('aria-expanded', 'true');
-      drawerCloseBtn?.focus();
       drawerPrevOverflow = document.documentElement.style.overflow;
       document.documentElement.style.overflow = 'hidden';
       document.body.style.overflow = 'hidden';
+      setTimeout(() => drawerCloseBtn?.focus(), 50);
     }
 
     function closeDrawer() {
@@ -386,24 +472,75 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
       drawerOpenBtn?.setAttribute('aria-expanded', 'false');
       document.documentElement.style.overflow = drawerPrevOverflow;
       document.body.style.overflow = '';
+      if (drawerResetConfirm) drawerResetConfirm.style.display = 'none';
+      if (drawerResetBtn) drawerResetBtn.style.display = 'inline-flex';
       (drawerLastActive || drawerOpenBtn)?.focus();
     }
 
     drawerOpenBtn?.addEventListener('click', openDrawer);
     drawerCloseBtn?.addEventListener('click', closeDrawer);
     drawerBackdrop?.addEventListener('click', closeDrawer);
+    emptyExploreBtn?.addEventListener('click', closeDrawer);
 
+    // Focus trap & Escape handling inside open drawer
     window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && drawerOverlay?.classList.contains('is-open')) {
+      if (!drawerOverlay?.classList.contains('is-open')) return;
+      if (e.key === 'Escape') {
         closeDrawer();
+        return;
+      }
+      if (e.key === 'Tab') {
+        const focusable = Array.from(
+          drawerOverlay.querySelectorAll<HTMLElement>(
+            'button:not([disabled]), [href]:not([aria-disabled="true"]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+          )
+        ).filter((el) => el.offsetParent !== null && !el.closest('[style*="display: none"]'));
+
+        if (focusable.length === 0) return;
+        const firstEl = focusable[0];
+        const lastEl = focusable[focusable.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === firstEl) {
+            e.preventDefault();
+            lastEl.focus();
+          }
+        } else {
+          if (document.activeElement === lastEl) {
+            e.preventDefault();
+            firstEl.focus();
+          }
+        }
       }
     });
 
-    // Reset board from inside drawer
+    // Reset board with inline confirmation flow
     drawerResetBtn?.addEventListener('click', () => {
-      resetTileOrder();
-      clearLayout();
-      closeDrawer();
+      drawerResetBtn.style.display = 'none';
+      if (drawerResetConfirm) drawerResetConfirm.style.display = 'flex';
+      resetConfirmYes?.focus();
+    });
+
+    resetConfirmCancel?.addEventListener('click', () => {
+      if (drawerResetConfirm) drawerResetConfirm.style.display = 'none';
+      if (drawerResetBtn) drawerResetBtn.style.display = 'inline-flex';
+      drawerResetBtn?.focus();
+    });
+
+    resetConfirmYes?.addEventListener('click', () => {
+      if (drawerResetConfirm) drawerResetConfirm.style.display = 'none';
+      if (drawerResetBtn) drawerResetBtn.style.display = 'inline-flex';
+      const prevSlugs = clearPins();
+      if (typeof (window as any).plausible === 'function') {
+        (window as any).plausible('peg_reset', {
+          props: { previousCount: prevSlugs.length }
+        });
+      }
+      triggerUndoToast('All topics removed from board.', () => {
+        restorePins(prevSlugs);
+        syncPinsUI();
+      });
+      syncPinsUI();
     });
 
     // Copy email handler
@@ -412,12 +549,19 @@ import { zones, tiles, ZONE_ORDER, FEATURES } from '../../data/pegBoard';
       try {
         await navigator.clipboard.writeText(email);
         if (copyEmailFeedback) {
-          copyEmailFeedback.textContent = 'Copied!';
+          copyEmailFeedback.textContent = 'Copied';
           setTimeout(() => {
             copyEmailFeedback.textContent = 'Copy';
           }, 2000);
         }
-      } catch {}
+      } catch {
+        if (copyEmailFeedback) {
+          copyEmailFeedback.textContent = 'Copied';
+          setTimeout(() => {
+            copyEmailFeedback.textContent = 'Copy';
+          }, 2000);
+        }
+      }
     });
 
     // 2. EXPLORER PROGRESS

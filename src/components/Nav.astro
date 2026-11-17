@@ -20,7 +20,7 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
 <header id="main-nav-header" class="site-header">
   <div class="container header-inner">
     <!-- Left: Brand Logo -->
-    <a href="/" class="brand-logo-link" aria-label="RHSP - Return to homepage">
+    <a href="/" class="brand-logo-link" aria-label="RHSP home">
       <LogoMark size="md" showText={true} />
     </a>
 
@@ -150,7 +150,9 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
 <!-- Mobile Full-Screen Drawer Menu (rendered outside header so header transforms/filters don't contain it) -->
 <div id="mobile-menu-drawer" class="mobile-drawer" aria-hidden="true">
   <div class="mobile-drawer-header">
-    <LogoMark size="md" showText={true} />
+    <a href="/" class="brand-logo-link mobile-drawer-logo" aria-label="RHSP home">
+      <LogoMark size="md" showText={true} />
+    </a>
     <button
       type="button"
       id="mobile-menu-close-btn"
@@ -267,6 +269,14 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
     text-decoration: none;
     color: inherit;
     flex-shrink: 0;
+    border-radius: 8px;
+    transition: opacity 0.2s ease;
+  }
+
+  .brand-logo-link:focus-visible {
+    outline: 2px solid var(--color-border-focus, #F7941D);
+    outline-offset: 4px;
+    border-radius: 8px;
   }
 
   /* Desktop Nav Links (Visible >= 1100px) */
@@ -794,7 +804,7 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
       closeBtn?.focus({ preventScroll: true });
     }
 
-    function closeDrawer() {
+    function closeDrawer(restoreScroll = true) {
       if (!drawer || !isDrawerOpen) return;
       isDrawerOpen = false;
       drawer.classList.remove('is-open');
@@ -805,11 +815,27 @@ const sortedProducts = [...allProducts].sort((a, b) => (a.data.order ?? 99) - (b
       document.body.style.overflow = prevBodyOverflow;
       document.body.style.touchAction = prevBodyTouchAction;
 
-      // Restore exact scroll position
-      window.scrollTo({ top: savedScrollY, behavior: 'instant' as ScrollBehavior });
+      if (restoreScroll) {
+        // Restore exact scroll position
+        window.scrollTo({ top: savedScrollY, behavior: 'instant' as ScrollBehavior });
+      }
 
       openBtn?.focus({ preventScroll: true });
     }
+
+    window.addEventListener('rhsp:close-drawer-no-scroll', () => {
+      closeDrawer(false);
+    });
+
+    window.addEventListener('rhsp:reset-to-top', () => {
+      if (header) {
+        header.classList.remove('is-scrolled', 'is-hidden');
+      }
+      if (progressBar) {
+        progressBar.style.width = '0%';
+      }
+      lastScrollY = 0;
+    });
 
     openBtn?.addEventListener('click', openDrawer);
     closeBtn?.addEventListener('click', closeDrawer);

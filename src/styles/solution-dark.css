@@ -204,39 +204,7 @@
   color: var(--sd-text);
 }
 
-/* Journey Progress Pill (Fixed on desktop right margin) */
-:root[data-theme="dark"] #journey-progress-rail,
-:root[data-theme="dark"] .journey-progress-pill {
-  /* wrapper */
-}
-:root[data-theme="dark"] .journey-progress-rail .rail-indicator,
-:root[data-theme="dark"] .journey-progress-rail .rail-dots-track {
-  background: rgba(10, 14, 22, 0.92);
-  border: 1px solid rgba(91, 143, 224, 0.3);
-  box-shadow: 0 10px 30px -10px #000, 0 0 28px -10px rgba(91, 143, 224, 0.5);
-  backdrop-filter: blur(8px);
-}
-:root[data-theme="dark"] .journey-progress-rail .rail-indicator {
-  color: var(--sd-text-2);
-}
-:root[data-theme="dark"] .journey-progress-rail .rail-connecting-line {
-  background: rgba(91, 143, 224, 0.2);
-}
-:root[data-theme="dark"] .rail-dot.is-upcoming :is(.dot-inner, .dot-passed) {
-  background: #3A4558;
-}
-:root[data-theme="dark"] .rail-dot.is-passed :is(.dot-inner, .dot-passed) {
-  background: var(--sd-blue);
-  box-shadow: 0 0 6px var(--sd-blue);
-}
-:root[data-theme="dark"] :is(.peg-marker-cube, .rail-cube) {
-  filter: drop-shadow(0 0 8px rgba(247, 148, 29, 0.7));
-}
-:root[data-theme="dark"] :is(.stage-label, .rail-label) {
-  background: var(--sd-inner);
-  color: var(--sd-text-2);
-  border: 1px solid rgba(91, 143, 224, 0.25);
-}
+
 
 /* StageRail Component (Desktop & Mobile Rail) */
 :root[data-theme="dark"] .stage-rail-mobile {
@@ -426,35 +394,7 @@
     color: var(--sd-text);
   }
 
-  /* Journey Progress Pill */
-  :root:not([data-theme="light"]) .journey-progress-rail .rail-indicator,
-  :root:not([data-theme="light"]) .journey-progress-rail .rail-dots-track {
-    background: rgba(10, 14, 22, 0.92);
-    border: 1px solid rgba(91, 143, 224, 0.3);
-    box-shadow: 0 10px 30px -10px #000, 0 0 28px -10px rgba(91, 143, 224, 0.5);
-    backdrop-filter: blur(8px);
-  }
-  :root:not([data-theme="light"]) .journey-progress-rail .rail-indicator {
-    color: var(--sd-text-2);
-  }
-  :root:not([data-theme="light"]) .journey-progress-rail .rail-connecting-line {
-    background: rgba(91, 143, 224, 0.2);
-  }
-  :root:not([data-theme="light"]) .rail-dot.is-upcoming :is(.dot-inner, .dot-passed) {
-    background: #3A4558;
-  }
-  :root:not([data-theme="light"]) .rail-dot.is-passed :is(.dot-inner, .dot-passed) {
-    background: var(--sd-blue);
-    box-shadow: 0 0 6px var(--sd-blue);
-  }
-  :root:not([data-theme="light"]) :is(.peg-marker-cube, .rail-cube) {
-    filter: drop-shadow(0 0 8px rgba(247, 148, 29, 0.7));
-  }
-  :root:not([data-theme="light"]) :is(.stage-label, .rail-label) {
-    background: var(--sd-inner);
-    color: var(--sd-text-2);
-    border: 1px solid rgba(91, 143, 224, 0.25);
-  }
+
 
   /* StageRail Component */
   :root:not([data-theme="light"]) .stage-rail-mobile {
