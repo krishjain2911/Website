@@ -1,4 +1,4 @@
-export const CAREERS_EMAIL = process.env.CAREERS_EMAIL || 'letstalk@rhsp.solutions';
+export const CAREERS_EMAIL = process.env.CAREERS_EMAIL || 'career@rhsp.solutions';
 export const CAREERS_COMPANY_NAME = 'RHSP Technologies';
 export const CAREERS_DEFAULT_LOCATION = 'Mumbai, India';
 
